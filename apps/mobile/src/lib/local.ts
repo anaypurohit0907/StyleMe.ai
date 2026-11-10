@@ -70,7 +70,12 @@ export interface Weather {
 /** Open-Meteo, no API key. Falls back to a mild default offline. */
 export async function getWeather(): Promise<Weather> {
   try {
-    const perm = await Location.requestForegroundPermissionsAsync();
+    // Never block the Today screen on a permission prompt.
+    const perm = await Promise.race([
+      Location.requestForegroundPermissionsAsync(),
+      new Promise<null>((resolve) => setTimeout(() => resolve(null), 2500)),
+    ]);
+    if (!perm) return { tempC: 18, isRaining: false };
     if (perm.status !== "granted") return { tempC: 18, isRaining: false };
     const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Low });
     const url =

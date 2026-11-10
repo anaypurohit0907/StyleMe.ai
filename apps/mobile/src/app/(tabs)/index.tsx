@@ -21,18 +21,21 @@ export default function Today() {
   const load = useCallback(async () => {
     setLoading(true);
     setPicked(null);
-    const all = await listGarments();
-    const free = all.filter((g) => g.status === "available");
-    setGarments(all);
-    setAvailable(free);
-    const w = await getWeather();
-    setWeather(w);
-    if (free.length >= 2) {
-      setToday(await recommendLocal(free, occasion, w, seed));
-    } else {
-      setToday(null);
+    try {
+      const all = await listGarments();
+      const free = all.filter((g) => g.status === "available");
+      setGarments(all);
+      setAvailable(free);
+      const w = await getWeather();
+      setWeather(w);
+      if (free.length >= 2) {
+        setToday(await recommendLocal(free, occasion, w, seed));
+      } else {
+        setToday(null);
+      }
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   }, [occasion, seed]);
 
   useFocusEffect(

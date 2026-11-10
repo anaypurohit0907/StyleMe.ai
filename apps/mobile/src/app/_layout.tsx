@@ -12,12 +12,14 @@ function Gate() {
   useEffect(() => {
     (async () => {
       await getDb();
-      // Dev builds get the real ONNX tagger; Expo Go keeps the mock.
-      try {
-        const { createOnnxTagger } = require("@/lib/onnx-tagger") as typeof import("@/lib/onnx-tagger");
-        setVisionTagger(createOnnxTagger());
-      } catch {
-        // native module unavailable (Expo Go) — mock tagger stays active
+      // Native dev builds can opt into ONNX; Expo Go stays on the mock.
+      if (process.env.EXPO_PUBLIC_VISION === "onnx") {
+        try {
+          const { createOnnxTagger } = require("@/lib/onnx-tagger") as typeof import("@/lib/onnx-tagger");
+          setVisionTagger(createOnnxTagger());
+        } catch {
+          // native module unavailable — mock tagger stays active
+        }
       }
       const onboarded = await metaGet("onboarded");
       await SplashScreen.hideAsync().catch(() => {});
