@@ -1,5 +1,18 @@
 # StyleMe.ai — Build Plan v1
 
+## Status — 11 Nov 2026
+
+- **Phase 0/1 (scaffold + ML):** done. Engine 41 tests, worker 7 tests, notebooks 00–03 run on T4. ONNX parity 1.000.
+- **Phase 2 (app):** done for MVP. Onboarding, Today (3 outfits), Wardrobe, Capture + tag editor, item detail/laundry, Style DNA; local SQLite + offline engine.
+- **Phase 3 (backend):** deployed to Cloudflare: `https://styleme-api.style-me.workers.dev` with D1 migrations applied. R2 photo backup optional/disabled.
+- **Phase 4 (learning/tone):** engine learning + tone banks implemented; UI uses local engine. Worker tone endpoint live.
+- **Phase 5 (compat model):** Polyvore baseline produced a negative result (item CF doesn't transfer); attribute rules remain the path.
+- **Distribution:** arm64 release APK built in GitHub Actions and published at `/releases/tag/apk-latest`.
+
+Known gaps: color is classical CV (strong on solids, weak on multi-color/lighting); pattern/fit remain zero-shot; native build only via CI (local 7GB machine OOMs).
+
+
+
 Status: DRAFT — awaiting approval
 Date: 2026-11-09
 
