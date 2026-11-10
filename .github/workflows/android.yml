@@ -1,0 +1,68 @@
+name: Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "apps/mobile/**"
+      - ".github/workflows/android.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: release APK (arm64)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Install JS deps
+        run: npm ci
+
+      - name: Fetch vision bundle
+        run: |
+          mkdir -p apps/mobile/assets/vision
+          curl -fL --retry 3 \
+            "https://github.com/${{ github.repository }}/releases/download/vision-v1/styleme_vision_v1.zip" \
+            -o /tmp/vision.zip
+          unzip -o /tmp/vision.zip -d apps/mobile/assets/vision
+          ls -lh apps/mobile/assets/vision
+
+      - name: Generate native project
+        working-directory: apps/mobile
+        env:
+          EXPO_PUBLIC_API_BASE: https://styleme-api.style-me.workers.dev
+          EXPO_PUBLIC_VISION: onnx
+        run: npx expo prebuild --platform android --clean --no-install
+
+      - name: Build release APK
+        working-directory: apps/mobile/android
+        env:
+          EXPO_PUBLIC_API_BASE: https://styleme-api.style-me.workers.dev
+          EXPO_PUBLIC_VISION: onnx
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon \
+            -PreactNativeArchitectures=arm64-v8a
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: styleme-arm64-release
+          path: apps/mobile/android/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+          retention-days: 30
