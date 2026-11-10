@@ -57,6 +57,17 @@ jobs:
           EXPO_PUBLIC_VISION: onnx
         run: npx expo prebuild --platform android --clean --no-install
 
+      - name: Configure release signing
+        working-directory: apps/mobile
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          STYLEME_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          STYLEME_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          STYLEME_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > android/app/styleme-release.keystore
+          python3 scripts/configure-signing.py
+
       - name: Build release APK
         working-directory: apps/mobile/android
         env:
