@@ -7,6 +7,7 @@
 import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system/legacy";
 import jpeg from "jpeg-js";
+import { toByteArray } from "base64-js";
 import { InferenceSession, Tensor } from "onnxruntime-react-native";
 import type { ColorName, Fit, GarmentAttrs, Pattern, Slot } from "@styleme/schema";
 import { mockTagger, type VisionTagger } from "./vision";
@@ -110,9 +111,7 @@ function resizeRgba(src: Uint8Array, sw: number, sh: number, size: number): Floa
 
 async function decode(uri: string): Promise<{ data: Uint8Array; width: number; height: number }> {
   const b64 = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
-  const bin = globalThis.atob(b64);
-  const bytes = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  const bytes = toByteArray(b64);
   const raw = jpeg.decode(bytes, { useTArray: true });
   return { data: raw.data as Uint8Array, width: raw.width, height: raw.height };
 }
