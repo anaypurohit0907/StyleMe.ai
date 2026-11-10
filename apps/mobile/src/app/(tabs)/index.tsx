@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { Image, Pressable, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Image, Pressable, StyleSheet, View } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
 import type { Garment, Occasion, ScoredOutfit } from "@styleme/schema";
 import { colors, occasionLabel, occasions, paletteSwatch, radius, space } from "@styleme/design";
@@ -109,6 +109,13 @@ export default function Today() {
             />
           ))}
         </View>
+
+        {loading && (
+          <Card style={{ alignItems: "center", gap: space.s }}>
+            <ActivityIndicator color={colors.accent} />
+            <Caption>Styling three options…</Caption>
+          </Card>
+        )}
 
         {picked && (
           <Card style={{ borderColor: colors.ok }}>
