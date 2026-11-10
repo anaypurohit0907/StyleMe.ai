@@ -10,6 +10,7 @@ import jpeg from "jpeg-js";
 import { toByteArray } from "base64-js";
 import { InferenceSession, Tensor } from "onnxruntime-react-native";
 import type { ColorName, Fit, GarmentAttrs, Pattern, Slot } from "@styleme/schema";
+import { paletteSwatch } from "@styleme/design";
 import { mockTagger, type VisionTagger } from "./vision";
 
 const SIZE = 256;
@@ -92,6 +93,47 @@ function applyProbe(embedding: number[], group: string): string | null {
   return label;
 }
 
+const PALETTE_RGB = Object.entries(paletteSwatch).map(([name, hex]) => {
+  const n = parseInt(hex.slice(1), 16);
+  return { name, r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+});
+
+function median(values: number[]): number {
+  values.sort((a, b) => a - b);
+  return values[Math.floor(values.length / 2)] ?? 0;
+}
+
+/** Center-crop median color -> nearest palette anchor. Robust for solids. */
+function dominantColor(src: Uint8Array, w: number, h: number): ColorName {
+  const x0 = Math.floor(w * 0.2);
+  const x1 = Math.floor(w * 0.8);
+  const y0 = Math.floor(h * 0.2);
+  const y1 = Math.floor(h * 0.8);
+  const step = Math.max(1, Math.floor(Math.min(w, h) / 64));
+  const rs: number[] = [];
+  const gs: number[] = [];
+  const bs: number[] = [];
+  for (let y = y0; y < y1; y += step) {
+    for (let x = x0; x < x1; x += step) {
+      const i = (y * w + x) * 4;
+      rs.push(src[i] ?? 0);
+      gs.push(src[i + 1] ?? 0);
+      bs.push(src[i + 2] ?? 0);
+    }
+  }
+  const [r, g, b] = [median(rs), median(gs), median(bs)];
+  let best = PALETTE_RGB[0]!;
+  let bestD = Infinity;
+  for (const p of PALETTE_RGB) {
+    const d = (p.r - r) ** 2 + (p.g - g) ** 2 + (p.b - b) ** 2;
+    if (d < bestD) {
+      bestD = d;
+      best = p;
+    }
+  }
+  return best.name as ColorName;
+}
+
 function resizeRgba(src: Uint8Array, sw: number, sh: number, size: number): Float32Array {
   const out = new Float32Array(3 * size * size);
   const plane = size * size;
@@ -143,7 +185,7 @@ class OnnxTagger implements VisionTagger {
       const e = normalize(Array.from(first.data as Float32Array));
 
       const slot = (applyProbe(e, "slot") ?? zeroShot(e, "slot") ?? "top") as Slot;
-      const color = (applyProbe(e, "color") ?? zeroShot(e, "color_ml") ?? "black") as ColorName;
+      const color = dominantColor(img.data, img.width, img.height);
       const formalityLabel = applyProbe(e, "formality") ?? zeroShot(e, "formality") ?? "3";
       const pattern = (zeroShot(e, "pattern") ?? "solid") as Pattern;
       const fit = (zeroShot(e, "fit") ?? "regular") as Fit;
