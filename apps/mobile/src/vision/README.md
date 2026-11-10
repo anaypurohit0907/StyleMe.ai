@@ -26,8 +26,9 @@ npx expo install onnxruntime-react-native expo-file-system
 3. Run → `e` (512-d). L2-normalize.
 4. Zero-shot: cosine vs each group's rows in `prompt_embeddings.npy`; argmax.
 5. Probe override: if `probes.json[group]` exists → `argmax(W·e + b)` over `labels`.
-   Groups currently probed: `slot` (0.930), `formality` (0.942), `color` (0.642).
-6. Pattern/fit stay zero-shot for MVP (Fashionpedia public mirrors have disjoint image-id remaps). User tag corrections are the training signal for the next probe version.
+   Groups currently probed: `slot` (0.930), `formality` (0.942), `pattern` (0.419), `fit` (0.406).
+   Color uses classical CV (center-crop median → palette), not a probe.
+6. User tag corrections are the training signal for the next probe version.
 
 Everything after the embedding is pure TS. `src/lib/vision.ts` exposes `VisionTagger`; swap `mockTagger` for `OnnxTagger` in `src/app/_layout.tsx`.
 

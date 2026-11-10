@@ -31,11 +31,11 @@ Four Colab notebooks. Run in order. Everything is idempotent and survives sessio
 | color | linear probe (diagnostic) | 0.642 | 0.85 |
 | formality | zero-shot | 0.100 exact / 0.499 ±1 | 0.70 |
 | formality | **linear probe** (3 coarse bands) | **0.942** | 0.70 ✅ |
-| pattern | zero-shot | not measurable* | 0.80 |
-| fit | zero-shot | not measurable* | 0.75 |
+| pattern | **linear probe** (Fashionpedia train) | **0.419** (6 classes) | 0.80 ❌ |
+| fit | **linear probe** (Fashionpedia train) | **0.406** (4 classes) | 0.75 ❌ |
 | ONNX vs PyTorch parity | 20 crops | cosine **1.000** | > 0.999 ✅ |
 
-\* Fashionpedia's public mirrors ship attributes and images with **disjoint image-id remaps**. The app keeps pattern/fit zero-shot and learns from user tag corrections; a future run can use the official train split (images + `instances_attributes_train2020.json`) to train probes.
+Pattern/fit now use probes trained on Fashionpedia `train2020` (`ml/train_pattern_fit_probe.py`). Accuracy is modest (random is 0.167 / 0.25) but far better than zero-shot, which predicted "solid" for every pattern. User corrections remain the flywheel.
 
 ### Runtime decision
 
