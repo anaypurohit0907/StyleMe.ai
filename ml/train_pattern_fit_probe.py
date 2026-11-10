@@ -174,7 +174,7 @@ def embed(samples: list[dict], model: Path) -> tuple[np.ndarray, list[dict]]:
 
 def fit_probe(X: np.ndarray, y: np.ndarray, name: str) -> dict:
     Xtr, Xte, ytr, yte = train_test_split(X, y, test_size=0.2, random_state=0, stratify=y)
-    clf = LogisticRegression(max_iter=3000, C=1.0).fit(Xtr, ytr)
+    clf = LogisticRegression(max_iter=3000, C=0.5, class_weight="balanced").fit(Xtr, ytr)
     acc = float(clf.score(Xte, yte))
     print(f"{name}: test acc {acc:.3f}  n={len(y)}  classes={sorted(set(y))}", flush=True)
     return {
@@ -198,6 +198,13 @@ def main() -> None:
     rows = list(unique.values())
     print("unique crops to embed:", len(rows), flush=True)
     X, kept = embed(rows, model)
+    np.savez_compressed(
+        ROOT / "artifacts" / "pattern_fit_embeddings.npz",
+        X=X,
+        pattern=np.array([s["pattern"] or "" for s in kept]),
+        fit=np.array([s["fit"] or "" for s in kept]),
+    )
+    print("saved embeddings", X.shape, flush=True)
 
     def subset(key: str) -> tuple[np.ndarray, np.ndarray]:
         idx = [i for i, s in enumerate(kept) if s[key]]

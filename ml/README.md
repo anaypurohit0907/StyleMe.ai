@@ -31,11 +31,11 @@ Four Colab notebooks. Run in order. Everything is idempotent and survives sessio
 | color | linear probe (diagnostic) | 0.642 | 0.85 |
 | formality | zero-shot | 0.100 exact / 0.499 ±1 | 0.70 |
 | formality | **linear probe** (3 coarse bands) | **0.942** | 0.70 ✅ |
-| pattern | **linear probe** (Fashionpedia train) | **0.419** (6 classes) | 0.80 ❌ |
-| fit | **linear probe** (Fashionpedia train) | **0.406** (4 classes) | 0.75 ❌ |
+| pattern | zero-shot / editable default | no signal found | 0.80 |
+| fit | zero-shot / editable default | no signal found | 0.75 |
 | ONNX vs PyTorch parity | 20 crops | cosine **1.000** | > 0.999 ✅ |
 
-Pattern/fit now use probes trained on Fashionpedia `train2020` (`ml/train_pattern_fit_probe.py`). Accuracy is modest (random is 0.167 / 0.25) but far better than zero-shot, which predicted "solid" for every pattern. User corrections remain the flywheel.
+Pattern/fit probes were trained on Fashionpedia `train2020` (`ml/train_pattern_fit_probe.py`), but MobileCLIP-S1 embeddings carry no usable signal for these fine attributes: balanced accuracy was ~random (0.24/0.25) and the model predicted solid/regular for nearly everything. They are **not shipped**; the tag editor defaults to solid/regular and user corrections remain the flywheel. A fashion-specific encoder is the next lever.
 
 ### Runtime decision
 
