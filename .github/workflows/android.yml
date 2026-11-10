@@ -9,7 +9,7 @@ on:
       - ".github/workflows/android.yml"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -70,3 +70,10 @@ jobs:
           path: apps/mobile/android/app/build/outputs/apk/release/*.apk
           if-no-files-found: error
           retention-days: 30
+
+      - name: Publish to apk-latest release
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload apk-latest             apps/mobile/android/app/build/outputs/apk/release/app-release.apk             --clobber

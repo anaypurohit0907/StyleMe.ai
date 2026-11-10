@@ -57,7 +57,7 @@ The app bundle is `ml/artifacts/styleme_vision_v1.zip`. Copy the ONNX + JSON fil
 ## Install the test APK
 
 Download the latest arm64 APK from
-[Releases](https://github.com/anaypurohit0907/StyleMe.ai/releases) and install it
+[apk-latest](https://github.com/anaypurohit0907/StyleMe.ai/releases/tag/apk-latest) and install it
 on an Android phone (allow "install unknown apps"). It is debug-signed for
 testing, not Play Store distribution.
 
