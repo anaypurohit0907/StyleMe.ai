@@ -1,5 +1,7 @@
 # StyleMe.ai
 
+[![Android APK](https://github.com/anaypurohit0907/StyleMe.ai/actions/workflows/android.yml/badge.svg)](https://github.com/anaypurohit0907/StyleMe.ai/actions/workflows/android.yml)
+
 Outfit recommendations from first principles — not trends.
 
 Photograph your clothes once. The app tags each piece **on-device**, keeps the photos on your phone, and gives you **three outfits a day** for the weather, occasion, and mood. It learns from which one you pick, and never suggests something that's in the wash.
@@ -62,7 +64,7 @@ on an Android phone (allow "install unknown apps"). It is debug-signed for
 testing, not Play Store distribution.
 
 The release APK bundles JS + the MobileCLIP-S1 ONNX model, so tagging runs
-on-device with no laptop/Metro.
+on-device with no laptop/Metro. Tester guide: [`docs/TESTING.md`](docs/TESTING.md).
 
 ## Deploy the worker
 
