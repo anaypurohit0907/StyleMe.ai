@@ -26,8 +26,9 @@ Four Colab notebooks. Run in order. Everything is idempotent and survives sessio
 | slot | zero-shot | 0.584 | 0.90 |
 | slot | **linear probe** (DF2 + Fashion Product) | **0.930** | 0.90 ✅ |
 | color | zero-shot | 0.596 | — |
-| color | classical CV (LAB k-means) | 0.266 | 0.85 |
-| color | **linear probe** | **0.642** | 0.85 ❌ |
+| color | classical CV (studio product set) | 0.266 | 0.85 |
+| color | classical CV (center median, solid palette) | **16/16 synthetic** | — |
+| color | linear probe (diagnostic) | 0.642 | 0.85 |
 | formality | zero-shot | 0.100 exact / 0.499 ±1 | 0.70 |
 | formality | **linear probe** (3 coarse bands) | **0.942** | 0.70 ✅ |
 | pattern | zero-shot | not measurable* | 0.80 |
@@ -40,6 +41,7 @@ Four Colab notebooks. Run in order. Everything is idempotent and survives sessio
 
 - **TFLite was rejected.** `onnx2tf` produced a model with cosine **-0.12** vs PyTorch; int8 dynamic quantization scored **0.11**. FastViT is too sensitive for those paths without calibration.
 - **Ship fp32 ONNX** (88.7 MB) with `onnxruntime-react-native`. Parity is exact. Static int8 with a calibration set is the later optimization.
+- **Color uses classical CV, not a probe.** Center-crop median RGB → nearest palette anchor. Perfect on solid colors; robust on garment close-ups. The color probe stays in `probes.json` only as a diagnostic.
 - The app applies probes as `argmax(W·e + b)` in TypeScript — no extra runtime.
 
 ## Bundle contents

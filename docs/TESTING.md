@@ -25,9 +25,10 @@ The APK is debug-signed for testing, not Play Store distribution.
 
 ## What is real vs mock
 
-- **Tagging:** on-device MobileCLIP-S1 ONNX + linear probes. No network needed.
-  Slot and formality are strong; color is the weakest tag — correct it once and it
-  becomes training data for the next probe version.
+- **Tagging:** on-device MobileCLIP-S1 ONNX + linear probes for slot/formality,
+  classical CV for color. No network needed. Color is strong on solid garments;
+  patterned/multi-color pieces may need a correction — those corrections become
+  training data for the next probe version.
 - **Recommendations:** the real `@styleme/engine` runs locally, offline.
 - **API:** `https://styleme-api.style-me.workers.dev` (Cloudflare Worker + D1)
   is live for auth/sync/recommend. The app currently computes locally and can
