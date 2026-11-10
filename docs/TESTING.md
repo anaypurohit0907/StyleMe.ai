@@ -2,7 +2,9 @@
 
 ## Install
 
-1. Open **https://github.com/anaypurohit0907/StyleMe.ai/releases/tag/apk-latest** on the phone.
+1. Scan this with the phone (or open **https://github.com/anaypurohit0907/StyleMe.ai/releases/tag/apk-latest**):
+
+   ![APK QR](apk-qr.png)
 2. Download `app-release.apk`.
 3. Allow "install unknown apps" for the browser/file manager when prompted.
 4. Install and open **StyleMe**.
