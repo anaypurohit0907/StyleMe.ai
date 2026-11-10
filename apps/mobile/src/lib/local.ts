@@ -81,7 +81,14 @@ export async function getWeather(): Promise<Weather> {
     const url =
       `https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}` +
       `&longitude=${pos.coords.longitude}&current=temperature_2m,rain&timezone=auto`;
-    const res = await fetch(url);
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 3000);
+    let res: Response;
+    try {
+      res = await fetch(url, { signal: ctrl.signal });
+    } finally {
+      clearTimeout(timer);
+    }
     if (!res.ok) throw new Error(`weather ${res.status}`);
     const body = (await res.json()) as {
       current?: { temperature_2m?: number; rain?: number };

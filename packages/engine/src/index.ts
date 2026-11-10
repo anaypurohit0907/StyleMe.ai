@@ -165,11 +165,28 @@ export function recommend(input: RecommendInput): RecommendResult {
   scored.sort((a, b) => b.base - a.base);
   const perSig = new Map<string, number>();
   const kept: Scored[] = [];
+  const dropped: Scored[] = [];
   for (const s of scored) {
     const count = perSig.get(s.sig) ?? 0;
-    if (count >= 2) continue;
+    if (count >= 2) {
+      dropped.push(s);
+      continue;
+    }
     perSig.set(s.sig, count + 1);
     kept.push(s);
+  }
+
+  // Product rule: always offer at least 3 options. If signature dedupe
+  // collapsed the list, fill with the best remaining distinct outfits.
+  if (kept.length < topK) {
+    const seen = new Set(kept.map((s) => s.outfit.garmentIds.join("+")));
+    for (const s of dropped) {
+      if (kept.length >= topK) break;
+      const key = s.outfit.garmentIds.join("+");
+      if (seen.has(key)) continue;
+      seen.add(key);
+      kept.push(s);
+    }
   }
 
   // Exploration pass.

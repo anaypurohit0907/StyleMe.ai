@@ -35,6 +35,18 @@ describe("recommend() invariants", () => {
     }
   });
 
+  it("still returns 3 options when signature dedupe collapses the list", () => {
+    const neutral = makeWardrobe({ seed: 7, neutralsOnly: true });
+    const res = recommend({
+      userId: "u-neutral",
+      wardrobe: neutral,
+      context,
+      prefs: emptyPreference(),
+      topK: 3,
+    });
+    expect(res.outfits.length).toBe(3);
+  });
+
   it("NEVER suggests items in the wash (hard filter)", () => {
     const washed: Garment[] = wardrobe.map((g, i) =>
       i < 12 ? { ...g, status: "in_wash" as const } : g,

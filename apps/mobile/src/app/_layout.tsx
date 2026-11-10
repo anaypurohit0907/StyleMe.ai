@@ -12,13 +12,20 @@ function Gate() {
   useEffect(() => {
     (async () => {
       await getDb();
-      // Native dev builds can opt into ONNX; Expo Go stays on the mock.
+      // Native dev builds can opt into ONNX; Expo Go can use the local server.
       if (process.env.EXPO_PUBLIC_VISION === "onnx") {
         try {
           const { createOnnxTagger } = require("@/lib/onnx-tagger") as typeof import("@/lib/onnx-tagger");
           setVisionTagger(createOnnxTagger());
         } catch {
           // native module unavailable — mock tagger stays active
+        }
+      } else if (process.env.EXPO_PUBLIC_VISION === "remote") {
+        try {
+          const { remoteTagger } = require("@/lib/remote-tagger") as typeof import("@/lib/remote-tagger");
+          setVisionTagger(remoteTagger);
+        } catch {
+          // local tagger unavailable — mock tagger stays active
         }
       }
       const onboarded = await metaGet("onboarded");

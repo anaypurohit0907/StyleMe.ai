@@ -2,9 +2,9 @@ import { useCallback, useState } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
 import type { Garment, Occasion, ScoredOutfit } from "@styleme/schema";
-import { colors, occasionLabel, occasions, radius, space } from "@styleme/design";
+import { colors, occasionLabel, occasions, paletteSwatch, radius, space } from "@styleme/design";
 import { Btn, Caption, Card, Chip, Empty, Screen, Scroll, Title } from "@/components/ui";
-import { listGarments, logWear } from "@/lib/db";
+import { listGarments, logWear, upsertGarment } from "@/lib/db";
 import { getWeather, recommendLocal, recordPick, type LocalToday, type Weather } from "@/lib/local";
 
 export default function Today() {
@@ -28,11 +28,14 @@ export default function Today() {
       setAvailable(free);
       const w = await getWeather();
       setWeather(w);
-      if (free.length >= 2) {
-        setToday(await recommendLocal(free, occasion, w, seed));
+      if (free.length >= 3) {
+        const result = await recommendLocal(free, occasion, w, seed);
+        setToday(result.outfits.length > 0 ? result : null);
       } else {
         setToday(null);
       }
+    } catch {
+      setToday(null);
     } finally {
       setLoading(false);
     }
@@ -52,6 +55,35 @@ export default function Today() {
   }
 
   const byId = new Map(garments.map((g) => [g.id, g]));
+  const owned = new Set(available.map((g) => g.attrs.slot));
+  const missing: string[] = [];
+  if (!owned.has("shoes")) missing.push("shoes");
+  if (!((owned.has("top") && owned.has("bottom")) || owned.has("dress"))) {
+    missing.push("a top + bottom (or a dress)");
+  }
+
+  async function seedDemo() {
+    const demo = [
+      { slot: "top", colors: ["white"], pattern: "solid", fit: "regular", formality: 2, season: "all", material: "light" },
+      { slot: "bottom", colors: ["navy"], pattern: "solid", fit: "regular", formality: 2, season: "all", material: "medium" },
+      { slot: "shoes", colors: ["white"], pattern: "solid", fit: "regular", formality: 2, season: "all", material: "medium" },
+      { slot: "outerwear", colors: ["black"], pattern: "solid", fit: "regular", formality: 3, season: "cool", material: "heavy" },
+      { slot: "top", colors: ["cream"], pattern: "solid", fit: "relaxed", formality: 3, season: "cool", material: "medium" },
+      { slot: "bottom", colors: ["black"], pattern: "solid", fit: "slim", formality: 3, season: "all", material: "medium" },
+    ] as const;
+    for (let i = 0; i < demo.length; i++) {
+      await upsertGarment({
+        id: `demo_${i}`,
+        attrs: { ...demo[i], colors: [...demo[i].colors] } as Garment["attrs"],
+        status: "available",
+        photoRef: "",
+        addedAt: Date.now(),
+        lastWornAt: null,
+        corrections: [],
+      });
+    }
+    setSeed((x) => x + 1);
+  }
 
   return (
     <Screen>
@@ -92,9 +124,16 @@ export default function Today() {
             body={
               available.length === 0
                 ? "Add your first top, bottom, and shoes. Photos stay on your phone."
-                : "Add at least a top + bottom (or a dress) and shoes to get 3 outfits."
+                : missing.length > 0
+                  ? `Still missing: ${missing.join(" and ")}. Add those and 3 outfits appear.`
+                  : "Those pieces don't form a complete outfit yet. Add shoes or a dress, or try the demo."
             }
-            action={<Btn label="Add clothes" onPress={() => router.push("/(tabs)/capture")} />}
+            action={
+              <View style={{ gap: space.s, alignSelf: "stretch" }}>
+                <Btn label="Add clothes" onPress={() => router.push("/(tabs)/capture")} />
+                <Btn label="Try a demo wardrobe" variant="ghost" onPress={() => void seedDemo()} />
+              </View>
+            }
           />
         )}
 
@@ -107,10 +146,14 @@ export default function Today() {
             <View style={s.thumbs}>
               {outfit.garmentIds.map((id) => {
                 const g = byId.get(id);
-                return g ? (
+                if (!g) return <View key={id} style={[s.thumb, { backgroundColor: colors.surfaceAlt }]} />;
+                return g.photoRef ? (
                   <Image key={id} source={{ uri: g.photoRef }} style={s.thumb} />
                 ) : (
-                  <View key={id} style={[s.thumb, { backgroundColor: colors.surfaceAlt }]} />
+                  <View
+                    key={id}
+                    style={[s.thumb, { backgroundColor: paletteSwatch[g.attrs.colors[0]] ?? colors.surfaceAlt }]}
+                  />
                 );
               })}
             </View>
@@ -140,6 +183,6 @@ const s = StyleSheet.create({
   chips: { flexDirection: "row", flexWrap: "wrap", gap: space.s },
   rowBetween: { flexDirection: "row", justifyContent: "space-between" },
   thumbs: { flexDirection: "row", gap: space.s },
-  thumb: { flex: 1, aspectRatio: 0.8, borderRadius: radius.sm, backgroundColor: colors.surfaceAlt },
+  thumb: { flex: 1, aspectRatio: 0.8, borderRadius: radius.sm, backgroundColor: colors.surfaceAlt, borderWidth: StyleSheet.hairlineWidth, borderColor: colors.line },
   notToday: { alignItems: "center", paddingVertical: space.m },
 });

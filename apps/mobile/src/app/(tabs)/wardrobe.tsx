@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
 import type { Garment } from "@styleme/schema";
-import { colors, radius, space } from "@styleme/design";
+import { colors, paletteSwatch, radius, space } from "@styleme/design";
 import { Btn, Caption, Chip, Empty, Screen, Scroll, Title } from "@/components/ui";
 import { listGarments } from "@/lib/db";
 
@@ -48,7 +48,11 @@ export default function Wardrobe() {
           <View style={s.grid}>
             {shown.map((g) => (
               <Pressable key={g.id} onPress={() => router.push(`/item/${g.id}`)} style={s.tile}>
-                <Image source={{ uri: g.photoRef }} style={s.img} />
+                {g.photoRef ? (
+                  <Image source={{ uri: g.photoRef }} style={s.img} />
+                ) : (
+                  <View style={[s.img, { backgroundColor: paletteSwatch[g.attrs.colors[0]] ?? colors.surfaceAlt }]} />
+                )}
                 <View style={s.tileBody}>
                   <Caption>
                     {g.attrs.slot} · {g.attrs.colors.join(" / ")}
@@ -78,6 +82,6 @@ const s = StyleSheet.create({
     borderColor: colors.line,
     overflow: "hidden",
   },
-  img: { width: "100%", aspectRatio: 0.8, backgroundColor: colors.surfaceAlt },
+  img: { width: "100%", aspectRatio: 0.8, backgroundColor: colors.surfaceAlt, borderWidth: StyleSheet.hairlineWidth, borderColor: colors.line },
   tileBody: { padding: space.s, gap: 2 },
 });
