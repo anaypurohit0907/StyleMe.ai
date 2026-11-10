@@ -10,7 +10,9 @@
 4. Install and open **StyleMe**.
 
 Requirements: arm64 Android phone (almost all phones since ~2017), Android 8+.
-The APK is debug-signed for testing, not Play Store distribution.
+The APK is signed with a stable test key, not Play Store distribution.
+If you installed an earlier debug-signed build, uninstall it once before installing
+this one (Android rejects signature changes on update).
 
 ## First run (about 2 minutes)
 
