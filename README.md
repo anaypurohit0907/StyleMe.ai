@@ -54,6 +54,16 @@ See [`ml/README.md`](ml/README.md). Run notebooks in order:
 
 The app bundle is `ml/artifacts/styleme_vision_v1.zip`. Copy the ONNX + JSON files into `apps/mobile/assets/vision/` for a dev build.
 
+## Install the test APK
+
+Download the latest arm64 APK from
+[Releases](https://github.com/anaypurohit0907/StyleMe.ai/releases) and install it
+on an Android phone (allow "install unknown apps"). It is debug-signed for
+testing, not Play Store distribution.
+
+The release APK bundles JS + the MobileCLIP-S1 ONNX model, so tagging runs
+on-device with no laptop/Metro.
+
 ## Deploy the worker
 
 ```bash

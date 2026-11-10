@@ -9,7 +9,7 @@ import * as FileSystem from "expo-file-system/legacy";
 import jpeg from "jpeg-js";
 import { InferenceSession, Tensor } from "onnxruntime-react-native";
 import type { ColorName, Fit, GarmentAttrs, Pattern, Slot } from "@styleme/schema";
-import type { VisionTagger } from "./vision";
+import { mockTagger, type VisionTagger } from "./vision";
 
 const SIZE = 256;
 const MEAN = [0.485, 0.456, 0.406];
@@ -134,31 +134,36 @@ class OnnxTagger implements VisionTagger {
   }
 
   async tag(uri: string): Promise<GarmentAttrs> {
-    const session = await this.load();
-    const img = await decode(uri);
-    const input = resizeRgba(img.data, img.width, img.height, SIZE);
-    const tensor = new Tensor("float32", input, [1, 3, SIZE, SIZE]);
-    const out = await session.run({ pixels: tensor });
-    const first = Object.values(out)[0];
-    const e = normalize(Array.from(first.data as Float32Array));
+    try {
+      const session = await this.load();
+      const img = await decode(uri);
+      const input = resizeRgba(img.data, img.width, img.height, SIZE);
+      const tensor = new Tensor("float32", input, [1, 3, SIZE, SIZE]);
+      const out = await session.run({ pixels: tensor });
+      const first = Object.values(out)[0];
+      const e = normalize(Array.from(first.data as Float32Array));
 
-    const slot = (applyProbe(e, "slot") ?? zeroShot(e, "slot") ?? "top") as Slot;
-    const color = (applyProbe(e, "color") ?? zeroShot(e, "color_ml") ?? "black") as ColorName;
-    const formalityLabel = applyProbe(e, "formality") ?? zeroShot(e, "formality") ?? "3";
-    const pattern = (zeroShot(e, "pattern") ?? "solid") as Pattern;
-    const fit = (zeroShot(e, "fit") ?? "regular") as Fit;
-    const season = (zeroShot(e, "seasons") ?? "all") as GarmentAttrs["season"];
-    const material = (zeroShot(e, "materials") ?? "medium") as GarmentAttrs["material"];
+      const slot = (applyProbe(e, "slot") ?? zeroShot(e, "slot") ?? "top") as Slot;
+      const color = (applyProbe(e, "color") ?? zeroShot(e, "color_ml") ?? "black") as ColorName;
+      const formalityLabel = applyProbe(e, "formality") ?? zeroShot(e, "formality") ?? "3";
+      const pattern = (zeroShot(e, "pattern") ?? "solid") as Pattern;
+      const fit = (zeroShot(e, "fit") ?? "regular") as Fit;
+      const season = (zeroShot(e, "seasons") ?? "all") as GarmentAttrs["season"];
+      const material = (zeroShot(e, "materials") ?? "medium") as GarmentAttrs["material"];
 
-    return {
-      slot,
-      colors: [color],
-      pattern,
-      fit,
-      formality: Math.max(1, Math.min(5, parseInt(formalityLabel, 10) || 3)),
-      season,
-      material,
-    };
+      return {
+        slot,
+        colors: [color],
+        pattern,
+        fit,
+        formality: Math.max(1, Math.min(5, parseInt(formalityLabel, 10) || 3)),
+        season,
+        material,
+      };
+    } catch (e) {
+      console.warn("ONNX tagger failed, using mock:", e);
+      return mockTagger.tag(uri);
+    }
   }
 }
 
