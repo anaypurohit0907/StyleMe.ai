@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: typecheck + tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Typecheck shared packages
+        run: npx turbo run typecheck --filter=@styleme/schema --filter=@styleme/engine --filter=@styleme/worker --filter=@styleme/mobile
+      - name: Engine + worker tests
+        run: npx turbo run test --filter=@styleme/engine --filter=@styleme/worker
+
+  ml-notebooks:
+    name: validate notebooks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install nbformat
+      - name: Validate .ipynb structure and Python syntax
+        run: |
+          python - <<'PY'
+          import glob, json, re, sys
+          import nbformat
+
+          failed = False
+          for path in sorted(glob.glob("ml/*.ipynb")):
+              nb = nbformat.read(path, as_version=4)
+              nbformat.validate(nb)
+              for i, cell in enumerate(nb.cells):
+                  if cell.cell_type != "code":
+                      continue
+                  src = re.sub(r"(?m)^!(pip|cp|cd|ls)\b.*", "# shell", cell.source)
+                  try:
+                      compile(src, f"{path}:cell{i}", "exec")
+                  except SyntaxError as e:
+                      print(f"{path}:cell{i}: {e}")
+                      failed = True
+              print(f"ok {path} ({len(nb.cells)} cells)")
+          sys.exit(1 if failed else 0)
+          PY

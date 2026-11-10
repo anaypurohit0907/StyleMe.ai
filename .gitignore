@@ -1,0 +1,21 @@
+node_modules/
+dist/
+.turbo/
+*.log
+.DS_Store
+.env
+.env.*
+!.env.example
+.wrangler/
+*.dev.vars
+.expo/
+expo-env.d.ts
+# ML
+ml/artifacts/
+ml/data/
+**/kaggle.json
+.ipynb_checkpoints/
+*.tflite
+*.mlpackage
+*.onnx
+*.onnx.data

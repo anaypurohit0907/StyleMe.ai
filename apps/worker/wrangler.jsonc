@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "styleme-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-01-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    // Copy to .dev.vars for local dev (never commit):
+    //   JWT_SECRET=<32+ chars random>
+    //   GEMINI_API_KEY= (optional, phase 6 tone rewrites)
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "styleme",
+      "database_id": "REPLACE_WITH_WRANGLER_D1_CREATE_OUTPUT"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "PHOTOS",
+      "bucket_name": "styleme-photos"
+    }
+  ]
+}
