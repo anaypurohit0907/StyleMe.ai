@@ -38,7 +38,7 @@ import { createWeatherCache, fetchWeather } from "./weather";
 
 interface Bindings {
   DB: D1Database;
-  PHOTOS: R2Bucket;
+  PHOTOS?: R2Bucket;
   JWT_SECRET: string;
   GEMINI_API_KEY?: string;
 }
@@ -312,6 +312,9 @@ app.post("/v1/photos/:id", auth, async (c) => {
   }
   const base64 = body.data.split(",")[1];
   if (!base64) return c.json({ error: "bad data URI" }, 400);
+  if (!c.env.PHOTOS) {
+    return c.json({ error: "photo storage is not configured (R2 disabled)" }, 503);
+  }
   const key = `${c.get("userId")}/${id}.jpg`;
   await c.env.PHOTOS.put(key, base64, { httpMetadata: { contentType: "image/jpeg" } });
   return c.json({ ok: true, key });

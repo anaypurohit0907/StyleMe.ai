@@ -10,6 +10,8 @@ dist/
 *.dev.vars
 .expo/
 expo-env.d.ts
+apps/mobile/android/
+apps/mobile/ios/
 # ML
 ml/artifacts/
 ml/data/

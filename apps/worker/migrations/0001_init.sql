@@ -1,5 +1,5 @@
 -- 0001_init.sql — StyleMe core schema (D1/SQLite)
-PRAGMA journal_mode = WAL;
+-- D1 manages journal mode itself; PRAGMA journal_mode is not permitted.
 
 CREATE TABLE IF NOT EXISTS users (
   id            TEXT PRIMARY KEY,          -- device id

@@ -13,13 +13,15 @@
     {
       "binding": "DB",
       "database_name": "styleme",
-      "database_id": "REPLACE_WITH_WRANGLER_D1_CREATE_OUTPUT"
+      "database_id": "7d92e3e6-58f1-42e4-91d6-91b5e3b23c71"
     }
   ],
-  "r2_buckets": [
-    {
-      "binding": "PHOTOS",
-      "bucket_name": "styleme-photos"
-    }
-  ]
+  // R2 is optional: enable it in the Cloudflare dashboard, create the bucket,
+  // then uncomment this block. Photos stay on-device by default anyway.
+  // "r2_buckets": [
+  //   {
+  //     "binding": "PHOTOS",
+  //     "bucket_name": "styleme-photos"
+  //   }
+  // ]
 }
