@@ -158,7 +158,11 @@ export default function Today() {
               })}
             </View>
             <Caption>
-              {outfit.reasons.find((r) => r.score > 0)?.text ?? "Complete, coherent, yours."}
+              {outfit.reasons
+                .filter((r) => r.score > 0.05)
+                .slice(0, 3)
+                .map((r) => r.text)
+                .join(" · ") || "Complete, coherent, yours."}
             </Caption>
             <Btn
               label={picked?.garmentIds.join("+") === outfit.garmentIds.join("+") ? "Picked" : "Wear this"}
