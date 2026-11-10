@@ -73,6 +73,9 @@ jobs:
         env:
           EXPO_PUBLIC_API_BASE: https://styleme-api.style-me.workers.dev
           EXPO_PUBLIC_VISION: onnx
+          STYLEME_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          STYLEME_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          STYLEME_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           chmod +x gradlew
           ./gradlew assembleRelease --no-daemon \
