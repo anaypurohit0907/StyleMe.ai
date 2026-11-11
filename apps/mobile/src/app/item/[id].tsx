@@ -82,6 +82,7 @@ export default function ItemDetail() {
         <Title>{draft.slot}</Title>
         <Caption>
           {draft.colors.join(" / ")} · {draft.pattern} · {draft.fit} · formality {draft.formality}/5
+          {draft.subtype ? ` · ${draft.subtype}` : ""}
         </Caption>
         {g.photoRef ? (
           <Image source={{ uri: g.photoRef }} style={s.img} />

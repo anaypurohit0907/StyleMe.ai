@@ -62,6 +62,42 @@ describe("recommend() invariants", () => {
     expect(new Set(tops).size).toBeGreaterThanOrEqual(2);
   });
 
+  it("prefers gym subtypes (t-shirt/shorts/sneakers) over a button-down", () => {
+    const make = (id: string, slot: Garment["attrs"]["slot"], subtype: string) => ({
+      id,
+      attrs: {
+        slot,
+        colors: ["white"] as const,
+        pattern: "solid" as const,
+        fit: "regular" as const,
+        formality: 2,
+        season: "all" as const,
+        material: "light" as const,
+        subtype,
+      },
+      status: "available" as const,
+      photoRef: "",
+      addedAt: 1,
+      lastWornAt: null,
+      corrections: [],
+    });
+    const gymWardrobe: Garment[] = [
+      make("tee", "top", "t-shirt"),
+      make("shirt", "top", "button-down shirt"),
+      make("shorts", "bottom", "shorts"),
+      make("sneakers", "shoes", "sneakers"),
+    ];
+    const res = recommend({
+      userId: "u-gym",
+      wardrobe: gymWardrobe,
+      context: makeContext({ occasion: "gym", tempC: 22 }),
+      prefs: emptyPreference(),
+      topK: 3,
+    });
+    expect(res.outfits[0]?.garmentIds).toContain("tee");
+    expect(res.outfits[0]?.garmentIds).not.toContain("shirt");
+  });
+
   it("NEVER suggests items in the wash (hard filter)", () => {
     const washed: Garment[] = wardrobe.map((g, i) =>
       i < 12 ? { ...g, status: "in_wash" as const } : g,

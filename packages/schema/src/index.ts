@@ -79,6 +79,8 @@ export const GarmentAttrsSchema = z.object({
   formality: FormalitySchema,
   season: SeasonSchema,
   material: MaterialSchema,
+  /** Supervised subtype: t-shirt, button-down shirt, shorts, sneakers... */
+  subtype: z.string().max(32).optional(),
   /** Optional free text the user typed ("my lucky blue shirt"). */
   nickname: z.string().max(64).optional(),
 });

@@ -20,6 +20,7 @@ function ort(): OrtModule {
 }
 
 const SIZE = 256;
+const SUBTYPE_SIZE = 224;
 const MEAN = [0.485, 0.456, 0.406];
 const STD = [0.229, 0.224, 0.225];
 
@@ -42,6 +43,10 @@ interface TaxonomyFile {
 const prompts = require("../../assets/vision/prompt_embeddings.json") as PromptFile;
 const taxonomy = require("../../assets/vision/taxonomy.json") as TaxonomyFile;
 const probes = require("../../assets/vision/probes.json") as Record<string, Probe>;
+const subtypeMeta = require("../../assets/vision/subtype_mobilenet.json") as {
+  labels: string[];
+  slot_by_label: Record<string, string>;
+};
 
 function groupRows(group: string): { values: string[]; rows: number[][] } {
   const values: string[] = [];
@@ -167,6 +172,7 @@ async function decode(uri: string): Promise<{ data: Uint8Array; width: number; h
 class OnnxTagger implements VisionTagger {
   readonly name = "mobileclip-s1-onnx";
   private session: Promise<import("onnxruntime-react-native").InferenceSession> | null = null;
+  private subtypeSession: Promise<import("onnxruntime-react-native").InferenceSession> | null = null;
 
   private load(): Promise<import("onnxruntime-react-native").InferenceSession> {
     if (!this.session) {
@@ -178,6 +184,35 @@ class OnnxTagger implements VisionTagger {
       })();
     }
     return this.session;
+  }
+
+  private loadSubtype(): Promise<import("onnxruntime-react-native").InferenceSession> {
+    if (!this.subtypeSession) {
+      this.subtypeSession = (async () => {
+        const asset = Asset.fromModule(require("../../assets/vision/subtype_mobilenet.onnx"));
+        await asset.downloadAsync();
+        const path = (asset.localUri ?? asset.uri).replace(/^file:\/\//, "");
+        return ort().InferenceSession.create(path, { executionProviders: ["cpu"] });
+      })();
+    }
+    return this.subtypeSession;
+  }
+
+  private async classifySubtype(img: { data: Uint8Array; width: number; height: number }, slot: Slot): Promise<string | undefined> {
+    const session = await this.loadSubtype();
+    const input = resizeRgba(img.data, img.width, img.height, SUBTYPE_SIZE);
+    const tensor = new (ort().Tensor)("float32", input, [1, 3, SUBTYPE_SIZE, SUBTYPE_SIZE]);
+    const out = await session.run({ pixels: tensor });
+    const logits = Array.from(Object.values(out)[0].data as Float32Array);
+    const max = Math.max(...logits);
+    const exps = logits.map((x) => Math.exp(x - max));
+    const sum = exps.reduce((a, b) => a + b, 0);
+    let best = 0;
+    for (let i = 1; i < logits.length; i++) if (logits[i]! > logits[best]!) best = i;
+    const confidence = (exps[best] ?? 0) / sum;
+    const label = subtypeMeta.labels[best];
+    if (!label || confidence < 0.6) return undefined;
+    return subtypeMeta.slot_by_label[label] === slot ? label : undefined;
   }
 
   async tag(uri: string): Promise<GarmentAttrs> {
@@ -192,7 +227,20 @@ class OnnxTagger implements VisionTagger {
 
       const slot = (applyProbe(e, "slot") ?? zeroShot(e, "slot") ?? "top") as Slot;
       const color = dominantColor(img.data, img.width, img.height);
+      let subtype: string | undefined;
+      try {
+        subtype = await this.classifySubtype(img, slot);
+      } catch (err) {
+        console.warn("subtype model unavailable:", err);
+      }
       const formalityLabel = applyProbe(e, "formality") ?? zeroShot(e, "formality") ?? "3";
+      let formality = Math.max(1, Math.min(5, parseInt(formalityLabel, 10) || 3));
+      if (subtype) {
+        const casual = new Set(["t-shirt", "tank top", "shorts", "joggers", "sneakers", "running shoes", "sandals"]);
+        const formal = new Set(["button-down shirt", "trousers", "dress shoes", "skirt", "dress"]);
+        if (casual.has(subtype)) formality = Math.min(formality, 2);
+        if (formal.has(subtype)) formality = Math.max(formality, 3);
+      }
       const pattern = (zeroShot(e, "pattern") ?? "solid") as Pattern;
       const fit = (zeroShot(e, "fit") ?? "regular") as Fit;
       const season = (zeroShot(e, "seasons") ?? "all") as GarmentAttrs["season"];
@@ -203,9 +251,10 @@ class OnnxTagger implements VisionTagger {
         colors: [color],
         pattern,
         fit,
-        formality: Math.max(1, Math.min(5, parseInt(formalityLabel, 10) || 3)),
+        formality,
         season,
         material,
+        subtype,
       };
     } catch (e) {
       console.warn("ONNX tagger failed, using mock:", e);

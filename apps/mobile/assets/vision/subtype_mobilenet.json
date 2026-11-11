@@ -1,0 +1,41 @@
+{
+ "labels": [
+  "button-down shirt",
+  "t-shirt",
+  "sweater",
+  "tank top",
+  "trousers",
+  "shorts",
+  "skirt",
+  "dress"
+ ],
+ "slot_by_label": {
+  "button-down shirt": "top",
+  "t-shirt": "top",
+  "sweater": "top",
+  "tank top": "top",
+  "trousers": "bottom",
+  "shorts": "bottom",
+  "skirt": "bottom",
+  "dress": "dress"
+ },
+ "acc": 0.69,
+ "input": [
+  1,
+  3,
+  224,
+  224
+ ],
+ "normalize": {
+  "mean": [
+   0.485,
+   0.456,
+   0.406
+  ],
+  "std": [
+   0.229,
+   0.224,
+   0.225
+  ]
+ }
+}

@@ -30,8 +30,9 @@ this one (Android rejects signature changes on update).
 ## What is real vs mock
 
 - **Tagging:** on-device MobileCLIP-S1 ONNX + linear probes for slot/formality,
-  classical CV for color. No network needed. Color is strong on solid garments;
-  patterned/multi-color pieces may need a correction — those corrections become
+  classical CV for color, and a small MobileNetV3 subtype classifier
+  (t-shirt/shirt/shorts/etc., confidence-gated). No network needed.
+  Patterned/multi-color pieces may need a correction — those corrections become
   training data for the next probe version.
 - **Recommendations:** the real `@styleme/engine` runs locally, offline.
 - **API:** `https://styleme-api.style-me.workers.dev` (Cloudflare Worker + D1)

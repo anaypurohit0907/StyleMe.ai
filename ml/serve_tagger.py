@@ -36,6 +36,8 @@ input_name = session.get_inputs()[0].name
 prompt_emb = np.load(ART / "prompt_embeddings.npy").astype(np.float32)
 taxonomy = json.loads((ART / "taxonomy.json").read_text())
 probes = json.loads((ART / "probes.json").read_text())
+subtype_session = ort.InferenceSession(str(ART / "subtype_mobilenet.onnx"), providers=["CPUExecutionProvider"])
+subtype_meta = json.loads((ART / "subtype_mobilenet.json").read_text())
 palette = {
     name: np.array(rgb, dtype=np.float32)
     for name, rgb in yaml.safe_load((Path(__file__).parent / "taxonomy.yaml").read_text())["palette"].items()
@@ -57,6 +59,20 @@ def zero_shot(embedding: np.ndarray, group: str) -> str | None:
     if not table:
         return None
     return max(table.items(), key=lambda kv: float(np.dot(embedding, kv[1])))[0]
+
+
+def classify_subtype(im: Image.Image, slot: str) -> str | None:
+    small = im.resize((224, 224), Image.BICUBIC)
+    arr = np.asarray(small, dtype=np.float32) / 255.0
+    arr = np.transpose((arr - MEAN) / STD, (2, 0, 1))[None].astype(np.float32)
+    logits = np.asarray(subtype_session.run(None, {subtype_session.get_inputs()[0].name: arr})[0]).ravel()
+    probs = np.exp(logits - logits.max())
+    probs /= probs.sum()
+    idx = int(probs.argmax())
+    label = subtype_meta["labels"][idx]
+    if probs[idx] < 0.6 or subtype_meta["slot_by_label"].get(label) != slot:
+        return None
+    return label
 
 
 def apply_probe(embedding: np.ndarray, group: str) -> str | None:
@@ -118,6 +134,14 @@ def tag(req: TagRequest) -> dict:
         formality = max(1, min(5, int(formality_raw)))
     except ValueError:
         formality = 3
+    subtype = classify_subtype(im, slot)
+    if subtype:
+        casual = {"t-shirt", "tank top", "shorts", "joggers", "sneakers", "running shoes", "sandals"}
+        formal = {"button-down shirt", "trousers", "dress shoes", "skirt", "dress"}
+        if subtype in casual:
+            formality = min(formality, 2)
+        if subtype in formal:
+            formality = max(formality, 3)
 
     return {
         "slot": slot,
@@ -127,6 +151,7 @@ def tag(req: TagRequest) -> dict:
         "formality": formality,
         "season": zero_shot(e, "seasons") or "all",
         "material": zero_shot(e, "materials") or "medium",
+        "subtype": subtype,
     }
 
 

@@ -302,6 +302,56 @@ export const preferenceRule: Rule = (items, rc) => {
 };
 
 // ---------------------------------------------------------------------------
+// 9. Occasion/subtype fit (t-shirt vs button-down, shorts vs trousers)
+// ---------------------------------------------------------------------------
+
+const OCCASION_SUBTYPES: Partial<Record<Occasion, Partial<Record<string, Set<string>>>>> = {
+  gym: {
+    top: new Set(["t-shirt", "tank top", "sweatshirt"]),
+    bottom: new Set(["shorts", "joggers"]),
+    shoes: new Set(["sneakers", "running shoes"]),
+  },
+  beach: {
+    top: new Set(["t-shirt", "tank top", "top"]),
+    bottom: new Set(["shorts"]),
+    shoes: new Set(["sandals", "sneakers"]),
+  },
+  office: {
+    top: new Set(["button-down shirt", "sweater", "top"]),
+    bottom: new Set(["trousers", "jeans", "skirt"]),
+    shoes: new Set(["dress shoes", "flats", "heels"]),
+  },
+};
+
+export const occasionRule: Rule = (items, rc) => {
+  const table = OCCASION_SUBTYPES[rc.context.occasion];
+  if (!table) return { score: 0, text: "occasion neutral" };
+
+  let s = 0;
+  const good: string[] = [];
+  const bad: string[] = [];
+  for (const g of items) {
+    const allowed = table[g.attrs.slot];
+    if (!allowed || !g.attrs.subtype) continue;
+    if (allowed.has(g.attrs.subtype)) {
+      s += 0.18;
+      if (good.length < 2) good.push(g.attrs.subtype);
+    } else {
+      s -= 0.28;
+      if (bad.length < 2) bad.push(g.attrs.subtype);
+    }
+  }
+  s = Math.max(-0.7, Math.min(0.7, s));
+  const text =
+    good.length > 0
+      ? `made for ${rc.context.occasion}: ${good.join(", ")}`
+      : bad.length > 0
+        ? `not quite ${rc.context.occasion} gear`
+        : "occasion neutral";
+  return { score: s, text };
+};
+
+// ---------------------------------------------------------------------------
 // Rule registry & weights
 // ---------------------------------------------------------------------------
 
@@ -313,6 +363,7 @@ export interface EngineWeights {
   weather: number;
   rotation: number;
   preference: number;
+  occasion: number;
 }
 
 export const DEFAULT_WEIGHTS: EngineWeights = {
@@ -323,6 +374,7 @@ export const DEFAULT_WEIGHTS: EngineWeights = {
   weather: 0.9,
   rotation: 0.7,
   preference: 0.8,
+  occasion: 1.0,
 };
 
 export const RULES: { name: string; weightKey: keyof EngineWeights; fn: Rule }[] = [
@@ -333,4 +385,5 @@ export const RULES: { name: string; weightKey: keyof EngineWeights; fn: Rule }[]
   { name: "weather", weightKey: "weather", fn: weatherRule },
   { name: "rotation", weightKey: "rotation", fn: rotationRule },
   { name: "preference", weightKey: "preference", fn: preferenceRule },
+  { name: "occasion", weightKey: "occasion", fn: occasionRule },
 ];

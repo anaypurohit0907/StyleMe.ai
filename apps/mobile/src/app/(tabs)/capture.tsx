@@ -117,7 +117,7 @@ export default function Capture() {
           <Image source={{ uri }} style={s.preview} />
 
           <Card style={{ gap: space.s }}>
-            <Caption>Slot</Caption>
+            <Caption>Slot{attrs.subtype ? ` · ${attrs.subtype}` : ""}</Caption>
             <View style={s.wrap}>
               {SLOTS.map((v) => (
                 <Chip key={v} label={v} selected={attrs.slot === v} onPress={() => patch({ slot: v })} />
