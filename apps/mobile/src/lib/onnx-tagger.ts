@@ -8,10 +8,16 @@ import { Asset } from "expo-asset";
 import * as FileSystem from "expo-file-system/legacy";
 import jpeg from "jpeg-js";
 import { toByteArray } from "base64-js";
-import { InferenceSession, Tensor } from "onnxruntime-react-native";
 import type { ColorName, Fit, GarmentAttrs, Pattern, Slot } from "@styleme/schema";
 import { paletteSwatch } from "@styleme/design";
 import { mockTagger, type VisionTagger } from "./vision";
+
+type OrtModule = typeof import("onnxruntime-react-native");
+let ortModule: OrtModule | null = null;
+function ort(): OrtModule {
+  if (!ortModule) ortModule = require("onnxruntime-react-native") as OrtModule;
+  return ortModule;
+}
 
 const SIZE = 256;
 const MEAN = [0.485, 0.456, 0.406];
@@ -160,15 +166,15 @@ async function decode(uri: string): Promise<{ data: Uint8Array; width: number; h
 
 class OnnxTagger implements VisionTagger {
   readonly name = "mobileclip-s1-onnx";
-  private session: Promise<InferenceSession> | null = null;
+  private session: Promise<import("onnxruntime-react-native").InferenceSession> | null = null;
 
-  private load(): Promise<InferenceSession> {
+  private load(): Promise<import("onnxruntime-react-native").InferenceSession> {
     if (!this.session) {
       this.session = (async () => {
         const asset = Asset.fromModule(require("../../assets/vision/mobileclip_s1_image.onnx"));
         await asset.downloadAsync();
         const path = (asset.localUri ?? asset.uri).replace(/^file:\/\//, "");
-        return InferenceSession.create(path, { executionProviders: ["cpu"] });
+        return ort().InferenceSession.create(path, { executionProviders: ["cpu"] });
       })();
     }
     return this.session;
@@ -179,7 +185,7 @@ class OnnxTagger implements VisionTagger {
       const session = await this.load();
       const img = await decode(uri);
       const input = resizeRgba(img.data, img.width, img.height, SIZE);
-      const tensor = new Tensor("float32", input, [1, 3, SIZE, SIZE]);
+      const tensor = new (ort().Tensor)("float32", input, [1, 3, SIZE, SIZE]);
       const out = await session.run({ pixels: tensor });
       const first = Object.values(out)[0];
       const e = normalize(Array.from(first.data as Float32Array));
