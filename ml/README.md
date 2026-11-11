@@ -65,3 +65,11 @@ Copy into the app build (see `apps/mobile/src/vision/README.md`).
 - The CLI executes notebooks headless; `drive.mount` is skipped when `STYLEME_ROOT` is set.
 - Set `KAGGLE_API_TOKEN` in the kernel (preamble) before running 00.
 - Artifacts live in `/content/StyleMe` on the CLI runtime (ephemeral). Pull them out with `scp` through the CLI's SSH proxy before stopping the session.
+
+## Subtype experiments (negative)
+
+Tried supervised subtype probes (t-shirt vs button-down, shorts vs trousers):
+- Fashion Product Images, 28 classes, 8k images: **0.149** accuracy.
+- Fashionpedia train2020, high-res crops, top classes: **0.285** (random 0.25).
+
+MobileCLIP-S1 embeddings don't carry enough shape signal for subtypes. Scripts live in `ml/experiments/`. A fashion-specific backbone or end-to-end fine-tuning is required; not shipped.

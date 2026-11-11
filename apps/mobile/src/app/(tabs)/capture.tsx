@@ -24,6 +24,8 @@ export default function Capture() {
   const [attrs, setAttrs] = useState<GarmentAttrs | null>(null);
   const [busy, setBusy] = useState(false);
   const [cameraReady, setCameraReady] = useState(false);
+  const [cameraError, setCameraError] = useState<string | null>(null);
+  const [cameraKey, setCameraKey] = useState(0);
 
   // First open can sit on an unresolved permission. Ask proactively and keep
   // the UI honest while the camera hardware warms up.
@@ -196,15 +198,33 @@ export default function Capture() {
   return (
     <Screen style={{ padding: 0 }}>
       <CameraView
+        key={cameraKey}
         ref={cameraRef}
         style={{ flex: 1 }}
         facing="back"
-        onCameraReady={() => setCameraReady(true)}
+        onCameraReady={() => {
+          setCameraError(null);
+          setCameraReady(true);
+        }}
+        onMountError={(event) => {
+          setCameraReady(false);
+          setCameraError(event.message);
+        }}
       />
       {!cameraReady && (
         <View style={s.cameraLoading}>
           <ActivityIndicator color={colors.accent} size="large" />
-          <Caption>Starting camera…</Caption>
+          <Caption>{cameraError ? `Camera didn't start: ${cameraError}` : "Starting camera…"}</Caption>
+          {cameraError && (
+            <Btn
+              label="Retry camera"
+              variant="ghost"
+              onPress={() => {
+                setCameraError(null);
+                setCameraKey((k) => k + 1);
+              }}
+            />
+          )}
         </View>
       )}
       <View style={s.camBar}>
