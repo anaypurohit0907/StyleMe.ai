@@ -32,6 +32,15 @@ jobs:
           distribution: temurin
           java-version: 21
 
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/gradle-wrapper.properties', '**/*.gradle*', 'package-lock.json') }}
+          restore-keys: gradle-${{ runner.os }}-
+
       - name: Android SDK
         run: |
           echo "ANDROID_HOME=$ANDROID_HOME"
@@ -78,8 +87,10 @@ jobs:
           STYLEME_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           chmod +x gradlew
-          ./gradlew assembleRelease --no-daemon \
-            -PreactNativeArchitectures=arm64-v8a
+          ./gradlew assembleRelease --no-daemon --max-workers=4 \
+            -PreactNativeArchitectures=arm64-v8a \
+            -Pandroid.enableMinifyInReleaseBuilds=false \
+            -Pandroid.enablePngCrunchInReleaseBuilds=false
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
