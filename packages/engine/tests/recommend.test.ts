@@ -47,6 +47,21 @@ describe("recommend() invariants", () => {
     expect(res.outfits.length).toBe(3);
   });
 
+  it("varies garments across the 3 options", () => {
+    const res = recommend({
+      userId: "u-diverse",
+      wardrobe,
+      context,
+      prefs: emptyPreference(),
+      topK: 3,
+    });
+    const byId = new Map(wardrobe.map((g) => [g.id, g]));
+    const tops = res.outfits.map((o) =>
+      o.garmentIds.find((id) => byId.get(id)?.attrs.slot === "top"),
+    );
+    expect(new Set(tops).size).toBeGreaterThanOrEqual(2);
+  });
+
   it("NEVER suggests items in the wash (hard filter)", () => {
     const washed: Garment[] = wardrobe.map((g, i) =>
       i < 12 ? { ...g, status: "in_wash" as const } : g,

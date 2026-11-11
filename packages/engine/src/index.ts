@@ -200,7 +200,31 @@ export function recommend(input: RecommendInput): RecommendResult {
   }
 
   kept.sort((a, b) => b.final - a.final);
-  const top = kept.slice(0, Math.max(1, topK));
+
+  // Greedy diversity: penalize reusing the same garment across options so the
+  // three cards are actually different outfits, not one outfit with a swapped top.
+  const REUSE_PENALTY = 0.35;
+  const pool = [...kept];
+  const top: Scored[] = [];
+  const chosenIds = new Set<string>();
+  const limit = Math.max(1, topK);
+  while (top.length < limit && pool.length > 0) {
+    let bestIdx = 0;
+    let bestScore = -Infinity;
+    for (let i = 0; i < pool.length; i++) {
+      const candidate = pool[i]!;
+      const reuse = candidate.outfit.garmentIds.filter((id) => chosenIds.has(id)).length;
+      const adjusted = candidate.final - reuse * REUSE_PENALTY;
+      if (adjusted > bestScore) {
+        bestScore = adjusted;
+        bestIdx = i;
+      }
+    }
+    const [picked] = pool.splice(bestIdx, 1);
+    if (!picked) break;
+    top.push(picked);
+    for (const id of picked.outfit.garmentIds) chosenIds.add(id);
+  }
 
   // Missing-slot introspection so the app can say "add shoes".
   // Body is satisfied by (top AND bottom) OR dress. Shoes always required.

@@ -1,5 +1,5 @@
-import { useRef, useState } from "react";
-import { Image, Platform, StyleSheet, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { ActivityIndicator, Image, Platform, StyleSheet, View } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { useRouter } from "expo-router";
 import type { Fit, GarmentAttrs, Pattern, Slot } from "@styleme/schema";
@@ -23,6 +23,15 @@ export default function Capture() {
   const [uri, setUri] = useState<string | null>(null);
   const [attrs, setAttrs] = useState<GarmentAttrs | null>(null);
   const [busy, setBusy] = useState(false);
+  const [cameraReady, setCameraReady] = useState(false);
+
+  // First open can sit on an unresolved permission. Ask proactively and keep
+  // the UI honest while the camera hardware warms up.
+  useEffect(() => {
+    if (permission && permission.status === "undetermined" && permission.canAskAgain) {
+      void requestPermission();
+    }
+  }, [permission, requestPermission]);
 
   async function shoot() {
     setBusy(true);
@@ -78,6 +87,7 @@ export default function Capture() {
       <Screen>
         <Scroll>
           <Title>Camera</Title>
+          <ActivityIndicator color={colors.accent} style={{ marginTop: space.m }} />
           <Caption>Checking permission…</Caption>
         </Scroll>
       </Screen>
@@ -185,10 +195,26 @@ export default function Capture() {
 
   return (
     <Screen style={{ padding: 0 }}>
-      <CameraView ref={cameraRef} style={{ flex: 1 }} facing="back" />
+      <CameraView
+        ref={cameraRef}
+        style={{ flex: 1 }}
+        facing="back"
+        onCameraReady={() => setCameraReady(true)}
+      />
+      {!cameraReady && (
+        <View style={s.cameraLoading}>
+          <ActivityIndicator color={colors.accent} size="large" />
+          <Caption>Starting camera…</Caption>
+        </View>
+      )}
       <View style={s.camBar}>
         <Caption>Fill the frame with one piece.</Caption>
-        <Btn label={busy ? "Tagging…" : "Capture"} onPress={() => void shoot()} loading={busy} />
+        <Btn
+          label={busy ? "Tagging…" : "Capture"}
+          onPress={() => void shoot()}
+          loading={busy}
+          disabled={!cameraReady}
+        />
       </View>
     </Screen>
   );
@@ -197,6 +223,17 @@ export default function Capture() {
 const s = StyleSheet.create({
   preview: { width: "100%", aspectRatio: 0.8, borderRadius: radius.md, backgroundColor: colors.surfaceAlt },
   wrap: { flexDirection: "row", flexWrap: "wrap", gap: space.s, alignItems: "center" },
+  cameraLoading: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: space.s,
+    backgroundColor: colors.bg,
+  },
   camBar: {
     position: "absolute",
     left: 0,
