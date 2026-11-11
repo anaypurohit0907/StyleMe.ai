@@ -55,5 +55,13 @@
     "lint": "expo lint",
     "typecheck": "tsc --noEmit"
   },
-  "private": true
+  "private": true,
+  "expo": {
+    "autolinking": {
+      "searchPaths": [
+        "node_modules",
+        "../../node_modules"
+      ]
+    }
+  }
 }
