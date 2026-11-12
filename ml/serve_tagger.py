@@ -37,6 +37,8 @@ prompt_emb = np.load(ART / "prompt_embeddings.npy").astype(np.float32)
 taxonomy = json.loads((ART / "taxonomy.json").read_text())
 probes = json.loads((ART / "probes.json").read_text())
 subtype_session = ort.InferenceSession(str(ART / "subtype_mobilenet.onnx"), providers=["CPUExecutionProvider"])
+slot_session = ort.InferenceSession(str(ART / "slot_product_mobilenet.onnx"), providers=["CPUExecutionProvider"])
+slot_meta = json.loads((ART / "slot_product_mobilenet.json").read_text())
 subtype_meta = json.loads((ART / "subtype_mobilenet.json").read_text())
 palette = {
     name: np.array(rgb, dtype=np.float32)
@@ -59,6 +61,14 @@ def zero_shot(embedding: np.ndarray, group: str) -> str | None:
     if not table:
         return None
     return max(table.items(), key=lambda kv: float(np.dot(embedding, kv[1])))[0]
+
+
+def classify_slot(im: Image.Image) -> str:
+    small = im.resize((224, 224), Image.BICUBIC)
+    arr = np.asarray(small, dtype=np.float32) / 255.0
+    arr = np.transpose((arr - MEAN) / STD, (2, 0, 1))[None].astype(np.float32)
+    logits = np.asarray(slot_session.run(None, {slot_session.get_inputs()[0].name: arr})[0]).ravel()
+    return slot_meta["labels"][int(np.argmax(logits))]
 
 
 def classify_subtype(im: Image.Image, slot: str) -> str | None:
@@ -127,7 +137,7 @@ def tag(req: TagRequest) -> dict:
     out = session.run(None, {input_name: tensor})[0]
     e = normalize(np.asarray(out, dtype=np.float32).ravel())
 
-    slot = apply_probe(e, "slot") or zero_shot(e, "slot") or "top"
+    slot = classify_slot(im)
     color = dominant_color(im)
     formality_raw = apply_probe(e, "formality") or zero_shot(e, "formality") or "3"
     try:

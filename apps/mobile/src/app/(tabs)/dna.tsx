@@ -8,6 +8,7 @@ import { Btn, Caption, Card, Screen, Scroll, Title } from "@/components/ui";
 import { loadPrefs, savePrefs } from "@/lib/local";
 import { listGarments, metaSet, upsertGarment } from "@/lib/db";
 import { getVisionTagger } from "@/lib/vision";
+import { segmentGarment } from "@/lib/segment";
 
 function Bars({ data, swatches }: { data: Record<string, number>; swatches?: boolean }) {
   const entries = Object.entries(data)
@@ -60,8 +61,15 @@ export default function DNA() {
         setRetagProgress(`${done}/${garments.length}`);
         if (!g.photoRef) continue;
         try {
-          const attrs = await tagger.tag(g.photoRef);
-          await upsertGarment({ ...g, attrs });
+          const source = g.originalRef ?? g.photoRef;
+          const seg = await segmentGarment(source, g.id);
+          const attrs = await tagger.tag(seg.classifyUri);
+          await upsertGarment({
+            ...g,
+            attrs,
+            photoRef: seg.cutoutUri,
+            originalRef: g.originalRef ?? source,
+          });
         } catch {
           // keep the old tags for this item
         }

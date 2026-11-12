@@ -172,12 +172,13 @@ export async function persistPhoto(uri: string, id: string): Promise<string> {
   return dest;
 }
 
-export function newGarment(id: string, attrs: GarmentAttrs, photoRef: string): Garment {
+export function newGarment(id: string, attrs: GarmentAttrs, photoRef: string, originalRef?: string): Garment {
   return {
     id,
     attrs,
     status: "available",
     photoRef,
+    originalRef,
     addedAt: Date.now(),
     lastWornAt: null,
     corrections: [],

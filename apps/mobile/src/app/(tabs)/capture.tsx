@@ -7,6 +7,7 @@ import { colors, paletteSwatch, radius, space } from "@styleme/design";
 import { Btn, Caption, Card, Chip, Screen, Scroll, Swatch, Title } from "@/components/ui";
 import { upsertGarment } from "@/lib/db";
 import { newGarment, persistPhoto } from "@/lib/local";
+import { segmentGarment } from "@/lib/segment";
 import { getVisionTagger } from "@/lib/vision";
 
 const SLOTS: Slot[] = ["top", "bottom", "dress", "outerwear", "shoes", "accessory"];
@@ -21,6 +22,9 @@ export default function Capture() {
   const cameraRef = useRef<CameraView>(null);
   const [permission, requestPermission] = useCameraPermissions();
   const [uri, setUri] = useState<string | null>(null);
+  const [originalUri, setOriginalUri] = useState<string | null>(null);
+  const [classifyUri, setClassifyUri] = useState<string | null>(null);
+  const [draftId, setDraftId] = useState<string | null>(null);
   const [attrs, setAttrs] = useState<GarmentAttrs | null>(null);
   const [busy, setBusy] = useState(false);
   const [cameraReady, setCameraReady] = useState(false);
@@ -38,23 +42,37 @@ export default function Capture() {
   async function shoot() {
     setBusy(true);
     try {
-      const photo = await cameraRef.current?.takePictureAsync({ quality: 0.75, skipProcessing: true });
+      const photo = await cameraRef.current?.takePictureAsync({ quality: 0.85, skipProcessing: true });
       if (!photo?.uri) return;
-      setUri(photo.uri);
-      setAttrs(await getVisionTagger().tag(photo.uri));
+      const id = `g_${Date.now().toString(36)}`;
+      setDraftId(id);
+      setOriginalUri(photo.uri);
+      try {
+        const seg = await segmentGarment(photo.uri, id);
+        setUri(seg.cutoutUri);
+        setClassifyUri(seg.classifyUri);
+        setAttrs(await getVisionTagger().tag(seg.classifyUri));
+      } catch (err) {
+        console.warn("cutout failed, using original:", err);
+        setUri(photo.uri);
+        setClassifyUri(photo.uri);
+        setAttrs(await getVisionTagger().tag(photo.uri));
+      }
     } finally {
       setBusy(false);
     }
   }
 
   async function save() {
-    if (!uri || !attrs) return;
+    if (!uri || !attrs || !draftId) return;
     setBusy(true);
     try {
-      const id = `g_${Date.now().toString(36)}`;
-      const photoRef = await persistPhoto(uri, id);
-      await upsertGarment(newGarment(id, attrs, photoRef));
+      const originalRef = originalUri ? await persistPhoto(originalUri, draftId) : undefined;
+      await upsertGarment(newGarment(draftId, attrs, uri, originalRef));
       setUri(null);
+      setOriginalUri(null);
+      setClassifyUri(null);
+      setDraftId(null);
       setAttrs(null);
       router.replace("/(tabs)/wardrobe");
     } finally {
@@ -189,7 +207,17 @@ export default function Capture() {
           </Card>
 
           <Btn label="Add to wardrobe" onPress={() => void save()} loading={busy} />
-          <Btn label="Retake" variant="ghost" onPress={() => { setUri(null); setAttrs(null); }} />
+          <Btn
+            label="Retake"
+            variant="ghost"
+            onPress={() => {
+              setUri(null);
+              setOriginalUri(null);
+              setClassifyUri(null);
+              setDraftId(null);
+              setAttrs(null);
+            }}
+          />
         </Scroll>
       </Screen>
     );
@@ -197,6 +225,7 @@ export default function Capture() {
 
   return (
     <Screen style={{ padding: 0 }}>
+      <View pointerEvents="none" style={s.guide} />
       <CameraView
         key={cameraKey}
         ref={cameraRef}
@@ -243,6 +272,17 @@ export default function Capture() {
 const s = StyleSheet.create({
   preview: { width: "100%", aspectRatio: 0.8, borderRadius: radius.md, backgroundColor: colors.surfaceAlt },
   wrap: { flexDirection: "row", flexWrap: "wrap", gap: space.s, alignItems: "center" },
+  guide: {
+    position: "absolute",
+    top: "12%",
+    left: "8%",
+    right: "8%",
+    bottom: "26%",
+    borderWidth: 2,
+    borderColor: "rgba(255,255,255,0.75)",
+    borderRadius: radius.lg,
+    borderStyle: "dashed",
+  },
   cameraLoading: {
     position: "absolute",
     top: 0,

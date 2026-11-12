@@ -93,6 +93,8 @@ export const GarmentSchema = z.object({
   id: z.string().min(1),
   attrs: GarmentAttrsSchema,
   status: GarmentStatusSchema.default("available"),
+  /** Original camera photo, kept for re-segmentation. */
+  originalRef: z.string().optional(),
   /** 512-d mobileclip embedding (base64) for novelty + future search. Optional in MVP. */
   embedding: z.string().optional(),
   /** Local file ref on the device; R2 key when backed up. */

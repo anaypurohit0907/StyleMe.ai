@@ -1,0 +1,29 @@
+{
+ "labels": [
+  "top",
+  "bottom",
+  "dress",
+  "outerwear",
+  "shoes",
+  "accessory"
+ ],
+ "acc": 0.96,
+ "input": [
+  1,
+  3,
+  224,
+  224
+ ],
+ "normalize": {
+  "mean": [
+   0.485,
+   0.456,
+   0.406
+  ],
+  "std": [
+   0.229,
+   0.224,
+   0.225
+  ]
+ }
+}

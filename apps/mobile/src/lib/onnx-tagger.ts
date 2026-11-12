@@ -47,6 +47,7 @@ const subtypeMeta = require("../../assets/vision/subtype_mobilenet.json") as {
   labels: string[];
   slot_by_label: Record<string, string>;
 };
+const slotMeta = require("../../assets/vision/slot_product_mobilenet.json") as { labels: string[] };
 
 function groupRows(group: string): { values: string[]; rows: number[][] } {
   const values: string[] = [];
@@ -173,6 +174,7 @@ class OnnxTagger implements VisionTagger {
   readonly name = "mobileclip-s1-onnx";
   private session: Promise<import("onnxruntime-react-native").InferenceSession> | null = null;
   private subtypeSession: Promise<import("onnxruntime-react-native").InferenceSession> | null = null;
+  private slotSession: Promise<import("onnxruntime-react-native").InferenceSession> | null = null;
 
   private load(): Promise<import("onnxruntime-react-native").InferenceSession> {
     if (!this.session) {
@@ -196,6 +198,30 @@ class OnnxTagger implements VisionTagger {
       })();
     }
     return this.subtypeSession;
+  }
+
+  private loadSlot(): Promise<import("onnxruntime-react-native").InferenceSession> {
+    if (!this.slotSession) {
+      this.slotSession = (async () => {
+        const asset = Asset.fromModule(require("../../assets/vision/slot_product_mobilenet.onnx"));
+        await asset.downloadAsync();
+        const path = (asset.localUri ?? asset.uri).replace(/^file:\/\//, "");
+        return ort().InferenceSession.create(path, { executionProviders: ["cpu"] });
+      })();
+    }
+    return this.slotSession;
+  }
+
+  private async classifySlot(img: { data: Uint8Array; width: number; height: number }): Promise<Slot | undefined> {
+    const session = await this.loadSlot();
+    const input = resizeRgba(img.data, img.width, img.height, SUBTYPE_SIZE);
+    const tensor = new (ort().Tensor)("float32", input, [1, 3, SUBTYPE_SIZE, SUBTYPE_SIZE]);
+    const out = await session.run({ pixels: tensor });
+    const logits = Array.from(Object.values(out)[0].data as Float32Array);
+    let best = 0;
+    for (let i = 1; i < logits.length; i++) if (logits[i]! > logits[best]!) best = i;
+    const label = slotMeta.labels[best];
+    return (label as Slot | undefined) ?? undefined;
   }
 
   private async classifySubtype(img: { data: Uint8Array; width: number; height: number }, slot: Slot): Promise<string | undefined> {
@@ -225,7 +251,12 @@ class OnnxTagger implements VisionTagger {
       const first = Object.values(out)[0];
       const e = normalize(Array.from(first.data as Float32Array));
 
-      const slot = (applyProbe(e, "slot") ?? zeroShot(e, "slot") ?? "top") as Slot;
+      let slot = (applyProbe(e, "slot") ?? zeroShot(e, "slot") ?? "top") as Slot;
+      try {
+        slot = (await this.classifySlot(img)) ?? slot;
+      } catch (err) {
+        console.warn("slot model unavailable:", err);
+      }
       const color = dominantColor(img.data, img.width, img.height);
       let subtype: string | undefined;
       try {

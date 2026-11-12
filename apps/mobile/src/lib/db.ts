@@ -14,12 +14,14 @@ export async function getDb(): Promise<SQLite.SQLiteDatabase> {
   if (db) return db;
   db = await SQLite.openDatabaseAsync("styleme.db");
   await db.execAsync("PRAGMA journal_mode = WAL;");
+  await db.execAsync("ALTER TABLE garments ADD COLUMN original_ref TEXT;").catch(() => {});
   await db.execAsync(`
 CREATE TABLE IF NOT EXISTS garments (
   id TEXT PRIMARY KEY,
   attrs TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'available',
   photo_ref TEXT,
+  original_ref TEXT,
   added_at INTEGER NOT NULL,
   last_worn_at INTEGER,
   corrections TEXT NOT NULL DEFAULT '[]'
@@ -68,18 +70,20 @@ export async function metaSet(key: string, value: string): Promise<void> {
 export async function upsertGarment(g: Garment): Promise<void> {
   const d = await getDb();
   await d.runAsync(
-    `INSERT INTO garments (id, attrs, status, photo_ref, added_at, last_worn_at, corrections)
-     VALUES (?, ?, ?, ?, ?, ?, ?)
+    `INSERT INTO garments (id, attrs, status, photo_ref, original_ref, added_at, last_worn_at, corrections)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
      ON CONFLICT(id) DO UPDATE SET
        attrs = excluded.attrs,
        status = excluded.status,
        photo_ref = excluded.photo_ref,
+       original_ref = excluded.original_ref,
        last_worn_at = excluded.last_worn_at,
        corrections = excluded.corrections`,
     g.id,
     JSON.stringify(g.attrs),
     g.status,
     g.photoRef,
+    g.originalRef ?? null,
     g.addedAt,
     g.lastWornAt,
     JSON.stringify(g.corrections),
@@ -93,6 +97,7 @@ export async function listGarments(): Promise<Garment[]> {
     attrs: string;
     status: GarmentStatus;
     photo_ref: string | null;
+    original_ref: string | null;
     added_at: number;
     last_worn_at: number | null;
     corrections: string;
@@ -102,6 +107,7 @@ export async function listGarments(): Promise<Garment[]> {
     attrs: JSON.parse(r.attrs),
     status: r.status,
     photoRef: r.photo_ref ?? "",
+    originalRef: r.original_ref ?? undefined,
     addedAt: r.added_at,
     lastWornAt: r.last_worn_at ?? null,
     corrections: JSON.parse(r.corrections || "[]"),
@@ -128,6 +134,7 @@ export async function getGarment(id: string): Promise<Garment | null> {
     attrs: string;
     status: GarmentStatus;
     photo_ref: string | null;
+    original_ref: string | null;
     added_at: number;
     last_worn_at: number | null;
     corrections: string;
@@ -138,6 +145,7 @@ export async function getGarment(id: string): Promise<Garment | null> {
     attrs: JSON.parse(r.attrs),
     status: r.status,
     photoRef: r.photo_ref ?? "",
+    originalRef: r.original_ref ?? undefined,
     addedAt: r.added_at,
     lastWornAt: r.last_worn_at ?? null,
     corrections: JSON.parse(r.corrections || "[]"),
