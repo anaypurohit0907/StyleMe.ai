@@ -8,6 +8,7 @@
  * pure-JS decode/composite/encode steps small enough for a phone.
  */
 import { Asset } from "expo-asset";
+import { Buffer } from "buffer";
 import { Directory, File, Paths } from "expo-file-system";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import jpeg from "jpeg-js";
@@ -21,6 +22,10 @@ function ort(): OrtModule {
   if (!ortModule) ortModule = require("onnxruntime-react-native") as OrtModule;
   return ortModule;
 }
+
+// jpeg-js writes its output through the Node Buffer API. Metro/Hermes has no
+// global Buffer, so provide the browser polyfill before the encoder runs.
+(globalThis as unknown as { Buffer?: typeof Buffer }).Buffer ??= Buffer;
 
 const SEG_SIZE = 320;
 const WORK_MAX = 1024;

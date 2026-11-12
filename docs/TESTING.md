@@ -40,6 +40,27 @@ this one (Android rejects signature changes on update).
   sync later.
 - **Photos:** stay on the phone. R2 photo backup is disabled.
 
+## Scan log (for bug reports)
+
+Release builds do not print console logs to `adb logcat`. Instead, every
+capture and re-scan step is shown on screen:
+
+- **Add** → take a photo → the busy overlay shows the current step, and the
+  review screen keeps the last 8 lines under **Last capture**.
+- **Style DNA** → **Re-scan wardrobe tags** → the button and the **Scan log**
+  card show progress and the last 14 lines.
+
+Useful lines:
+
+- `prepared 1024x1219` — photo was normalized (rotation baked in).
+- `mask ... cov=0.42 bbox=... useMask=true` — cutout found the garment.
+- `useMask=false` — mask looked wrong, so the full photo was kept.
+- `slot model -> top` / `subtype model -> t-shirt conf=0.81` — classifier output.
+- `FAILED ... timed out` — that item was skipped; the scan moved on.
+
+The log is also appended to `pipeline.log` in the app's document directory and
+reloaded on the next launch, so a crash does not erase the last step.
+
 ## Known limits
 
 - Pattern/fit are zero-shot until a Fashionpedia train-split probe is built.
