@@ -1,14 +1,18 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { useFocusEffect } from "expo-router";
 import type { PreferenceVector } from "@styleme/schema";
 import { emptyPreference } from "@styleme/schema";
 import { colors, paletteSwatch, space } from "@styleme/design";
 import { Btn, Caption, Card, Screen, Scroll, Title } from "@/components/ui";
+import { ScanLog } from "@/components/scan-log";
 import { loadPrefs, savePrefs } from "@/lib/local";
 import { listGarments, metaSet, upsertGarment } from "@/lib/db";
 import { getVisionTagger } from "@/lib/vision";
 import { segmentGarment } from "@/lib/segment";
+import { errorText, log, withTimeout } from "@/lib/pipeline-log";
+
+const ITEM_TIMEOUT = 120_000;
 
 function Bars({ data, swatches }: { data: Record<string, number>; swatches?: boolean }) {
   const entries = Object.entries(data)
@@ -43,6 +47,8 @@ export default function DNA() {
   const [prefs, setPrefs] = useState<PreferenceVector>(emptyPreference());
   const [retagging, setRetagging] = useState(false);
   const [retagProgress, setRetagProgress] = useState("");
+  const [retagStage, setRetagStage] = useState("");
+  const cancelRef = useRef(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -51,33 +57,77 @@ export default function DNA() {
   );
 
   async function retagAll() {
+    if (retagging) return;
+    cancelRef.current = false;
     setRetagging(true);
+    setRetagStage("starting");
+    const scanStart = Date.now();
     try {
+      log("scan", "re-scan requested");
       const garments = await listGarments();
+      log("scan", `loaded ${garments.length} garments`);
       const tagger = getVisionTagger();
       let done = 0;
       for (const g of garments) {
+        if (cancelRef.current) {
+          log("scan", "cancelled by user");
+          break;
+        }
         done++;
-        setRetagProgress(`${done}/${garments.length}`);
-        if (!g.photoRef) continue;
+        const label = `${done}/${garments.length}`;
+        setRetagProgress(label);
+        setRetagStage("preparing");
+        if (!g.photoRef) {
+          log("scan", `${label} skip id=${g.id}: no photo`);
+          continue;
+        }
+        const itemStart = Date.now();
+        log(
+          "scan",
+          `${label} start id=${g.id} slot=${g.attrs.slot} source=${g.originalRef ? "original" : "stored"}`,
+        );
         try {
           const source = g.originalRef ?? g.photoRef;
-          const seg = await segmentGarment(source, g.id);
-          const attrs = await tagger.tag(seg.classifyUri);
+          const seg = await withTimeout(
+            segmentGarment(source, g.id),
+            ITEM_TIMEOUT,
+            `cutout ${label}`,
+          );
+          setRetagStage("tagging");
+          const attrs = await withTimeout(
+            tagger.tag(seg.classifyUri),
+            ITEM_TIMEOUT,
+            `tag ${label}`,
+          );
+          setRetagStage("saving");
           await upsertGarment({
             ...g,
             attrs,
             photoRef: seg.cutoutUri,
             originalRef: g.originalRef ?? source,
           });
-        } catch {
-          // keep the old tags for this item
+          log(
+            "scan",
+            `${label} saved slot=${attrs.slot} subtype=${attrs.subtype ?? "-"} cov=${seg.coverage.toFixed(2)} in ${Date.now() - itemStart}ms`,
+          );
+        } catch (err) {
+          // Keep the old tags for this item, but leave the reason on screen.
+          log("scan", `${label} FAILED after ${Date.now() - itemStart}ms: ${errorText(err)}`);
         }
       }
-      setRetagProgress("done");
+      setRetagStage("done");
+      log("scan", `finished in ${Date.now() - scanStart}ms`);
+    } catch (err) {
+      setRetagStage("failed");
+      log("scan", `aborted: ${errorText(err)}`);
     } finally {
       setRetagging(false);
     }
+  }
+
+  function cancelRetag() {
+    cancelRef.current = true;
+    log("scan", "cancel requested");
   }
 
   async function reset() {
@@ -117,12 +167,24 @@ export default function DNA() {
         </Card>
 
         <Btn
-          label={retagging ? `Re-scanning ${retagProgress}…` : "Re-scan wardrobe tags"}
+          label={
+            retagging
+              ? `Re-scanning ${retagProgress} · ${retagStage}…`
+              : "Re-scan wardrobe tags"
+          }
           variant="ghost"
           onPress={() => void retagAll()}
           loading={retagging}
         />
+        {retagging && <Btn label="Cancel scan" variant="ghost" onPress={cancelRetag} />}
         <Caption>Applies the latest on-device model to clothes you already added.</Caption>
+        {retagging && (
+          <Caption>
+            Working on {retagProgress} · {retagStage}. Each item has a 2-minute timeout, so the scan
+            always moves on.
+          </Caption>
+        )}
+        <ScanLog limit={14} />
 
         <Btn label="Reset what I've learned" variant="danger" onPress={() => void reset()} />
       </Scroll>

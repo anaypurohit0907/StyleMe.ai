@@ -4,6 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import * as SplashScreen from "expo-splash-screen";
 import { getDb, metaGet } from "@/lib/db";
 import { setVisionTagger } from "@/lib/vision";
+import { initPipelineLog, log } from "@/lib/pipeline-log";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -11,6 +12,8 @@ function Gate() {
   const router = useRouter();
   useEffect(() => {
     (async () => {
+      void initPipelineLog();
+      log("app", "started");
       await getDb();
       // Native dev builds can opt into ONNX; Expo Go can use the local server.
       if (process.env.EXPO_PUBLIC_VISION === "onnx") {

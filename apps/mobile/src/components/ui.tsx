@@ -77,7 +77,10 @@ export function Btn({
         variant === "ghost" && s.ghost,
       ]}>
       {loading ? (
-        <ActivityIndicator color={fg} />
+        <View style={s.btnLoading}>
+          <ActivityIndicator color={fg} size="small" />
+          <Text style={[s.btnText, { color: fg }]}>{label}</Text>
+        </View>
       ) : (
         <Text style={[s.btnText, { color: fg }]}>{label}</Text>
       )}
@@ -167,6 +170,7 @@ const s = StyleSheet.create({
     justifyContent: "center",
   },
   ghost: { borderWidth: StyleSheet.hairlineWidth, borderColor: colors.line },
+  btnLoading: { flexDirection: "row", alignItems: "center", gap: space.s },
   btnText: { ...type.body, fontWeight: "600" },
   chip: {
     borderRadius: radius.pill,

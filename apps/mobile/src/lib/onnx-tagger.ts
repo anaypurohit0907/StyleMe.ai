@@ -5,11 +5,11 @@
  * tagger remains the fallback so the product loop works in Expo Go.
  */
 import { Asset } from "expo-asset";
-import * as FileSystem from "expo-file-system/legacy";
+import { File } from "expo-file-system";
 import jpeg from "jpeg-js";
-import { toByteArray } from "base64-js";
 import type { ColorName, Fit, GarmentAttrs, Pattern, Slot } from "@styleme/schema";
 import { paletteSwatch } from "@styleme/design";
+import { errorText, log } from "./pipeline-log";
 import { mockTagger, type VisionTagger } from "./vision";
 
 type OrtModule = typeof import("onnxruntime-react-native");
@@ -164,9 +164,8 @@ function resizeRgba(src: Uint8Array, sw: number, sh: number, size: number): Floa
 }
 
 async function decode(uri: string): Promise<{ data: Uint8Array; width: number; height: number }> {
-  const b64 = await FileSystem.readAsStringAsync(uri, { encoding: FileSystem.EncodingType.Base64 });
-  const bytes = toByteArray(b64);
-  const raw = jpeg.decode(bytes, { useTArray: true });
+  const bytes = await new File(uri).bytes();
+  const raw = jpeg.decode(bytes, { useTArray: true, maxMemoryUsageInMB: 1024 });
   return { data: raw.data as Uint8Array, width: raw.width, height: raw.height };
 }
 
@@ -213,6 +212,8 @@ class OnnxTagger implements VisionTagger {
   }
 
   private async classifySlot(img: { data: Uint8Array; width: number; height: number }): Promise<Slot | undefined> {
+    const start = Date.now();
+    log("tag", "slot model start");
     const session = await this.loadSlot();
     const input = resizeRgba(img.data, img.width, img.height, SUBTYPE_SIZE);
     const tensor = new (ort().Tensor)("float32", input, [1, 3, SUBTYPE_SIZE, SUBTYPE_SIZE]);
@@ -221,10 +222,13 @@ class OnnxTagger implements VisionTagger {
     let best = 0;
     for (let i = 1; i < logits.length; i++) if (logits[i]! > logits[best]!) best = i;
     const label = slotMeta.labels[best];
+    log("tag", `slot model -> ${label ?? "none"} (${Date.now() - start}ms)`);
     return (label as Slot | undefined) ?? undefined;
   }
 
   private async classifySubtype(img: { data: Uint8Array; width: number; height: number }, slot: Slot): Promise<string | undefined> {
+    const start = Date.now();
+    log("tag", `subtype model start (slot=${slot})`);
     const session = await this.loadSubtype();
     const input = resizeRgba(img.data, img.width, img.height, SUBTYPE_SIZE);
     const tensor = new (ort().Tensor)("float32", input, [1, 3, SUBTYPE_SIZE, SUBTYPE_SIZE]);
@@ -237,32 +241,46 @@ class OnnxTagger implements VisionTagger {
     for (let i = 1; i < logits.length; i++) if (logits[i]! > logits[best]!) best = i;
     const confidence = (exps[best] ?? 0) / sum;
     const label = subtypeMeta.labels[best];
+    const accepted = Boolean(label) && confidence >= 0.6 && subtypeMeta.slot_by_label[label!] === slot;
+    log(
+      "tag",
+      `subtype model -> ${label ?? "none"} conf=${confidence.toFixed(2)} accepted=${accepted} (${Date.now() - start}ms)`,
+    );
     if (!label || confidence < 0.6) return undefined;
     return subtypeMeta.slot_by_label[label] === slot ? label : undefined;
   }
 
   async tag(uri: string): Promise<GarmentAttrs> {
+    const start = Date.now();
+    log("tag", `start ${uri.split("/").pop() ?? uri}`);
     try {
+      const loadStart = Date.now();
       const session = await this.load();
+      log("tag", `mobileclip ready (${Date.now() - loadStart}ms)`);
+      const decodeStart = Date.now();
       const img = await decode(uri);
+      log("tag", `decoded ${img.width}x${img.height} (${Date.now() - decodeStart}ms)`);
       const input = resizeRgba(img.data, img.width, img.height, SIZE);
       const tensor = new (ort().Tensor)("float32", input, [1, 3, SIZE, SIZE]);
       const out = await session.run({ pixels: tensor });
       const first = Object.values(out)[0];
       const e = normalize(Array.from(first.data as Float32Array));
+      log("tag", `mobileclip embedding done (${Date.now() - start}ms)`);
 
       let slot = (applyProbe(e, "slot") ?? zeroShot(e, "slot") ?? "top") as Slot;
+      const clipSlot = slot;
       try {
         slot = (await this.classifySlot(img)) ?? slot;
       } catch (err) {
-        console.warn("slot model unavailable:", err);
+        log("tag", `slot model unavailable: ${errorText(err)}`);
       }
+      log("tag", `slot clip=${clipSlot} final=${slot}`);
       const color = dominantColor(img.data, img.width, img.height);
       let subtype: string | undefined;
       try {
         subtype = await this.classifySubtype(img, slot);
       } catch (err) {
-        console.warn("subtype model unavailable:", err);
+        log("tag", `subtype model unavailable: ${errorText(err)}`);
       }
       const formalityLabel = applyProbe(e, "formality") ?? zeroShot(e, "formality") ?? "3";
       let formality = Math.max(1, Math.min(5, parseInt(formalityLabel, 10) || 3));
@@ -277,6 +295,10 @@ class OnnxTagger implements VisionTagger {
       const season = (zeroShot(e, "seasons") ?? "all") as GarmentAttrs["season"];
       const material = (zeroShot(e, "materials") ?? "medium") as GarmentAttrs["material"];
 
+      log(
+        "tag",
+        `done ${Date.now() - start}ms slot=${slot} subtype=${subtype ?? "-"} color=${color} formality=${formality} pattern=${pattern} fit=${fit} season=${season}`,
+      );
       return {
         slot,
         colors: [color],
@@ -288,7 +310,7 @@ class OnnxTagger implements VisionTagger {
         subtype,
       };
     } catch (e) {
-      console.warn("ONNX tagger failed, using mock:", e);
+      log("tag", `FAILED, mock fallback: ${errorText(e)}`);
       return mockTagger.tag(uri);
     }
   }
