@@ -6,7 +6,8 @@ import { emptyPreference } from "@styleme/schema";
 import { colors, paletteSwatch, space } from "@styleme/design";
 import { Btn, Caption, Card, Screen, Scroll, Title } from "@/components/ui";
 import { loadPrefs, savePrefs } from "@/lib/local";
-import { metaSet } from "@/lib/db";
+import { listGarments, metaSet, upsertGarment } from "@/lib/db";
+import { getVisionTagger } from "@/lib/vision";
 
 function Bars({ data, swatches }: { data: Record<string, number>; swatches?: boolean }) {
   const entries = Object.entries(data)
@@ -39,12 +40,37 @@ function Bars({ data, swatches }: { data: Record<string, number>; swatches?: boo
 
 export default function DNA() {
   const [prefs, setPrefs] = useState<PreferenceVector>(emptyPreference());
+  const [retagging, setRetagging] = useState(false);
+  const [retagProgress, setRetagProgress] = useState("");
 
   useFocusEffect(
     useCallback(() => {
       void loadPrefs().then(setPrefs);
     }, []),
   );
+
+  async function retagAll() {
+    setRetagging(true);
+    try {
+      const garments = await listGarments();
+      const tagger = getVisionTagger();
+      let done = 0;
+      for (const g of garments) {
+        done++;
+        setRetagProgress(`${done}/${garments.length}`);
+        if (!g.photoRef) continue;
+        try {
+          const attrs = await tagger.tag(g.photoRef);
+          await upsertGarment({ ...g, attrs });
+        } catch {
+          // keep the old tags for this item
+        }
+      }
+      setRetagProgress("done");
+    } finally {
+      setRetagging(false);
+    }
+  }
 
   async function reset() {
     const fresh = emptyPreference();
@@ -81,6 +107,14 @@ export default function DNA() {
           <Title>{prefs.formalityCenter.toFixed(1)} / 5</Title>
           <Caption>1 = street, 5 = formal. Drifts with your picks.</Caption>
         </Card>
+
+        <Btn
+          label={retagging ? `Re-scanning ${retagProgress}…` : "Re-scan wardrobe tags"}
+          variant="ghost"
+          onPress={() => void retagAll()}
+          loading={retagging}
+        />
+        <Caption>Applies the latest on-device model to clothes you already added.</Caption>
 
         <Btn label="Reset what I've learned" variant="danger" onPress={() => void reset()} />
       </Scroll>
