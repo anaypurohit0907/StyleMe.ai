@@ -98,6 +98,34 @@ describe("recommend() invariants", () => {
     expect(res.outfits[0]?.garmentIds).not.toContain("shirt");
   });
 
+  it("falls back to all seasons instead of returning zero outfits", () => {
+    const make = (id: string, slot: Garment["attrs"]["slot"]) => ({
+      id,
+      attrs: {
+        slot,
+        colors: ["white"] as const,
+        pattern: "solid" as const,
+        fit: "regular" as const,
+        formality: 2,
+        season: "cool" as const,
+        material: "medium" as const,
+      },
+      status: "available" as const,
+      photoRef: "",
+      addedAt: 1,
+      lastWornAt: null,
+      corrections: [],
+    });
+    const res = recommend({
+      userId: "u-hot",
+      wardrobe: [make("t", "top"), make("b", "bottom"), make("s", "shoes")],
+      context: makeContext({ occasion: "casual", tempC: 30 }),
+      prefs: emptyPreference(),
+    });
+    expect(res.outfits.length).toBeGreaterThanOrEqual(1);
+    expect(res.meta.seasonFallback).toBe(true);
+  });
+
   it("NEVER suggests items in the wash (hard filter)", () => {
     const washed: Garment[] = wardrobe.map((g, i) =>
       i < 12 ? { ...g, status: "in_wash" as const } : g,

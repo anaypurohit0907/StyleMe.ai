@@ -74,6 +74,8 @@ export interface RecommendMeta {
   exploredSignatures: string[];
   /** Slots the wardrobe can't fill at all (app should prompt to add). */
   missingSlots: string[];
+  /** True when the season filter emptied the wardrobe and was relaxed. */
+  seasonFallback: boolean;
   seed: string;
 }
 
@@ -92,7 +94,15 @@ export function recommend(input: RecommendInput): RecommendResult {
     ),
   };
 
-  const { candidates, stats, options } = generateCandidates(wardrobe, context.weather);
+  let generated = generateCandidates(wardrobe, context.weather);
+  let seasonFallback = false;
+  if (generated.candidates.length === 0 && wardrobe.some((g) => g.status === "available")) {
+    // Auto season tags are noisy. Never return zero outfits just because the
+    // whole wardrobe was tagged for the wrong season.
+    generated = generateCandidates(wardrobe, { tempC: 18, isRaining: context.weather.isRaining });
+    seasonFallback = true;
+  }
+  const { candidates, stats, options } = generated;
 
   // Exploration strength ramps with confidence: don't surprise new users,
   // but never stop diversifying.
@@ -243,6 +253,7 @@ export function recommend(input: RecommendInput): RecommendResult {
       candidatesScored: kept.length,
       exploredSignatures,
       missingSlots,
+      seasonFallback,
       seed,
     },
   };
