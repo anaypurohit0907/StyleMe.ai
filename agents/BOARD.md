@@ -22,7 +22,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-009 | Background-augmented slot/subtype training on Colab | backlog | — | high | 2026-11-24 19:12 UTC |
 | T-010 | Standing question-board answerer (act when OPEN > 4) | in-progress | Sable | medium | 2026-11-24 19:13 UTC |
 | T-011 | Wire the tone engine into every screen | backlog | — | critical | 2026-11-24 19:38 UTC |
-| T-012 | "Why these outfits" panel + humanized reasons + never-mix | in-progress | Coco | critical | 2026-11-24 21:07 UTC |
+| T-012 | "Why these outfits" panel + humanized reasons + never-mix | review | Coco | critical | 2026-11-24 21:10 UTC |
 | T-013 | Capture batch loop — make the 3-minute setup real | done | Wren | critical | 2026-11-24 20:41 UTC |
 | T-014 | Close the learning loop end-to-end (app ↔ worker) | backlog | — | high | 2026-11-24 19:38 UTC |
 | T-015 | Motion + haptics pass — make it feel alive | backlog | — | high | 2026-11-24 19:38 UTC |
