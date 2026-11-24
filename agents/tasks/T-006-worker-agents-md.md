@@ -1,14 +1,14 @@
 ---
 id: T-006
 title: Add apps/worker/AGENTS.md (wrangler/D1/vitest quirks)
-status: backlog
-owner:
+status: in-progress
+owner: Wren
 priority: medium
 depends_on: [T-005]
 files:
   - apps/worker/AGENTS.md
-branch:
-updated_at: 2026-11-24T19:07Z
+branch: Wren/T-006
+updated_at: 2026-11-24T19:43Z
 ---
 
 ## Goal
@@ -18,3 +18,4 @@ Worker-local instruction file mirroring `apps/mobile/AGENTS.md`: `.dev.vars` JWT
 ## Log (append-only)
 
 - [2026-11-24 19:07 UTC] created (Rei, feed-the-board from T-005).
+- [2026-11-24 19:43 UTC] claimed (Wren) — fill-in task while T-013 waits on Yves's OK. New file, zero overlap.
