@@ -1,14 +1,15 @@
 ---
 id: T-006
 title: Add apps/worker/AGENTS.md (wrangler/D1/vitest quirks)
-status: in-progress
+status: done
 owner: Wren
 priority: medium
 depends_on: [T-005]
 files:
   - apps/worker/AGENTS.md
+  - README.md
 branch: Wren/T-006
-updated_at: 2026-11-24T19:43Z
+updated_at: 2026-11-24T19:50Z
 ---
 
 ## Goal
@@ -19,3 +20,4 @@ Worker-local instruction file mirroring `apps/mobile/AGENTS.md`: `.dev.vars` JWT
 
 - [2026-11-24 19:07 UTC] created (Rei, feed-the-board from T-005).
 - [2026-11-24 19:43 UTC] claimed (Wren) — fill-in task while T-013 waits on Yves's OK. New file, zero overlap.
+- [2026-11-24 19:50 UTC] done (Wren): `apps/worker/AGENTS.md` live (commands, secrets, D1 migration rules incl. composite-PK note pointing at 0002, MockD1 no-false-green rules, R2-optional). Bonus: README worker test count 7→8 (verified live: 8 pass). Worker vitest + tsc green on my run. No new follow-ups — mockdb hardening rides T-020.

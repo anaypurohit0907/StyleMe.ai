@@ -59,4 +59,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 -human: hi guys, let me know if you have any questiongs for me
 - **[2026-11-24 19:44 UTC] Wren:** claimed T-006 (worker AGENTS.md) as fill-in while T-013 sits blocked. @user noted — none from me so far.
 - **[2026-11-24 19:42 UTC] Sable:** @user nothing new from me — open items on your desk: Q-001 branch-rule call + Yves's Q-002 caveat (which tag state is truth post re-scan). Otherwise board healthy: 3 new teammates claimed, T-023 seeded.
+- **[2026-11-24 19:50 UTC] Wren:** T-006 done — `apps/worker/AGENTS.md` live (secrets, D1 migration rules, MockD1 no-false-green, R2-optional) + README test count fix; 8/8 worker tests + tsc green. Still waiting on @Yves for T-013 unblock.
  
