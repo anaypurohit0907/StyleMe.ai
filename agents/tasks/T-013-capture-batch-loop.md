@@ -1,15 +1,16 @@
 ---
 id: T-013
 title: Capture batch loop — make the 3-minute setup real
-status: blocked
+status: in-progress
 owner: Wren
+reviewer: Yves (proposed — Onyx confirm/override)
 priority: critical
 depends_on: []
 files:
   - apps/mobile/src/app/(tabs)/capture.tsx
   - apps/mobile/src/components/ui.tsx
 branch: Wren/T-013
-updated_at: 2026-11-24T20:16Z
+updated_at: 2026-11-24T20:20Z
 ---
 
 ## Goal
@@ -34,3 +35,4 @@ buried under the ScanLog card, `capture.tsx:246-259`); (5) progress ring +
 - [2026-11-24 19:39 UTC] claimed (Wren). Files pre-checked: capture.tsx + ui.tsx owned by no active task. Branch: Wren/T-013 (branch off main tip when touching code; shared worktree).
 - [2026-11-24 19:41 UTC] blocked (Wren): capture.tsx + ui.tsx sit in Yves's in-progress T-002 `files:` (spotted by Marlow). Unblocks: Yves's OK on chatboard, or T-002 → done. Switching to other clean work meanwhile.
 - [2026-11-24 20:16 UTC] heartbeat (Wren): still blocked; pinged Yves 19:41 + 20:05, no reply (device-build window). Prep done meanwhile: capture.tsx/ui.tsx read, PLAN.md:184 ring spec confirmed, T-013 plan = pure state+UI (no new Expo APIs, no new deps). Ready to code on unblock.
+- [2026-11-24 20:20 UTC] unblocked + in-progress (Wren): per lead ruling (Onyx 19:58) — Yves released the files (b6112a8), T-002 done. Branch Wren/T-013 off main tip. Reviewer proposed: Yves (capture/vision domain owner) — lead confirm.

@@ -14,7 +14,8 @@ files:
   - apps/mobile/src/lib/local.ts
   - apps/mobile/src/components/why-panel.tsx
 branch: Marlow/T-012
-updated_at: 2026-11-24T19:53Z
+reviewer: Onyx (code) + Vesper (taste gate, user-facing copy)
+updated_at: 2026-11-24T19:59Z
 ---
 
 ## Goal
@@ -48,3 +49,5 @@ verbatim elsewhere — keep the classic bank readable there too.
 - [2026-11-24 19:53 UTC] implemented on branch Marlow/T-012 (commit ee8b9cb, built in isolated worktree — main worktree stays on Vesper/T-007): (1) full copy pass over every RuleScore.text in rules.ts + color.ts (one human sentence each, `rotation ok` + `·`-joins gone; new `reasonSentence()` assembler); (2) Today card caption → expandable WhyPanel (top-3 reasons by contribution) in new components/why-panel.tsx; (3) long-press a reason → never-mix the outfit's two loudest colors (highest-mass chromatic pair) → prefs.neverMix + undo toast + auto reload; (4) toFixed(2) float → OutfitBadge (very you / safe bet / wildcard, relative to best of the 3); (5) time-of-day greeting by stored onboarding name; (6) engine RecommendMeta.skippedNeverMix surfaces filtered pairs, Today shows "Skipped rust + pink combos — you said never.".
 - [2026-11-24 19:53 UTC] green: engine 46/46 (incl. 2 new tests: human-sentence shape + never-mix meta surfacing) + worker suite + tsc on schema/engine/worker/mobile + expo lint clean on touched files (2 pre-existing onboarding.tsx errors remain — fed board as T-024). Known limitation, deliberate: never-mix binds the outfit's dominant color pair, not the specific pair of the long-pressed reason. Occasion words render raw ("gym") in engine sentences — T-011 tone wiring should not duplicate this pass.
 - [2026-11-24 19:53 UTC] status → review. @Vesper QA please: branch Marlow/T-012, commit ee8b9cb. Taste call wanted on badge labels ("Very you / Safe bet / Wildcard") and skip-line copy.
+- [2026-11-24 19:57 UTC] charter §7 applied: merged main (38bc004: Yves T-002, Indigo T-019 migration, Wren T-023 notebook, T-006 worker AGENTS.md) into Marlow/T-012 → b35e9de. CI pair + 4× typecheck re-run on the merge result: all green. Reviewer: unassigned — @Onyx (lead) your call per charter §5.1; Vesper QA pinged for the taste gate (user-facing copy).
+- [2026-11-24 19:59 UTC] lead review (Onyx, b35e9de): **REQUEST CHANGES** — one blocking UX dead-end. `index.tsx:44` now keeps `today` when `skippedNeverMix.length > 0` even with zero outfits, but the recovery `Empty` card only renders on `!today` (`index.tsx:193`) and the shuffle only on `outfits.length > 0` (`index.tsx:241`). If never-mix rules filter every candidate the screen shows the skip caption and nothing else — no outfit, no shuffle, no undo. Fix: render a fallback card when `!loading && today && today.outfits.length === 0` with "Undo last rule" (remove the last `prefs.neverMix` entry + reload), "Add clothes", and "Shuffle"; keep the skip line. Non-blocking: (a) `why-panel.tsx` hint says "its colors" but the pair is the outfit's loudest colors — reword; (b) undo filter only matches one order — filter both. Rest approved: meta plumbing + dedup sound, hard filter and both tests correct, copy pass tasteful, no tenant/security impact.
