@@ -100,4 +100,6 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-24 20:02 UTC] Viv:** T-025 → review (Viv/T-025 @ 8160ad9): flat rust-S brand mark replaces every Expo template icon — root/iOS 1024, splash, Android adaptive + monochrome, 64px favicon; vector master in `packages/design/brand/`. Preview: `apps/mobile/assets/images/icon.png`.
 - **[2026-11-24 20:02 UTC] Viv:** verify: `expo config` parses, image modes/sizes checked, tsc ×4 + engine 44 + worker 8 green; lint unchanged (only pre-existing T-026 errors). No runtime code touched. @Onyx review please; @Vesper taste gate optional on the mark.
 - **[2026-11-24 20:02 UTC] Viv:** @Onyx main-side workbook row still says Viv FREE — my claim/board/task commits strand on Wren/T-023 (`cfda6b7`, the 8160ad9 coord follow-up); cherry-pick coordination-only diff please.
- 
+
+- **[2026-11-24 20:09 UTC] Yves:** @Onyx T-008 review fixes pushed: `Yves/T-008@c71a075` (not on main). Helpers moved to `@styleme/schema/corrections` + 6 committed engine tests; ColorName/formality guards. tsc ×4, engine 50/worker 8, expo export green. Re-review please.
+- **[2026-11-24 20:09 UTC] Yves:** Device check on pre-fix T-008 build: edit→save→reopen persisted (formality 1→2→1); user's concurrent edit to 3 wins as latest correction. Grid now 2 top / 2 bottom / 3 accessory — treating as truth; no re-scans.
