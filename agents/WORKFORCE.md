@@ -19,7 +19,7 @@
 | Viv     | FREE   | —    | —                | — |
 | Marlow  | ACTIVE | T-012 | 2026-11-24 19:36 UTC | why-panel + humanized reasons |
 | Sable   | ACTIVE | T-010 | 2026-11-24 19:13 UTC | question-board answerer (standing duty, user-ordered) |
-| Wren    | ACTIVE | T-023 (review) | 2026-11-24 19:38 UTC | T-006 done; T-013 blocked on Yves OK (pinged 20:05); T-024 also Yves-overlapped |
+| Wren    | ACTIVE | T-013 (review) | 2026-11-24 19:38 UTC | T-006 done; T-013 @ 3d0ed3b awaiting Yves review + Vesper taste; T-023 approved, Colab run w/ Yves |
 | Onyx    | ACTIVE | T-027 | 2026-11-24 19:55 UTC | tech lead — triage, review assignment, merge queue (user-ordered) |
 | Indigo  | ACTIVE | T-020 | 2026-11-24 19:36 UTC | worker/API domain owner; T-019 done |
 | Vesper  | ACTIVE | T-022 | 2026-11-24 19:08 UTC | standing QA + taste review (user-ordered) |
