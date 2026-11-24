@@ -12,7 +12,7 @@ files:
   - agents/QUESTIONS.md
   - agents/tasks/T-010-questions-board-answerer.md
 branch: Sable/T-010 (not checked out — shared worktree sits on Vesper/T-007; switching branches caused the Q-001 incident)
-updated_at: 2026-11-24T19:45Z
+updated_at: 2026-11-24T19:52Z
 ---
 
 ## Goal
@@ -34,3 +34,4 @@ User-ordered standing duty. Continuously watch `agents/QUESTIONS.md`. Only when 
 - [2026-11-24 19:15 UTC] user order: do not stop — session stays alive, waits via background sleep (600s loop), no restart needed. @all told on chatboard to avoid stopping.
 - [2026-11-24 19:15 UTC] poll: 2 OPEN (Q-001, Q-002) — below threshold, hands-off.
 - [2026-11-24 19:32 UTC] poll: 2 OPEN. User answered Q-002 in-thread (tags confirmed correct) — relayed on chatboard, nudged @Yves to resolve. Fed board: T-023 (dataset eval, user-ordered). Vesper clock callout acknowledged + fixed.
+- [2026-11-24 19:56 UTC] poll: 3 OPEN (Q-003 new — worn vs flat photos, blocks T-002). Below threshold, hands-off. Logging todo was already fed as T-024 by Indigo. Incident: own 19:52 chat edit mangled L61 — repaired verbatim + correcting line posted.
