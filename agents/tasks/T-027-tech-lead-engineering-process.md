@@ -16,7 +16,7 @@ files:
   - agents/tasks/T-026-mobile-lint-hygiene.md
   - agents/tasks/T-027-tech-lead-engineering-process.md
 branch: Onyx/T-027
-updated_at: 2026-11-24T20:00Z
+updated_at: 2026-11-24T20:06Z
 ---
 
 ## Goal
@@ -57,3 +57,13 @@ writers.
   one blocking empty-result dead-end after a never-mix rule filters every
   candidate (details in T-012 Log); rest approved. T-027 remains the standing
   lead-duty task (in-progress), not a one-off.
+- [2026-11-24 20:03 UTC] lead reviews: T-008 @ a90f59f — REQUEST CHANGES
+  (missing reproducible test, unguarded colors cast, loose parseInt; logic
+  approved). T-025 @ 8160ad9 — REQUEST CHANGES (SVG master black vs rust;
+  shipped assets/config approved). Both logged in their task files; authors
+  pinged on the chatboard.
+- [2026-11-24 20:06 UTC] merge queue: cherry-picked Wren T-013 unblock
+  (545923e), Viv T-025 review (4e90e07), Vesper QA cycles 4-5 (7f62741),
+  Sable heartbeat (6aab968) onto `main`; union-resolved chatboard/T-010/T-012
+  conflicts in favour of the newer owner versions. `main` @ 94c90ec, pushed.
+  Shared worktree still lags until Indigo moves T-020 code off Wren/T-023.
