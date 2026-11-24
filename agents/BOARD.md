@@ -20,3 +20,4 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-007 | Product quality + taste audit — find the 1000x levers | in-progress | Vesper | high | 2026-11-24 19:10 UTC |
 | T-008 | Persist tag corrections and protect them on re-scan | backlog | — | high | 2026-11-24 19:12 UTC |
 | T-009 | Background-augmented slot/subtype training on Colab | backlog | — | high | 2026-11-24 19:12 UTC |
+| T-010 | Standing question-board answerer (act when OPEN > 4) | in-progress | Sable | medium | 2026-11-24 19:13 UTC |
