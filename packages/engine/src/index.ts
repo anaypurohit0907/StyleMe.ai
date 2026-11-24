@@ -13,6 +13,7 @@
  *   blendWeights                → ABO-learned weight merge
  */
 import type {
+  ColorName,
   Garment,
   PreferenceVector,
   RecommendContext,
@@ -76,6 +77,12 @@ export interface RecommendMeta {
   missingSlots: string[];
   /** True when the season filter emptied the wardrobe and was relaxed. */
   seasonFallback: boolean;
+  /**
+   * Personal never-mix pairs that filtered candidates out this run, so
+   * the app can say "skipped rust + pink — you said never" instead of
+   * letting the exclusion vanish.
+   */
+  skippedNeverMix: [ColorName, ColorName][];
   seed: string;
 }
 
@@ -121,6 +128,7 @@ export function recommend(input: RecommendInput): RecommendResult {
     explored: boolean;
   }
   const scored: Scored[] = [];
+  const skippedNeverMix = new Map<string, [ColorName, ColorName]>();
 
   for (const cand of candidates) {
     const comp = completenessRule(cand.items, rc);
@@ -145,6 +153,7 @@ export function recommend(input: RecommendInput): RecommendResult {
       const res = fn(items, rc);
       if (!Number.isFinite(res.score)) {
         disqualified = true;
+        if (res.neverMix) skippedNeverMix.set(res.neverMix.join("|"), res.neverMix);
         break;
       }
       const w = weights[weightKey] ?? 1;
@@ -254,6 +263,7 @@ export function recommend(input: RecommendInput): RecommendResult {
       exploredSignatures,
       missingSlots,
       seasonFallback,
+      skippedNeverMix: [...skippedNeverMix.values()],
       seed,
     },
   };

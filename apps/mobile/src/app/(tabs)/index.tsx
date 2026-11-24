@@ -1,11 +1,20 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Image, Pressable, StyleSheet, View } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
-import type { Garment, Occasion, ScoredOutfit } from "@styleme/schema";
+import type { ColorName, Garment, Occasion, ScoredOutfit } from "@styleme/schema";
 import { colors, occasionLabel, occasions, paletteSwatch, radius, space } from "@styleme/design";
 import { Btn, Caption, Card, Chip, Empty, Screen, Scroll, Title } from "@/components/ui";
-import { listGarments, logWear, upsertGarment } from "@/lib/db";
-import { getWeather, recommendLocal, recordPick, type LocalToday, type Weather } from "@/lib/local";
+import { OutfitBadge, Toast, WhyPanel } from "@/components/why-panel";
+import { listGarments, logWear, metaGet, upsertGarment } from "@/lib/db";
+import {
+  getWeather,
+  loadPrefs,
+  recommendLocal,
+  recordPick,
+  savePrefs,
+  type LocalToday,
+  type Weather,
+} from "@/lib/local";
 
 export default function Today() {
   const router = useRouter();
@@ -17,6 +26,9 @@ export default function Today() {
   const [loading, setLoading] = useState(true);
   const [picked, setPicked] = useState<ScoredOutfit | null>(null);
   const [seed, setSeed] = useState(0);
+  const [name, setName] = useState<string | null>(null);
+  const [toast, setToast] = useState<{ message: string; undo?: () => void } | null>(null);
+  const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -28,9 +40,13 @@ export default function Today() {
       setAvailable(free);
       const w = await getWeather();
       setWeather(w);
+      setName(await metaGet("name"));
       if (free.length >= 3) {
         const result = await recommendLocal(free, occasion, w, seed);
-        setToday(result.outfits.length > 0 ? result : null);
+        // Keep the result even when a never-mix rule emptied it — the skip
+        // line ("skipped rust + pink — you said never") must survive.
+        const keep = result.outfits.length > 0 || result.skippedNeverMix.length > 0;
+        setToday(keep ? result : null);
       } else {
         setToday(null);
       }
@@ -47,6 +63,46 @@ export default function Today() {
     }, [load]),
   );
 
+  useEffect(() => {
+    return () => {
+      if (toastTimer.current) clearTimeout(toastTimer.current);
+    };
+  }, []);
+
+  function showToast(message: string, undo?: () => void) {
+    if (toastTimer.current) clearTimeout(toastTimer.current);
+    setToast({ message, undo });
+    toastTimer.current = setTimeout(() => setToast(null), 6000);
+  }
+
+  /**
+   * Never-mix a color pair (long-press on a reason). Saved to prefs, the
+   * engine hard-filters it from now on, and the toast offers an undo.
+   */
+  async function neverMix(pair: [ColorName, ColorName]) {
+    const [colorA, colorB] = pair;
+    const prefs = await loadPrefs();
+    const dup = prefs.neverMix.some(
+      (m) =>
+        (m.colorA === colorA && m.colorB === colorB) ||
+        (m.colorA === colorB && m.colorB === colorA),
+    );
+    if (dup) {
+      showToast(`Already skipping ${colorA} + ${colorB} combos.`);
+      return;
+    }
+    await savePrefs({ ...prefs, neverMix: [...prefs.neverMix, { colorA, colorB }] });
+    void load();
+    showToast(`Never mixing ${colorA} + ${colorB} again.`, async () => {
+      const p = await loadPrefs();
+      await savePrefs({
+        ...p,
+        neverMix: p.neverMix.filter((m) => !(m.colorA === colorA && m.colorB === colorB)),
+      });
+      void load();
+    });
+  }
+
   async function pick(outfit: ScoredOutfit) {
     if (!today) return;
     await recordPick(available, outfit, today.outfits, today.context);
@@ -61,6 +117,11 @@ export default function Today() {
   if (!((owned.has("top") && owned.has("bottom")) || owned.has("dress"))) {
     missing.push("a top + bottom (or a dress)");
   }
+
+  const hour = new Date().getHours();
+  const part = hour < 12 ? "Morning" : hour < 18 ? "Afternoon" : "Evening";
+  const greeting = name ? `${part}, ${name}` : "Today";
+  const bestScore = today ? Math.max(...today.outfits.map((o) => o.score)) : 0;
 
   async function seedDemo() {
     const demo = [
@@ -90,7 +151,7 @@ export default function Today() {
       <Scroll>
         <View style={s.head}>
           <View style={{ flex: 1 }}>
-            <Title>Today</Title>
+            <Title>{greeting}</Title>
             <Caption>
               {Math.round(weather.tempC)}°{weather.isRaining ? " · rain" : ""} ·{" "}
               {available.length} pieces ready
@@ -110,6 +171,10 @@ export default function Today() {
           ))}
         </View>
 
+        {today?.skippedNeverMix.map(([a, b]) => (
+          <Caption key={`${a}|${b}`}>Skipped {a} + {b} combos — you said never.</Caption>
+        ))}
+
         {loading && (
           <Card style={{ alignItems: "center", gap: space.s }}>
             <ActivityIndicator color={colors.accent} />
@@ -121,7 +186,7 @@ export default function Today() {
           <Card style={{ borderColor: colors.ok }}>
             <Caption>Worn.</Caption>
             <Title>Logged it.</Title>
-            <Caption>It rests for a couple of days so you don't repeat it.</Caption>
+            <Caption>It rests for a couple of days so you don&apos;t repeat it.</Caption>
           </Card>
         )}
 
@@ -148,7 +213,7 @@ export default function Today() {
           <Card key={outfit.garmentIds.join("+")} style={{ gap: space.m }}>
             <View style={s.rowBetween}>
               <Caption>Option {i + 1}</Caption>
-              <Caption>{outfit.score.toFixed(2)}</Caption>
+              <OutfitBadge score={outfit.score} best={bestScore} />
             </View>
             <View style={s.thumbs}>
               {outfit.garmentIds.map((id) => {
@@ -164,13 +229,7 @@ export default function Today() {
                 );
               })}
             </View>
-            <Caption>
-              {outfit.reasons
-                .filter((r) => r.score > 0.05)
-                .slice(0, 3)
-                .map((r) => r.text)
-                .join(" · ") || "Complete, coherent, yours."}
-            </Caption>
+            <WhyPanel outfit={outfit} byId={byId} onNeverMix={(pair) => void neverMix(pair)} />
             <Btn
               label={picked?.garmentIds.join("+") === outfit.garmentIds.join("+") ? "Picked" : "Wear this"}
               onPress={() => void pick(outfit)}
@@ -179,12 +238,25 @@ export default function Today() {
           </Card>
         ))}
 
-        {today && (
+        {today && today.outfits.length > 0 && (
           <Pressable onPress={() => setSeed((x) => x + 1)} style={s.notToday}>
             <Caption>None of these? Shuffle the 3 options.</Caption>
           </Pressable>
         )}
       </Scroll>
+      {toast && (
+        <Toast
+          message={toast.message}
+          onUndo={
+            toast.undo
+              ? () => {
+                  toast.undo?.();
+                  setToast(null);
+                }
+              : undefined
+          }
+        />
+      )}
     </Screen>
   );
 }
