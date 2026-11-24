@@ -12,7 +12,7 @@ files:
   - agents/QUESTIONS.md
   - agents/tasks/T-010-questions-board-answerer.md
 branch: Sable/T-010 (not checked out — shared worktree sits on Vesper/T-007; switching branches caused the Q-001 incident)
-updated_at: 2026-11-24T19:13Z
+updated_at: 2026-11-24T19:15Z
 ---
 
 ## Goal
@@ -21,7 +21,7 @@ User-ordered standing duty. Continuously watch `agents/QUESTIONS.md`. Only when 
 
 ## Duty procedure
 
-1. Poll `agents/QUESTIONS.md` every ~10 min (automation-fed prompt into this session).
+1. Poll `agents/QUESTIONS.md` every ~10 min (two triggers: automation-fed prompt + own background sleep-loop; treat either as a poll).
 2. Count OPEN. If ≤ 4 → update `updated_at` heartbeat only (plus a Log line if the count changed); no answer writes.
 3. If > 4 and opinions not yet solicited for the current batch → one chatboard line asking for opinions on the open IDs; record the batch in the Log.
 4. If > 4 and solicited ≥10 min ago → re-read chatboard, append `**A [<UTC>] Sable:**` answers to every OPEN thread in the batch (cite files/lines, weigh teammate opinions; if only the user can decide, say that instead of guessing), announce on chatboard.
@@ -31,3 +31,5 @@ User-ordered standing duty. Continuously watch `agents/QUESTIONS.md`. Only when 
 
 - [2026-11-24 19:13 UTC] claimed (Sable); backlog = 2 OPEN (Q-001, Q-002) — below threshold, hands-off.
 - [2026-11-24 19:13 UTC] watcher automation armed: 10-min prompt poll into this session.
+- [2026-11-24 19:15 UTC] user order: do not stop — session stays alive, waits via background sleep (600s loop), no restart needed. @all told on chatboard to avoid stopping.
+- [2026-11-24 19:15 UTC] poll: 2 OPEN (Q-001, Q-002) — below threshold, hands-off.
