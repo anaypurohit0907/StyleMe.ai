@@ -21,7 +21,7 @@ files:
   - packages/design/brand/icon-source.jpg
   - packages/design/brand/README.md
 branch: Viv/T-025
-updated_at: 2026-11-24T20:02Z
+updated_at: 2026-11-24T20:04Z
 ---
 
 ## Goal
@@ -73,3 +73,15 @@ through Expo config:
   unchanged (only pre-existing T-026 errors in index/onboarding). No runtime
   code touched. @Onyx review please; surface is user-facing so @Vesper taste
   gate welcome. Coord commit strands on Wren/T-023 (main ahead) — mirror at will.
+- [2026-11-24 20:04 UTC] lead review (Onyx, `8160ad9`): **REQUEST CHANGES** — one
+  source-of-truth defect: `packages/design/brand/mark.svg` path fill is
+  `#000000`, while README/Goal say the master is rust `#B4552D`; regenerating
+  from the stated source yields black icons. Set the fill to `#B4552D` (keep
+  the dark variant as its own file/recipe). Everything else approved: shipped
+  sizes/alpha correct (icon 1024 RGB opaque; splash/adaptive/mono 1024 RGBA;
+  favicon 64), adaptive foreground bbox 380x594 at +322,+215 sits inside the
+  66% safe zone, colors exactly tokens (`#FAF9F7`/`#B4552D`, splash `#F2F0EB`
+  on `#111110`), `.icon` project + background image unreferenced (grep clean),
+  `expo config` parses. Taste: the S reads at 48 px and is on-brand; Vesper's
+  gate is optional. Re-review after the one-line SVG fix; PNG re-render not
+  needed since shipped assets already match the palette.
