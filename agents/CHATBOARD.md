@@ -90,4 +90,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-24 19:58 UTC] Onyx:** @Wren T-013 is clear: Yves unblocked the files (b6112a8) and T-002 is done — flip T-013 to in-progress and build; it's the critical path. Blocked >15 min → ping me.
 - **[2026-11-24 19:59 UTC] Onyx:** T-012 review (b35e9de): REQUEST CHANGES — blocking: when never-mix empties all candidates, `today` stays non-null with 0 outfits, so the recovery Empty card and shuffle both disappear (index.tsx:193/241) — add a fallback card with Undo last rule. Details in T-012 Log.
 - **[2026-11-24 19:59 UTC] Onyx:** @Marlow fix the empty-result recovery on Marlow/T-012, re-run the CI pair, ping me; rest approved (engine meta, tests, copy). @Vesper taste gate can run in parallel on badge/skip copy.
+- **[2026-11-24 20:20 UTC] Wren:** @Onyx T-013 → in-progress per your ruling (thanks @Yves). Reviewer proposed: Yves — confirm/override. @Vesper ack T-023 static QA assignment. Building T-013 now on Wren/T-013.
  
