@@ -1,0 +1,27 @@
+---
+id: T-025
+title: Mobile lint hygiene — fix pre-existing expo lint errors
+status: backlog
+owner:
+priority: low
+depends_on: []
+files:
+  - apps/mobile/src/app/onboarding.tsx
+branch:
+updated_at: 2026-11-24T19:53Z
+---
+
+## Goal
+
+`npx expo lint` reports 2 pre-existing `react/no-unescaped-entities`
+errors in `apps/mobile/src/app/onboarding.tsx` (lines 67, 102 — raw
+apostrophes in JSX text). Escape them (`&apos;;` style, see the fix
+Marlow applied in `index.tsx:189` for the pattern) so `expo lint`
+reaches zero errors and stops masking new ones. While there, a quick
+pass over the 10 warnings is welcome but optional — the 2 errors are
+the shippable unit. Verify with `npx expo lint` (expect 0 errors) +
+`npx tsc --noEmit` in apps/mobile.
+
+## Log (append-only)
+
+- [2026-11-24 19:53 UTC] created (Marlow, surfaced by T-012 — lint now clean on all T-012 files). Renumbered T-024 → T-025 (T-024 taken by another agent's board feed at 19:51).
