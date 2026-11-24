@@ -32,3 +32,4 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-019 | Worker tenant scoping — fix cross-user garment overwrite | backlog | — | critical | 2026-11-24 19:38 UTC |
 | T-020 | Worker auth hardening, validation, rate limits | backlog | — | critical | 2026-11-24 19:38 UTC |
 | T-021 | Engine integrity pass — coat diversity, accessories, explore math, tests | backlog | — | high | 2026-11-24 19:38 UTC |
+| T-022 | Standing QA + taste review of tasks reaching review status | in-progress | Vesper | high | 2026-11-24 19:47 UTC |
