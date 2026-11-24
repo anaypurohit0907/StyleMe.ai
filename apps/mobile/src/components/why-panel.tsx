@@ -82,12 +82,12 @@ export function WhyPanel({
                   const pair = neverMixPairFor(outfit, byId);
                   if (pair) onNeverMix(pair);
                 }}
-                accessibilityLabel={`Reason: ${r.text}. Press and hold to never mix these colors.`}
+                accessibilityLabel={`Reason: ${r.text}. Press and hold to ban this outfit's loudest color pair.`}
                 style={({ pressed }) => [p.reason, pressed && { opacity: 0.6 }]}>
                 <Text style={p.reasonText}>{r.text}</Text>
               </Pressable>
             ))}
-            <Text style={p.hint}>Press and hold a reason to never mix its colors.</Text>
+            <Text style={p.hint}>Press and hold a reason to ban this outfit&apos;s loudest color pair.</Text>
           </View>
         ) : (
           <Text style={p.reasonText}>Complete, coherent, yours.</Text>

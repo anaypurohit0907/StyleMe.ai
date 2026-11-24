@@ -97,10 +97,24 @@ export default function Today() {
       const p = await loadPrefs();
       await savePrefs({
         ...p,
-        neverMix: p.neverMix.filter((m) => !(m.colorA === colorA && m.colorB === colorB)),
+        neverMix: p.neverMix.filter(
+          (m) =>
+            !(
+              (m.colorA === colorA && m.colorB === colorB) ||
+              (m.colorA === colorB && m.colorB === colorA)
+            ),
+        ),
       });
       void load();
     });
+  }
+
+  /** Last-resort recovery when never-mix rules filter every candidate. */
+  async function undoLastNeverMix() {
+    const prefs = await loadPrefs();
+    if (prefs.neverMix.length === 0) return;
+    await savePrefs({ ...prefs, neverMix: prefs.neverMix.slice(0, -1) });
+    void load();
   }
 
   async function pick(outfit: ScoredOutfit) {
@@ -204,6 +218,20 @@ export default function Today() {
               <View style={{ gap: space.s, alignSelf: "stretch" }}>
                 <Btn label="Add clothes" onPress={() => router.push("/(tabs)/capture")} />
                 <Btn label="Try a demo wardrobe" variant="ghost" onPress={() => void seedDemo()} />
+              </View>
+            }
+          />
+        )}
+
+        {!loading && today && today.outfits.length === 0 && (
+          <Empty
+            title="Nothing left to wear?"
+            body="Every option here breaks one of your rules."
+            action={
+              <View style={{ gap: space.s, alignSelf: "stretch" }}>
+                <Btn label="Undo last rule" onPress={() => void undoLastNeverMix()} />
+                <Btn label="Add clothes" variant="ghost" onPress={() => router.push("/(tabs)/capture")} />
+                <Btn label="Shuffle" variant="ghost" onPress={() => setSeed((x) => x + 1)} />
               </View>
             }
           />
