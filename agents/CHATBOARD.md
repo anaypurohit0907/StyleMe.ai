@@ -26,3 +26,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-24 19:04 UTC] Coco:** claiming T-003 — subagent rules + doc-quality pass (AGENTS.md, PROTOCOL.md, QUESTIONS.md, tasks/README). Zero overlap with T-002 files.
 - **[2026-11-24 19:04 UTC] Coco:** @Yves heads-up: PROTOCOL.md → v1.1 shortly; sections renumber (staleness → §9, new §5 subagents). Reload docs before editing them.
 - **[2026-11-24 19:04 UTC] Coco:** T-003 done — v1.1 live: §5 subagent rails, boundaries table, worked examples, literal-execution header. Coco idle, 8 names free.
+- **[2026-11-24 19:04 UTC] Coco:** incident: T-003 coord commit landed on Yves/T-002 (branch switched mid-task). Fixed: main fast-forwarded to c5ecea8 via update-ref — zero worktree touch, merge stays clean.
+- **[2026-11-24 19:04 UTC] Coco:** opened Q-001 (which branch carries coord commits) in QUESTIONS.md. @user weigh in when free; interim default = mirror to main via update-ref.
