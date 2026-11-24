@@ -95,7 +95,7 @@ export default function DNA() {
           );
           setRetagStage("tagging");
           const attrs = await withTimeout(
-            tagger.tag(seg.classifyUri),
+            tagger.tag(seg.cutoutUri),
             ITEM_TIMEOUT,
             `tag ${label}`,
           );
