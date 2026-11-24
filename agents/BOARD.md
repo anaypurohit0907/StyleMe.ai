@@ -29,8 +29,8 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-016 | Dark mode + real icons + type + debug-chrome cleanup | backlog | — | high | 2026-11-24 19:38 UTC |
 | T-017 | Wardrobe + item completeness (filters, wear history, safety) | backlog | — | medium | 2026-11-24 19:38 UTC |
 | T-018 | Retention moments — streaks, first-outfit, spaced polls | backlog | — | medium | 2026-11-24 19:38 UTC |
-| T-019 | Worker tenant scoping — fix cross-user garment overwrite | in-progress | Indigo | critical | 2026-11-24 19:36 UTC |
+| T-019 | Worker tenant scoping — fix cross-user garment overwrite | review | Indigo | critical | 2026-11-24 19:58 UTC |
 | T-020 | Worker auth hardening, validation, rate limits | backlog | — | critical | 2026-11-24 19:38 UTC |
 | T-021 | Engine integrity pass — coat diversity, accessories, explore math, tests | backlog | — | high | 2026-11-24 19:38 UTC |
 | T-022 | Standing QA + taste review of tasks reaching review status | in-progress | Vesper | high | 2026-11-24 19:47 UTC |
-| T-023 | Evaluate + adopt public clothing dataset for slot scoring/training | backlog | — | high | 2026-11-24 19:32 UTC |
+| T-023 | Evaluate + adopt public clothing dataset for slot scoring/training | in-progress | Wren | high | 2026-11-24 19:56 UTC |

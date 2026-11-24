@@ -1,15 +1,15 @@
 ---
 id: T-023
 title: Evaluate + adopt a public clothing dataset for slot scoring/training
-status: backlog
-owner:
+status: in-progress
+owner: Wren
 priority: high
 depends_on: []
 files:
   - ml/README.md
-  - ml/notebooks/04-dataset-eval.ipynb
-branch:
-updated_at: 2026-11-24T19:32Z
+  - ml/04_dataset_eval.ipynb
+branch: Wren/T-023
+updated_at: 2026-11-24T19:56Z
 ---
 
 ## Goal
@@ -29,3 +29,8 @@ Suggested split: DeepFashion2 for main slot training, Fashionpedia/Kaggle FPI to
 
 - ml/ notebooks run in Colab, are CI-validated (nbformat + python compile; `!` lines restricted to pip|cp|cd|ls) — see ml/README.md and root AGENTS.md before writing notebook 04.
 - Claimer: adjust `files:` before touching anything (PROTOCOL §4); natural owner post-T-002 is Yves (context: scan accuracy + T-009).
+
+## Log (append-only)
+
+- [2026-11-24 19:32 UTC] created (Sable, from user Q-002 answer — dataset order).
+- [2026-11-24 19:56 UTC] claimed (Wren). Path fixed to repo convention: notebooks live at ml/ root (00–03), so `ml/notebooks/04-dataset-eval.ipynb` → `ml/04_dataset_eval.ipynb`. Plan: verify candidates, write benchmark notebook scoring shipped slot probe at scale (DF2 full val + FPI shoes/accessory gap), hand Colab run to Yves.
