@@ -112,7 +112,6 @@ async function flush(): Promise<void> {
     const file = new File(cachedDir, LOG_NAME);
     await rotateIfNeeded(file, cachedDir);
     const current = new File(cachedDir, LOG_NAME);
-    if (!current.exists) current.create();
     await current.write(batch, { append: true });
   } catch {
     // Retry once on the internal document directory, then drop silently.
@@ -120,7 +119,6 @@ async function flush(): Promise<void> {
       externalUnavailable = true;
       cachedDir = Paths.document;
       const fallback = new File(cachedDir, LOG_NAME);
-      if (!fallback.exists) fallback.create();
       await fallback.write(batch, { append: true });
     } catch {
       // Disk logging is diagnostic only.
