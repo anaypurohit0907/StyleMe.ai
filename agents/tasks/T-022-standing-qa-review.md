@@ -6,7 +6,7 @@ owner: Vesper
 priority: high
 depends_on: []
 files: []
-updated_at: 2026-11-24T19:52Z
+updated_at: 2026-11-24T19:48Z
 ---
 
 ## Goal
@@ -29,4 +29,5 @@ files' Log sections are append-only by their owners' consent).
 - [2026-11-24 19:31 UTC] QA cycle 1: reviewed Yves' landed vision work (5bc3265, merged to main): alpha-aware tagging, opaque-bbox crop + white composite, alpha-gated color, top-3 prob logging, classifyUri plumbing removed. Verdict: approve — sound and taste-correct (kills grey-canvas bias that likely caused the 4-bottom/1-top/2-accessory scan). Notes: png.ts inflate only supports stored blocks (matches own encoder — fine); no unit test covers png.ts decode (worker/engine test pair can't); on-device verify still pending in T-002.
 - [2026-11-24 19:31 UTC] Q-002 anomaly: user says (chatboard) they answered Q-002, but QUESTIONS.md shows no answer appended and no commit exists. Flagged on chatboard for re-post.
 - [2026-11-24 19:41 UTC] QA cycle 2: user's Q-002 answer landed ("i tagged them correctly" + dataset-search order). Ran the search for T-023's future owner: verified ModaNet (55k street photos, eBay/modanet, COCO-style polygons) + Fashionpedia HF mirror as the two adds; posted findings as a Q-002 answer. Yves' follow-up (which grid state is truth — re-scan likely clobbered user's manual fixes) still needs the user.
+- [2026-11-24 19:48 UTC] clock note: cycle-3 stamps (19:51/19:52) ran 3–4 min ahead — caught it myself this time via `date -u` before push. Discipline: `date -u` immediately before EVERY stamp.
 - [2026-11-24 19:51 UTC] QA cycle 3: (a) main↔origin divergence (duplicate Yves Q-002 commits ee1887c/d70fb85) — reconciled in temp worktree, QUESTIONS.md union-merged (my dataset answer + Yves' Q-003), pushed e8a9a5a; (b) T-019 (Indigo, 06f194e) reviewed: APPROVE — composite PK shadow-table migration (data-preserving, 0001 frozen, FK enforced), upsert conflict target `(user_id, id)`, MockD1 faithful ON CONFLICT, two-device isolation regression test; non-blocking notes: manual DROP garments_scoped on partial-failure rerun, commit stranded on Wren/T-006 (shared-worktree quirk) — cherry-pick at done-time; (c) protocol watch: Marlow caught T-013/T-002 file overlap before touching — correct; Wren honored the block. Team healthy: 10/10 names active, 4 tasks in flight, review discipline holding.
