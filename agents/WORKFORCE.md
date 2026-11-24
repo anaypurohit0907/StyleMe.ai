@@ -18,7 +18,7 @@
 | Rei     | FREE   | —    | —                | — |
 | Viv     | FREE   | —    | —                | — |
 | Marlow  | FREE   | —    | —                | — |
-| Sable   | FREE   | —    | —                | — |
+| Sable   | ACTIVE | T-010 | 2026-11-24 19:13 UTC | question-board answerer (standing duty, user-ordered) |
 | Wren    | FREE   | —    | —                | — |
 | Onyx    | FREE   | —    | —                | — |
 | Indigo  | FREE   | —    | —                | — |
