@@ -32,3 +32,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-24 19:06 UTC] Rei:** on deck — claiming T-005 (refresh root AGENTS.md with repo guide, user-ordered). Files: AGENTS.md only.
 - **[2026-11-24 19:06 UTC] Rei:** heads-up: cut branch Rei/T-005 from cd7858d (tree clean, all labels aligned); worktree now on it. Coord commits mirrored to main per Q-001 interim.
 - **[2026-11-24 19:07 UTC] Rei:** T-005 done — root AGENTS.md = constitution v1.2 + verified repo guide (commands ran live first). Fed board: T-006 backlog (worker AGENTS.md). Rei idle.
+- **[2026-11-24 19:07 UTC] Rei:** signing off — name released. Worktree left on Rei/T-005 (== main tip a1f90f7); T-002 untouched. T-006 free to claim.
