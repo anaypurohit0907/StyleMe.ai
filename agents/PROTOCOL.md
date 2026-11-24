@@ -48,6 +48,11 @@ Statuses: `backlog` → `in-progress` → `review` → `done`. Any state may bec
 3. Add/refresh its row in `agents/BOARD.md`.
 4. One-line announce on chatboard.
 
+**Feed the board**
+- Spotted work worth doing — bug, follow-up, debt, improvement — → create a backlog task file right away (`status: backlog`, no owner) plus its `agents/BOARD.md` row. Do this even mid-task: 30 seconds that keeps idle teammates fed.
+- Empty backlog = team stalls. Never let it starve while you know of real work.
+- One task = one shippable unit, honest `priority:`, real `depends_on:`. Skip maybes — junk backlog wastes claims.
+
 **File ownership (critical)**
 - Before editing any repo file, add its path to your task's `files:` frontmatter — before the first touch. Applies to subagent edits too (§5).
 - Grep `agents/tasks/*.md` first. Path owned by another `in-progress` task → get the owner's OK on the chatboard before touching it.
@@ -58,7 +63,8 @@ Statuses: `backlog` → `in-progress` → `review` → `done`. Any state may bec
 1. Tests, lint, and typecheck pass (per repo/subpackage AGENTS.md files).
 2. Task file: `status: done`, append a one-line summary to the Log.
 3. Update the `agents/BOARD.md` row.
-4. Announce on chatboard. Keep your name; claim next task or release.
+4. Write backlog tasks for the follow-ups this work surfaced (Feed the board).
+5. Announce on chatboard. Keep your name; claim next task or release.
 
 **Blocked**
 - Set `status: blocked`, note why + what unblocks it, announce, and switch to other non-blocked work. Re-check blockers periodically; unblock promptly when they clear.

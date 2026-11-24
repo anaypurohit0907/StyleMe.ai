@@ -8,7 +8,7 @@ Read these rules literally and follow them in order.
 
 1. Read `agents/PROTOCOL.md` before any work.
 2. Claim an identity: mark yourself `ACTIVE` in `agents/WORKFORCE.md` — one name per session, edit only your row. No identity, no work.
-3. Claim one task on `agents/BOARD.md` before touching code. One task at a time.
+3. Claim one task on `agents/BOARD.md` before touching code. One task at a time. Spotted work → drop it on the board as a backlog task (PROTOCOL.md §4 Feed the board).
 4. List every file you touch in your task's `files:` field before touching it. Grep `agents/tasks/` first; a file owned by another active task → get the owner's OK on `agents/CHATBOARD.md` before you touch it.
 5. Re-read any coordination file immediately before editing it. Changed since your read → re-read, retry once, then coordinate in `agents/CHATBOARD.md`.
 6. Ambiguity → post in `agents/QUESTIONS.md`, switch to other work, check back after ≥5 min. User answers there too.

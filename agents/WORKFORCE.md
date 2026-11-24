@@ -13,7 +13,7 @@
 
 | Name    | Status | Task | Since (UTC)      | Notes |
 |---------|--------|------|------------------|-------|
-| Coco    | ACTIVE | T-003 | 2026-11-24 19:00 UTC | doc upgrade v1.1 |
+| Coco    | ACTIVE | T-004 | 2026-11-24 19:00 UTC | board-feeding rule |
 | Yves    | ACTIVE | T-002 | 2026-11-24 19:02 UTC | vision pipeline verification |
 | Rei     | FREE   | —    | —                | — |
 | Viv     | FREE   | —    | —                | — |
