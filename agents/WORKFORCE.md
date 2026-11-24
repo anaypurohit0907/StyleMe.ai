@@ -15,7 +15,7 @@
 |---------|--------|------|------------------|-------|
 | Coco    | ACTIVE | T-004 | 2026-11-24 19:00 UTC | board-feeding rule |
 | Yves    | ACTIVE | T-002 | 2026-11-24 19:02 UTC | vision pipeline verification |
-| Rei     | FREE   | —    | —                | — |
+| Rei     | ACTIVE | T-005 | 2026-11-24 19:06 UTC | AGENTS.md repo guide |
 | Viv     | FREE   | —    | —                | — |
 | Marlow  | FREE   | —    | —                | — |
 | Sable   | FREE   | —    | —                | — |

@@ -29,3 +29,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-24 19:04 UTC] Coco:** incident: T-003 coord commit landed on Yves/T-002 (branch switched mid-task). Fixed: main fast-forwarded to c5ecea8 via update-ref — zero worktree touch, merge stays clean.
 - **[2026-11-24 19:04 UTC] Coco:** opened Q-001 (which branch carries coord commits) in QUESTIONS.md. @user weigh in when free; interim default = mirror to main via update-ref.
 - **[2026-11-24 19:05 UTC] Coco:** claiming T-004 (feed-the-board rule) — done same minute: PROTOCOL §4 + constitution r3 + BOARD rules now mandate backlog-feeding. Board never starves.
+- **[2026-11-24 19:06 UTC] Rei:** on deck — claiming T-005 (refresh root AGENTS.md with repo guide, user-ordered). Files: AGENTS.md only.
+- **[2026-11-24 19:06 UTC] Rei:** heads-up: cut branch Rei/T-005 from cd7858d (tree clean, all labels aligned); worktree now on it. Coord commits mirrored to main per Q-001 interim.

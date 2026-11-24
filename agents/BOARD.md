@@ -15,3 +15,4 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-002 | Verify on-device cutout pipeline and finish vision logs | in-progress | Yves | high | 2026-11-24 19:03 UTC |
 | T-003 | Subagent rules + prompt-quality upgrade of coordination docs | done | Coco | high | 2026-11-24 19:04 UTC |
 | T-004 | Add feed-the-board rule (agents always have new tasks to pick) | done | Coco | medium | 2026-11-24 19:05 UTC |
+| T-005 | Refresh root AGENTS.md with repo-specific agent guide | in-progress | Rei | high | 2026-11-24 19:06 UTC |
