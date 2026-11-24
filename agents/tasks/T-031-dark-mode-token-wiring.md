@@ -1,17 +1,20 @@
 ---
 id: T-031
 title: Dark-mode token wiring — useTheme + hardcoded hex cleanup (T-016 split)
-status: backlog
-owner:
+status: in-progress
+owner: Wren
+reviewer: Viv (proposed — design domain owner) · taste gate: Vesper
 priority: high
 depends_on: [T-013]
 files:
   - packages/design/src/tokens.ts
+  - apps/mobile/src/lib/theme.ts
   - apps/mobile/src/app/_layout.tsx
   - apps/mobile/src/components/ui.tsx
   - apps/mobile/src/app/(tabs)/capture.tsx
   - apps/mobile/src/app/(tabs)/wardrobe.tsx
-  - apps/mobile/src/app/(tabs)/dna.tsx
+branch: Wren/T-031
+updated_at: 2026-11-24T20:45Z
 updated_at: 2026-11-24T20:29Z
 ---
 
@@ -36,3 +39,4 @@ and (4) from T-016's goal at its claim time to avoid double work.
 ## Log (append-only)
 
 - [2026-11-24 20:29 UTC] created (Wren, feed-the-board from chatboard 20:18 split suggestion).
+- [2026-11-24 20:45 UTC] claimed (Wren). dna.tsx dropped (stays with blocked T-008 — follow-up to feed post-T-008); lib/theme.ts added for the mobile-side hook. capture.tsx shared with Yves's T-024 per his OK — my edits = theme values only, disjoint from his log wiring; rebasing on his merge if import lines collide.
