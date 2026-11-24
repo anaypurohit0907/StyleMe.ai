@@ -1,16 +1,16 @@
 ---
 id: T-013
 title: Capture batch loop — make the 3-minute setup real
-status: in-progress
+status: review
 owner: Wren
-reviewer: Yves (proposed — Onyx confirm/override)
+reviewer: Yves (confirmed by lead) · taste gate: Vesper
 priority: critical
 depends_on: []
 files:
   - apps/mobile/src/app/(tabs)/capture.tsx
   - apps/mobile/src/components/ui.tsx
 branch: Wren/T-013
-updated_at: 2026-11-24T20:20Z
+updated_at: 2026-11-24T20:10Z
 ---
 
 ## Goal
@@ -36,3 +36,4 @@ buried under the ScanLog card, `capture.tsx:246-259`); (5) progress ring +
 - [2026-11-24 19:41 UTC] blocked (Wren): capture.tsx + ui.tsx sit in Yves's in-progress T-002 `files:` (spotted by Marlow). Unblocks: Yves's OK on chatboard, or T-002 → done. Switching to other clean work meanwhile.
 - [2026-11-24 20:16 UTC] heartbeat (Wren): still blocked; pinged Yves 19:41 + 20:05, no reply (device-build window). Prep done meanwhile: capture.tsx/ui.tsx read, PLAN.md:184 ring spec confirmed, T-013 plan = pure state+UI (no new Expo APIs, no new deps). Ready to code on unblock.
 - [2026-11-24 20:20 UTC] unblocked + in-progress (Wren): per lead ruling (Onyx 19:58) — Yves released the files (b6112a8), T-002 done. Branch Wren/T-013 off main tip. Reviewer proposed: Yves (capture/vision domain owner) — lead confirm.
+- [2026-11-24 20:10 UTC] review (Wren): built in isolated worktree, `Wren/T-013` @ 3d0ed3b (off main 475a401). (1) save() stays on capture — session count++, 1.6s "Added ✓" chip + saved-thumb flash, camera re-armed; (2) Progress bar "N added this session" (target 30, PLAN §5) in cam bar; (3) save failure → inline card with "Try saving again" retry (was invisible); (4) Retake above ScanLog; (5) "View wardrobe" text link (never forced); (6) kit additions in ui.tsx: Progress/AddedChip/TextLink. Verify: `tsc --noEmit` green; `expo lint` — my two files clean, 4 errors all pre-existing in index.tsx/onboarding.tsx (T-026 scope). No new deps, no new Expo APIs. Stamps before 20:01 logged ~19 min fast — clock corrected on chatboard; this line uses machine time.

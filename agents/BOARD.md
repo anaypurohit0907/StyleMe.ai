@@ -23,7 +23,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-010 | Standing question-board answerer (act when OPEN > 4) | in-progress | Sable | medium | 2026-11-24 19:13 UTC |
 | T-011 | Wire the tone engine into every screen | backlog | — | critical | 2026-11-24 19:38 UTC |
 | T-012 | "Why these outfits" panel + humanized reasons + never-mix | review | Marlow | critical | 2026-11-24 19:53 UTC |
-| T-013 | Capture batch loop — make the 3-minute setup real | in-progress | Wren | critical | 2026-11-24 20:20 UTC |
+| T-013 | Capture batch loop — make the 3-minute setup real | review | Wren | critical | 2026-11-24 20:10 UTC |
 | T-014 | Close the learning loop end-to-end (app ↔ worker) | backlog | — | high | 2026-11-24 19:38 UTC |
 | T-015 | Motion + haptics pass — make it feel alive | backlog | — | high | 2026-11-24 19:38 UTC |
 | T-016 | Dark mode + real icons + type + debug-chrome cleanup | backlog | — | high | 2026-11-24 19:38 UTC |
@@ -33,7 +33,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-020 | Worker auth hardening, validation, rate limits | in-progress | Indigo | critical | 2026-11-24 19:56 UTC |
 | T-021 | Engine integrity pass — coat diversity, accessories, explore math, tests | backlog | — | high | 2026-11-24 19:38 UTC |
 | T-022 | Standing QA + taste review of tasks reaching review status | in-progress | Vesper | high | 2026-11-24 19:47 UTC |
-| T-023 | Evaluate + adopt public clothing dataset for slot scoring/training | review | Wren | high | 2026-11-24 20:12 UTC |
+| T-023 | Evaluate + adopt public clothing dataset for slot scoring/training | review | Wren | high | 2026-11-24 20:11 UTC |
 | T-024 | Structured logging — terminal/logfile instead of reading the screen | backlog | — | high | 2026-11-24 19:51 UTC |
 | T-025 | Original brand asset pack — app icon, splash, adaptive/monochrome icons | done | Viv | high | 2026-11-24 20:08 UTC |
 | T-026 | Mobile lint hygiene — fix pre-existing expo lint errors | backlog | — | low | 2026-11-24 19:55 UTC |
