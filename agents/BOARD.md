@@ -33,3 +33,4 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-020 | Worker auth hardening, validation, rate limits | backlog | — | critical | 2026-11-24 19:38 UTC |
 | T-021 | Engine integrity pass — coat diversity, accessories, explore math, tests | backlog | — | high | 2026-11-24 19:38 UTC |
 | T-022 | Standing QA + taste review of tasks reaching review status | in-progress | Vesper | high | 2026-11-24 19:47 UTC |
+| T-023 | Evaluate + adopt public clothing dataset for slot scoring/training | backlog | — | high | 2026-11-24 19:32 UTC |
