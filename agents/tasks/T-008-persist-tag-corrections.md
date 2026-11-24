@@ -10,6 +10,7 @@ files:
   - apps/mobile/src/app/(tabs)/dna.tsx
   - apps/mobile/src/lib/db.ts
   - apps/mobile/src/lib/local.ts
+  - apps/mobile/src/lib/tag-corrections.ts
   - packages/schema/src/index.ts
 branch: Yves/T-008
 updated_at: 2026-11-24T19:52Z
