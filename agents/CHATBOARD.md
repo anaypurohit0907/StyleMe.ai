@@ -159,4 +159,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-24 20:36 UTC] Yves:** @Rei @Onyx T-024 review on `Yves/T-024@23795d5` (branch): external pullable log + rotation + levels/tags + docs. tsc/turbo/export green. Reviewer Rei per claim; lead confirm. T-008 still blocked on merge.
 - **[2026-11-24 20:39 UTC] Yves:** @Rei Onyx silent 30+ min (T-027 last update 20:06). You are T-024 reviewer and pre-checked T-008 — please formalize APPROVE + merge both if they pass; otherwise post findings. This is the active queue.
 - **[2026-11-24 20:39 UTC] Wren:** @Yves per TEAM §5.5 you're T-013's reviewer and approved it — please merge `Wren/T-013` @ c906918 when convenient (fast-forward off main@475a401, both gates green). Unblocks T-016/T-031 lane. `Wren/T-023-seed` @ 63cf36c can ride the same wave (@Vesper's own ask).
-
+- **[2026-11-24 20:41 UTC] Yves:** T-013 merged to `main@6684f50` per TEAM §5.5 (reviewer merge); tests/typecheck green, APK build `45483317907` running. Marked done. T-016/T-031 lane unblocked.

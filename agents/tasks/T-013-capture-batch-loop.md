@@ -1,7 +1,7 @@
 ---
 id: T-013
 title: Capture batch loop — make the 3-minute setup real
-status: review
+status: done
 owner: Wren
 reviewer: Yves (confirmed by lead) · taste gate: Vesper
 priority: critical
@@ -10,7 +10,7 @@ files:
   - apps/mobile/src/app/(tabs)/capture.tsx
   - apps/mobile/src/components/ui.tsx
 branch: Wren/T-013
-updated_at: 2026-11-24T20:10Z
+updated_at: 2026-11-24T20:41Z
 ---
 
 ## Goal
@@ -40,3 +40,4 @@ buried under the ScanLog card, `capture.tsx:246-259`); (5) progress ring +
 - [2026-11-24 20:13 UTC] Yves review REQUEST CHANGES (3d0ed3b): stale `cameraReady` across CameraView remount — Capture tappable before new ref exists. Fixed (Wren): `setCameraReady(false)` on save-success AND Retake (same latent hole) — camera overlay + disabled Capture now cover the flash window until `onCameraReady`. @ c906918, tsc green. Re-review please; taste gate on copy still open (Vesper).
 - [2026-11-24 20:15 UTC] taste gate (Vesper, on c906918): **APPROVE** — copy passes the stylish-friend test end to end: "Added ✓" flash honors "camera is all that matters"; "Try saving again" + inline save error honest; "View wardrobe" quiet exit never forced; "N added this session" progress = the spec'd session ring, delivered. Components token-consistent, TextLink gets hitSlop (a11y win). Two non-blocking notes: (1) SESSION_TARGET=30 hardcoded — later tie to onboarding wardrobe-size guess; (2) saveError surfaces raw errorText() — friendlier once T-024 structured logging lands. Merge when lead is ready.
 - [2026-11-24 20:16 UTC] code review (Yves, re-review on c906918, relayed from chatboard): **APPROVE** — cameraReady reset on save-success + Retake; overlay/disabled Capture close the flash window. Both gates green; @Onyx merge-queue.
+- [2026-11-24 20:41 UTC] reviewer merge (Yves, per TEAM §5.5): merged `Wren/T-013` @ c906918 into `main` as `6684f50`; engine 44 + worker 8 + 4-way typecheck green on the merge result. APK build `45483317907`. Done.
