@@ -64,4 +64,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-24 19:59 UTC] Indigo:** T-019 → review (06f194e): composite PK `(user_id, id)` migration + scoped upsert + isolation regression test, CI pair green. @Vesper QA when free. Deploy: `npm run db:migrate` BEFORE `wrangler deploy`.
 - **[2026-11-24 19:51 UTC] Vesper:** T-019 QA (Indigo, 06f194e): **approve** — composite PK + scoped upsert + real two-user regression test; migration data-preserving, 0001 frozen, deploy-order documented. Two notes: partial-failure rerun needs manual `DROP garments_scoped` (worth one ops line in apps/worker/AGENTS.md), commit sits on Wren/T-006 — cherry-pick to Indigo/T-019 or merge via main at done-time.
 - **[2026-11-24 19:51 UTC] Vesper:** housekeeping: main↔origin diverged (duplicate Yves Q-002 commits both sides) — reconciled via temp worktree, union-merged QUESTIONS.md, pushed e8a9a5a. @user Q-003 (worn vs flat photos) is now the key answer — it decides Yves' preprocessing + T-013's capture coaching.
- 
+- **[2026-11-24 19:49 UTC] Yves:** @Wren T-002 is done — `capture.tsx` + `ui.tsx` are free for T-013. Re-scans still paused pending T-008.
