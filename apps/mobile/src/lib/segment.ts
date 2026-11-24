@@ -1,14 +1,13 @@
 /**
  * On-device garment cutout: U²-Net-p salient-object mask → transparent PNG.
- * The classifier runs on a neutral-gray composite so bed/floor patterns stop
- * leaking into slot/subtype predictions.
+ * The tagger reads the PNG's alpha, crops to the garment, and composites it on
+ * white before classification — no bed/floor pixels and no grey canvas.
  *
  * Photos are normalized to a 1024px JPEG with expo-image-manipulator first:
  * it bakes EXIF rotation, converts any source format to JPEG, and keeps the
  * pure-JS decode/composite/encode steps small enough for a phone.
  */
 import { Asset } from "expo-asset";
-import { Buffer } from "buffer";
 import { Directory, File, Paths } from "expo-file-system";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import jpeg from "jpeg-js";
@@ -23,10 +22,6 @@ function ort(): OrtModule {
   return ortModule;
 }
 
-// jpeg-js writes its output through the Node Buffer API. Metro/Hermes has no
-// global Buffer, so provide the browser polyfill before the encoder runs.
-(globalThis as unknown as { Buffer?: typeof Buffer }).Buffer ??= Buffer;
-
 const SEG_SIZE = 320;
 const WORK_MAX = 1024;
 const MEAN = [0.485, 0.456, 0.406];
@@ -37,10 +32,8 @@ const INFERENCE_TIMEOUT = 120_000;
 const WRITE_TIMEOUT = 30_000;
 
 export interface CutoutResult {
-  /** Transparent PNG for the wardrobe card. */
+  /** Transparent PNG for the wardrobe card and the tagger. */
   cutoutUri: string;
-  /** Garment on neutral gray, used by the tagger. */
-  classifyUri: string;
   /** Fraction of pixels the mask kept. */
   coverage: number;
 }
@@ -218,27 +211,18 @@ export async function segmentGarment(uri: string, id: string): Promise<CutoutRes
 
   const composite = Date.now();
   const cutout = new Uint8Array(width * height * 4);
-  const gray = new Uint8Array(width * height * 4);
   for (let i = 0; i < width * height; i++) {
     const si = i * 4;
     const alpha = useMask ? Math.max(0, Math.min(1, mask[i] ?? 0)) : 1;
-    const r = data[si] ?? 0;
-    const g = data[si + 1] ?? 0;
-    const b = data[si + 2] ?? 0;
-    cutout[si] = r;
-    cutout[si + 1] = g;
-    cutout[si + 2] = b;
+    cutout[si] = data[si] ?? 0;
+    cutout[si + 1] = data[si + 1] ?? 0;
+    cutout[si + 2] = data[si + 2] ?? 0;
     cutout[si + 3] = Math.round(alpha * 255);
-    gray[si] = Math.round(r * alpha + 128 * (1 - alpha));
-    gray[si + 1] = Math.round(g * alpha + 128 * (1 - alpha));
-    gray[si + 2] = Math.round(b * alpha + 128 * (1 - alpha));
-    gray[si + 3] = 255;
   }
   log("cutout", `composite ${width}x${height} (${Date.now() - composite}ms)`);
 
   const dir = cutoutDir();
   const cutoutUri = new File(dir, `${id}.png`).uri;
-  const classifyUri = new File(dir, `${id}_gray.jpg`).uri;
 
   const pngStart = Date.now();
   const png = encodePngRgba(cutout, width, height);
@@ -248,14 +232,6 @@ export async function segmentGarment(uri: string, id: string): Promise<CutoutRes
   await withTimeout(writeBytes(`${id}.png`, png), WRITE_TIMEOUT, "write cutout png");
   log("cutout", `png written (${Date.now() - writePngStart}ms) ${shortUri(cutoutUri)}`);
 
-  const jpegStart = Date.now();
-  const encoded = jpeg.encode({ data: gray, width, height }, 88).data;
-  log("cutout", `gray jpeg encoded ${Math.round(encoded.length / 1024)}KB (${Date.now() - jpegStart}ms)`);
-
-  const writeJpegStart = Date.now();
-  await withTimeout(writeBytes(`${id}_gray.jpg`, encoded), WRITE_TIMEOUT, "write classify jpeg");
-  log("cutout", `gray jpeg written (${Date.now() - writeJpegStart}ms)`);
-
   log("cutout", `done ${id} total=${Date.now() - start}ms cov=${coverage.toFixed(3)}`);
-  return { cutoutUri, classifyUri, coverage };
+  return { cutoutUri, coverage };
 }

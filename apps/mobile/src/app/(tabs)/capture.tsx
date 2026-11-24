@@ -25,7 +25,6 @@ export default function Capture() {
   const [permission, requestPermission] = useCameraPermissions();
   const [uri, setUri] = useState<string | null>(null);
   const [originalUri, setOriginalUri] = useState<string | null>(null);
-  const [classifyUri, setClassifyUri] = useState<string | null>(null);
   const [draftId, setDraftId] = useState<string | null>(null);
   const [attrs, setAttrs] = useState<GarmentAttrs | null>(null);
   const [busy, setBusy] = useState(false);
@@ -65,9 +64,8 @@ export default function Capture() {
         const seg = await segmentGarment(photo.uri, id);
         setCutoutNote(`Cutout kept ${Math.round(seg.coverage * 100)}% of the frame`);
         setUri(seg.cutoutUri);
-        setClassifyUri(seg.classifyUri);
         setStage("Tagging cutout…");
-        const tagged = await getVisionTagger().tag(seg.classifyUri);
+        const tagged = await getVisionTagger().tag(seg.cutoutUri);
         log(
           "capture",
           `tags slot=${tagged.slot} subtype=${tagged.subtype ?? "-"} color=${tagged.colors.join(",")}`,
@@ -78,7 +76,6 @@ export default function Capture() {
         setCutoutNote("Cutout failed — using the full photo. Scan log has details.");
         setStage("Tagging full photo…");
         setUri(photo.uri);
-        setClassifyUri(photo.uri);
         setAttrs(await getVisionTagger().tag(photo.uri));
       }
       log("capture", `ready in ${Date.now() - start}ms`);
@@ -102,7 +99,6 @@ export default function Capture() {
       log("capture", `saved ${draftId} photo=${uri.split("/").pop() ?? uri}`);
       setUri(null);
       setOriginalUri(null);
-      setClassifyUri(null);
       setDraftId(null);
       setAttrs(null);
       setCutoutNote("");
@@ -250,7 +246,6 @@ export default function Capture() {
             onPress={() => {
               setUri(null);
               setOriginalUri(null);
-              setClassifyUri(null);
               setDraftId(null);
               setAttrs(null);
               setCutoutNote("");

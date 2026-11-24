@@ -9,6 +9,7 @@ import { File } from "expo-file-system";
 import jpeg from "jpeg-js";
 import type { ColorName, Fit, GarmentAttrs, Pattern, Slot } from "@styleme/schema";
 import { paletteSwatch } from "@styleme/design";
+import { decodePngRgba } from "./png";
 import { errorText, log } from "./pipeline-log";
 import { mockTagger, type VisionTagger } from "./vision";
 
@@ -75,6 +76,18 @@ function normalize(v: number[]): number[] {
   return v.map((x) => x / n);
 }
 
+function topLabels(logits: number[], labels: string[], k = 3): string {
+  const max = Math.max(...logits);
+  const exps = logits.map((x) => Math.exp(x - max));
+  const sum = exps.reduce((a, b) => a + b, 0) || 1;
+  return logits
+    .map((_, i) => i)
+    .sort((a, b) => (logits[b] ?? 0) - (logits[a] ?? 0))
+    .slice(0, k)
+    .map((i) => `${labels[i] ?? i}=${((exps[i] ?? 0) / sum).toFixed(2)}`)
+    .join(" ");
+}
+
 function zeroShot(embedding: number[], group: string): string | null {
   const { values, rows } = groupRows(group);
   if (rows.length === 0) return null;
@@ -110,28 +123,82 @@ const PALETTE_RGB = Object.entries(paletteSwatch).map(([name, hex]) => {
   return { name, r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
 });
 
+interface Box {
+  x0: number;
+  y0: number;
+  x1: number;
+  y1: number;
+}
+
+interface RgbaImage {
+  data: Uint8Array;
+  width: number;
+  height: number;
+  /** True for cutout PNGs; false for camera JPEG fallbacks. */
+  hasAlpha: boolean;
+  /** Opaque-pixel bounds, null when there is no meaningful alpha. */
+  box: Box | null;
+}
+
+function opaqueBox(src: Uint8Array, w: number, h: number): Box | null {
+  let x0 = w;
+  let y0 = h;
+  let x1 = -1;
+  let y1 = -1;
+  let count = 0;
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      if ((src[(y * w + x) * 4 + 3] ?? 0) > 24) {
+        count++;
+        if (x < x0) x0 = x;
+        if (y < y0) y0 = y;
+        if (x > x1) x1 = x;
+        if (y > y1) y1 = y;
+      }
+    }
+  }
+  // A few stray pixels are not a garment; use the full frame instead.
+  if (x1 < 0 || count < w * h * 0.005) return null;
+  return { x0, y0, x1, y1 };
+}
+
 function median(values: number[]): number {
   values.sort((a, b) => a - b);
   return values[Math.floor(values.length / 2)] ?? 0;
 }
 
-/** Center-crop median color -> nearest palette anchor. Robust for solids. */
-function dominantColor(src: Uint8Array, w: number, h: number): ColorName {
-  const x0 = Math.floor(w * 0.2);
-  const x1 = Math.floor(w * 0.8);
-  const y0 = Math.floor(h * 0.2);
-  const y1 = Math.floor(h * 0.8);
-  const step = Math.max(1, Math.floor(Math.min(w, h) / 64));
+/** Median color of the garment -> nearest palette anchor. Alpha-aware. */
+function dominantColor(img: RgbaImage): ColorName {
+  const { data: src, width: w, height: h, hasAlpha, box } = img;
+  let x0 = Math.floor(w * 0.2);
+  let x1 = Math.floor(w * 0.8);
+  let y0 = Math.floor(h * 0.2);
+  let y1 = Math.floor(h * 0.8);
+  if (hasAlpha && box) {
+    x0 = box.x0;
+    y0 = box.y0;
+    x1 = box.x1 + 1;
+    y1 = box.y1 + 1;
+  }
+  const area = Math.max(1, (x1 - x0) * (y1 - y0));
+  const step = Math.max(1, Math.floor(Math.sqrt(area / 4096)));
   const rs: number[] = [];
   const gs: number[] = [];
   const bs: number[] = [];
   for (let y = y0; y < y1; y += step) {
     for (let x = x0; x < x1; x += step) {
       const i = (y * w + x) * 4;
+      if (hasAlpha && (src[i + 3] ?? 0) < 200) continue;
       rs.push(src[i] ?? 0);
       gs.push(src[i + 1] ?? 0);
       bs.push(src[i + 2] ?? 0);
     }
+  }
+  if (rs.length === 0) {
+    const i = (Math.floor(h / 2) * w + Math.floor(w / 2)) * 4;
+    rs.push(src[i] ?? 0);
+    gs.push(src[i + 1] ?? 0);
+    bs.push(src[i + 2] ?? 0);
   }
   const [r, g, b] = [median(rs), median(gs), median(bs)];
   let best = PALETTE_RGB[0]!;
@@ -146,6 +213,7 @@ function dominantColor(src: Uint8Array, w: number, h: number): ColorName {
   return best.name as ColorName;
 }
 
+/** Stretch a full frame to a square model input (JPEG fallback path). */
 function resizeRgba(src: Uint8Array, sw: number, sh: number, size: number): Float32Array {
   const out = new Float32Array(3 * size * size);
   const plane = size * size;
@@ -163,10 +231,54 @@ function resizeRgba(src: Uint8Array, sw: number, sh: number, size: number): Floa
   return out;
 }
 
-async function decode(uri: string): Promise<{ data: Uint8Array; width: number; height: number }> {
+/**
+ * Square, white-background, bbox-centered garment crop for the product-trained
+ * heads. The flat-lay model never saw a grey bed-sized canvas; feeding it one
+ * was the main reason slot predictions collapsed to bottom/accessory.
+ */
+function garmentInput(img: RgbaImage, size: number): Float32Array {
+  if (!img.hasAlpha || !img.box) return resizeRgba(img.data, img.width, img.height, size);
+  const { data, width: w, height: h, box } = img;
+  const bw = box.x1 - box.x0 + 1;
+  const bh = box.y1 - box.y0 + 1;
+  const side = Math.max(16, Math.max(bw, bh) * 1.08);
+  const cx = (box.x0 + box.x1 + 1) / 2;
+  const cy = (box.y0 + box.y1 + 1) / 2;
+  const left = cx - side / 2;
+  const top = cy - side / 2;
+  const out = new Float32Array(3 * size * size);
+  const plane = size * size;
+  for (let y = 0; y < size; y++) {
+    const fy = top + ((y + 0.5) * side) / size;
+    for (let x = 0; x < size; x++) {
+      const fx = left + ((x + 0.5) * side) / size;
+      let r = 255;
+      let g = 255;
+      let b = 255;
+      if (fx >= 0 && fy >= 0 && fx < w && fy < h) {
+        const si = (Math.floor(fy) * w + Math.floor(fx)) * 4;
+        const a = (data[si + 3] ?? 0) / 255;
+        r = (data[si] ?? 0) * a + 255 * (1 - a);
+        g = (data[si + 1] ?? 0) * a + 255 * (1 - a);
+        b = (data[si + 2] ?? 0) * a + 255 * (1 - a);
+      }
+      const di = y * size + x;
+      out[di] = (r / 255 - MEAN[0]!) / STD[0]!;
+      out[plane + di] = (g / 255 - MEAN[1]!) / STD[1]!;
+      out[2 * plane + di] = (b / 255 - MEAN[2]!) / STD[2]!;
+    }
+  }
+  return out;
+}
+
+async function decode(uri: string): Promise<RgbaImage> {
   const bytes = await new File(uri).bytes();
+  if (bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47) {
+    const png = decodePngRgba(bytes);
+    return { ...png, hasAlpha: true, box: opaqueBox(png.data, png.width, png.height) };
+  }
   const raw = jpeg.decode(bytes, { useTArray: true, maxMemoryUsageInMB: 1024 });
-  return { data: raw.data as Uint8Array, width: raw.width, height: raw.height };
+  return { data: raw.data as Uint8Array, width: raw.width, height: raw.height, hasAlpha: false, box: null };
 }
 
 class OnnxTagger implements VisionTagger {
@@ -211,26 +323,29 @@ class OnnxTagger implements VisionTagger {
     return this.slotSession;
   }
 
-  private async classifySlot(img: { data: Uint8Array; width: number; height: number }): Promise<Slot | undefined> {
+  private async classifySlot(img: RgbaImage): Promise<Slot | undefined> {
     const start = Date.now();
     log("tag", "slot model start");
     const session = await this.loadSlot();
-    const input = resizeRgba(img.data, img.width, img.height, SUBTYPE_SIZE);
+    const input = garmentInput(img, SUBTYPE_SIZE);
     const tensor = new (ort().Tensor)("float32", input, [1, 3, SUBTYPE_SIZE, SUBTYPE_SIZE]);
     const out = await session.run({ pixels: tensor });
     const logits = Array.from(Object.values(out)[0].data as Float32Array);
     let best = 0;
     for (let i = 1; i < logits.length; i++) if (logits[i]! > logits[best]!) best = i;
     const label = slotMeta.labels[best];
-    log("tag", `slot model -> ${label ?? "none"} (${Date.now() - start}ms)`);
+    log(
+      "tag",
+      `slot model -> ${label ?? "none"} [${topLabels(logits, slotMeta.labels)}] (${Date.now() - start}ms)`,
+    );
     return (label as Slot | undefined) ?? undefined;
   }
 
-  private async classifySubtype(img: { data: Uint8Array; width: number; height: number }, slot: Slot): Promise<string | undefined> {
+  private async classifySubtype(img: RgbaImage, slot: Slot): Promise<string | undefined> {
     const start = Date.now();
     log("tag", `subtype model start (slot=${slot})`);
     const session = await this.loadSubtype();
-    const input = resizeRgba(img.data, img.width, img.height, SUBTYPE_SIZE);
+    const input = garmentInput(img, SUBTYPE_SIZE);
     const tensor = new (ort().Tensor)("float32", input, [1, 3, SUBTYPE_SIZE, SUBTYPE_SIZE]);
     const out = await session.run({ pixels: tensor });
     const logits = Array.from(Object.values(out)[0].data as Float32Array);
@@ -244,7 +359,7 @@ class OnnxTagger implements VisionTagger {
     const accepted = Boolean(label) && confidence >= 0.6 && subtypeMeta.slot_by_label[label!] === slot;
     log(
       "tag",
-      `subtype model -> ${label ?? "none"} conf=${confidence.toFixed(2)} accepted=${accepted} (${Date.now() - start}ms)`,
+      `subtype model -> ${label ?? "none"} conf=${confidence.toFixed(2)} accepted=${accepted} [${topLabels(logits, subtypeMeta.labels)}] (${Date.now() - start}ms)`,
     );
     if (!label || confidence < 0.6) return undefined;
     return subtypeMeta.slot_by_label[label] === slot ? label : undefined;
@@ -259,8 +374,11 @@ class OnnxTagger implements VisionTagger {
       log("tag", `mobileclip ready (${Date.now() - loadStart}ms)`);
       const decodeStart = Date.now();
       const img = await decode(uri);
-      log("tag", `decoded ${img.width}x${img.height} (${Date.now() - decodeStart}ms)`);
-      const input = resizeRgba(img.data, img.width, img.height, SIZE);
+      log(
+        "tag",
+        `decoded ${img.width}x${img.height} alpha=${img.hasAlpha} bbox=${img.box ? `${img.box.x0},${img.box.y0} ${img.box.x1},${img.box.y1}` : "full"} (${Date.now() - decodeStart}ms)`,
+      );
+      const input = garmentInput(img, SIZE);
       const tensor = new (ort().Tensor)("float32", input, [1, 3, SIZE, SIZE]);
       const out = await session.run({ pixels: tensor });
       const first = Object.values(out)[0];
@@ -275,7 +393,7 @@ class OnnxTagger implements VisionTagger {
         log("tag", `slot model unavailable: ${errorText(err)}`);
       }
       log("tag", `slot clip=${clipSlot} final=${slot}`);
-      const color = dominantColor(img.data, img.width, img.height);
+      const color = dominantColor(img);
       let subtype: string | undefined;
       try {
         subtype = await this.classifySubtype(img, slot);

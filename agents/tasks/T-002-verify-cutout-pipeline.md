@@ -20,7 +20,7 @@ files:
   - docs/TESTING.md
   - .github/workflows/android.yml
 branch: Yves/T-002
-updated_at: 2026-11-24T19:12Z
+updated_at: 2026-11-24T19:15Z
 ---
 
 ## Goal
@@ -38,3 +38,4 @@ branch in a shippable state.
 - [2026-11-24 19:03 UTC] device `00256665B000161` was disconnected before install; reconnect needed before on-device verification.
 - [2026-11-24 19:12 UTC] Buffer polyfill verified on device (`c1d46e1`): 7/7 re-scanned in 49s, no failures; 5–7s/item. Cutout PNG 1.5–3MB, mask cov 0.29–0.85, log shows every decode/infer/encode/write step. Blocking bug from prior build (missing `Buffer` at gray-JPEG encode) is gone.
 - [2026-11-24 19:12 UTC] Quality signal: final slots = 4 bottom, 1 top, 2 accessory; all tagged grey/black. Slot model + MobileCLIP agree, so this is preprocessing/input quality, not a broken session. Next: alpha-aware white composite + mask-bbox crop in tagger, then compare. Need true slots from user (Q-002) to score accuracy.
+- [2026-11-24 19:15 UTC] implemented alpha-aware tagger (`5bc3265`): JS PNG decoder for our stored-block cutouts, opaque bbox crop, square white composite for MobileCLIP/slot/subtype, color from opaque pixels only, top-3 logits in scan log; removed gray JPEG + Buffer path. `tsc` + `expo export` pass. Next: device re-scan, compare slot/color distribution.
