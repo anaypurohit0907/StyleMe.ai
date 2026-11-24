@@ -1,8 +1,8 @@
 ---
 id: T-019
 title: Worker tenant scoping — fix cross-user garment overwrite
-status: backlog
-owner:
+status: in-progress
+owner: Indigo
 priority: critical
 depends_on: []
 files:
@@ -10,7 +10,12 @@ files:
   - apps/worker/migrations/0002_tenant_scoping.sql
   - apps/worker/tests/worker.test.ts
   - apps/worker/tests/mockdb.ts
-updated_at: 2026-11-24T19:28Z
+  - agents/WORKFORCE.md
+  - agents/BOARD.md
+  - agents/CHATBOARD.md
+  - agents/tasks/T-019-worker-tenant-scoping.md
+branch: Indigo/T-019
+updated_at: 2026-11-24T19:36Z
 ---
 
 ## Goal
