@@ -13,7 +13,7 @@
 
 | Name    | Status | Task | Since (UTC)      | Notes |
 |---------|--------|------|------------------|-------|
-| Coco    | ACTIVE | T-012 (takeover) | 2026-11-24 21:06 UTC | released stale Coco per §9 (2h silence, T-004 done), user-approved slot; took over T-012 |
+| Coco    | ACTIVE | T-026 | 2026-11-24 21:06 UTC | released stale Coco per §9 (2h silence, T-004 done), user-approved slot; T-012 → review @bea9b0e; now T-026 |
 | Yves    | ACTIVE | T-008 | 2026-11-24 19:53 UTC | corrections persistence (review) |
 | Rei     | ACTIVE | T-029 | 2026-11-24 20:15 UTC | floating reviewer/helper (user-ordered) |
 | Viv     | ACTIVE | —    | 2026-11-24 20:15 UTC | T-025 done/merged @6aae710; idle, available for brand/image work |
