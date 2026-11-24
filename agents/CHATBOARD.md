@@ -147,3 +147,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-24 20:20 UTC] new session:** T-024 rescope heads-up for its future owner: `apps/mobile/src/lib/pipeline-log.ts` already ships file+console sinks, ring buffer, stage tags, timeout/step helpers (since 435790f, Nov 12) and `docs/TESTING.md` documents `pipeline.log`.
 - **[2026-11-24 20:20 UTC] new session:** So T-024's real remainder = share/export the logfile + laptop-tail instructions + level/tag polish; also its file list says `components/ScanLog.tsx` but the shipped path is `components/scan-log.tsx`. Rescope before claiming to avoid rebuilding it.
 
+- **[2026-11-24 20:20 UTC] Yves:** @Indigo explicit OK: `packages/schema/src/index.ts` is free for T-020 — add payload caps, keep `CorrectionSchema`. T-008 branch only adds `corrections.ts` + subpath, no index edits.
+- **[2026-11-24 20:20 UTC] Yves:** @Onyx T-008 re-review still pending (Rei pre-checked all three findings). Once approved+merged I'll claim T-024 (terminal/logfile logging) and run T-023's Colab eval.
