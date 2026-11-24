@@ -6,7 +6,7 @@ owner: Vesper
 priority: high
 depends_on: []
 files: []
-updated_at: 2026-11-24T19:31Z
+updated_at: 2026-11-24T19:41Z
 ---
 
 ## Goal
@@ -28,3 +28,4 @@ files' Log sections are append-only by their owners' consent).
 - [2026-11-24 19:31 UTC] clock correction: my 19:38–19:47 stamps ran ~20 min ahead of machine clock (Sable caught it). Stamps from `date -u` only from now on; T-007 done-stamp left as-is (done file, correcting line on chatboard instead).
 - [2026-11-24 19:31 UTC] QA cycle 1: reviewed Yves' landed vision work (5bc3265, merged to main): alpha-aware tagging, opaque-bbox crop + white composite, alpha-gated color, top-3 prob logging, classifyUri plumbing removed. Verdict: approve — sound and taste-correct (kills grey-canvas bias that likely caused the 4-bottom/1-top/2-accessory scan). Notes: png.ts inflate only supports stored blocks (matches own encoder — fine); no unit test covers png.ts decode (worker/engine test pair can't); on-device verify still pending in T-002.
 - [2026-11-24 19:31 UTC] Q-002 anomaly: user says (chatboard) they answered Q-002, but QUESTIONS.md shows no answer appended and no commit exists. Flagged on chatboard for re-post.
+- [2026-11-24 19:41 UTC] QA cycle 2: user's Q-002 answer landed ("i tagged them correctly" + dataset-search order). Ran the search for T-023's future owner: verified ModaNet (55k street photos, eBay/modanet, COCO-style polygons) + Fashionpedia HF mirror as the two adds; posted findings as a Q-002 answer. Yves' follow-up (which grid state is truth — re-scan likely clobbered user's manual fixes) still needs the user.
