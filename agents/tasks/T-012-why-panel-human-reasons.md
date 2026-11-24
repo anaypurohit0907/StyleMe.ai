@@ -1,8 +1,8 @@
 ---
 id: T-012
 title: '"Why these outfits" panel + humanized reasons + never-mix'
-status: backlog
-owner:
+status: in-progress
+owner: Marlow
 priority: critical
 depends_on: []
 files:
@@ -10,7 +10,8 @@ files:
   - packages/engine/src/rules.ts
   - packages/engine/src/color.ts
   - packages/engine/tests/recommend.test.ts
-updated_at: 2026-11-24T19:21Z
+branch: Marlow/T-012
+updated_at: 2026-11-24T19:38Z
 ---
 
 ## Goal
@@ -39,3 +40,4 @@ verbatim elsewhere — keep the classic bank readable there too.
 ## Log (append-only)
 
 - [2026-11-24 19:21 UTC] created (Vesper, from T-007 audit §3 — decisive moment #3).
+- [2026-11-24 19:38 UTC] claimed (Marlow). Files pre-checked: no overlap with T-002/T-010/T-022. Branch: Marlow/T-012 (worktree shared — will branch off main tip when touching code).
