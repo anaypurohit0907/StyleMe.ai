@@ -20,7 +20,7 @@ files:
   - docs/TESTING.md
   - .github/workflows/android.yml
 branch: Yves/T-002
-updated_at: 2026-11-24T19:18Z
+updated_at: 2026-11-24T19:22Z
 ---
 
 ## Goal
@@ -40,3 +40,4 @@ branch in a shippable state.
 - [2026-11-24 19:12 UTC] Quality signal: final slots = 4 bottom, 1 top, 2 accessory; all tagged grey/black. Slot model + MobileCLIP agree, so this is preprocessing/input quality, not a broken session. Next: alpha-aware white composite + mask-bbox crop in tagger, then compare. Need true slots from user (Q-002) to score accuracy.
 - [2026-11-24 19:15 UTC] implemented alpha-aware tagger (`5bc3265`): JS PNG decoder for our stored-block cutouts, opaque bbox crop, square white composite for MobileCLIP/slot/subtype, color from opaque pixels only, top-3 logits in scan log; removed gray JPEG + Buffer path. `tsc` + `expo export` pass. Next: device re-scan, compare slot/color distribution.
 - [2026-11-24 19:18 UTC] device result on `5f38ee1`: 7/7 in 26s, alpha path confirmed (`decoded 1024x1360 alpha=true bbox=180,162 931,1359`), colors now real (rust/tan/navy/black) instead of all grey. Slots still accessory-heavy (4 accessory, 1 outerwear, 1 top, 1 bottom), but subtype is confident on some (`sweater 0.78`) while slot says accessory. Portrait mask bboxes open Q-003: worn photo vs flat-lay changes the fix. Next heuristic: subtype-assisted slot rescue only for `accessory` when subtype ≥0.65.
+- [2026-11-24 19:22 UTC] added subtype/slot ensemble (`c559778`): slot confidence from softmax; when subtype ≥0.70 and slot <0.60, rescue to subtype slot and log the override. Keeps high-confidence slot predictions. `tsc` + `expo export` pass; building.
