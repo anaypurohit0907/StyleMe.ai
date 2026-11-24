@@ -21,6 +21,7 @@ npm run db:migrate            # wrangler d1 migrations apply styleme --remote
 
 - `database_id` in `wrangler.jsonc` is already live — do not run `wrangler d1 create styleme` again.
 - Migrations live in `migrations/` and are applied **remotely** via `npm run db:migrate`. Additive numbered files only; never edit an applied migration — write a new `NNNN_*.sql`.
+- `0002` rebuilds `garments` via shadow table `garments_scoped`: if it fails mid-apply (e.g. FK violation from orphaned rows), drop the shadow (`npx wrangler d1 execute styleme --remote --command "DROP TABLE garments_scoped"`) before re-running — the original `garments` table is untouched until the final `DROP`/`RENAME`.
 - As of `migrations/0002_tenant_scoping.sql`, the `garments` PK is composite `(user_id, id)` — every query must filter by `user_id`. Cross-user overwrite is the bug class that spawned this PK; keep it scoping-correct.
 
 ## Tests + the MockD1 pattern
