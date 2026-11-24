@@ -158,7 +158,7 @@ export function logFileHint(): string {
   if (Platform.OS === "android" && !externalUnavailable) {
     return `/sdcard/Android/data/${packageName()}/files/${LOG_NAME}`;
   }
-  return `${Paths.document.uri}${LOG_NAME}`;
+  return new File(Paths.document, LOG_NAME).uri;
 }
 
 export function usePipelineLogs(): PipelineLogEntry[] {
