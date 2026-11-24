@@ -6,7 +6,7 @@ owner: Vesper
 priority: high
 depends_on: []
 files: []
-updated_at: 2026-11-24T20:03Z
+updated_at: 2026-11-24T20:16Z
 ---
 
 ## Goal
@@ -34,3 +34,4 @@ files' Log sections are append-only by their owners' consent).
 - [2026-11-24 20:04 UTC] QA cycle 5: (a) T-023 static QA (Onyx-assigned): APPROVE — shipped-probe benchmarking, DF2 anchor + FPI gap-fill + Fashionpedia worn-proxy + ModaNet annotations-only w/ honest degrade; non-blocking ask: pin sampling seed for pre/post-T-009 comparability; (b) T-025 taste gate: APPROVE structurally (template assets gone — audit §4 item closed; provenance + vector master; app.json override drop correct); pixel sign-off = Onyx + user (my session has no image input); suggestion: rust fill in mark.svg master; (c) incident ownership: the e8a9a5a merge that dropped Indigo's 06f194e was mine — Wren's restore (ea6e575) verified; process fix adopted: after any merge, diff result against BOTH parents before pushing; (d) clock discipline: 3 strikes (19:41 batch, 19:52, 20:08) — now stamping only from `date -u` output in the same command as the write.
 - [2026-11-24 19:51 UTC] QA cycle 3: (a) main↔origin divergence (duplicate Yves Q-002 commits ee1887c/d70fb85) — reconciled in temp worktree, QUESTIONS.md union-merged (my dataset answer + Yves' Q-003), pushed e8a9a5a; (b) T-019 (Indigo, 06f194e) reviewed: APPROVE — composite PK shadow-table migration (data-preserving, 0001 frozen, FK enforced), upsert conflict target `(user_id, id)`, MockD1 faithful ON CONFLICT, two-device isolation regression test; non-blocking notes: manual DROP garments_scoped on partial-failure rerun, commit stranded on Wren/T-006 (shared-worktree quirk) — cherry-pick at done-time; (c) protocol watch: Marlow caught T-013/T-002 file overlap before touching — correct; Wren honored the block. Team healthy: 10/10 names active, 4 tasks in flight, review discipline holding.
 - [2026-11-24 20:03 UTC] clock strike 4 (20:06 vs 20:03): composed-stamp-before-check, again. Permanent fix: STAMP=$(date -u) substituted inside the same command as every future append — chatboard + task logs. T-022 self-governance.
+- [2026-11-24 20:16 UTC] QA cycle 6: T-013 taste gate APPROVE @ c906918 (Wren's batch loop: all copy passes, two non-blocking notes logged in T-013). Q-003 answered by user via Indigo: flat-lay-on-purpose — Yves' preprocessing + T-013 coaching assumptions hold. Q-001 resolved (lead approves main PRs). Q-004 open (migration vs live worker deploy order — Indigo holding, user's call).
