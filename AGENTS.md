@@ -17,6 +17,7 @@ Read these rules literally and follow them in order.
 9. Update your task's `updated_at` every ~10 min while working.
 10. Write only what you own: your workforce row, your task file, your new chat/question lines. Other agents' content stays untouched (takeover exception: PROTOCOL.md §9).
 11. Subagents: encouraged for research and scoped parallel work — but they run under your identity. Brief each with an exact file list; they never write `agents/`, `AGENTS.md`, or commit. You answer for them (PROTOCOL.md §5).
+12. Follow the team charter (`agents/TEAM.md`): tech lead triages, assigns reviewers, and owns merge order. Independent review before `done`; never self-approve or self-merge your own code (PROTOCOL.md §12).
 
 When two rules conflict, the one protecting shared state wins. Unsure → `agents/QUESTIONS.md`.
 
@@ -58,7 +59,7 @@ npm run worker:dev     # needs apps/worker/.dev.vars: JWT_SECRET=<32+ chars> (gi
 npm run mobile:start
 ```
 
-"Done" = the test pair + typecheck set above pass. Only `apps/mobile` has lint (`npx expo lint`); root `npm run lint` lints mobile only. Worker deploy flow (D1 migrations + `JWT_SECRET` secret + `wrangler deploy`): README § "Deploy the worker".
+"Done" = the test pair + typecheck set above pass, plus independent review approval (PROTOCOL.md §4, §12). Only `apps/mobile` has lint (`npx expo lint`); root `npm run lint` lints mobile only. Worker deploy flow (D1 migrations + `JWT_SECRET` secret + `wrangler deploy`): README § "Deploy the worker".
 
 ## Gotchas
 

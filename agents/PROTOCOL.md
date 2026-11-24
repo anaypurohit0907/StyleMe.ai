@@ -1,4 +1,4 @@
-# StyleMe.ai — Multi-Agent Coordination Protocol (v1.1)
+# StyleMe.ai — Multi-Agent Coordination Protocol (v1.2)
 
 This repo is worked in parallel by multiple AI agents. All coordination happens through markdown files in `agents/`. No message bus, no scripts, no external services — the files are shared production state. Treat them accordingly.
 
@@ -10,7 +10,8 @@ The human (repo owner) may edit any file at any time. Agents follow the rules be
 
 | File | Purpose | Written by |
 |---|---|---|
-| `agents/PROTOCOL.md` | This rulebook | Human only |
+| `agents/PROTOCOL.md` | This rulebook | Human only (lead may amend under explicit user order) |
+| `agents/TEAM.md` | Engineering charter: roles, SDLC, review gates | Tech lead, human-approved |
 | `agents/WORKFORCE.md` | Identity registry (10 names) | Each agent edits only its own row |
 | `agents/BOARD.md` | Task index (thin) | Task owner, at claim / release / done / status change |
 | `agents/tasks/T-NNN-*.md` | One file per task | Task owner only |
@@ -44,7 +45,7 @@ Statuses: `backlog` → `in-progress` → `review` → `done`. Any state may bec
 
 **Claim**
 1. Pick a task with `status: backlog`, all `depends_on` tasks `done`, and no owner. Or create one (format: `agents/tasks/README.md`; worked example: `T-001`), then claim it.
-2. In the task file frontmatter: `status: in-progress`, `owner: <name>`, `branch: <name>/T-NNN`, `updated_at: <now>`.
+2. In the task file frontmatter: `status: in-progress`, `owner: <name>`, `reviewer: <name>` (lead-assigned; defaults to the domain owner in `TEAM.md` §2), `branch: <name>/T-NNN`, `updated_at: <now>`.
 3. Add/refresh its row in `agents/BOARD.md`.
 4. One-line announce on chatboard.
 
@@ -61,10 +62,11 @@ Statuses: `backlog` → `in-progress` → `review` → `done`. Any state may bec
 
 **Done**
 1. Tests, lint, and typecheck pass (per repo/subpackage AGENTS.md files).
-2. Task file: `status: done`, append a one-line summary to the Log.
-3. Update the `agents/BOARD.md` row.
-4. Write backlog tasks for the follow-ups this work surfaced (Feed the board).
-5. Announce on chatboard. Keep your name; claim next task or release.
+2. An independent reviewer (not the author) approved the diff in the task Log; user-facing work also cleared the QA/taste gate. No self-approval.
+3. Task file: `status: done`, append a one-line summary to the Log.
+4. Update the `agents/BOARD.md` row.
+5. Write backlog tasks for the follow-ups this work surfaced (Feed the board).
+6. Announce on chatboard. Keep your name; claim next task or release.
 
 **Blocked**
 - Set `status: blocked`, note why + what unblocks it, announce, and switch to other non-blocked work. Re-check blockers periodically; unblock promptly when they clear.
@@ -131,6 +133,7 @@ Never ask the user in-session for what another agent can answer. `QUESTIONS.md` 
 - Commit every coordination change immediately and standalone: `coord: <name> <action>` (e.g. `coord: Nova claims T-007`). Stage only the coordination files you touched.
 - Leave no coordination file dirty.
 - Code work follows normal repo conventions on your branch.
+- Authors never merge their own code to `main`. The reviewer or tech lead merges after approval and records the merge commit in the task Log; the lead owns merge order (`TEAM.md` §7).
 - Commit fails on index lock (another agent mid-commit): wait a few seconds, retry. Never force.
 
 ## 11. Boundaries
@@ -143,3 +146,20 @@ Never ask the user in-session for what another agent can answer. `QUESTIONS.md` 
 | Wait on the user while blocked | Post `QUESTIONS.md`, mark the task `blocked`, switch work |
 | Rewrite or delete history in an append-only zone | Append a correcting line |
 | Add non-md coordination machinery (scripts, lockfiles, services) | Work the protocol as written |
+
+## 12. Tech lead and engineering workflow
+
+The team has one accountable tech lead (current seat in `WORKFORCE.md` Notes).
+Full charter: `agents/TEAM.md`. The lead:
+
+- Triages the board and sets priority order; keeps the backlog fed and honest.
+- Assigns a `reviewer:` to every code task and enforces the review SLA.
+- Unblocks or reassigns work stuck >15 min; may take over per §9.
+- Owns merge order and the final technical call; may reject a review.
+- Never self-approves own code and does not write every task — leads by
+  review, unblocking, and architecture.
+
+Flow limits bind everyone: one `in-progress` task per developer, review queue
+≤3 per reviewer, independent approval before `done`, no self-merge. Critical
+security/data bugs preempt feature work. When process and speed conflict, the
+review gate wins — a broken `main` costs more than a late task.

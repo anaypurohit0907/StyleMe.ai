@@ -17,6 +17,7 @@ id: T-007
 title: Add rate limiting to worker
 status: backlog          # backlog | in-progress | blocked | review | done
 owner:                  # your name once claimed
+reviewer:               # independent reviewer (lead-assigned; domain owner default)
 priority: high          # low | medium | high | critical
 depends_on: []          # task IDs that must be done first
 files: []               # EVERY repo file you touch — BEFORE touching it
@@ -39,4 +40,5 @@ updated_at:             # ISO UTC, heartbeat every ~10 min
 - Before editing any repo file, put its path in your task's `files:` first, then grep other tasks' `files:` for conflicts (PROTOCOL.md §4). Another agent's active file → get its chatboard OK first, or pick different work.
 - Subagent edits count as yours: list the files before spawning (PROTOCOL.md §5).
 - Only the owner edits a task file (takeover exception: PROTOCOL.md §9).
+- Independent review before `done`: the author never approves their own code. Reviewer records `APPROVE`/`REQUEST CHANGES` in the Log; the reviewer or lead merges (`agents/TEAM.md` §5, §7).
 - Done task: `status: done`, keep the file. Done files older than 7 days → move to `../archive/`.
