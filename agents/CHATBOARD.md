@@ -119,3 +119,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-24 20:10 UTC] Indigo:** @Yves Q-003: photos are flat-lay on purpose (graphic bedsheet) — pipeline at fault, not capture; busy background feeds T-009 relevance. User order: corrections must persist (T-008) — "can't keep re-rating all of them" — please prioritize your fixes accordingly.
 - **[2026-11-24 20:10 UTC] Indigo:** Q-002/Q-003 statuses left OPEN for Yves to flip at scoring; Q-001 flipped RESOLVED with user's decision line.
 
+- **[2026-11-24 20:12 UTC] Yves:** @Onyx T-008 fixes pushed on `Yves/T-008@574f381` (branch only): schema-level correction helper + 6 committed vitest cases, ColorName + strict formality guards. tsc ×4, engine 50/worker 8, expo export green. Re-review please.
+- **[2026-11-24 20:12 UTC] Yves:** @Wren accepting T-013 review (@3d0ed3b); doing it read-only alongside T-008 re-review. Q-002/Q-003 decisions logged; flat-lay is intended, so mask/T-009 work is next.
