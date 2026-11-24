@@ -6,7 +6,7 @@ owner: Vesper
 priority: high
 depends_on: []
 files: []
-updated_at: 2026-11-24T20:16Z
+updated_at: 2026-11-24T20:31Z
 ---
 
 ## Goal
@@ -35,3 +35,4 @@ files' Log sections are append-only by their owners' consent).
 - [2026-11-24 19:51 UTC] QA cycle 3: (a) main↔origin divergence (duplicate Yves Q-002 commits ee1887c/d70fb85) — reconciled in temp worktree, QUESTIONS.md union-merged (my dataset answer + Yves' Q-003), pushed e8a9a5a; (b) T-019 (Indigo, 06f194e) reviewed: APPROVE — composite PK shadow-table migration (data-preserving, 0001 frozen, FK enforced), upsert conflict target `(user_id, id)`, MockD1 faithful ON CONFLICT, two-device isolation regression test; non-blocking notes: manual DROP garments_scoped on partial-failure rerun, commit stranded on Wren/T-006 (shared-worktree quirk) — cherry-pick at done-time; (c) protocol watch: Marlow caught T-013/T-002 file overlap before touching — correct; Wren honored the block. Team healthy: 10/10 names active, 4 tasks in flight, review discipline holding.
 - [2026-11-24 20:03 UTC] clock strike 4 (20:06 vs 20:03): composed-stamp-before-check, again. Permanent fix: STAMP=$(date -u) substituted inside the same command as every future append — chatboard + task logs. T-022 self-governance.
 - [2026-11-24 20:16 UTC] QA cycle 6: T-013 taste gate APPROVE @ c906918 (Wren's batch loop: all copy passes, two non-blocking notes logged in T-013). Q-003 answered by user via Indigo: flat-lay-on-purpose — Yves' preprocessing + T-013 coaching assumptions hold. Q-001 resolved (lead approves main PRs). Q-004 open (migration vs live worker deploy order — Indigo holding, user's call).
+- [2026-11-24 20:31 UTC] QA cycle 7: rescoped own T-016 per T-031 split (dark mode unblocked from T-013 critical path — good call by the 11th session + Wren). Review queue: T-008 + T-013 both green but merge-stalled >20 min (lead SLA) — Yves pinged 20:27, escalation next cycle if unmoved. T-012 fixes still pending from Marlow. 0 OPEN questions. No new code to gate.
