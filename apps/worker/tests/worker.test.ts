@@ -48,14 +48,17 @@ function testWardrobe() {
 
 let env: MockEnv;
 let token: string;
+let tokenB: string;
 const NOW = Date.UTC(2026, 10, 10, 9);
+const USER_A = "device-test-12345678";
+const USER_B = "device-tenant-99887766";
 
-async function call(path: string, init?: RequestInit, withAuth = false) {
+async function call(path: string, init?: RequestInit, withAuth = false, tok = token) {
   const headers: Record<string, string> = {
     "content-type": "application/json",
     ...(init?.headers as Record<string, string>),
   };
-  if (withAuth) headers.authorization = `Bearer ${token}`;
+  if (withAuth) headers.authorization = `Bearer ${tok}`;
   return app.request(
     path,
     { ...init, headers },
@@ -166,7 +169,7 @@ describe("worker API", () => {
       },
       true,
     );
-    expect(env.DB.garments.get("s1")?.status).toBe("available");
+    expect(env.DB.garment(USER_A, "s1")?.status).toBe("available");
 
     // --- learn: pick the first suggested outfit
     const pickedId = rec.outfits[0]!.garmentIds.join("+");
@@ -187,7 +190,7 @@ describe("worker API", () => {
     expect((await learnR.json()).n).toBe(1);
     // rotation stamped
     for (const id of pickedId.split("+")) {
-      expect(env.DB.garments.get(id)?.last_worn_at).toBe(NOW);
+      expect(env.DB.garment(USER_A, id)?.last_worn_at).toBe(NOW);
     }
     expect(env.DB.wearLog.length).toBe(1);
 
@@ -198,5 +201,78 @@ describe("worker API", () => {
     expect(typeof tone.copy.pick_one).toBe("string");
     const tone2R = await call("/v1/tone", undefined, true);
     expect((await tone2R.json()).copy).toEqual(tone.copy);
+  });
+
+  it("tenant isolation: same garment id across users — no overwrite, no cross-effects", async () => {
+    // --- second device registers
+    const r = await app.request(
+      "/v1/auth/device",
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ deviceId: USER_B }),
+      },
+      env as never,
+    );
+    expect(r.status).toBe(200);
+    tokenB = (await r.json()).token as string;
+
+    const aT1Before = env.DB.garment(USER_A, "t1");
+
+    // --- B upserts the SAME id A already owns, with different attrs
+    const evil = garment("t1", {
+      attrs: { slot: "bottom", colors: ["red"], pattern: "floral", fit: "slim", formality: 2, season: "warm", material: "light" },
+    });
+    const syncB = await call(
+      "/v1/wardrobe/sync",
+      { method: "POST", body: JSON.stringify({ upserts: [evil], deletions: [], ts: NOW }) },
+      true,
+      tokenB,
+    );
+    expect(syncB.status).toBe(200);
+    expect(JSON.parse(env.DB.garment(USER_A, "t1")!.attrs as string).colors).toEqual(["blue"]);
+    expect(JSON.parse(env.DB.garment(USER_B, "t1")!.attrs as string).colors).toEqual(["red"]);
+    expect(env.DB.garment(USER_A, "t1")!.attrs).toBe(aT1Before!.attrs);
+
+    // --- B launders A's garment id → A's status must not move
+    await call(
+      "/v1/laundry",
+      {
+        method: "POST",
+        body: JSON.stringify({ garmentIds: ["s1"], event: "in_wash", expectedAvailableAt: null, ts: NOW + 60_000 }),
+      },
+      true,
+      tokenB,
+    );
+    expect(env.DB.garment(USER_A, "s1")?.status).toBe("available");
+
+    // --- B learns with pickedId "t1" → rotation stamps only B's row
+    await call(
+      "/v1/learn",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          suggestedIds: [["t1"]],
+          pickedId: "t1",
+          context: { occasion: "office", mood: "none", weather: { tempC: 15, isRaining: false }, now: NOW + 60_000 },
+          ts: NOW + 60_000,
+        }),
+      },
+      true,
+      tokenB,
+    );
+    expect(env.DB.garment(USER_B, "t1")?.last_worn_at).toBe(NOW + 60_000);
+    expect(env.DB.garment(USER_A, "t1")?.last_worn_at).toBe(aT1Before!.last_worn_at);
+
+    // --- B deletes "t1" → only B's row goes
+    const delB = await call(
+      "/v1/wardrobe/sync",
+      { method: "POST", body: JSON.stringify({ upserts: [], deletions: ["t1"], ts: NOW + 120_000 }) },
+      true,
+      tokenB,
+    );
+    expect(delB.status).toBe(200);
+    expect(env.DB.garment(USER_B, "t1")).toBeUndefined();
+    expect(env.DB.garment(USER_A, "t1")).toBeDefined();
   });
 });
