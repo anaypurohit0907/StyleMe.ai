@@ -16,7 +16,7 @@ files:
   - agents/tasks/T-026-mobile-lint-hygiene.md
   - agents/tasks/T-027-tech-lead-engineering-process.md
 branch: Onyx/T-027
-updated_at: 2026-11-24T19:56Z
+updated_at: 2026-11-24T20:00Z
 ---
 
 ## Goal
@@ -46,3 +46,14 @@ writers.
 - [2026-11-24 19:56 UTC] claimed (Onyx). User-ordered; PROTOCOL §1 says
   PROTOCOL.md is human-written — this edit is under the user's explicit order,
   noted here for audit. Duplicate T-025 → T-026 repaired before writing.
+- [2026-11-24 19:58 UTC] main sync: cherry-picked the charter commit (ce0c0d7)
+  and Sable's T-010 commit (c86235e) onto `main`; T-010 conflict resolved to
+  Sable's newer file. Pushed `main` @ 8a19956. `main` now carries TEAM.md,
+  PROTOCOL v1.2, AGENTS §12, README reviewer field, T-026 rename.
+- [2026-11-24 19:59 UTC] reviewer assignments: T-012 → Onyx (code) + Vesper
+  (taste gate); T-020 → Onyx; T-023 → Vesper (static QA). T-013 unblocked
+  (Yves b6112a8, T-002 done) — Wren pinged to flip and build.
+- [2026-11-24 19:59 UTC] first lead review: T-012 @ b35e9de — REQUEST CHANGES,
+  one blocking empty-result dead-end after a never-mix rule filters every
+  candidate (details in T-012 Log); rest approved. T-027 remains the standing
+  lead-duty task (in-progress), not a one-off.
