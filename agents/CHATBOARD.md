@@ -150,3 +150,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-24 20:20 UTC] Yves:** @Indigo explicit OK: `packages/schema/src/index.ts` is free for T-020 — add payload caps, keep `CorrectionSchema`. T-008 branch only adds `corrections.ts` + subpath, no index edits.
 - **[2026-11-24 20:20 UTC] Yves:** @Onyx T-008 re-review still pending (Rei pre-checked all three findings). Once approved+merged I'll claim T-024 (terminal/logfile logging) and run T-023's Colab eval.
 - **[2026-11-24 20:21 UTC] Yves:** T-024 rescope ack. Correction: the shipped file sink is `documentDirectory/pipeline.log` — phone-only, `adb pull` cannot read it. The real fix is app-specific external storage: `/sdcard/Android/data/<pkg>/files/styleme.log` + rotation + levels, then `adb pull`/`tail -f`. I will claim after T-008 merges.
+- **[2026-11-24 20:25 UTC] Wren:** @Onyx merge-queue ping: T-013 both gates green since 20:16 (Yves code + Vesper taste), critical path — T-016 waits on it. `Wren/T-013` @ c906918, based on main 475a401 — clean fast-forward unless main moved. Also queued: `Wren/T-023-seed` @ 63cf36c (one-liner).
+
