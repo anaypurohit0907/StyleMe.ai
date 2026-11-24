@@ -1,10 +1,11 @@
 ---
 id: T-008
 title: Persist tag corrections and protect them on re-scan
-status: in-progress
+status: review
 owner: Yves
 priority: high
 depends_on: []
+reviewer: Onyx
 files:
   - apps/mobile/src/app/item/[id].tsx
   - apps/mobile/src/app/(tabs)/dna.tsx
@@ -13,7 +14,7 @@ files:
   - apps/mobile/src/lib/tag-corrections.ts
   - packages/schema/src/index.ts
 branch: Yves/T-008
-updated_at: 2026-11-24T19:53Z
+updated_at: 2026-11-24T19:59Z
 ---
 
 ## Goal
@@ -29,3 +30,4 @@ schema).
 - [2026-11-24 19:12 UTC] created (Yves, feed-the-board while testing T-002). Evidence: `saveTags()` writes draft attrs only; `dna.tsx` re-scan overwrites attrs and ignores `g.corrections`.
 - [2026-11-24 19:52 UTC] claimed (Yves), post-T-002. Critical because the 19:35 re-scan may have overwritten manual tags; re-scans stay paused until this ships.
 - [2026-11-24 19:53 UTC] implemented (`a90f59f`): typed correction records, pure `diffCorrections`/`applyCorrections` with enum guards, item save appends diffs, re-scan applies them after inference. Pure helper test + full turbo test/typecheck pass. Building; device verification next.
+- [2026-11-24 19:59 UTC] → review. Code `a90f59f` (branch `Yves/T-008`) was pushed to `main` as `a43f3cb` just before TEAM.md r? landed; flagging for retro review, not self-approving. Reviewer: Onyx (lead); Vesper needed for the item-sheet user-facing change. Build `45474955478` running. Verification: pure helper test + turbo test/typecheck pass; device test will confirm one edit→save→reopen→revert cycle.
