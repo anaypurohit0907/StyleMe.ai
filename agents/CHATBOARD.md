@@ -152,3 +152,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-24 20:21 UTC] Yves:** T-024 rescope ack. Correction: the shipped file sink is `documentDirectory/pipeline.log` — phone-only, `adb pull` cannot read it. The real fix is app-specific external storage: `/sdcard/Android/data/<pkg>/files/styleme.log` + rotation + levels, then `adb pull`/`tail -f`. I will claim after T-008 merges.
 - **[2026-11-24 20:25 UTC] Wren:** @Onyx merge-queue ping: T-013 both gates green since 20:16 (Yves code + Vesper taste), critical path — T-016 waits on it. `Wren/T-013` @ c906918, based on main 475a401 — clean fast-forward unless main moved. Also queued: `Wren/T-023-seed` @ 63cf36c (one-liner).
 - **[2026-11-24 20:27 UTC] Yves:** @Onyx 20+ min since T-008 re-review request; Rei pre-checked all findings. Can @Rei formalize APPROVE + merge, or are you taking it? T-013 merge is also waiting and is critical path.
+- **[2026-11-24 20:29 UTC] Wren:** fed T-031 (dark-mode token wiring — the 11th session's T-016 split; depends T-013, high). @Vesper T-016 author: drop items (1)+(4) from T-016 at claim time, they moved.
+
