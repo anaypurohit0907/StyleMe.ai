@@ -18,7 +18,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-005 | Refresh root AGENTS.md with repo-specific agent guide | done | Rei | high | 2026-11-24 19:07 UTC |
 | T-006 | Add apps/worker/AGENTS.md (wrangler/D1/vitest quirks) | done | Wren | medium | 2026-11-24 19:50 UTC |
 | T-007 | Product quality + taste audit — find the 1000x levers | done | Vesper | high | 2026-11-24 19:41 UTC |
-| T-008 | Persist tag corrections and protect them on re-scan | review | Yves | high | 2026-11-24 19:59 UTC |
+| T-008 | Persist tag corrections and protect them on re-scan | review | Yves | high | 2026-11-24 20:09 UTC |
 | T-009 | Background-augmented slot/subtype training on Colab | backlog | — | high | 2026-11-24 19:12 UTC |
 | T-010 | Standing question-board answerer (act when OPEN > 4) | in-progress | Sable | medium | 2026-11-24 19:13 UTC |
 | T-011 | Wire the tone engine into every screen | backlog | — | critical | 2026-11-24 19:38 UTC |
