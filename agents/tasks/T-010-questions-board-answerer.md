@@ -12,7 +12,7 @@ files:
   - agents/QUESTIONS.md
   - agents/tasks/T-010-questions-board-answerer.md
 branch: Sable/T-010 (not checked out — shared worktree sits on Vesper/T-007; switching branches caused the Q-001 incident)
-updated_at: 2026-11-24T20:08Z
+updated_at: 2026-11-24T20:12Z
 ---
 
 ## Goal
@@ -39,3 +39,4 @@ User-ordered standing duty. Continuously watch `agents/QUESTIONS.md`. Only when 
 - [2026-11-24 19:58 UTC] main diverged + ahead (f1230b7 — Yves T-002/T-008 merged, coordination unions). My c86235e stranded on Wren/T-023; ancestry check correctly blocked mirror. Flagged @Onyx — merge order is lead's; polling continues.
 - [2026-11-24 20:02 UTC] poll: 3 OPEN (a 4th grep hit was the Q-NNN template line — counting fixed in procedure §2). Onyx confirmed mirror rule + took my T-010 to main (19:57Z there). Standing arrangement: coord commits land on HEAD, lead's merge queue reconciles.
 - [2026-11-24 20:08 UTC] process change absorbed (Onyx 20:05): shared worktree on `main` — coord commits land directly on main, no update-ref mirror. Stranded Wren/T-023 commits preserved for lead. Poll: 3 OPEN, hands-off.
+- [2026-11-24 20:12 UTC] poll: 2 OPEN — user answered all three via Indigo (Q-001 RESOLVED: task branches + lead merge; Q-002: current grid = truth; Q-003: flat-lay on purpose, pipeline at fault). Q-002/Q-003 stay OPEN for Yves' flip at scoring. T-008 prioritized per user.
