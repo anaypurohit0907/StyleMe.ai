@@ -5,11 +5,13 @@ import type { Garment } from "@styleme/schema";
 import { colors, paletteSwatch, radius, space } from "@styleme/design";
 import { Btn, Caption, Chip, Empty, Screen, Scroll, Title } from "@/components/ui";
 import { listGarments } from "@/lib/db";
+import { useTheme } from "@/lib/theme";
 
 const SLOTS = ["all", "top", "bottom", "dress", "outerwear", "shoes", "accessory"] as const;
 
 export default function Wardrobe() {
   const router = useRouter();
+  const t = useTheme();
   const [garments, setGarments] = useState<Garment[]>([]);
   const [slot, setSlot] = useState<(typeof SLOTS)[number]>("all");
 
@@ -47,11 +49,11 @@ export default function Wardrobe() {
         ) : (
           <View style={s.grid}>
             {shown.map((g) => (
-              <Pressable key={g.id} onPress={() => router.push(`/item/${g.id}`)} style={s.tile}>
+              <Pressable key={g.id} onPress={() => router.push(`/item/${g.id}`)} style={[s.tile, { backgroundColor: t.surface, borderColor: t.line }]}>
                 {g.photoRef ? (
-                  <Image source={{ uri: g.photoRef }} style={s.img} />
+                  <Image source={{ uri: g.photoRef }} style={[s.img, { borderColor: t.line }]} />
                 ) : (
-                  <View style={[s.img, { backgroundColor: paletteSwatch[g.attrs.colors[0]] ?? colors.surfaceAlt }]} />
+                  <View style={[s.img, { borderColor: t.line, backgroundColor: paletteSwatch[g.attrs.colors[0]] ?? t.surfaceAlt }]} />
                 )}
                 <View style={s.tileBody}>
                   <Caption>
@@ -76,12 +78,10 @@ const s = StyleSheet.create({
   grid: { flexDirection: "row", flexWrap: "wrap", gap: space.m },
   tile: {
     width: "47%",
-    backgroundColor: colors.surface,
     borderRadius: radius.md,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.line,
     overflow: "hidden",
   },
-  img: { width: "100%", aspectRatio: 0.8, backgroundColor: colors.surfaceAlt, borderWidth: StyleSheet.hairlineWidth, borderColor: colors.line },
+  img: { width: "100%", aspectRatio: 0.8, borderWidth: StyleSheet.hairlineWidth },
   tileBody: { padding: space.s, gap: 2 },
 });
