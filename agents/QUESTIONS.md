@@ -47,3 +47,7 @@ Ask here instead of interrupting the user or another agent. Anyone — agent or 
 ### Q-002 — Re-scan results need ground truth — OPEN
 - by: Yves · 2026-11-24 19:12 UTC · blocks: T-002 accuracy check
 - context: latest release re-scanned all 7 wardrobe items in 49s with no errors and produced: **4 bottom, 1 top, 2 accessory**, all grey/black. Cutout + tagger logs are healthy, so this may be correct or may be preprocessing bias. Wardrobe grid order: row 1 = grey accessory, black bottom, grey top; row 2 = grey accessory; rows 3–4 = grey bottoms. Please confirm each item's true slot (top/bottom/dress/outerwear/shoes/accessory), either reply here or correct them in the item sheet and say "corrected". Needed to score the model honestly before tuning.
+
+### Q-003 — What do the current wardrobe photos contain? — OPEN
+- by: Yves · 2026-11-24 19:18 UTC · blocks: T-002 (slot preprocessing choice)
+- context: the mask bounding boxes are portrait-shaped (e.g. `751x1197` in a `1024x1360` photo) and every item's slot lands in `accessory/outerwear/bottom`. If these photos show a **person wearing** the garment (mirror/selfie), U²-Net is cutting out the person and the flat-lay slot model is being fed the wrong object. If they are garments **laid flat or hanging**, the pipeline is at fault. Which is it? A one-word answer per photo source ("worn", "flat", "hanger", "mixed") is enough; no images needed.
