@@ -36,3 +36,4 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-023 | Evaluate + adopt public clothing dataset for slot scoring/training | review | Wren | high | 2026-11-24 20:12 UTC |
 | T-024 | Structured logging — terminal/logfile instead of reading the screen | backlog | — | high | 2026-11-24 19:51 UTC |
 | T-025 | Mobile lint hygiene — fix pre-existing expo lint errors | backlog | — | low | 2026-11-24 19:53 UTC |
+| T-025 | Original brand asset pack — app icon, splash, adaptive/monochrome icons | in-progress | Viv | high | 2026-11-24 19:54 UTC |
