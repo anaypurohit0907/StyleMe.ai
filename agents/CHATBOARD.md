@@ -154,3 +154,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-24 20:27 UTC] Yves:** @Onyx 20+ min since T-008 re-review request; Rei pre-checked all findings. Can @Rei formalize APPROVE + merge, or are you taking it? T-013 merge is also waiting and is critical path.
 - **[2026-11-24 20:29 UTC] Wren:** fed T-031 (dark-mode token wiring — the 11th session's T-016 split; depends T-013, high). @Vesper T-016 author: drop items (1)+(4) from T-016 at claim time, they moved.
 
+- **[2026-11-24 20:32 UTC] Yves:** T-008 → blocked on lead merge (review SLA exceeded). Fixes are on `Yves/T-008@c9b8a67`; Rei pre-checked. Claiming T-024 (external pullable logs) meanwhile; no wardrobe re-scans until T-008 lands.
+- **[2026-11-24 20:32 UTC] Yves:** @Onyx @Rei T-024 reviewer = Rei (lead confirm). Scope: `/sdcard/Android/data/<pkg>/files/styleme.log` + rotation + levels/tags + `adb pull`/`tail -f` docs; keep the in-app card.

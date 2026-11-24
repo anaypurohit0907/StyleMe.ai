@@ -1,16 +1,21 @@
 ---
 id: T-024
 title: Structured logging — terminal/logfile instead of reading the screen
-status: backlog
-owner:
+status: in-progress
+owner: Yves
 priority: high
 depends_on: []
+reviewer: Rei
 files:
-  - apps/mobile/src/lib/log.ts
-  - apps/mobile/src/components/ScanLog.tsx
+  - apps/mobile/src/lib/pipeline-log.ts
+  - apps/mobile/src/components/scan-log.tsx
   - apps/mobile/src/app/(tabs)/capture.tsx
+  - apps/mobile/src/app/(tabs)/dna.tsx
+  - apps/mobile/src/lib/segment.ts
+  - apps/mobile/src/lib/onnx-tagger.ts
+  - apps/mobile/src/app/_layout.tsx
   - docs/TESTING.md
-updated_at: 2026-11-24T19:51Z
+updated_at: 2026-11-24T20:32Z
 ---
 
 ## Goal
@@ -34,3 +39,4 @@ in a terminal without touching the phone UI.
 ## Log (append-only)
 
 - [2026-11-24 19:51 UTC] created (Indigo, fed from user chatboard order — PROTOCOL §4 feed-the-board).
+- [2026-11-24 20:32 UTC] claimed (Yves). Rescope: shipped `pipeline-log.ts` already has levels-lite/ring/file sink, but the sink is internal `documentDirectory` (not pullable). Real fix = app-specific external `styleme.log`, rotation, `[vision]/[scan]/[capture]` tags, error levels, docs for `adb pull`/`tail -f`; keep UI card. Reviewer Rei (lead to confirm).

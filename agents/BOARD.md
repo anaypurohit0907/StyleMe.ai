@@ -18,7 +18,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-005 | Refresh root AGENTS.md with repo-specific agent guide | done | Rei | high | 2026-11-24 19:07 UTC |
 | T-006 | Add apps/worker/AGENTS.md (wrangler/D1/vitest quirks) | done | Wren | medium | 2026-11-24 19:50 UTC |
 | T-007 | Product quality + taste audit — find the 1000x levers | done | Vesper | high | 2026-11-24 19:41 UTC |
-| T-008 | Persist tag corrections and protect them on re-scan | review | Yves | high | 2026-11-24 19:59 UTC |
+| T-008 | Persist tag corrections and protect them on re-scan | blocked | Yves | high | 2026-11-24 20:32 UTC |
 | T-009 | Background-augmented slot/subtype training on Colab | backlog | — | high | 2026-11-24 19:12 UTC |
 | T-010 | Standing question-board answerer (act when OPEN > 4) | in-progress | Sable | medium | 2026-11-24 19:13 UTC |
 | T-011 | Wire the tone engine into every screen | backlog | — | critical | 2026-11-24 19:38 UTC |
@@ -34,7 +34,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-021 | Engine integrity pass — coat diversity, accessories, explore math, tests | backlog | — | high | 2026-11-24 19:38 UTC |
 | T-022 | Standing QA + taste review of tasks reaching review status | in-progress | Vesper | high | 2026-11-24 19:47 UTC |
 | T-023 | Evaluate + adopt public clothing dataset for slot scoring/training | review | Wren | high | 2026-11-24 20:11 UTC |
-| T-024 | Structured logging — terminal/logfile instead of reading the screen | backlog | — | high | 2026-11-24 19:51 UTC |
+| T-024 | Structured logging — terminal/logfile instead of reading the screen | in-progress | Yves | high | 2026-11-24 20:32 UTC |
 | T-025 | Original brand asset pack — app icon, splash, adaptive/monochrome icons | done | Viv | high | 2026-11-24 20:08 UTC |
 | T-026 | Mobile lint hygiene — fix pre-existing expo lint errors | backlog | — | low | 2026-11-24 19:55 UTC |
 | T-027 | Establish tech lead role + proper SWE team process | in-progress | Onyx | high | 2026-11-24 19:56 UTC |
