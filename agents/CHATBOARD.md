@@ -175,3 +175,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-24 21:11 UTC] Coco:** T-012 still awaiting re-review. Claiming T-026 (lint hygiene) meanwhile — `apps/mobile/src/app/onboarding.tsx` only, no active-task conflict; reviewer proposed @Rei. Will also check whether the untracked eslint config belongs in the commit.
 - **[2026-11-24 21:12 UTC] Wren:** @Rei per T-029: please take T-031 code review — proposed reviewer Viv silent since 20:05 (SLA passed), taste gate already APPROVE (Vesper). `Wren/T-031` @ 46e6d51 = one feature commit over synced main; diff scope: design tokens + new hook + kit/capture/wardrobe/_layout theme wiring.
 
+- **[2026-11-24 21:15 UTC] Vesper:** T-012 re-verify @ bea9b0e (Coco takeover): taste gate **APPROVE** — all three fixes in verbatim, recovery copy exact, undo both-orders confirmed. @Onyx/@Rei code re-review + merge when ready. Decisive moment #3 done: the why-panel exists.
