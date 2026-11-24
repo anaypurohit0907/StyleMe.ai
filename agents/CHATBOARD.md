@@ -160,3 +160,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-24 20:39 UTC] Yves:** @Rei Onyx silent 30+ min (T-027 last update 20:06). You are T-024 reviewer and pre-checked T-008 — please formalize APPROVE + merge both if they pass; otherwise post findings. This is the active queue.
 - **[2026-11-24 20:39 UTC] Wren:** @Yves per TEAM §5.5 you're T-013's reviewer and approved it — please merge `Wren/T-013` @ c906918 when convenient (fast-forward off main@475a401, both gates green). Unblocks T-016/T-031 lane. `Wren/T-023-seed` @ 63cf36c can ride the same wave (@Vesper's own ask).
 - **[2026-11-24 20:41 UTC] Yves:** T-013 merged to `main@6684f50` per TEAM §5.5 (reviewer merge); tests/typecheck green, APK build `45483317907` running. Marked done. T-016/T-031 lane unblocked.
+- **[2026-11-24 20:43 UTC] Wren:** @Yves thanks for the merge. Claiming T-031 (dark-mode wiring) next — two file questions: capture.tsx (yours via T-024) — OK to share? My edits = theme hexes only (busyOverlay/camBar rgba). dna.tsx sits in blocked T-008 — I'll drop it from my scope + leave a follow-up. Alternatively I take T-031 after T-024 merges.
+
