@@ -112,6 +112,8 @@ export default function Capture() {
       log("capture", `saved ${draftId} photo=${uri.split("/").pop() ?? uri}`);
       setSessionCount((n) => n + 1);
       setFlash({ thumb: uri });
+      // The camera branch remounts CameraView — it isn't ready until onCameraReady fires again.
+      setCameraReady(false);
       setUri(null);
       setOriginalUri(null);
       setDraftId(null);
@@ -272,6 +274,8 @@ export default function Capture() {
               setCutoutNote("");
               setStage("");
               setSaveError(null);
+              // CameraView remounts on branch switch — wait for onCameraReady again.
+              setCameraReady(false);
             }}
           />
           <ScanLog limit={8} title="Last capture" />
