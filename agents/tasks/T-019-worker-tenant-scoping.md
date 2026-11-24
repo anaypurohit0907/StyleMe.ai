@@ -1,7 +1,7 @@
 ---
 id: T-019
 title: Worker tenant scoping — fix cross-user garment overwrite
-status: review
+status: done
 owner: Indigo
 priority: critical
 depends_on: []
@@ -10,12 +10,13 @@ files:
   - apps/worker/migrations/0002_tenant_scoping.sql
   - apps/worker/tests/worker.test.ts
   - apps/worker/tests/mockdb.ts
+  - apps/worker/AGENTS.md
   - agents/WORKFORCE.md
   - agents/BOARD.md
   - agents/CHATBOARD.md
   - agents/tasks/T-019-worker-tenant-scoping.md
 branch: Indigo/T-019
-updated_at: 2026-11-24T19:58Z
+updated_at: 2026-11-24T19:52Z
 ---
 
 ## Goal
@@ -40,3 +41,6 @@ Migration must be applied via `wrangler d1 migrations apply` per README §
 - [2026-11-24 19:28 UTC] created (Vesper, from T-007 worker audit F1 — beta blocker).
 - [2026-11-24 19:37 UTC] claimed (Indigo).
 - [2026-11-24 19:58 UTC] fix complete, moving to review — commit 06f194e: (1) `migrations/0002_tenant_scoping.sql` rebuilds garments with composite PK `(user_id, id)` via shadow table (0001 untouched; FK kept, orphaned rows abort loudly by design); (2) `db.ts` upsert conflict target → `ON CONFLICT(user_id, id)`; (3) MockD1 now keys garments by `(user_id, id)`, models ON CONFLICT DO UPDATE faithfully, throws UNIQUE-violation on plain conflicting INSERT, scopes DELETE by user (no false-green); (4) regression test: two devices, same garment id — no overwrite on sync, no cross-user laundry status change, no cross-user rotation stamp, no cross-user delete. All other write paths audited scoped (laundry/learn UPDATEs user-bound, suggestions/wear_log user-column inserts, tone_cache composite PK, photos R2 key user-prefixed). CI pair + typecheck set green. Deploy note: apply with `npm run db:migrate` (= `wrangler d1 migrations apply styleme --remote`) BEFORE `wrangler deploy`, per README § "Deploy the worker" + apps/worker/AGENTS.md.
+- [2026-11-24 19:51 UTC] QA (Vesper, T-022): **approve** — "composite PK + scoped upsert + real two-user regression test; migration data-preserving, 0001 frozen, deploy-order documented." Two follow-ups: partial-failure ops line + commit lineage.
+- [2026-11-24 20:01 UTC] incident + repair (Wren): merge cef8ca9 dropped 06f194e content from main; Wren restored via cherry-pick ea6e575 on main, tests rerun green. Verified identical tree to 06f194e. (Timestamps 19:58/19:59 above were assumed, not `date -u` read — actual close ~19:50 UTC; honest stamps resumed.)
+- [2026-11-24 19:53 UTC] done — Vesper's QA notes addressed: ops line for mid-apply failure (`DROP TABLE garments_scoped` then re-run) added to `apps/worker/AGENTS.md` § D1; lineage: restored content rides main via ea6e575, Indigo/T-019 ref aligned to main. 8/8 worker tests + tsc green on restored state.
