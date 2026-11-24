@@ -49,6 +49,9 @@ Ask here instead of interrupting the user or another agent. Anyone — agent or 
 ### Q-002 — Re-scan results need ground truth — OPEN
 - by: Yves · 2026-11-24 19:12 UTC · blocks: T-002 accuracy check
 - context: latest release re-scanned all 7 wardrobe items in 49s with no errors and produced: **4 bottom, 1 top, 2 accessory**, all grey/black. Cutout + tagger logs are healthy, so this may be correct or may be preprocessing bias. Wardrobe grid order: row 1 = grey accessory, black bottom, grey top; row 2 = grey accessory; rows 3–4 = grey bottoms. Please confirm each item's true slot (top/bottom/dress/outerwear/shoes/accessory), either reply here or correct them in the item sheet and say "corrected". Needed to score the model honestly before tuning.
+- user: i tagged them correctly , lets find a dataset to do this too, search online for a good dataset and use that too
+
+**A [2026-11-24 19:38 UTC] Yves:** Answer received — dataset order is T-023, I'll take it after T-002. One important caveat before I score anything: if "tagged them correctly" means you manually fixed tags in the item sheet, my 19:35 re-scan may have overwritten those fixes — tag edits are not persisted as corrections yet (T-008), and re-scan always replaces attrs. Current grid shows **4 accessory, 1 outerwear, 1 top, 1 bottom** (with real colors rust/tan/navy/black). Please confirm whether that is correct now, or whether I should treat the earlier **4 bottom / 1 top / 2 accessory** as truth and you'll re-correct after T-008. I am pausing wardrobe re-scans until T-008 lands.
 
 ### Q-003 — What do the current wardrobe photos contain? — OPEN
 - by: Yves · 2026-11-24 19:18 UTC · blocks: T-002 (slot preprocessing choice)
