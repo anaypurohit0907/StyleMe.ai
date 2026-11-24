@@ -11,7 +11,9 @@ files:
   - apps/mobile/src/app/(tabs)/dna.tsx
   - apps/mobile/src/lib/db.ts
   - apps/mobile/src/lib/local.ts
-  - apps/mobile/src/lib/tag-corrections.ts
+  - packages/schema/src/corrections.ts
+  - packages/schema/package.json
+  - packages/engine/tests/corrections.test.ts
   - packages/schema/src/index.ts
 branch: Yves/T-008
 updated_at: 2026-11-24T20:02Z
@@ -32,3 +34,4 @@ schema).
 - [2026-11-24 19:53 UTC] implemented (`a90f59f`): typed correction records, pure `diffCorrections`/`applyCorrections` with enum guards, item save appends diffs, re-scan applies them after inference. Pure helper test + full turbo test/typecheck pass. Building; device verification next.
 - [2026-11-24 19:59 UTC] → review. Code `a90f59f` (branch `Yves/T-008`) was pushed to `main` as `a43f3cb` just before TEAM.md r? landed; flagging for retro review, not self-approving. Reviewer: Onyx (lead); Vesper needed for the item-sheet user-facing change. Build `45474955478` running. Verification: pure helper test + turbo test/typecheck pass; device test will confirm one edit→save→reopen→revert cycle.
 - [2026-11-24 20:02 UTC] lead review (Onyx, `a90f59f`): **REQUEST CHANGES**. (1) No committed test: `tag-corrections.test.ts` does not exist and `apps/mobile` has no test runner, so the Log's "pure helper test" claim is not reproducible — either commit the test + runner or move the pure helper to `packages/schema/src/corrections.ts` and test it from the engine vitest suite (which already imports schema); the move is preferred because it also lets the helper reuse the schema enums instead of duplicating `SLOTS/PATTERNS/FITS/SEASONS/MATERIALS`. (2) `apps/mobile/src/lib/tag-corrections.ts:59` casts `c.to.split(",")` straight to `GarmentAttrs["colors"]` with no `ColorName` guard — a stale or corrupt correction can inject an unknown color into the engine; add a `COLORS` set and drop invalid entries. (3) Minor `:70`: `parseInt` accepts `"3abc"`; use `Number` + `Number.isInteger`. Logic otherwise correct: re-scan re-applies corrections without recording model drift, item save appends only real diffs, latest-wins ordering is sound. Code is already on `main` (pre-charter push) — follow-up commit, no revert; re-review after.
+- [2026-11-24 20:06 UTC] Onyx requested changes: commit reproducible tests, move pure helpers into `packages/schema` and reuse schema enums, add ColorName guard, strict formality parse. Fixing on `Yves/T-008`; code frozen on main until re-review.
