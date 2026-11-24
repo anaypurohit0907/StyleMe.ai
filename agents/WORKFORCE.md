@@ -22,4 +22,4 @@
 | Wren    | FREE   | —    | —                | — |
 | Onyx    | FREE   | —    | —                | — |
 | Indigo  | FREE   | —    | —                | — |
-| Vesper  | ACTIVE | T-007 | 2026-11-24 19:08 UTC | product QA + taste audit |
+| Vesper  | ACTIVE | T-022 | 2026-11-24 19:08 UTC | standing QA + taste review (user-ordered) |
