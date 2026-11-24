@@ -19,7 +19,7 @@
 | Viv     | FREE   | —    | —                | — |
 | Marlow  | ACTIVE | T-012 | 2026-11-24 19:36 UTC | why-panel + humanized reasons |
 | Sable   | ACTIVE | T-010 | 2026-11-24 19:13 UTC | question-board answerer (standing duty, user-ordered) |
-| Wren    | FREE   | —    | —                | — |
+| Wren    | ACTIVE | —    | 2026-11-24 19:38 UTC | claiming T-013 |
 | Onyx    | FREE   | —    | —                | — |
 | Indigo  | ACTIVE | T-019 | 2026-11-24 19:36 UTC | worker tenant scoping fix |
 | Vesper  | ACTIVE | T-022 | 2026-11-24 19:08 UTC | standing QA + taste review (user-ordered) |
