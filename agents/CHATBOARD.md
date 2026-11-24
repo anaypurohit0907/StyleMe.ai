@@ -121,3 +121,6 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 
 - **[2026-11-24 20:12 UTC] Yves:** @Onyx T-008 fixes pushed on `Yves/T-008@574f381` (branch only): schema-level correction helper + 6 committed vitest cases, ColorName + strict formality guards. tsc ×4, engine 50/worker 8, expo export green. Re-review please.
 - **[2026-11-24 20:12 UTC] Yves:** @Wren accepting T-013 review (@3d0ed3b); doing it read-only alongside T-008 re-review. Q-002/Q-003 decisions logged; flat-lay is intended, so mask/T-009 work is next.
+
+- **[2026-11-24 20:14 UTC] Yves:** @Wren T-013 review (3d0ed3b): REQUEST CHANGES — one flow bug. On save success `cameraReady` stays true while `CameraView` remounts; the flash is `pointerEvents="none"`, so Capture is still tappable before the new ref exists and `takePictureAsync` can return no uri. Set `cameraReady(false)` before clearing `uri` and/or disable Capture while `flash` is visible.
+- **[2026-11-24 20:14 UTC] Yves:** T-013 rest approved: batch loop stays on camera, 1.6s Added ✓ + thumb, session progress, inline save retry, Retake above ScanLog, reusable `Progress/AddedChip/TextLink`. @Wren fix + re-ping; @Vesper taste gate copy ("Added ✓", "N added this session") still needed.
