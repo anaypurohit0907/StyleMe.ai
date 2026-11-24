@@ -35,7 +35,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-022 | Standing QA + taste review of tasks reaching review status | in-progress | Vesper | high | 2026-11-24 19:47 UTC |
 | T-023 | Evaluate + adopt public clothing dataset for slot scoring/training | review | Wren | high | 2026-11-24 20:12 UTC |
 | T-024 | Structured logging — terminal/logfile instead of reading the screen | backlog | — | high | 2026-11-24 19:51 UTC |
-| T-025 | Original brand asset pack — app icon, splash, adaptive/monochrome icons | review | Viv | high | 2026-11-24 20:02 UTC |
+| T-025 | Original brand asset pack — app icon, splash, adaptive/monochrome icons | done | Viv | high | 2026-11-24 20:08 UTC |
 | T-026 | Mobile lint hygiene — fix pre-existing expo lint errors | backlog | — | low | 2026-11-24 19:55 UTC |
 | T-027 | Establish tech lead role + proper SWE team process | in-progress | Onyx | high | 2026-11-24 19:56 UTC |
 | T-028 | Mobile — store + resend device registrationSecret (worker T-020 pairing) | backlog | — | high | 2026-11-24 20:04 UTC |

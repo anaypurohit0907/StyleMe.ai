@@ -1,7 +1,7 @@
 ---
 id: T-025
 title: Original brand asset pack — app icon, splash, adaptive/monochrome icons
-status: review
+status: done
 owner: Viv
 priority: high
 depends_on: []
@@ -21,7 +21,7 @@ files:
   - packages/design/brand/icon-source.jpg
   - packages/design/brand/README.md
 branch: Viv/T-025
-updated_at: 2026-11-24T20:04Z
+updated_at: 2026-11-24T20:08Z
 ---
 
 ## Goal
@@ -85,3 +85,7 @@ through Expo config:
   `expo config` parses. Taste: the S reads at 48 px and is on-brand; Vesper's
   gate is optional. Re-review after the one-line SVG fix; PNG re-render not
   needed since shipped assets already match the palette.
+- [2026-11-24 20:08 UTC] re-review (Onyx, `0254615`): **APPROVE**. `mark.svg`
+  fill is now `#B4552D`; shipped PNGs untouched; all prior checks stand.
+  Vesper structural taste approve on record. Merged to `main` @ `6aae710`
+  (reviewer/lead merge per TEAM §7) — T-025 done.
