@@ -1,6 +1,7 @@
-import { beforeAll, describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it, vi } from "vitest";
 import app from "../src/index";
 import { makeEnv, type MockEnv } from "./mockdb";
+import { updatePreference } from "@styleme/engine";
 
 /**
  * API-surface integration test: auth → sync → recommend → laundry → learn
@@ -274,5 +275,233 @@ describe("worker API", () => {
     expect(delB.status).toBe(200);
     expect(env.DB.garment(USER_B, "t1")).toBeUndefined();
     expect(env.DB.garment(USER_A, "t1")).toBeDefined();
+  });
+
+  it("auth proof-of-possession: one-time secret, no silent re-registration", async () => {
+    const deviceId = "device-pos-11223344";
+    const reg = async (initBody: Record<string, unknown>) =>
+      app.request(
+        "/v1/auth/device",
+        {
+          method: "POST",
+          headers: { "content-type": "application/json", "cf-connecting-ip": "198.51.100.7" },
+          body: JSON.stringify(initBody),
+        },
+        env as never,
+      );
+
+    // First registration returns the secret exactly once + stores only a hash.
+    const first = await reg({ deviceId, onboarding: { city: "Berlin" } });
+    expect(first.status).toBe(200);
+    const firstBody = (await first.json()) as { token: string; registrationSecret: string };
+    expect(firstBody.registrationSecret).toMatch(/^[0-9a-f]{64}$/);
+    expect(env.DB.users.get(deviceId)?.reg_secret_hash).toMatch(/^[0-9a-f]{64}$/);
+    expect(env.DB.users.get(deviceId)?.reg_secret_hash).not.toBe(firstBody.registrationSecret);
+
+    // Re-registration without the secret is refused — no token, no takeover.
+    expect((await reg({ deviceId })).status).toBe(403);
+    // Wrong secret refused too.
+    expect((await reg({ deviceId, registrationSecret: "0".repeat(64) })).status).toBe(403);
+    // Correct secret works.
+    const again = await reg({ deviceId, registrationSecret: firstBody.registrationSecret });
+    expect(again.status).toBe(200);
+
+    // Onboarding is set at registration only: a secret-bearing re-registration
+    // must not overwrite the stored onboarding.
+    await reg({ deviceId, registrationSecret: firstBody.registrationSecret, onboarding: { city: "Pwned" } });
+    expect(JSON.parse(env.DB.users.get(deviceId)!.onboarding as string).city).toBe("Berlin");
+  });
+
+  it("auth: legacy user without secret hash gets one-time upgrade, not lockout", async () => {
+    // Pre-0003 row shape: no reg_secret_hash.
+    env.DB.users.set("device-legacy-00000001", {
+      id: "device-legacy-00000001",
+      locale: null,
+      onboarding: JSON.stringify({ city: "Oslo" }),
+      tone: null,
+      prefs: "{}",
+      explore_state: "{}",
+      created_at: 1,
+      reg_secret_hash: null,
+    });
+    const r = await app.request(
+      "/v1/auth/device",
+      {
+        method: "POST",
+        headers: { "content-type": "application/json", "cf-connecting-ip": "198.51.100.8" },
+        body: JSON.stringify({ deviceId: "device-legacy-00000001" }),
+      },
+      env as never,
+    );
+    expect(r.status).toBe(200);
+    const body = (await r.json()) as { token: string; registrationSecret: string };
+    expect(body.registrationSecret).toMatch(/^[0-9a-f]{64}$/);
+    // Upgraded: hash stored, and a second call now demands the secret.
+    expect(env.DB.users.get("device-legacy-00000001")?.reg_secret_hash).toMatch(/^[0-9a-f]{64}$/);
+    const r2 = await app.request(
+      "/v1/auth/device",
+      {
+        method: "POST",
+        headers: { "content-type": "application/json", "cf-connecting-ip": "198.51.100.8" },
+        body: JSON.stringify({ deviceId: "device-legacy-00000001" }),
+      },
+      env as never,
+    );
+    expect(r2.status).toBe(403);
+  });
+
+  it("rate limits: auth per-IP and recommend per-user return 429", async () => {
+    // Fresh IP, fresh device: 10 allowed in the window, the 11th is a 429.
+    const ip = "198.51.100.9";
+    let lastStatus = 0;
+    for (let i = 0; i < 11; i++) {
+      const r = await app.request(
+        "/v1/auth/device",
+        {
+          method: "POST",
+          headers: { "content-type": "application/json", "cf-connecting-ip": ip },
+          body: JSON.stringify({ deviceId: "device-rl-0000000001" }),
+        },
+        env as never,
+      );
+      lastStatus = r.status;
+    }
+    expect(lastStatus).toBe(429);
+
+    // Authed surface: fresh user hammers /v1/recommend — cap is 10/min.
+    const reg = await app.request(
+      "/v1/auth/device",
+      {
+        method: "POST",
+        headers: { "content-type": "application/json", "cf-connecting-ip": "198.51.100.10" },
+        body: JSON.stringify({ deviceId: "device-rl-0000000002" }),
+      },
+      env as never,
+    );
+    const tok = ((await reg.json()) as { token: string }).token;
+    let recStatus = 0;
+    for (let i = 0; i < 11; i++) {
+      const r = await app.request(
+        "/v1/recommend",
+        {
+          method: "POST",
+          headers: { "content-type": "application/json", authorization: `Bearer ${tok}` },
+          body: JSON.stringify({ occasion: "office", now: NOW, weather: { tempC: 15, isRaining: false } }),
+        },
+        env as never,
+      );
+      recStatus = r.status;
+    }
+    expect(recStatus).toBe(429);
+  });
+
+  it("recommend: invalid occasion is a 400, not a 500", async () => {
+    const r = await call(
+      "/v1/recommend",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          occasion: "zero-gravity gala",
+          now: NOW,
+          weather: { tempC: 15, isRaining: false },
+        }),
+      },
+      true,
+    );
+    expect(r.status).toBe(400);
+    const body = (await r.json()) as { error: string };
+    expect(body.error).toContain("invalid recommend context");
+  });
+
+  it("learn: the picked outfit is not also counted as rejected", async () => {
+    // Fresh user so preference math starts from zero.
+    const reg = await app.request(
+      "/v1/auth/device",
+      {
+        method: "POST",
+        headers: { "content-type": "application/json", "cf-connecting-ip": "198.51.100.11" },
+        body: JSON.stringify({ deviceId: "device-learn-00000001" }),
+      },
+      env as never,
+    );
+    const tok = ((await reg.json()) as { token: string }).token;
+    const USER = "device-learn-00000001";
+    const w = [
+      garment("lt1"),
+      garment("lb1", { attrs: { slot: "bottom", colors: ["navy"], pattern: "solid", fit: "slim", formality: 3, season: "all", material: "medium" } }),
+      garment("ls1", { attrs: { slot: "shoes", colors: ["brown"], pattern: "solid", fit: "regular", formality: 3, season: "all", material: "medium" } }),
+    ];
+    const sync = await app.request(
+      "/v1/wardrobe/sync",
+      {
+        method: "POST",
+        headers: { "content-type": "application/json", authorization: `Bearer ${tok}` },
+        body: JSON.stringify({ upserts: w, deletions: [], ts: NOW }),
+      },
+      env as never,
+    );
+    expect(sync.status).toBe(200);
+
+    const rec = (await (
+      await app.request(
+        "/v1/recommend",
+        {
+          method: "POST",
+          headers: { "content-type": "application/json", authorization: `Bearer ${tok}` },
+          body: JSON.stringify({ occasion: "office", now: NOW, weather: { tempC: 15, isRaining: false } }),
+        },
+        env as never,
+      )
+    ).json()) as { outfits: { garmentIds: string[] }[] };
+    expect(rec.outfits.length).toBeGreaterThan(0);
+
+    const pickedId = rec.outfits[0]!.garmentIds.join("+");
+    // Baseline preference vector as stored before the learn call.
+    const baseline = JSON.parse(env.DB.users.get(USER)!.prefs as string);
+    const learnR = await app.request(
+      "/v1/learn",
+      {
+        method: "POST",
+        headers: { "content-type": "application/json", authorization: `Bearer ${tok}` },
+        body: JSON.stringify({
+          suggestedIds: rec.outfits.map((o) => o.garmentIds),
+          pickedId,
+          context: { occasion: "office", mood: "none", weather: { tempC: 15, isRaining: false }, now: NOW },
+          ts: NOW,
+        }),
+      },
+      env as never,
+    );
+    expect(learnR.status).toBe(200);
+
+    // Expected preferences use correct semantics: rejected = offered minus
+    // picked (by id), not by object identity.
+    const garmentMap = new Map(w.map((g) => [g.id, g]));
+    const expected = updatePreference(baseline, {
+      picked: { garmentIds: rec.outfits[0]!.garmentIds, score: 0, reasons: [] },
+      rejected: rec.outfits.slice(1).map((o) => ({ garmentIds: o.garmentIds, score: 0, reasons: [] })),
+      garments: garmentMap,
+      occasion: "office",
+    });
+    const actual = JSON.parse(env.DB.users.get(USER)!.prefs as string);
+    expect(actual).toEqual(expected);
+  });
+
+  it("weather cache: bounded at MAX_CACHE_ENTRIES entries", async () => {
+    const fakeFetch = vi.fn(async () => ({
+      ok: true,
+      json: async () => ({ current: { temperature_2m: 20, precipitation: 0 } }),
+    }));
+    vi.stubGlobal("fetch", fakeFetch);
+    try {
+      const cache = new Map<string, { weather: { tempC: number; isRaining: boolean }; at: number }>();
+      const { fetchWeather } = await import("../src/weather");
+      for (let i = 0; i < 1005; i++) {
+        await fetchWeather(cache as never, undefined, i * 0.01, i * 0.01);
+      }
+      expect(cache.size).toBeLessThanOrEqual(1000);
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 });

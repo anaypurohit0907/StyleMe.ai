@@ -17,6 +17,7 @@ export interface UserRow {
   tone: ToneProfile | null;
   prefs: PreferenceVector;
   exploreState: Record<string, SignatureState>;
+  regSecretHash: string | null;
   created_at: number;
 }
 
@@ -31,8 +32,17 @@ export function mapUser(row: Record<string, unknown> | null): UserRow | null {
     exploreState: row.explore_state
       ? (JSON.parse(row.explore_state as string) as Record<string, SignatureState>)
       : {},
+    regSecretHash: (row.reg_secret_hash as string | null) ?? null,
     created_at: row.created_at as number,
   };
+}
+
+export async function getUser(db: D1Database, id: string): Promise<UserRow | null> {
+  const row = (await db.prepare("SELECT * FROM users WHERE id = ?").bind(id).first()) as Record<
+    string,
+    unknown
+  > | null;
+  return mapUser(row);
 }
 
 export function mapGarment(row: Record<string, unknown>): Garment {
@@ -95,11 +105,16 @@ export async function syncWardrobe(
   return sync.upserts.length + sync.deletions.length;
 }
 
+export async function setUserRegSecretHash(db: D1Database, id: string, hash: string): Promise<void> {
+  await db.prepare("UPDATE users SET reg_secret_hash = ? WHERE id = ?").bind(hash, id).run();
+}
+
 export async function ensureUser(
   db: D1Database,
   id: string,
   onboarding?: Record<string, unknown>,
   tone?: ToneProfile,
+  regSecretHash?: string,
 ): Promise<UserRow> {
   const existing = await db.prepare("SELECT * FROM users WHERE id = ?").bind(id).first();
   if (existing) {
@@ -112,7 +127,9 @@ export async function ensureUser(
     return mapUser((await db.prepare("SELECT * FROM users WHERE id = ?").bind(id).first()) as Record<string, unknown>)!;
   }
   await db
-    .prepare("INSERT INTO users (id, locale, onboarding, tone, prefs, explore_state, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)")
+    .prepare(
+      "INSERT INTO users (id, locale, onboarding, tone, prefs, explore_state, created_at, reg_secret_hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+    )
     .bind(
       id,
       onboarding?.city ? String(onboarding.city) : null,
@@ -121,6 +138,7 @@ export async function ensureUser(
       JSON.stringify(emptyPreference()),
       "{}",
       Date.now(),
+      regSecretHash ?? null,
     )
     .run();
   return mapUser((await db.prepare("SELECT * FROM users WHERE id = ?").bind(id).first()) as Record<string, unknown>)!;
