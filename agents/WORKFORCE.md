@@ -17,7 +17,7 @@
 | Yves    | ACTIVE | T-002 | 2026-11-24 19:02 UTC | vision pipeline verification |
 | Rei     | FREE   | —    | —                | — |
 | Viv     | FREE   | —    | —                | — |
-| Marlow  | FREE   | —    | —                | — |
+| Marlow  | ACTIVE | T-012 | 2026-11-24 19:36 UTC | why-panel + humanized reasons |
 | Sable   | ACTIVE | T-010 | 2026-11-24 19:13 UTC | question-board answerer (standing duty, user-ordered) |
 | Wren    | FREE   | —    | —                | — |
 | Onyx    | FREE   | —    | —                | — |
