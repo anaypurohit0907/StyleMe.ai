@@ -8,6 +8,7 @@ Four Colab notebooks. Run in order. Everything is idempotent and survives sessio
 | `01_taxonomy_and_zero_shot.ipynb` | encodes taxonomy prompts with MobileCLIP-S1, evaluates zero-shot, exports the image tower to ONNX, writes probe training data | `prompt_embeddings.npy`, `taxonomy.json`, `mobileclip_s1_image.onnx`, `probe_data.npz`, `eval_report.*` |
 | `02_probe_finetune_and_export.ipynb` | fits linear probes for attributes that failed a gate, re-bundles | `probes.json`, `styleme_vision_v1.zip` |
 | `03_compatibility_abo.ipynb` | Polyvore fill-in-the-blank baseline (compatibility sanity check) | `compat_baseline.json` |
+| `04_dataset_eval.ipynb` | benchmarks the shipped slot head at scale on public sets: DeepFashion2 val (anchor), Fashion Product (shoes/accessory), Fashionpedia street (worn realism), ModaNet (annotations only — no public bulk images) | `dataset_eval_report.md/json` |
 
 ## Verified data sources
 
@@ -18,6 +19,18 @@ Four Colab notebooks. Run in order. Everything is idempotent and survives sessio
 | Fashionpedia clean annotations | Kaggle `tpgd01/fashionpedia-filter-attributes` | textile-pattern + silhouette attributes |
 | Fashionpedia val images | HF `sandrocaseiro/fashionpedia` | image bytes for the annotation split |
 | Polyvore outfit annotations | Kaggle `nguynmcch/polyvore-outfits-data` | FITB benchmark |
+| ModaNet annotations | GitHub `eBay/modanet` (git-lfs) | street-photo slot labels for T-009 augmentation; images not publicly scriptable — eval skipped, see notebook 04 |
+| Fashionpedia images (HF) | HF `detection-datasets/fashionpedia` | street-photo slot benchmark split (worn garments) |
+
+## Dataset slot benchmark (notebook 04 — T-023)
+
+Scores the shipped slot head (zero-shot + `probes.json` probe) on public corpora against our
+6-slot taxonomy. Gate: probe ≥ 0.90 on the DeepFashion2 anchor; street sets measure
+worn-vs-flat distribution shift, not the gate. **Numbers pending first Colab run** — report
+lands in `artifacts/dataset_eval_report.md`. All four corpora are non-commercial-licensed:
+fine for eval/training research (T-009), re-review before commercial use. They supplement —
+never replace — the 20–30 real labeled phone photos T-009 needs; no public set contains our
+bed/floor phone flat-lays.
 
 ## Results (MobileCLIP-S1, 256px, 512-d)
 

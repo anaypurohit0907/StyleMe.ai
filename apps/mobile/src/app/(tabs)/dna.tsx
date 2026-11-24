@@ -7,6 +7,7 @@ import { colors, paletteSwatch, space } from "@styleme/design";
 import { Btn, Caption, Card, Screen, Scroll, Title } from "@/components/ui";
 import { ScanLog } from "@/components/scan-log";
 import { loadPrefs, savePrefs } from "@/lib/local";
+import { applyCorrections } from "@/lib/tag-corrections";
 import { listGarments, metaSet, upsertGarment } from "@/lib/db";
 import { getVisionTagger } from "@/lib/vision";
 import { segmentGarment } from "@/lib/segment";
@@ -94,11 +95,15 @@ export default function DNA() {
             `cutout ${label}`,
           );
           setRetagStage("tagging");
-          const attrs = await withTimeout(
+          const modelAttrs = await withTimeout(
             tagger.tag(seg.cutoutUri),
             ITEM_TIMEOUT,
             `tag ${label}`,
           );
+          const attrs = applyCorrections(modelAttrs, g.corrections);
+          if (g.corrections.length > 0) {
+            log("scan", `${label} re-applied ${g.corrections.length} user correction(s)`);
+          }
           setRetagStage("saving");
           await upsertGarment({
             ...g,

@@ -89,6 +89,25 @@ export type GarmentAttrs = z.infer<typeof GarmentAttrsSchema>;
 export const GarmentStatusSchema = z.enum(["available", "in_use", "in_wash", "retired"]);
 export type GarmentStatus = z.infer<typeof GarmentStatusSchema>;
 
+/** A single user override of an auto-tag field. Latest `at` wins. */
+export const CorrectionSchema = z.object({
+  field: z.enum([
+    "slot",
+    "colors",
+    "pattern",
+    "fit",
+    "formality",
+    "season",
+    "material",
+    "subtype",
+    "nickname",
+  ]),
+  from: z.string(),
+  to: z.string(),
+  at: z.number(),
+});
+export type Correction = z.infer<typeof CorrectionSchema>;
+
 export const GarmentSchema = z.object({
   id: z.string().min(1),
   attrs: GarmentAttrsSchema,
@@ -102,10 +121,8 @@ export const GarmentSchema = z.object({
   addedAt: z.number(),
   /** Last worn epoch ms, null if never. Drives rotation cooldowns. */
   lastWornAt: z.number().nullable().default(null),
-  /** User corrections to auto-tags: { field, from, to } — flywheel data. */
-  corrections: z
-    .array(z.object({ field: z.string(), from: z.string(), to: z.string(), at: z.number() }))
-    .default([]),
+  /** User corrections to auto-tags: { field, from, to, at } — flywheel data. */
+  corrections: z.array(CorrectionSchema).default([]),
 });
 export type Garment = z.infer<typeof GarmentSchema>;
 

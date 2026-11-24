@@ -5,6 +5,7 @@ import type { Fit, Garment, GarmentAttrs, Pattern, Slot } from "@styleme/schema"
 import { colors, paletteSwatch, radius, space } from "@styleme/design";
 import { Btn, Caption, Card, Chip, Screen, Scroll, Swatch, Title } from "@/components/ui";
 import { deleteGarment, getGarment, setGarmentStatus, upsertGarment } from "@/lib/db";
+import { diffCorrections } from "@/lib/tag-corrections";
 
 const SLOTS: Slot[] = ["top", "bottom", "dress", "outerwear", "shoes", "accessory"];
 const PATTERNS: Pattern[] = ["solid", "striped", "check", "floral", "graphic", "animal", "other"];
@@ -46,8 +47,9 @@ export default function ItemDetail() {
   async function saveTags() {
     if (!g || !draft) return;
     setSaving(true);
-    await upsertGarment({ ...g, attrs: draft });
-    setG({ ...g, attrs: draft });
+    const corrections = [...g.corrections, ...diffCorrections(g.attrs, draft)];
+    await upsertGarment({ ...g, attrs: draft, corrections });
+    setG({ ...g, attrs: draft, corrections });
     setSaving(false);
     router.back();
   }
