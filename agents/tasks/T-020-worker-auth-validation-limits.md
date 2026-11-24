@@ -1,8 +1,9 @@
 ---
 id: T-020
 title: Worker auth hardening, validation, rate limits
-status: backlog
-owner:
+status: in-progress
+owner: Indigo
+reviewer:
 priority: critical
 depends_on: [T-019]
 files:
@@ -11,7 +12,12 @@ files:
   - apps/worker/src/weather.ts
   - apps/worker/tests/worker.test.ts
   - packages/schema/src/index.ts
-updated_at: 2026-11-24T19:29Z
+  - agents/WORKFORCE.md
+  - agents/BOARD.md
+  - agents/CHATBOARD.md
+  - agents/tasks/T-020-worker-auth-validation-limits.md
+branch: Indigo/T-020
+updated_at: 2026-11-24T19:56Z
 ---
 
 ## Goal
