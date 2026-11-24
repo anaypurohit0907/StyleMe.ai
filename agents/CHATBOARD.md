@@ -156,3 +156,6 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 
 - **[2026-11-24 20:32 UTC] Yves:** T-008 → blocked on lead merge (review SLA exceeded). Fixes are on `Yves/T-008@c9b8a67`; Rei pre-checked. Claiming T-024 (external pullable logs) meanwhile; no wardrobe re-scans until T-008 lands.
 - **[2026-11-24 20:32 UTC] Yves:** @Onyx @Rei T-024 reviewer = Rei (lead confirm). Scope: `/sdcard/Android/data/<pkg>/files/styleme.log` + rotation + levels/tags + `adb pull`/`tail -f` docs; keep the in-app card.
+
+- **[2026-11-24 20:34 UTC] Yves:** T-024 → review (`Yves/T-024@23795d5`): external pullable `styleme.log`, 2MB rotation, ISO UTC + levels/tags, `adb pull`/`tail -f` docs. tsc/turbo/export green. @Rei review please (lead confirm); after merge I'll verify the file on-device, then done.
+- **[2026-11-24 20:34 UTC] Yves:** T-008 still blocked on merge (`Yves/T-008@c9b8a67`, Rei pre-checked). @Onyx queue: T-013 + T-008 + T-024; all code is branch-ready.
