@@ -149,6 +149,37 @@ export function Empty({
   );
 }
 
+/** Thin progress bar with an optional caption — capture session progress etc. */
+export function Progress({ value, label }: { value: number; label?: string }) {
+  const pct = `${Math.round(Math.min(1, Math.max(0, value)) * 100)}%`;
+  return (
+    <View style={{ gap: space.s }}>
+      {label ? <Caption>{label}</Caption> : null}
+      <View style={s.progressTrack}>
+        <View style={[s.progressFill, { width: pct }]} />
+      </View>
+    </View>
+  );
+}
+
+/** Floating "Added ✓" confirmation pill — brief success feedback. */
+export function AddedChip({ label }: { label: string }) {
+  return (
+    <View style={s.addedChip}>
+      <Text style={s.addedChipText}>{label}</Text>
+    </View>
+  );
+}
+
+/** Underlined quiet text link — secondary exits like "View wardrobe". */
+export function TextLink({ label, onPress }: { label: string; onPress: () => void }) {
+  return (
+    <Pressable onPress={onPress} hitSlop={8}>
+      <Text style={s.textLink}>{label}</Text>
+    </Pressable>
+  );
+}
+
 const s = StyleSheet.create({
   screen: { flex: 1, backgroundColor: colors.bg },
   scroll: { padding: space.m, paddingBottom: space.xxl, gap: space.m },
@@ -183,4 +214,20 @@ const s = StyleSheet.create({
   chipText: { ...type.caption, color: colors.ink },
   swatch: { width: 34, height: 34, borderRadius: radius.pill },
   emptyTitle: { ...type.title, color: colors.ink },
+  progressTrack: {
+    height: 6,
+    borderRadius: radius.pill,
+    backgroundColor: colors.surfaceAlt,
+    overflow: "hidden",
+  },
+  progressFill: { height: 6, borderRadius: radius.pill, backgroundColor: colors.accent },
+  addedChip: {
+    alignSelf: "center",
+    borderRadius: radius.pill,
+    backgroundColor: colors.ink,
+    paddingHorizontal: space.l,
+    paddingVertical: space.s,
+  },
+  addedChipText: { ...type.caption, color: colors.bg, fontWeight: "600" },
+  textLink: { ...type.caption, color: colors.inkSoft, textDecorationLine: "underline" },
 });

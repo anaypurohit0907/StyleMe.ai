@@ -4,7 +4,7 @@ import { CameraView, useCameraPermissions } from "expo-camera";
 import { useRouter } from "expo-router";
 import type { Fit, GarmentAttrs, Pattern, Slot } from "@styleme/schema";
 import { colors, paletteSwatch, radius, space } from "@styleme/design";
-import { Btn, Caption, Card, Chip, Screen, Scroll, Swatch, Title } from "@/components/ui";
+import { AddedChip, Btn, Caption, Card, Chip, Progress, Screen, Scroll, Swatch, TextLink, Title } from "@/components/ui";
 import { ScanLog } from "@/components/scan-log";
 import { upsertGarment } from "@/lib/db";
 import { newGarment, persistPhoto } from "@/lib/local";
@@ -18,6 +18,8 @@ const FITS: Fit[] = ["slim", "regular", "relaxed", "oversized"];
 const SEASONS = ["warm", "cool", "all"] as const;
 const MATERIALS = ["light", "medium", "heavy"] as const;
 const COLOR_NAMES = Object.keys(paletteSwatch);
+const SESSION_TARGET = 30; // PLAN.md §5: 30 items ≈ 3 min setup
+const FLASH_MS = 1600;
 
 export default function Capture() {
   const router = useRouter();
@@ -33,6 +35,9 @@ export default function Capture() {
   const [cameraReady, setCameraReady] = useState(false);
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [cameraKey, setCameraKey] = useState(0);
+  const [sessionCount, setSessionCount] = useState(0);
+  const [flash, setFlash] = useState<{ thumb: string } | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   // First open can sit on an unresolved permission. Ask proactively and keep
   // the UI honest while the camera hardware warms up.
@@ -41,6 +46,13 @@ export default function Capture() {
       void requestPermission();
     }
   }, [permission, requestPermission]);
+
+  // The "Added ✓" confirmation is a brief flash, then the camera is all that matters.
+  useEffect(() => {
+    if (!flash) return;
+    const t = setTimeout(() => setFlash(null), FLASH_MS);
+    return () => clearTimeout(t);
+  }, [flash]);
 
   async function shoot() {
     setBusy(true);
@@ -92,20 +104,24 @@ export default function Capture() {
     if (!uri || !attrs || !draftId) return;
     setBusy(true);
     setStage("Saving…");
+    setSaveError(null);
     log("capture", `save ${draftId} slot=${attrs.slot}`);
     try {
       const originalRef = originalUri ? await persistPhoto(originalUri, draftId) : undefined;
       await upsertGarment(newGarment(draftId, attrs, uri, originalRef));
       log("capture", `saved ${draftId} photo=${uri.split("/").pop() ?? uri}`);
+      setSessionCount((n) => n + 1);
+      setFlash({ thumb: uri });
       setUri(null);
       setOriginalUri(null);
       setDraftId(null);
       setAttrs(null);
       setCutoutNote("");
-      router.replace("/(tabs)/wardrobe");
+      setStage("");
     } catch (err) {
       log("capture", `save FAILED: ${errorText(err)}`);
-      setStage(`Save failed: ${errorText(err)}`);
+      setSaveError(`Save failed: ${errorText(err)}`);
+      setStage("");
     } finally {
       setBusy(false);
     }
@@ -238,8 +254,13 @@ export default function Capture() {
             </View>
           </Card>
 
+          {saveError ? (
+            <Card style={{ gap: space.s, borderColor: colors.bad }}>
+              <Caption>{saveError}</Caption>
+              <Btn label="Try saving again" onPress={() => void save()} loading={busy} />
+            </Card>
+          ) : null}
           <Btn label="Add to wardrobe" onPress={() => void save()} loading={busy} />
-          <ScanLog limit={8} title="Last capture" />
           <Btn
             label="Retake"
             variant="ghost"
@@ -250,8 +271,10 @@ export default function Capture() {
               setAttrs(null);
               setCutoutNote("");
               setStage("");
+              setSaveError(null);
             }}
           />
+          <ScanLog limit={8} title="Last capture" />
         </Scroll>
       </Screen>
     );
@@ -274,6 +297,12 @@ export default function Capture() {
         }}
       />
       <View pointerEvents="none" style={s.guide} />
+      {flash ? (
+        <View pointerEvents="none" style={s.flash}>
+          <Image source={{ uri: flash.thumb }} style={s.flashThumb} />
+          <AddedChip label="Added ✓" />
+        </View>
+      ) : null}
       {!cameraReady && (
         <View style={s.cameraLoading}>
           <ActivityIndicator color={colors.accent} size="large" />
@@ -291,6 +320,12 @@ export default function Capture() {
         </View>
       )}
       <View style={s.camBar}>
+        {sessionCount > 0 ? (
+          <Progress
+            value={Math.min(1, sessionCount / SESSION_TARGET)}
+            label={`${sessionCount} added this session`}
+          />
+        ) : null}
         <Caption>{stage || "Fill the frame with one piece."}</Caption>
         <Btn
           label={busy ? stage || "Working…" : "Capture"}
@@ -298,6 +333,9 @@ export default function Capture() {
           loading={busy}
           disabled={!cameraReady}
         />
+        {sessionCount > 0 ? (
+          <TextLink label="View wardrobe" onPress={() => router.replace("/(tabs)/wardrobe")} />
+        ) : null}
       </View>
       {busy && (
         <View style={s.busyOverlay}>
@@ -355,5 +393,19 @@ const s = StyleSheet.create({
     paddingBottom: space.xl,
     gap: space.s,
     backgroundColor: "rgba(250,249,247,0.92)",
+  },
+  flash: {
+    position: "absolute",
+    top: space.xl * 2,
+    left: 0,
+    right: 0,
+    alignItems: "center",
+    gap: space.s,
+  },
+  flashThumb: {
+    width: 84,
+    height: 84,
+    borderRadius: radius.md,
+    backgroundColor: colors.surfaceAlt,
   },
 });
