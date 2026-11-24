@@ -1,7 +1,7 @@
 ---
 id: T-002
 title: Verify on-device cutout pipeline and finish vision logs
-status: in-progress
+status: done
 owner: Yves
 priority: high
 depends_on: []
@@ -20,7 +20,7 @@ files:
   - docs/TESTING.md
   - .github/workflows/android.yml
 branch: Yves/T-002
-updated_at: 2026-11-24T19:40Z
+updated_at: 2026-11-24T19:48Z
 ---
 
 ## Goal
@@ -42,3 +42,4 @@ branch in a shippable state.
 - [2026-11-24 19:18 UTC] device result on `5f38ee1`: 7/7 in 26s, alpha path confirmed (`decoded 1024x1360 alpha=true bbox=180,162 931,1359`), colors now real (rust/tan/navy/black) instead of all grey. Slots still accessory-heavy (4 accessory, 1 outerwear, 1 top, 1 bottom), but subtype is confident on some (`sweater 0.78`) while slot says accessory. Portrait mask bboxes open Q-003: worn photo vs flat-lay changes the fix. Next heuristic: subtype-assisted slot rescue only for `accessory` when subtype ≥0.65.
 - [2026-11-24 19:22 UTC] added subtype/slot ensemble (`c559778`): slot confidence from softmax; when subtype ≥0.70 and slot <0.60, rescue to subtype slot and log the override. Keeps high-confidence slot predictions. `tsc` + `expo export` pass; building.
 - [2026-11-24 19:38 UTC] user answered Q-002: "i tagged them correctly" + dataset order (T-023). Caveat posted: if that meant manual edits, the 19:35 re-scan happened before T-008 and may have overwritten them. Paused all further wardrobe re-scans until T-008. Current grid: 4 accessory, 1 outerwear, 1 top, 1 bottom. Q-003 (worn vs flat-lay photos) still open.
+- [2026-11-24 19:48 UTC] done. Latest APK (build from `dc2a332`) installed and launched; new capture exercised the full cutout→PNG decode→white composite→slot/subtype log path without saving (review showed "Cutout kept 1% of the frame", fallback path works). Re-scan 7/7 previously completed in 26s with no failures. Pipeline/logging goal met. Accuracy scoring + public dataset move to T-023; correction overwrite risk is T-008 and wardrobe re-scans stay paused until it lands. `turbo test` (engine 44, worker 7) + typecheck set pass. Lint unavailable: no eslint config/dep in repo; `expo lint` would auto-install and fail, so not run.

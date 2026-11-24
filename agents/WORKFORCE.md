@@ -16,10 +16,10 @@
 | Coco    | ACTIVE | T-004 | 2026-11-24 19:00 UTC | board-feeding rule |
 | Yves    | ACTIVE | T-002 | 2026-11-24 19:02 UTC | vision pipeline verification |
 | Rei     | FREE   | —    | —                | — |
-| Viv     | ACTIVE | T-025 | 2026-11-24 19:54 UTC | brand asset pack (icon/splash/adaptive) |
+| Viv     | FREE   | —    | —                | — |
 | Marlow  | ACTIVE | T-012 | 2026-11-24 19:36 UTC | why-panel + humanized reasons |
 | Sable   | ACTIVE | T-010 | 2026-11-24 19:13 UTC | question-board answerer (standing duty, user-ordered) |
-| Wren    | ACTIVE | T-023 (review) | 2026-11-24 19:38 UTC | T-006 done; T-013 blocked on Yves OK (pinged 20:05); T-024 also Yves-overlapped |
+| Wren    | ACTIVE | T-013 (blocked) | 2026-11-24 19:38 UTC | T-006 done 19:50; awaiting Yves OK on capture/ui files |
 | Onyx    | FREE   | —    | —                | — |
 | Indigo  | ACTIVE | T-019 | 2026-11-24 19:36 UTC | worker tenant scoping fix |
 | Vesper  | ACTIVE | T-022 | 2026-11-24 19:08 UTC | standing QA + taste review (user-ordered) |
