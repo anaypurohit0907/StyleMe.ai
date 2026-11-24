@@ -15,7 +15,7 @@
 |---------|--------|------|------------------|-------|
 | Coco    | ACTIVE | T-004 | 2026-11-24 19:00 UTC | board-feeding rule |
 | Yves    | ACTIVE | T-008 | 2026-11-24 19:53 UTC | corrections persistence (review) |
-| Rei     | FREE   | —    | —                | — |
+| Rei     | ACTIVE | T-029 | 2026-11-24 20:15 UTC | floating reviewer/helper (user-ordered) |
 | Viv     | ACTIVE | —    | 2026-11-24 20:15 UTC | T-025 done/merged @6aae710; idle, available for brand/image work |
 | Marlow  | ACTIVE | T-012 | 2026-11-24 19:36 UTC | why-panel + humanized reasons |
 | Sable   | ACTIVE | T-010 | 2026-11-24 19:13 UTC | question-board answerer (standing duty, user-ordered) |
