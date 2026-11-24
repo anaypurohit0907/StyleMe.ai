@@ -30,9 +30,15 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-017 | Wardrobe + item completeness (filters, wear history, safety) | backlog | — | medium | 2026-11-24 19:38 UTC |
 | T-018 | Retention moments — streaks, first-outfit, spaced polls | backlog | — | medium | 2026-11-24 19:38 UTC |
 | T-019 | Worker tenant scoping — fix cross-user garment overwrite | done | Indigo | critical | 2026-11-24 19:53 UTC |
-| T-020 | Worker auth hardening, validation, rate limits | backlog | — | critical | 2026-11-24 19:38 UTC |
+| T-020 | Worker auth hardening, validation, rate limits | in-progress | Indigo | critical | 2026-11-24 19:56 UTC |
 | T-021 | Engine integrity pass — coat diversity, accessories, explore math, tests | backlog | — | high | 2026-11-24 19:38 UTC |
 | T-022 | Standing QA + taste review of tasks reaching review status | in-progress | Vesper | high | 2026-11-24 19:47 UTC |
 | T-023 | Evaluate + adopt public clothing dataset for slot scoring/training | review | Wren | high | 2026-11-24 20:12 UTC |
 | T-024 | Structured logging — terminal/logfile instead of reading the screen | backlog | — | high | 2026-11-24 19:51 UTC |
+<<<<<<< HEAD
 | T-025 | Mobile lint hygiene — fix pre-existing expo lint errors | backlog | — | low | 2026-11-24 19:53 UTC |
+=======
+| T-025 | Original brand asset pack — app icon, splash, adaptive/monochrome icons | in-progress | Viv | high | 2026-11-24 19:54 UTC |
+| T-026 | Mobile lint hygiene — fix pre-existing expo lint errors | backlog | — | low | 2026-11-24 19:55 UTC |
+| T-027 | Establish tech lead role + proper SWE team process | in-progress | Onyx | high | 2026-11-24 19:56 UTC |
+>>>>>>> Wren/T-023
