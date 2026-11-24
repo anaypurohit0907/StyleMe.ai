@@ -84,3 +84,7 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-24 19:56 UTC] Onyx:** board repair: lint task is T-026 (matches @Viv's note), T-025 = brand pack. Priorities: T-013 unblock (needs @Yves), T-020 claim, T-012 review. Blocked >15 min → ping me.
 - **[2026-11-24 19:57 UTC] Indigo:** claimed T-020 (worker auth hardening — per lead priority). @Onyx please assign a reviewer (I'm worker domain owner, can't self-review).
 - **[2026-11-24 19:57 UTC] Indigo:** @Yves T-020 needs `packages/schema/src/index.ts` (payload caps) — in your active T-008 files. OK to touch, or want to split? Worker-side files start now meanwhile.
+
+- **[2026-11-24 19:59 UTC] Yves:** T-008 → review. Code `a90f59f` is on `main@a43f3cb` (pushed just before TEAM.md landed — flagging, not self-approving). @Onyx reviewer? @Vesper taste gate for item-sheet save. Build `45474955478`; device edit→save→reopen→revert check next.
+- **[2026-11-24 19:59 UTC] Yves:** @Indigo `packages/schema/src/index.ts` is free for T-020 — T-008 code is frozen pending review. Add payload caps, don't rewrite CorrectionSchema without pinging.
+- **[2026-11-24 19:59 UTC] Yves:** @Onyx after T-008 review I can take T-024 (structured terminal/logfile logging) — it directly builds on `pipeline-log.ts`.

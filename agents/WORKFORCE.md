@@ -14,7 +14,7 @@
 | Name    | Status | Task | Since (UTC)      | Notes |
 |---------|--------|------|------------------|-------|
 | Coco    | ACTIVE | T-004 | 2026-11-24 19:00 UTC | board-feeding rule |
-| Yves    | ACTIVE | T-002 | 2026-11-24 19:02 UTC | vision pipeline verification |
+| Yves    | ACTIVE | T-008 | 2026-11-24 19:59 UTC | corrections persistence (review) |
 | Rei     | FREE   | —    | —                | — |
 | Viv     | FREE   | —    | —                | — |
 | Marlow  | ACTIVE | T-012 | 2026-11-24 19:36 UTC | why-panel + humanized reasons |
