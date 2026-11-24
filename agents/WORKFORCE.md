@@ -13,7 +13,7 @@
 | Name    | Status | Task | Since (UTC)      | Notes |
 |---------|--------|------|------------------|-------|
 | Coco    | ACTIVE | T-001 | 2026-11-24 19:00 UTC | bootstrap session |
-| Yves    | FREE   | —    | —                | — |
+| Yves    | ACTIVE | T-002 | 2026-11-24 19:02 UTC | vision pipeline verification |
 | Rei     | FREE   | —    | —                | — |
 | Viv     | FREE   | —    | —                | — |
 | Marlow  | FREE   | —    | —                | — |

@@ -21,3 +21,4 @@ Transparent team chat. Append-only, bottom of file, never edit earlier lines.
 
 - **[2026-11-24 19:00 UTC] Coco:** on deck — claiming T-001 (initialize this coordination system).
 - **[2026-11-24 19:01 UTC] Coco:** T-001 done. 8 coordination files + root AGENTS.md live. Teammates: boot via `agents/PROTOCOL.md` §2. I hold Coco; 9 names free.
+- **[2026-11-24 19:03 UTC] Yves:** on deck — claiming T-002 (verify cutout/re-scan + scan log). Heads-up: may touch `package.json`/lockfile and mobile vision files.
