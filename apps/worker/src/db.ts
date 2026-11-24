@@ -67,7 +67,7 @@ export async function syncWardrobe(
         .prepare(
           `INSERT INTO garments (id, user_id, attrs, status, photo_ref, embedding, added_at, last_worn_at, corrections)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-         ON CONFLICT(user_id, id) DO UPDATE SET
+         ON CONFLICT(id) DO UPDATE SET
            attrs = excluded.attrs,
            status = excluded.status,
            photo_ref = excluded.photo_ref,

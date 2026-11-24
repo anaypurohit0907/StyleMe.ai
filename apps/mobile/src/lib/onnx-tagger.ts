@@ -88,6 +88,14 @@ function topLabels(logits: number[], labels: string[], k = 3): string {
     .join(" ");
 }
 
+function softmaxProb(logits: number[], index: number): number {
+  const max = Math.max(...logits);
+  let sum = 0;
+  for (const x of logits) sum += Math.exp(x - max);
+  if (sum === 0) return 0;
+  return Math.exp((logits[index] ?? 0) - max) / sum;
+}
+
 function zeroShot(embedding: number[], group: string): string | null {
   const { values, rows } = groupRows(group);
   if (rows.length === 0) return null;
@@ -323,7 +331,7 @@ class OnnxTagger implements VisionTagger {
     return this.slotSession;
   }
 
-  private async classifySlot(img: RgbaImage): Promise<Slot | undefined> {
+  private async classifySlot(img: RgbaImage): Promise<{ label: Slot; confidence: number } | undefined> {
     const start = Date.now();
     log("tag", "slot model start");
     const session = await this.loadSlot();
@@ -334,16 +342,17 @@ class OnnxTagger implements VisionTagger {
     let best = 0;
     for (let i = 1; i < logits.length; i++) if (logits[i]! > logits[best]!) best = i;
     const label = slotMeta.labels[best];
+    const confidence = softmaxProb(logits, best);
     log(
       "tag",
-      `slot model -> ${label ?? "none"} [${topLabels(logits, slotMeta.labels)}] (${Date.now() - start}ms)`,
+      `slot model -> ${label ?? "none"} conf=${confidence.toFixed(2)} [${topLabels(logits, slotMeta.labels)}] (${Date.now() - start}ms)`,
     );
-    return (label as Slot | undefined) ?? undefined;
+    return label ? { label: label as Slot, confidence } : undefined;
   }
 
-  private async classifySubtype(img: RgbaImage, slot: Slot): Promise<string | undefined> {
+  private async classifySubtype(img: RgbaImage): Promise<{ label: string; confidence: number } | undefined> {
     const start = Date.now();
-    log("tag", `subtype model start (slot=${slot})`);
+    log("tag", "subtype model start");
     const session = await this.loadSubtype();
     const input = garmentInput(img, SUBTYPE_SIZE);
     const tensor = new (ort().Tensor)("float32", input, [1, 3, SUBTYPE_SIZE, SUBTYPE_SIZE]);
@@ -356,13 +365,11 @@ class OnnxTagger implements VisionTagger {
     for (let i = 1; i < logits.length; i++) if (logits[i]! > logits[best]!) best = i;
     const confidence = (exps[best] ?? 0) / sum;
     const label = subtypeMeta.labels[best];
-    const accepted = Boolean(label) && confidence >= 0.6 && subtypeMeta.slot_by_label[label!] === slot;
     log(
       "tag",
-      `subtype model -> ${label ?? "none"} conf=${confidence.toFixed(2)} accepted=${accepted} [${topLabels(logits, subtypeMeta.labels)}] (${Date.now() - start}ms)`,
+      `subtype model -> ${label ?? "none"} conf=${confidence.toFixed(2)} [${topLabels(logits, subtypeMeta.labels)}] (${Date.now() - start}ms)`,
     );
-    if (!label || confidence < 0.6) return undefined;
-    return subtypeMeta.slot_by_label[label] === slot ? label : undefined;
+    return label ? { label, confidence } : undefined;
   }
 
   async tag(uri: string): Promise<GarmentAttrs> {
@@ -387,16 +394,32 @@ class OnnxTagger implements VisionTagger {
 
       let slot = (applyProbe(e, "slot") ?? zeroShot(e, "slot") ?? "top") as Slot;
       const clipSlot = slot;
+      let slotConfidence = 0;
       try {
-        slot = (await this.classifySlot(img)) ?? slot;
+        const pred = await this.classifySlot(img);
+        if (pred) {
+          slot = pred.label;
+          slotConfidence = pred.confidence;
+        }
       } catch (err) {
         log("tag", `slot model unavailable: ${errorText(err)}`);
       }
-      log("tag", `slot clip=${clipSlot} final=${slot}`);
+      log("tag", `slot clip=${clipSlot} final=${slot} conf=${slotConfidence.toFixed(2)}`);
       const color = dominantColor(img);
       let subtype: string | undefined;
       try {
-        subtype = await this.classifySubtype(img, slot);
+        const pred = await this.classifySubtype(img);
+        if (pred) {
+          const mapped = subtypeMeta.slot_by_label[pred.label] as Slot | undefined;
+          if (mapped && pred.confidence >= 0.7 && slotConfidence < 0.6) {
+            log(
+              "tag",
+              `slot rescue ${slot} -> ${mapped} from subtype=${pred.label} conf=${pred.confidence.toFixed(2)} slotConf=${slotConfidence.toFixed(2)}`,
+            );
+            slot = mapped;
+          }
+          if (mapped && mapped === slot && pred.confidence >= 0.6) subtype = pred.label;
+        }
       } catch (err) {
         log("tag", `subtype model unavailable: ${errorText(err)}`);
       }
