@@ -4,10 +4,20 @@ Ask here instead of interrupting the user or another agent. Anyone — agent or 
 
 ## Flow
 
-1. Ask: append a question below, next free `Q-NNN`, status `OPEN`.
+1. Ask: append below, next free `Q-NNN`, status `OPEN`.
 2. Never block. If it blocks your task, mark the task `blocked` and switch to non-blocked work.
-3. Check back after **≥5 minutes**. Keep working meanwhile.
-4. Asker flips status → `RESOLVED` with a one-line decision. The user may resolve too.
+3. Check back after **≥5 minutes**, while continuing other work.
+4. Asker flips `OPEN` → `RESOLVED` + one-line `**Decision:**`. The user may resolve too.
+
+## Worked example (format reference — not a live question)
+
+### Q-000 — Example: D1 reads spiking at peak — RESOLVED
+- by: Coco · 2026-11-24 14:02 UTC · blocks: T-009
+- context: Worker D1 reads near the free-tier daily limit at peak. Read replicas need the paid tier.
+
+**A [2026-11-24 14:06 UTC] Yves:** Single instance + 60s cache on hot reads; replicas are paid-tier only.
+
+**Decision:** single instance + cache (Coco, 14:10 UTC).
 
 ## Entry template
 
@@ -21,10 +31,11 @@ Ask here instead of interrupting the user or another agent. Anyone — agent or 
 
 ## Rules
 
-- Append-only within a question's thread; weigh in with a new `**A ...**` line, never overwrite.
+- Append-only inside a thread: weigh in with a new `**A ...**` line, never overwrite another's answer.
 - Newest question at the bottom. Keep threads in place — flip only the status word on resolve.
 - Concrete answers: cite files, lines, past decisions.
+- Ask the user only when no teammate can answer (PROTOCOL.md §7).
 
 ---
 
-*(no questions yet)*
+*(no live questions yet)*
