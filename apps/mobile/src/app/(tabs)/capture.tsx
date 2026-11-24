@@ -10,7 +10,7 @@ import { upsertGarment } from "@/lib/db";
 import { newGarment, persistPhoto } from "@/lib/local";
 import { segmentGarment } from "@/lib/segment";
 import { getVisionTagger } from "@/lib/vision";
-import { errorText, log } from "@/lib/pipeline-log";
+import { errorText, log, logError, logWarn } from "@/lib/pipeline-log";
 
 const SLOTS: Slot[] = ["top", "bottom", "dress", "outerwear", "shoes", "accessory"];
 const PATTERNS: Pattern[] = ["solid", "striped", "check", "floral", "graphic", "animal", "other"];
@@ -72,7 +72,7 @@ export default function Capture() {
         );
         setAttrs(tagged);
       } catch (err) {
-        log("capture", `cutout path failed: ${errorText(err)}`);
+        logWarn("capture", `cutout path failed: ${errorText(err)}`);
         setCutoutNote("Cutout failed — using the full photo. Scan log has details.");
         setStage("Tagging full photo…");
         setUri(photo.uri);
@@ -81,7 +81,7 @@ export default function Capture() {
       log("capture", `ready in ${Date.now() - start}ms`);
       setStage("");
     } catch (err) {
-      log("capture", `shoot FAILED: ${errorText(err)}`);
+      logError("capture", `shoot FAILED: ${errorText(err)}`);
       setStage(`Capture failed: ${errorText(err)}`);
     } finally {
       setBusy(false);
@@ -104,7 +104,7 @@ export default function Capture() {
       setCutoutNote("");
       router.replace("/(tabs)/wardrobe");
     } catch (err) {
-      log("capture", `save FAILED: ${errorText(err)}`);
+      logError("capture", `save FAILED: ${errorText(err)}`);
       setStage(`Save failed: ${errorText(err)}`);
     } finally {
       setBusy(false);

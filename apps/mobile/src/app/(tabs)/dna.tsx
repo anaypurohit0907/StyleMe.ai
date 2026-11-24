@@ -11,7 +11,7 @@ import { applyCorrections } from "@/lib/tag-corrections";
 import { listGarments, metaSet, upsertGarment } from "@/lib/db";
 import { getVisionTagger } from "@/lib/vision";
 import { segmentGarment } from "@/lib/segment";
-import { errorText, log, withTimeout } from "@/lib/pipeline-log";
+import { errorText, log, logError, withTimeout } from "@/lib/pipeline-log";
 
 const ITEM_TIMEOUT = 120_000;
 
@@ -117,14 +117,14 @@ export default function DNA() {
           );
         } catch (err) {
           // Keep the old tags for this item, but leave the reason on screen.
-          log("scan", `${label} FAILED after ${Date.now() - itemStart}ms: ${errorText(err)}`);
+          logError("scan", `${label} FAILED after ${Date.now() - itemStart}ms: ${errorText(err)}`);
         }
       }
       setRetagStage("done");
       log("scan", `finished in ${Date.now() - scanStart}ms`);
     } catch (err) {
       setRetagStage("failed");
-      log("scan", `aborted: ${errorText(err)}`);
+      logError("scan", `aborted: ${errorText(err)}`);
     } finally {
       setRetagging(false);
     }

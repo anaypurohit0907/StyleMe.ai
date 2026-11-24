@@ -1,10 +1,12 @@
 import { useEffect } from "react";
+import { Platform } from "react-native";
+import Constants from "expo-constants";
 import { Stack, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as SplashScreen from "expo-splash-screen";
 import { getDb, metaGet } from "@/lib/db";
 import { setVisionTagger } from "@/lib/vision";
-import { initPipelineLog, log } from "@/lib/pipeline-log";
+import { initPipelineLog, log, logFileHint } from "@/lib/pipeline-log";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -13,7 +15,10 @@ function Gate() {
   useEffect(() => {
     (async () => {
       void initPipelineLog();
-      log("app", "started");
+      log(
+        "app",
+        `started v${Constants.expoConfig?.version ?? "?"} on ${Platform.OS}; log=${logFileHint()}`,
+      );
       await getDb();
       // Native dev builds can opt into ONNX; Expo Go can use the local server.
       if (process.env.EXPO_PUBLIC_VISION === "onnx") {

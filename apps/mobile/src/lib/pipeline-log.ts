@@ -1,12 +1,22 @@
 /**
- * Pipeline logging that survives release builds.
+ * Structured logging that survives release builds.
  *
- * Release APKs drop console output from logcat, so every step is also kept in
- * memory for an on-screen log card and appended to documentDirectory for the
- * next launch. Logging must never break a scan: all writes are best-effort.
+ * Three sinks:
+ *  - in-memory ring for the in-app ScanLog card,
+ *  - Metro / console in dev,
+ *  - app-specific external file on Android (`adb pull` / `tail -f`),
+ *    falling back to documentDirectory on iOS/Expo Go.
+ *
+ * Release APKs drop console output from logcat, so the file is the source of
+ * truth for a test session. Logging must never break a scan: writes are
+ * best-effort and rotate at 2 MB.
  */
 import { useSyncExternalStore } from "react";
-import { File, Paths } from "expo-file-system";
+import { Platform } from "react-native";
+import Constants from "expo-constants";
+import { Directory, File, Paths } from "expo-file-system";
+
+export type LogLevel = "debug" | "info" | "warn" | "error";
 
 export interface PipelineLogEntry {
   id: number;
@@ -14,38 +24,82 @@ export interface PipelineLogEntry {
 }
 
 const MAX_ENTRIES = 240;
-const FILE_LIMIT = 512 * 1024;
+const FILE_LIMIT = 2 * 1024 * 1024;
+const LOG_NAME = "styleme.log";
 
 let seq = 0;
 let entries: PipelineLogEntry[] = [];
 let pending: string[] = [];
 let flushing = false;
 let initialized = false;
+let externalUnavailable = false;
+let cachedDir: Directory | null = null;
 const listeners = new Set<() => void>();
 
 function emit(): void {
   for (const listener of listeners) listener();
 }
 
-function logFile(): File {
-  return new File(Paths.document, "pipeline.log");
+function packageName(): string {
+  return Constants.expoConfig?.android?.package ?? "com.o_anay.styleme";
+}
+
+/**
+ * Android app-specific external files dir — readable by adb without root.
+ * iOS/Expo Go use the app document directory instead.
+ */
+async function target(): Promise<Directory> {
+  if (Platform.OS === "android" && !externalUnavailable) {
+    try {
+      const dir = new Directory(
+        `file:///storage/emulated/0/Android/data/${packageName()}/files`,
+      );
+      if (!dir.exists) dir.create({ intermediates: true, idempotent: true });
+      return dir;
+    } catch {
+      externalUnavailable = true;
+    }
+  }
+  return Paths.document;
+}
+
+async function rotateIfNeeded(file: File, dir: Directory): Promise<void> {
+  if (!file.exists || file.size <= FILE_LIMIT) return;
+  const backup = new File(dir, `${LOG_NAME}.1`);
+  try {
+    if (backup.exists) backup.delete();
+    await file.move(backup);
+  } catch {
+    // Keep appending if rotation fails.
+  }
 }
 
 function nowStamp(): string {
-  const d = new Date();
-  const pad = (n: number, width = 2) => String(n).padStart(width, "0");
-  return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}.${pad(d.getMilliseconds(), 3)}`;
+  return new Date().toISOString();
 }
 
-/** Append one line to the in-memory ring, the UI subscribers, and the log file. */
-export function log(stage: string, message: string): void {
-  const text = `${nowStamp()} ${stage}: ${message}`;
+function append(stage: string, message: string, level: LogLevel): void {
+  const tag = level === "info" ? "" : ` ${level.toUpperCase()}`;
+  const text = `${nowStamp()} [${stage}]${tag} ${message}`;
   entries = [...entries.slice(-(MAX_ENTRIES - 1)), { id: ++seq, text }];
   emit();
-  // Still useful in dev builds / Expo Go.
+  // Dev builds: visible in Metro. Release: the file sink below is authoritative.
   console.log(`[StyleMe] ${text}`);
   pending.push(text);
   void flush();
+}
+
+/** Append an informational line. */
+export function log(stage: string, message: string): void {
+  append(stage, message, "info");
+}
+
+export function logWarn(stage: string, message: string): void {
+  append(stage, message, "warn");
+}
+
+export function logError(stage: string, message: string): void {
+  append(stage, message, "error");
 }
 
 async function flush(): Promise<void> {
@@ -54,11 +108,23 @@ async function flush(): Promise<void> {
   const batch = `${pending.join("\n")}\n`;
   pending = [];
   try {
-    const file = logFile();
-    if (!file.exists) file.create();
-    await file.write(batch, { append: true });
+    if (!cachedDir) cachedDir = await target();
+    const file = new File(cachedDir, LOG_NAME);
+    await rotateIfNeeded(file, cachedDir);
+    const current = new File(cachedDir, LOG_NAME);
+    if (!current.exists) current.create();
+    await current.write(batch, { append: true });
   } catch {
-    // Disk logging is diagnostic only.
+    // Retry once on the internal document directory, then drop silently.
+    try {
+      externalUnavailable = true;
+      cachedDir = Paths.document;
+      const fallback = new File(cachedDir, LOG_NAME);
+      if (!fallback.exists) fallback.create();
+      await fallback.write(batch, { append: true });
+    } catch {
+      // Disk logging is diagnostic only.
+    }
   } finally {
     flushing = false;
     if (pending.length > 0) void flush();
@@ -70,7 +136,10 @@ export async function initPipelineLog(): Promise<void> {
   if (initialized) return;
   initialized = true;
   try {
-    const file = logFile();
+    if (!cachedDir) cachedDir = await target();
+    const initial = new File(cachedDir, LOG_NAME);
+    await rotateIfNeeded(initial, cachedDir);
+    const file = new File(cachedDir, LOG_NAME);
     if (!file.exists || file.size === 0) return;
     const text = await file.text();
     const lines = text.split("\n").filter(Boolean).slice(-40);
@@ -84,6 +153,14 @@ export async function initPipelineLog(): Promise<void> {
   } catch {
     // Previous log is optional.
   }
+}
+
+/** Absolute pull path for docs/testers (Android external dir when available). */
+export function logFileHint(): string {
+  if (Platform.OS === "android" && !externalUnavailable) {
+    return `/sdcard/Android/data/${packageName()}/files/${LOG_NAME}`;
+  }
+  return `${Paths.document.uri}${LOG_NAME}`;
 }
 
 export function usePipelineLogs(): PipelineLogEntry[] {
@@ -128,7 +205,7 @@ export async function step<T>(
     log(stage, `${label} ok (${Date.now() - start}ms)`);
     return result;
   } catch (err) {
-    log(stage, `${label} FAILED (${Date.now() - start}ms): ${errorText(err)}`);
+    logError(stage, `${label} FAILED (${Date.now() - start}ms): ${errorText(err)}`);
     throw err;
   }
 }
