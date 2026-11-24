@@ -83,7 +83,7 @@ Then set `EXPO_PUBLIC_API_BASE=https://styleme.<subdomain>.workers.dev` for the 
 ## Status
 
 - Engine: 40 tests green (including the 1,000-user uniqueness simulation).
-- Worker: 7 tests green; D1/R2 schema + routes complete; deploy pending Cloudflare auth.
+- Worker: 8 tests green; D1/R2 schema + routes complete; deploy pending Cloudflare auth.
 - ML: notebooks 00–03 run on a T4; ONNX parity exact; probes shipped.
 - App: onboarding, Today (3 outfits), Wardrobe, Capture + tag editor, item detail, Style DNA; local SQLite + offline engine. ONNX tagger is wired behind a dev-build check; Expo Go uses a deterministic mock tagger.
 

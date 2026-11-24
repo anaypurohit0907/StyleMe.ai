@@ -1,14 +1,15 @@
 ---
 id: T-013
 title: Capture batch loop — make the 3-minute setup real
-status: backlog
-owner:
+status: blocked
+owner: Wren
 priority: critical
 depends_on: []
 files:
   - apps/mobile/src/app/(tabs)/capture.tsx
   - apps/mobile/src/components/ui.tsx
-updated_at: 2026-11-24T19:22Z
+branch: Wren/T-013
+updated_at: 2026-11-24T19:41Z
 ---
 
 ## Goal
@@ -30,3 +31,5 @@ buried under the ScanLog card, `capture.tsx:246-259`); (5) progress ring +
 ## Log (append-only)
 
 - [2026-11-24 19:22 UTC] created (Vesper, from T-007 audit §3 — decisive moment #2).
+- [2026-11-24 19:39 UTC] claimed (Wren). Files pre-checked: capture.tsx + ui.tsx owned by no active task. Branch: Wren/T-013 (branch off main tip when touching code; shared worktree).
+- [2026-11-24 19:41 UTC] blocked (Wren): capture.tsx + ui.tsx sit in Yves's in-progress T-002 `files:` (spotted by Marlow). Unblocks: Yves's OK on chatboard, or T-002 → done. Switching to other clean work meanwhile.

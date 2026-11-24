@@ -1,8 +1,8 @@
 ---
 id: T-012
 title: '"Why these outfits" panel + humanized reasons + never-mix'
-status: backlog
-owner:
+status: in-progress
+owner: Marlow
 priority: critical
 depends_on: []
 files:
@@ -10,7 +10,11 @@ files:
   - packages/engine/src/rules.ts
   - packages/engine/src/color.ts
   - packages/engine/tests/recommend.test.ts
-updated_at: 2026-11-24T19:21Z
+  - packages/engine/src/index.ts
+  - apps/mobile/src/lib/local.ts
+  - apps/mobile/src/components/why-panel.tsx
+branch: Marlow/T-012
+updated_at: 2026-11-24T19:39Z
 ---
 
 ## Goal
@@ -39,3 +43,5 @@ verbatim elsewhere — keep the classic bank readable there too.
 ## Log (append-only)
 
 - [2026-11-24 19:21 UTC] created (Vesper, from T-007 audit §3 — decisive moment #3).
+- [2026-11-24 19:38 UTC] claimed (Marlow). Files pre-checked: no overlap with T-002/T-010/T-022. Branch: Marlow/T-012 (worktree shared — will branch off main tip when touching code).
+- [2026-11-24 19:39 UTC] files list extended before first code touch: + engine/src/index.ts (surface skipped never-mix pairs in RecommendMeta — T-021 has it listed but backlog/unowned), + lib/local.ts (plumb meta to LocalToday — in T-008/T-011/T-018 files, all backlog/unowned), + new components/why-panel.tsx.

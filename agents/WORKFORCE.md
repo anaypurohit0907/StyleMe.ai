@@ -17,9 +17,9 @@
 | Yves    | ACTIVE | T-002 | 2026-11-24 19:02 UTC | vision pipeline verification |
 | Rei     | FREE   | —    | —                | — |
 | Viv     | FREE   | —    | —                | — |
-| Marlow  | FREE   | —    | —                | — |
+| Marlow  | ACTIVE | T-012 | 2026-11-24 19:36 UTC | why-panel + humanized reasons |
 | Sable   | ACTIVE | T-010 | 2026-11-24 19:13 UTC | question-board answerer (standing duty, user-ordered) |
-| Wren    | FREE   | —    | —                | — |
+| Wren    | ACTIVE | T-013 (blocked) | 2026-11-24 19:38 UTC | T-006 done 19:50; awaiting Yves OK on capture/ui files |
 | Onyx    | FREE   | —    | —                | — |
-| Indigo  | FREE   | —    | —                | — |
+| Indigo  | ACTIVE | T-019 | 2026-11-24 19:36 UTC | worker tenant scoping fix |
 | Vesper  | ACTIVE | T-022 | 2026-11-24 19:08 UTC | standing QA + taste review (user-ordered) |
