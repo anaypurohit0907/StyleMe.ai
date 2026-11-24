@@ -1,8 +1,8 @@
 ---
 id: T-012
 title: '"Why these outfits" panel + humanized reasons + never-mix'
-status: review
-owner: Marlow
+status: in-progress
+owner: Coco
 priority: critical
 depends_on: []
 files:
@@ -13,9 +13,9 @@ files:
   - packages/engine/src/index.ts
   - apps/mobile/src/lib/local.ts
   - apps/mobile/src/components/why-panel.tsx
-branch: Marlow/T-012
+branch: Coco/T-012 (based on Marlow/T-012 @ b35e9de)
 reviewer: Onyx (code) + Vesper (taste gate, user-facing copy)
-updated_at: 2026-11-24T19:59Z
+updated_at: 2026-11-24T21:07Z
 ---
 
 ## Goal
@@ -52,3 +52,4 @@ verbatim elsewhere — keep the classic bank readable there too.
 - [2026-11-24 19:57 UTC] charter §7 applied: merged main (38bc004: Yves T-002, Indigo T-019 migration, Wren T-023 notebook, T-006 worker AGENTS.md) into Marlow/T-012 → b35e9de. CI pair + 4× typecheck re-run on the merge result: all green. Reviewer: unassigned — @Onyx (lead) your call per charter §5.1; Vesper QA pinged for the taste gate (user-facing copy).
 - [2026-11-24 19:59 UTC] lead review (Onyx, b35e9de): **REQUEST CHANGES** — one blocking UX dead-end. `index.tsx:44` now keeps `today` when `skippedNeverMix.length > 0` even with zero outfits, but the recovery `Empty` card only renders on `!today` (`index.tsx:193`) and the shuffle only on `outfits.length > 0` (`index.tsx:241`). If never-mix rules filter every candidate the screen shows the skip caption and nothing else — no outfit, no shuffle, no undo. Fix: render a fallback card when `!loading && today && today.outfits.length === 0` with "Undo last rule" (remove the last `prefs.neverMix` entry + reload), "Add clothes", and "Shuffle"; keep the skip line. Non-blocking: (a) `why-panel.tsx` hint says "its colors" but the pair is the outfit's loudest colors — reword; (b) undo filter only matches one order — filter both. Rest approved: meta plumbing + dedup sound, hard filter and both tests correct, copy pass tasteful, no tenant/security impact.
 - [2026-11-24 20:05 UTC] taste-gate review (Vesper, on b35e9de + Onyx's findings): **REQUEST CHANGES** — same round as lead, three deltas: (1) dead-end fix approved as Onyx specified; recovery-card copy must stay human, suggested body: "Every option here breaks one of your rules." (the rules are the user's own — respect, not error styling). (2) Hint reword (echo of Onyx (a), concretely): "Press and hold a reason to ban this outfit's loudest color pair." (3) Echo Onyx (b): undo matching both orders. **TASTE APPROVED explicitly, on the record:** badge labels "Very you / Safe bet / Wildcard" (accent on Very you — right call); skip-line "Skipped {a} + {b} combos — you said never."; greeting "Morning, {name}"; and the reason copy pass — "One statement piece — the {subtype}." is exactly the brand voice; reason casing via `reasonSentence` verified. Later (non-blocking, note only): tie "Wildcard" to engine `exploredSignatures` so the label means the engine deliberately explored — belongs with T-021. Expect APPROVE after fixes land.
+- [2026-11-24 21:07 UTC] TAKEOVER (Coco, §9): Marlow silent 60+ min; Vesper's 20:45 ping unanswered 15+ min. Owner → Coco; status back to in-progress. Branch: new `Coco/T-012` off Marlow's approved-content `b35e9de` (Marlow's branch preserved untouched). Fixing exactly the three review findings: dead-end recovery card, hint reword, undo both orders.
