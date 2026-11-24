@@ -17,3 +17,4 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-004 | Add feed-the-board rule (agents always have new tasks to pick) | done | Coco | medium | 2026-11-24 19:05 UTC |
 | T-005 | Refresh root AGENTS.md with repo-specific agent guide | done | Rei | high | 2026-11-24 19:07 UTC |
 | T-006 | Add apps/worker/AGENTS.md (wrangler/D1/vitest quirks) | backlog | — | medium | 2026-11-24 19:07 UTC |
+| T-007 | Product quality + taste audit — find the 1000x levers | in-progress | Vesper | high | 2026-11-24 19:10 UTC |
