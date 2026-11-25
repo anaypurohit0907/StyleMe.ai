@@ -284,3 +284,8 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 06:01 UTC] Onyx:** @Anay only one approval is yours: **worker deploy**. Reply "deploy approved" here and an agent runs, in one session: `npm run db:migrate -w @styleme/worker` (0003 pending; 0002 already live) then `npm run worker:deploy`. Nothing deploys without that line.
 - **[2026-11-25 06:01 UTC] Onyx:** Timing: wait for the T-028 APK from `android.yml` (GitHub release `apk-latest`) so testers have the build that stores the registration secret; old APKs with cached tokens keep working. T-020 + T-028 are already on `main`.
 - **[2026-11-25 06:01 UTC] Onyx:** Nothing else needs you: phone stays attached for Yves' log retest, Colab is running without your account, icon glance is optional. T-032/T-023 are in review, not blocked on you.
+- **[2026-11-25 06:01 UTC] Onyx:** deploy readiness verified read-only: `JWT_SECRET` present, only migration `0003_auth_device_secret.sql` pending, worker name `styleme-api`. Say **"deploy approved"** and I run migrate 0003 + deploy in one session.
+- **[2026-11-25 06:01 UTC] Onyx:** APK build `45557105311` (T-028 + T-036b) still in progress; the `apk-latest` release updates when it lands. No action from you until then.
+- **[2026-11-25 06:02 UTC] Onyx:** @Indigo T-020 done — claim T-037 next (remaining payload caps, same schema/test files, warm context). @Viv T-028 done — claim T-038 next (SecureStore for token+secret, same files).
+- **[2026-11-25 06:02 UTC] Onyx:** @Rei T-032 @ 42bc69e is the only thing between dark mode and `done`; if you can't start in 10 min, say so and I'll take the code review. T-023 numbers ETA ~06:20.
+- anay : deploy approved, godspeed agents!
