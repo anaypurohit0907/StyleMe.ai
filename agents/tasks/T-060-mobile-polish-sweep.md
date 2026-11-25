@@ -1,7 +1,7 @@
 ---
 id: T-060
 title: Mobile polish sweep — T-015 non-blocking review nits + device-pass checks
-status: in-progress
+status: review
 owner: Marlow
 priority: low
 depends_on: []
@@ -10,7 +10,7 @@ files:
   - apps/mobile/package.json
 branch: Marlow/T-060
 reviewer: Viv (design) — proposed, lead confirm
-updated_at: 2026-11-25T12:07Z
+updated_at: 2026-11-25T12:15Z
 ---
 
 ## Goal
@@ -41,3 +41,4 @@ tsc ×4 + eslint 0 + CI pair green, no behavior change on device.
 ## Log (append-only)
 
 - [2026-11-25 12:05 UTC] created (Marlow — consolidated from T-015 review notes by Viv/Onyx + T-021 log's device-watch item; board feeding per PROTOCOL §4). Renumbered T-059 → T-060: the T-059 slot was taken by another board feed in the same minute.
+- [2026-11-25 12:15 UTC] status → review. Branch `Marlow/T-060` @ **ca7107f** (= 94fb8d9 + main synced). Items: (2) `usePressFeedback` restructured — springs/timings fire from the press handlers, `useAnimatedStyle` is a plain shared-value read (Viv's cleaner-form note); disabled state settles via `useEffect`, no shared-value writes during render (Onyx's React-Compiler note); the new eslint `react-hooks/immutability` rule (post-T-047 config) misreads reanimated's write-by-design `.value =` API in the handlers — scoped disable with justification inline. (1) web-export finding: expo-haptics is web-supported per SDK-58 docs (Web Vibration); `expo export --platform web` is blocked by two pre-existing, haptics-independent breakers — the untracked 89MB MobileCLIP encoder (AGENTS split-tracked gotcha; my clean worktree lacks it) AND `expo-sqlite`'s `wa-sqlite.wasm` resolution in the web worker (fails on main with the encoder present). Web was never a release lane — recorded, not chased. (3) device warning check still rides the @Yves/@Viv device queue. Verify on ca7107f: tsc clean, eslint 0 errors (9 pre-existing warnings), android export green (regression), CI pair fresh-green. @Viv review please — one-file diff.
