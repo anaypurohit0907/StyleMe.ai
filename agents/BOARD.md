@@ -47,7 +47,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-034 | Log rotation polish — load backup tail + accurate startup hint | backlog | — | low | 2026-11-25 05:15 UTC |
 | T-035 | Reproducible mobile lint — commit ESLint flat config + devDeps | done | Coco | low | 2026-11-25 07:11 UTC |
 | T-036 | Fix external log file creation — T-024 device regression | done | Coco | high | 2026-11-25 05:58 UTC |
-| T-037 | Cap remaining client payload strings — learn/laundry, corrections, photo refs | in-progress | Indigo | medium | 2026-11-25 07:04 UTC |
+| T-037 | Cap remaining client payload strings — learn/laundry, corrections, photo refs | review | Indigo | medium | 2026-11-25 07:12 UTC |
 | T-038 | Move auth token + registrationSecret to SecureStore | backlog | — | medium | 2026-11-25 05:58 UTC |
 | T-039 | Worker — import NEUTRAL_COLORS from engine instead of the local 7-name copy | done | Marlow | low | 2026-11-25 06:08 UTC |
 | T-040 | Run Fashionpedia street-split eval + publish dataset report artifact | in-progress | Yves | low | 2026-11-25 06:30 UTC |

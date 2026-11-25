@@ -1,7 +1,7 @@
 ---
 id: T-037
 title: Cap remaining client payload strings — learn/laundry arrays, corrections, photo refs
-status: in-progress
+status: review
 owner: Indigo
 reviewer: Onyx
 priority: medium
@@ -32,3 +32,4 @@ mobile shapes valid. No behavior change for honest clients.
 - [2026-11-25 05:54 UTC] created (Onyx, from T-020 final review — non-blocking
   follow-up; T-020 shipped the auth-critical caps).
 - [2026-11-25 07:04 UTC] claimed (Indigo, lead-directed 06:02). Reviewer proposed Onyx (T-020 pattern; lead confirm). Branch Indigo/T-037 off current main; T-041 also lists these files but is backlog/unowned — first-claim wins, coordinate at its claim.
+- [2026-11-25 07:12 UTC] → review @ `Indigo/T-037` **620e36c**: all unbounded strings/arrays capped — `LearnEvent.suggestedIds` ≤20 outfits × ≤6 ids ≤64 chars, `pickedId` ≤512, `LaundryEvent.garmentIds` ≤100 × ≤64, `Correction.from/to` ≤64 (matches nickname bound), `Garment.photoRef/originalRef` ≤512, `WardrobeSync.deletions` items ≤64. Five 400-regression tests added (oversized offers, pickedId, laundry batch, correction strings, photoRef). Honest-client shapes unchanged. Verification: worker 20/20, engine 71/71, tsc ×4 on the branch. No worker route changes needed — schemas are the validation layer per apps/worker/AGENTS.md.
