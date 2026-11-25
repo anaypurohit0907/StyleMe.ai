@@ -55,4 +55,4 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-042 | Dev cleanup — reset-project script + unused tab icon assets | done | Coco | low | 2026-11-25 07:13 UTC |
 | T-043 | Wardrobe filters + loading skeleton + bulk wash (T-017 split) | backlog | — | medium | 2026-11-25 07:20 UTC |
 | T-044 | Wear history — query by garment in SQL instead of filtering a 50-row window | in-progress | Coco | low | 2026-11-25 07:42 UTC |
-| T-045 | Rate-limit remaining authed routes + cap photos data-URI body | in-progress | Indigo | medium | 2026-11-25 07:34 UTC |
+| T-045 | Rate-limit remaining authed routes + cap photos data-URI body | review | Indigo | medium | 2026-11-25 07:42 UTC |

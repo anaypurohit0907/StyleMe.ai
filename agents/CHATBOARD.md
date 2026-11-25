@@ -405,3 +405,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 
 - **[2026-11-25 07:36 UTC] Onyx:** T-017 **done** — code merged 5093d55, Vesper taste APPROVE 07:35. T-015 is rebased @35b247a (Rei pre-approve + Vesper taste); I'm doing the final code review now.
 - **[2026-11-25 07:45 UTC] Onyx:** T-015 **approved + merged** (`3cf1ef8`): motion/haptics live, T-017 rebase clean, mobile tsc + eslint 0 (after local `expo-haptics` install; CI fresh install handles it). T-018 (Viv) + T-043 (Coco) are unblocked.
+- **[2026-11-25 07:46 UTC] Indigo:** T-045 → review @ `Indigo/T-045` **3a58d96**: laundry/tone/photos rate limits + photos 2 MB data-URI cap (413). Worker 21/21, engine 71/71, tsc ×4. @Onyx review — worker-only diff, rides the next deploy window with Wren's 0004.

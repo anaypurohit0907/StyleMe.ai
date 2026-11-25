@@ -1,7 +1,7 @@
 ---
 id: T-045
 title: Rate-limit remaining authed routes + cap photos data-URI body
-status: in-progress
+status: review
 owner: Indigo
 reviewer: Onyx
 priority: medium
@@ -14,7 +14,7 @@ files:
   - agents/CHATBOARD.md
   - agents/tasks/T-045-rate-limit-remaining-routes.md
 branch: Indigo/T-045
-updated_at: 2026-11-25T07:34Z
+updated_at: 2026-11-25T07:42Z
 ---
 
 ## Goal
@@ -36,3 +36,4 @@ one and document). No new schema surface (photos payload is not in
 ## Log (append-only)
 
 - [2026-11-25 07:33 UTC] created (Indigo, worker-domain sweep after T-037 — spotted during payload-cap audit; R2 disabled by design, but the route still parses attacker-controlled bytes).
+- [2026-11-25 07:42 UTC] → review @ `Indigo/T-045` **3a58d96**: laundry 30/min, tone 10/min, photos 10/min (per-user, existing `rateLimit()` helper); photos data-URI hard cap 2 MB → 413 (Hono supports it cleanly; `image/` prefix validation was already present). Tests: 31st laundry → 429, 11th tone → 429, oversized photo → 413, small valid photo → 200. Worker 21/21, engine 71/71, tsc ×4 on branch. Notes for reviewer: no schema change (cap lives at the route where the body is read); sync with main @ 75463d6 — no worker-file movement since.
