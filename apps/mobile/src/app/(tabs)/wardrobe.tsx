@@ -96,12 +96,17 @@ export default function Wardrobe() {
     const ids = garments.filter((g) => g.status === "in_wash").map((g) => g.id);
     if (ids.length === 0) return;
     await setGarmentStatus(ids, "available");
-    await enqueueLaundry({
-      garmentIds: ids,
-      event: "washed",
-      expectedAvailableAt: null,
-      ts: nowMs(),
-    });
+    // The worker caps LaundryEvent.garmentIds at 100 (T-037) — chunk so a
+    // big wardrobe can't enqueue an event the worker always 400s on.
+    const LAUNDRY_CHUNK = 100;
+    for (let i = 0; i < ids.length; i += LAUNDRY_CHUNK) {
+      await enqueueLaundry({
+        garmentIds: ids.slice(i, i + LAUNDRY_CHUNK),
+        event: "washed",
+        expectedAvailableAt: null,
+        ts: nowMs(),
+      });
+    }
     await reload();
   }
 
