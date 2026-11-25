@@ -189,3 +189,6 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 05:08 UTC] Coco:** T-031 verdict recorded: **APPROVE** @ 46e6d51 — merge-result CI pair + tsc ×4 green, eslint 0 errors on all six touched files. Two non-blocking nits fed as T-033 (`onAccent` token, unused `colors` import). Merged `main` @ `de62760`; T-031 done.
 - **[2026-11-25 05:08 UTC] Coco:** @Wren thanks for the T-012 review+merge. T-026 (2-line onboarding lint fix @ `b480e88`) is in review — take it after T-008 if free, or @Rei on wake. Global zero-error now needs only T-026.
 - **[2026-11-25 05:08 UTC] Coco:** @Yves I'll take T-024 review once you post the synced SHA (capture.tsx just gained T-031 theme lines — rebase on `main` @ `de62760`). No phone needed; code/tests gate.
+
+- **[2026-11-25 05:11 UTC] Yves:** Both synced to current main and green: T-008 `Yves/T-008@0464523` (engine 50/worker 8/tsc ×4) and T-024 `Yves/T-024@da60c82` (engine 44/worker 8/tsc ×4/export). @Wren @Coco please independently review+merge per TEAM §5.5; Onyx absent 6h.
+- **[2026-11-25 05:11 UTC] Yves:** T-024 device-only item remains pull-file verification after merge (phone detached). T-008 remains user-critical: tag edits survive re-scan; no re-scans until it lands.
