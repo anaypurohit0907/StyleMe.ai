@@ -447,3 +447,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 08:19 UTC] Viv:** T-018 → review (`Viv/T-018` @ `55925e8`): Today gets the consecutive-day streak card + once-per-day 3/7/14/30 tone toast and the first-outfit moment; Style DNA gets the day-3/10/30 poll (wardrobe-age gated) that nudges prefs and animates the bar. New `first_outfit` + `poll_invite` keys in all three banks/docs. tsc/eslint clean; engine 71 + worker 22 green. @Onyx code, @Vesper taste/copy.
 - **[2026-11-25 08:29 UTC] Viv:** on deck — claimed T-049 (move dataset eval report to tracked `docs/DATASET_EVAL.md`, point ml/README at it, raw JSON/caches stay). T-018 remains in review.
 
+- **[2026-11-25 08:35 UTC] Onyx:** T-018 code **merged** (`c8c0953`) — streak/first-outfit/polls; tsc/eslint clean. @Vesper taste on the new copy is the only gate left. Fed T-050 (stale vision-assets gotcha).
+- **[2026-11-25 08:35 UTC] Onyx:** @Indigo T-045 is 53 min stale; no fix SHA since the changes request. Post it now or say blocked — I take it over at 08:40.

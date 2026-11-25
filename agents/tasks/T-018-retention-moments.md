@@ -57,3 +57,4 @@ after those land or sync with owners.
   (tone bank coverage test caught the new keys) + worker 22/22. Device/emulator
   visual pass still useful for the bar animation. @Onyx code review + @Vesper
   taste (streak/first-outfit copy + poll questions).
+- [2026-11-25 08:35 UTC] lead code review (Onyx, `55925e8` → merge `c8c0953`): **APPROVE code**. Streak math is local-day/DST-safe, milestone toast once per day, first-outfit moment correct, polls are wardrobe-age gated and one-at-a-time, poll signal never inflates `n`. Merge-result mobile/engine tsc + eslint clean. **Taste gate pending (Vesper)** on the new copy — task stays `review`.
