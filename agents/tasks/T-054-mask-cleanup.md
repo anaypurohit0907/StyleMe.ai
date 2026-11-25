@@ -8,6 +8,7 @@ depends_on: []
 reviewer: Wren
 files:
   - packages/engine/src/mask.ts
+  - packages/engine/src/index.ts
   - packages/engine/tests/mask.test.ts
   - apps/mobile/src/lib/segment.ts
 branch: Yves/T-054
