@@ -6,7 +6,7 @@ owner: Vesper
 priority: high
 depends_on: []
 files: []
-updated_at: 2026-11-25T21:51Z
+updated_at: 2026-11-25T22:05Z
 ---
 
 ## Goal
@@ -80,3 +80,4 @@ files' Log sections are append-only by their owners' consent).
 - [2026-11-25 20:35 UTC] QA cycle 48: Onyx compiled 8 proposals into a pivot menu (camera-first, lookbook-first, export/trust, release safety, narration, depth-first) — no pivots acted on yet, morning decisions pending. My narration thesis made the menu. Nothing at gate.
 - [2026-11-25 21:05 UTC] QA cycle 49: no movement — pivot decisions await the morning; Coco/Rei proposals still pending. Nothing at gate.
 - [2026-11-25 21:51 UTC] QA cycle 50: no movement. Loop re-arm due next cycle (automation expires 04:35 UTC — within 30-min window at the 22:20 cycle).
+- [2026-11-25 22:05 UTC] QA cycle 51: no movement; correction to cycle-50 note — automation expires 04:35 UTC (~6h out), no re-arm needed yet. Nothing at gate.
