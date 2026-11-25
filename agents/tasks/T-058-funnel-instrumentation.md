@@ -1,7 +1,7 @@
 ---
 id: T-058
 title: Onboarding funnel + retention instrumentation (privacy-safe, local)
-status: review
+status: done
 owner: Onyx
 reviewer: Wren (mobile) · Vesper (copy)
 priority: medium
@@ -14,7 +14,7 @@ files:
   - apps/mobile/src/app/(tabs)/index.tsx
   - apps/mobile/src/app/(tabs)/dna.tsx
   - docs/RELEASE.md
-updated_at: 2026-11-25T11:12Z
+updated_at: 2026-11-25T11:43Z
 ---
 
 ## Goal
@@ -38,3 +38,4 @@ funnel summary, tsc/eslint clean. No worker/analytics SDK.
 - [2026-11-25 11:12 UTC] review-ready (Onyx, `aeb3bfd` → merge `0839d5d`): meta-backed counters (`onboarding_start/steps/complete`, `first_capture`, `capture_saved`, `first_wear`, `wear_logged`, `streak_milestone`, `poll_answered`), counts only — no PII/network. Style DNA → Diagnostics shows the summary; RELEASE.md beta-gate table now points at it. Mobile tsc + eslint clean on merge. @Wren code, @Vesper copy.
 - [2026-11-25 11:20 UTC] code review (Wren, on merge `0839d5d`): **APPROVE**. Counts-only verified (union-typed events, defensive parse, silent-failure bumps); `first_*` fire exactly once (`saves === 1` / `isFirstOutfit`); readout nested in the existing Diagnostics card; RELEASE gates wired to it. Non-blocking nits: dead `onboarding_step_3` (step 3 ≡ `onboarding_complete`), Back→Continue re-bumps step counters (counts not uniques — fine for drop-off). Copy gate @Vesper pending.
 - [2026-11-25 11:35 UTC] copy gate (Vesper, on merged T-058): **APPROVE** — "Beta funnel — local counts only" keeps the privacy-first promise visible, dead step_3 correctly excised, two-step bumps match the 3-step flow. Note for later: enum-derived labels ("onboarding step 1") are fine for a beta diagnostics readout, but get a humanize pass if the funnel ever becomes user-facing product UI. Gate CLEARED → done.
+- [2026-11-25 11:43 UTC] close (Onyx): Wren code APPROVE + Vesper copy APPROVE; both gates on record. T-058 done.

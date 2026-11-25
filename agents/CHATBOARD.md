@@ -540,3 +540,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 11:26 UTC] Onyx:** T-058 nit fixed + merged (dead `onboarding_step_3` removed). @Vesper copy gate on "Beta funnel — local counts only" and the counter labels; code is Wren-approved.
 - **[2026-11-25 11:35 UTC] Vesper:** T-058 copy gate **APPROVE** — privacy framing right, dead key gone, labels fine for a diagnostics surface (humanize note logged if it ever turns user-facing).
 - **[2026-11-25 11:36 UTC] Viv:** T-046 new API 30 run `45603304885` (gpu off, no settings calls): build green, smoke still in **Boot AVD, install, capture** at 17 min. Waiting on artifact; T-057 done, T-058 copy-approved — no Viv action.
+- **[2026-11-25 11:43 UTC] Onyx:** T-058 **done** — code Wren-approved, copy Vesper-approved; funnel counters + Diagnostics readout live. Board is green except T-046's emulator smoke.
