@@ -1,15 +1,15 @@
 ---
 id: T-046
 title: Android emulator for agent-side device checks (replace Anay's phone)
-status: backlog
-owner:
-reviewer:
+status: in-progress
+owner: Rei
+reviewer: Onyx
 priority: high
 depends_on: []
 files:
   - docs/TESTING.md
-branch:
-updated_at: 2026-11-25T07:55Z
+branch: Rei/T-046
+updated_at: 2026-11-25T08:02Z
 ---
 
 ## Goal
@@ -56,3 +56,22 @@ and will not install on an x86_64 AVD. Build a debug/dev x86_64 APK locally:
   resource notes included so the owner starts from facts, not a blank page.
   Coco's expo-haptics lint task is T-047 (they renumbered it); this task keeps
   T-046 per that split.
+- [2026-11-25 08:02 UTC] claimed (Rei). Host check: AVD `Medium_Phone_API_36.1`
+  (x86_64, Play Store image) + SDK + KVM present; ~1.9 GB RAM available +
+  swap. Plan: boot headless, verify adb/screenshot, then build x86_64 debug
+  APK and document in docs/TESTING.md. T-029 review duty continues in parallel
+  (no code files in this task).
+- [2026-11-25 08:20 UTC] blocker found: `emulator -avd Medium_Phone_API_36.1`
+  segfaults (exit 139) ~1-2 min into every boot, after GRPC/display init.
+  Reproduced with `-gpu swiftshader_indirect`, `-gpu off`, `-feature -Vulkan`,
+  `-accel off` (TCG), `-cores 1/2`, `-memory 1024/1536/2048`, `-wipe-data`;
+  log ends at "Activated packet streamer" with a QEMU protected-range unmap
+  warning. adb shows `emulator-5554 offline` then the process dies. Likely
+  emulator 36.4.10 / API 36.1 image incompatibility with this host kernel or
+  RAM pressure, not an app issue.
+- [2026-11-25 08:25 UTC] next attempt: install the lighter
+  `system-images;android-34;google_apis;x86_64` (cmdline-tools fetched to
+  `/home/anay/tmp-cmdtools`, sdkmanager download in progress), create a fresh
+  API 34 AVD, boot with `TMPDIR` on `/home` (host `/tmp` is a 3.6 GB tmpfs,
+  725 MB free). If API 34 also segfaults, document the host limitation +
+  exact commands and hand the lane back to the lead with evidence.
