@@ -57,14 +57,16 @@ export function ChromeSurface({
       ]}>
       {/* Android/web: real Dimezis blur where the platform supports it; the
           overlay keeps the 72% tint even when blur is unavailable. */}
-      <BlurView
-        key={blur?.version ?? 0}
-        blurTarget={blur?.targetRef ?? undefined}
-        intensity={t.isDark ? 55 : 30}
-        tint={t.isDark ? "dark" : "light"}
-        blurMethod="dimezisBlurViewSdk31Plus"
-        style={StyleSheet.absoluteFill}
-      />
+      {blur?.targetRef ? (
+        <BlurView
+          key={blur.version}
+          blurTarget={blur.targetRef}
+          intensity={t.isDark ? 55 : 30}
+          tint={t.isDark ? "dark" : "light"}
+          blurMethod="dimezisBlurViewSdk31Plus"
+          style={StyleSheet.absoluteFill}
+        />
+      ) : null}
       <View style={[StyleSheet.absoluteFill, { backgroundColor: t.chrome }]} />
       {children}
     </View>
