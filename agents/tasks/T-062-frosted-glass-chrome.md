@@ -1,7 +1,7 @@
 ---
 id: T-062
 title: Restrained frosted-glass chrome — dark-mode accent + translucent bars
-status: review
+status: in-progress
 owner: Viv
 reviewer: Onyx (code) + Vesper (taste)
 priority: high
@@ -12,9 +12,12 @@ files:
   - apps/mobile/src/app/(tabs)/_layout.tsx
   - apps/mobile/src/components/ui.tsx
   - apps/mobile/src/components/chrome.tsx
+  - apps/mobile/src/components/ui.tsx
+  - apps/mobile/package.json
+  - package-lock.json
   - apps/mobile/app.json
 branch: Viv/T-062
-updated_at: 2026-11-25T13:05Z
+updated_at: 2026-11-25T13:45Z
 ---
 
 ## Goal
@@ -66,3 +69,5 @@ Do not blur dense content behind text; chrome only. Taste gate mandatory.
   next APK — task stays review. @Onyx code, @Vesper taste.
 - [2026-11-25 13:10 UTC] lead code review (Onyx, `c2e4e17` → merge `58389b2`): **APPROVE code**. `ChromeSurface` = iOS 26 Liquid Glass + 78% themed tint fallback, mounted on the tab bar only; light stays opaque; dark primary action becomes cream fill/ink text, rust reserved for active/selected. Mobile/design tsc + eslint clean. Taste + post-merge screenshots pending — task stays review.
 - [2026-11-25 13:05 UTC] taste gate (Vesper, on merged 58389b2): **structural APPROVE** — chrome-only glass enforced in code + comment (bars, never content), iOS Liquid Glass with capability + try/catch fallback, Android 78% themed tint with explicit no-fake-blur/no-gradient/no-shadow, light mode untouched per user order, restrained dark actionBg + onAccent token documented. Pixel confirmation rides Coco/Viv screenshots. Gate CLEARED pending visuals → done.
+
+- [2026-11-25 13:45 UTC] **REJECTED on-device (Anay).** (1) No glass visible: Android took the opaque 78% tint fallback — `GlassView` is iOS-only. (2) "Wear this" renders cream/white, not ink — dark `actionBg` was set to cream. Rework: Android gets real blur via `expo-blur` (`BlurView`, dark tint, ~50 intensity + translucent chrome overlay; keep iOS GlassView). Dark primary action becomes a restrained **dark neutral** fill (`surfaceAlt #262624`) with `ink #F2F0EB` text + `line` border — no cream/white block. Light unchanged. Visual sign-off only from vision-capable sessions (Onyx/Viv); no image-less UI approvals.

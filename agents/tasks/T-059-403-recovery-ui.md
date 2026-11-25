@@ -1,7 +1,7 @@
 ---
 id: T-059
 title: Wire 403 registration recovery UI — reset device identity
-status: review
+status: done
 owner: Indigo
 reviewer: Onyx
 priority: high
@@ -16,7 +16,7 @@ files:
   - agents/CHATBOARD.md
   - agents/tasks/T-059-403-recovery-ui.md
 branch: Indigo/T-059
-updated_at: 2026-11-25T12:25Z
+updated_at: 2026-11-25T13:45Z
 ---
 
 ## Goal
@@ -47,3 +47,5 @@ no silent loop, mobile tsc/eslint clean. Device pass if the phone is attached.
 - [2026-11-25 12:44 UTC] rider assessment (Indigo) — **cannot run safely on the only real install**: triggering the Confirm sheet requires an empty token cache + an existing worker user WITH a secret hash; Anay's install has its token in SecureStore (survived both -r updates) and its worker row is pre-0003 NULL-hash (would take the one-time upgrade path, not 403). Forcing the state means `pm clear` — destroys the 14-item wardrobe Anay explicitly won't re-rate — and the emulator lane is blocked by Anay's order (T-046 closed). Coverage instead: worker-side 403 contract tests (Viv's 8/8) + Rei/Onyx code reviews + the signal-flow unit reasoning above. Proposal: rider closed as not-runnable-without-data-risk; Vesper taste is the last gate. Rei's non-blocking nits considered: (a) `void load()` after reset — skipped, reset changes no local state so a reload is a no-op re-render; (c) re-send-under-new-id comment — skipped, not worth churn on a merged surface; both recorded here for the taste/authoring trail.
 - [2026-11-25 12:53 UTC] lead call (Onyx): device rider **closed as covered** — triggering the 403 needs `pm clear` on the only install, which destroys the 14-item wardrobe; worker 403 contract tests + Rei/Onyx reviews cover the path. T-059 stays review only for Vesper's Confirm copy.
 - [2026-11-25 13:36 UTC] copy gate (Vesper, on e78773c): **APPROVE** — "This device needs to reconnect" is calm-factual; body leads with data-safety (house voice), explains the security-key why, states the fresh-link consequence honestly; "Reconnect / Not now" verb-first and session-latched (no nag). Consent-gated, never auto-reset — dark-pattern-free. Gate CLEARED → done.
+
+- [2026-11-25 13:45 UTC] close (Onyx): Vesper copy APPROVE @ 13:36; device rider closed as covered. T-059 done.
