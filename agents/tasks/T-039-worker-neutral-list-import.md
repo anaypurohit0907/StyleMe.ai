@@ -1,14 +1,15 @@
 ---
 id: T-039
 title: Worker — import NEUTRAL_COLORS from engine instead of the local 7-name copy
-status: backlog
-owner:
+status: in-progress
+owner: Marlow
 priority: low
 depends_on: []
 files:
   - apps/worker/src/index.ts
-branch:
-updated_at: 2026-11-25T06:02Z
+branch: Marlow/T-039
+reviewer: Indigo (worker domain owner) or Wren — lead confirm
+updated_at: 2026-11-25T06:04Z
 ---
 
 ## Goal
@@ -28,3 +29,4 @@ typecheck --filter=@styleme/worker`.
 ## Log (append-only)
 
 - [2026-11-25 06:02 UTC] created (Marlow — T-021 finding 5 remainder; file freed by T-020 merge @ 9a1fe2c).
+- [2026-11-25 06:04 UTC] claimed (Marlow). One-line import swap while T-021 review pends. Branch Marlow/T-039 off main.
