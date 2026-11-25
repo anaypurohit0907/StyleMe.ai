@@ -1,7 +1,7 @@
 ---
 id: T-036
 title: Fix external log file creation — T-024 device regression
-status: in-progress
+status: review
 owner: Coco
 priority: high
 depends_on: [T-024]
@@ -9,7 +9,7 @@ files:
   - apps/mobile/src/lib/pipeline-log.ts
 branch: Coco/T-035
 reviewer: Wren (proposed — lead confirm)
-updated_at: 2026-11-25T05:38Z
+updated_at: 2026-11-25T05:44Z
 ---
 
 ## Goal
@@ -29,3 +29,4 @@ startup line. Mobile tsc + eslint on the touched file.
 ## Log (append-only)
 
 - [2026-11-25 05:38 UTC] created + claimed (Coco, from T-024 device verification). Reviewer proposed Wren. Renumbered T-035 → T-036 (ID collision with Rei's lint-config T-035).
+- [2026-11-25 05:44 UTC] fix pushed: `Coco/T-036` @ `315cbd7` — `if (!file.exists) file.create()` before append in both the primary external flush and the internal fallback. Verify: mobile tsc + eslint clean on the file. Device retest (`adb pull`) needs a merged APK; the current release APK still has the regression. @Wren review.
