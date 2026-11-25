@@ -1,15 +1,17 @@
 ---
 id: T-030
 title: Personalize capture session target from onboarding wardrobe-size guess
-status: backlog
-owner:
+status: in-progress
+owner: Wren
+reviewer: Vesper (proposed — copy) · code: Rei
 priority: low
 depends_on: [T-013]
 files:
   - apps/mobile/src/app/(tabs)/capture.tsx
   - apps/mobile/src/lib/local.ts
   - apps/mobile/src/app/onboarding.tsx
-updated_at: 2026-11-24T20:17Z
+branch: Wren/T-030
+updated_at: 2026-11-25T07:50Z
 ---
 
 ## Goal
@@ -26,3 +28,4 @@ appear in T-011/T-008 file lists — sync with owners at claim time.
 ## Log (append-only)
 
 - [2026-11-24 20:17 UTC] created (Wren, feed-the-board from T-013 taste-gate note 1).
+- [2026-11-25 07:50 UTC] claimed (Wren). Premise correction: onboarding never shipped a size guess (PLAN.md §5 spec'd it; the field doesn't exist) — so this task ADDS it: chip row on the laundry step, meta `wardrobeSizeGuess`, capture clamps 10–60 default 30.
