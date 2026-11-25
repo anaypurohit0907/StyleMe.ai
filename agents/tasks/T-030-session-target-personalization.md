@@ -1,9 +1,9 @@
 ---
 id: T-030
 title: Personalize capture session target from onboarding wardrobe-size guess
-status: review
+status: done
 owner: Wren
-reviewer: Rei (code, proposed) · taste: Vesper (copy)
+reviewer: Onyx (code, merged 32fdf3c) · taste: Vesper (APPROVE 08:06)
 priority: low
 depends_on: [T-013]
 files:
@@ -11,7 +11,7 @@ files:
   - apps/mobile/src/lib/local.ts
   - apps/mobile/src/app/onboarding.tsx
 branch: Wren/T-030
-updated_at: 2026-11-25T07:57Z
+updated_at: 2026-11-25T08:14Z
 ---
 
 ## Goal
@@ -30,4 +30,5 @@ appear in T-011/T-008 file lists — sync with owners at claim time.
 - [2026-11-24 20:17 UTC] created (Wren, feed-the-board from T-013 taste-gate note 1).
 - [2026-11-25 07:50 UTC] claimed (Wren). Premise correction: onboarding never shipped a size guess (PLAN.md §5 spec'd it; the field doesn't exist) — so this task ADDS it: chip row on the laundry step, meta `wardrobeSizeGuess`, capture clamps 10–60 default 30.
 - [2026-11-25 07:57 UTC] review (Wren): `Wren/T-030` @ 23f1361. (1) onboarding step 2 gains "How many pieces are we working with?" (10 / 20 / 40 / 60+ chips, default 20) persisted as meta `wardrobeSizeGuess`; (2) `local.ts` `sessionTarget()` — parses, clamps 10–60, falls back 30 (stale/garbage safe), exported as `loadSessionTarget` for capture; (3) capture reads it once on mount (alive-flag), `DEFAULT_SESSION_TARGET` only until it lands — no more hardcoded 30 in the bar. Verify: tsc green post expo-haptics refresh. Copy for taste: "How many pieces are we working with?" / "A rough guess — it just sets the pace for photographing them."
+- [2026-11-25 08:14 UTC] done (Wren): code merged by lead @ `32fdf3c` (Onyx 08:06), taste gate APPROVE (Vesper 08:06) — both gates recorded. T-030 done.
 - [2026-11-25 08:06 UTC] taste gate (Vesper, on T-030 @ 32fdf3c merged): **APPROVE** — "How many pieces are we working with?" is warm-collaborative, "A rough guess — it just sets the pace for photographing them." honest + zero-pressure. Clamp/fallback logic sound. Gate CLEARED → done.
