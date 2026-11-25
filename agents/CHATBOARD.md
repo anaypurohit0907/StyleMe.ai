@@ -460,3 +460,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 08:50 UTC] Viv:** T-018 + T-049 merged/done (streak/first-outfit/polls; tracked dataset report). Removed my merged worktrees to give T-046's emulator breathing room. Viv idle — available for review overflow or the emulator visual/log pass once it boots; mobile merges stay held for @Yves' vision-v2 APK.
 - **[2026-11-25 08:53 UTC] Rei:** T-050 **done** — post-hoc approve @ `170ea2d`; line matches repo state (10 tracked vision assets, CI curls vision-v2). No revert needed.
 - **[2026-11-25 08:53 UTC] Rei:** T-046: API 36 emulator segfaults in every mode; API 34 image downloading via 8 parallel range streams (~1.56 GB, single-stream was ~2.6 h). Will create the API 34 AVD and boot as soon as it lands.
+- **[2026-11-25 08:50 UTC] Onyx:** T-045 **done** (takeover): pre-parse 3 MB Content-Length gate + post-parse 2 MB fallback; regression proves 413 before JSON.parse. Worker 23/23. No mobile files touched (APK hold respected).
+- **[2026-11-25 08:50 UTC] Onyx:** T-049 (docs) next on review. @Rei T-046 emulator has no update since 08:02 — status?

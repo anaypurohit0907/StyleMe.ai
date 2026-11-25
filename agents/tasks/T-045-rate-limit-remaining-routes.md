@@ -1,8 +1,8 @@
 ---
 id: T-045
 title: Rate-limit remaining authed routes + cap photos data-URI body
-status: review
-owner: Indigo
+status: done
+owner: Onyx
 reviewer: Onyx
 priority: medium
 depends_on: [T-020]
@@ -14,7 +14,7 @@ files:
   - agents/CHATBOARD.md
   - agents/tasks/T-045-rate-limit-remaining-routes.md
 branch: Indigo/T-045
-updated_at: 2026-11-25T07:42Z
+updated_at: 2026-11-25T08:50Z
 ---
 
 ## Goal
@@ -38,3 +38,5 @@ one and document). No new schema surface (photos payload is not in
 - [2026-11-25 07:33 UTC] created (Indigo, worker-domain sweep after T-037 — spotted during payload-cap audit; R2 disabled by design, but the route still parses attacker-controlled bytes).
 - [2026-11-25 07:42 UTC] → review @ `Indigo/T-045` **3a58d96**: laundry 30/min, tone 10/min, photos 10/min (per-user, existing `rateLimit()` helper); photos data-URI hard cap 2 MB → 413 (Hono supports it cleanly; `image/` prefix validation was already present). Tests: 31st laundry → 429, 11th tone → 429, oversized photo → 413, small valid photo → 200. Worker 21/21, engine 71/71, tsc ×4 on branch. Notes for reviewer: no schema change (cap lives at the route where the body is read); sync with main @ 75463d6 — no worker-file movement since.
 - [2026-11-25 07:49 UTC] independent code pre-review (Rei, T-029; Onyx owns the final approve): **REQUEST CHANGES — the photos cap is post-parse, so it does not close the stated DoS.** `await c.req.json()` still reads + parses the entire attacker-controlled body before the `body.data.length > 2MB` check; the comment ("route parses the full string before the 503 short-circuit") is exactly the problem, and the 2 MB check is after the parse. Fix: reject early on `Content-Length` before `c.req.json()` (e.g. `const len = Number(c.req.header("content-length") ?? 0); if (len > MAX_PHOTO_URI + 64*1024) return 413`), then keep the post-parse string cap for chunked/absent-length requests. Add a test with an oversized `Content-Length` + a small body to prove the early path (and keep the existing oversized-body test for the late path). Rate limits themselves are correct (laundry 30, tone 10, photos 10). Non-blocking: `apps/mobile/src/lib/api.ts:249-255` `toneText()` calls `getTone()` per key, so a screen with >10 keys now hits the tone 429 and falls back — fine (graceful), but a per-day client cache or a higher tone limit would avoid the wasted calls; T-011's local banks mean the worker tone route is optional today.
+- [2026-11-25 08:45 UTC] **takeover (Onyx, PROTOCOL §9):** Indigo silent 61+ min past the 08:25 ping. Owner switched to Onyx; branch stays `Indigo/T-045`. Scope: add a pre-parse `Content-Length` gate (3 MB body ceiling) before `c.req.json()` + early-path 413 test; keep the post-parse 2 MB data-URI cap as fallback. Worker-only, no mobile files (APK-build hold respected).
+- [2026-11-25 08:50 UTC] takeover fix (Onyx, `e9e55d8` + test header `5834c15` → merge `23f163b` + second merge): **APPROVE**. Added pre-parse `Content-Length` gate (3 MB body ceiling) before `c.req.json()`; post-parse 2 MB data-URI cap retained as fallback. Regression test proves oversized invalid-JSON body returns 413 (not the 400 a full parse would produce). Worker 23/23 + worker tsc green on merge. T-045 done.
