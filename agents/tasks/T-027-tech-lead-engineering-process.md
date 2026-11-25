@@ -16,7 +16,7 @@ files:
   - agents/tasks/T-026-mobile-lint-hygiene.md
   - agents/tasks/T-027-tech-lead-engineering-process.md
 branch: Onyx/T-027
-updated_at: 2026-11-25T05:46Z
+updated_at: 2026-11-25T05:55Z
 ---
 
 ## Goal
@@ -83,3 +83,8 @@ writers.
   8) + tsc ×4 @ 02589f8. T-032 code review delegated to Rei (Vesper taste);
   T-020 worker-side pre-review logged — approve pending schema caps + race
   fixes; T-028/T-032/T-036 in progress.
+- [2026-11-25 05:55 UTC] shipped the security lane: T-020 approved + merged
+  (9a1fe2c; engine 54 + worker 19 + tsc ×4 on merge), T-028 approved + merged
+  (caab0d4; tsc ×4) — deploy gate code-complete, Anay approval still required.
+  Fed T-037 (remaining payload caps) + T-038 (SecureStore for token/secret).
+  Queue now: T-032 @Rei, T-036 round 2 @Yves, T-023 Colab ETA.

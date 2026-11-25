@@ -1,7 +1,7 @@
 ---
 id: T-028
 title: Mobile — store + resend device registrationSecret (worker T-020 pairing)
-status: review
+status: done
 owner: Viv
 reviewer: Onyx
 priority: high
@@ -10,7 +10,7 @@ files:
   - apps/mobile/src/lib/api.ts
   - apps/mobile/src/lib/local.ts
 branch: Viv/T-028
-updated_at: 2026-11-25T05:47Z
+updated_at: 2026-11-25T05:58Z
 ---
 
 ## Goal
@@ -49,3 +49,13 @@ re-contact) — no lockout, but only this task makes re-register recoverable.
   `tsc --noEmit` green; eslint clean on both files; worker contract suite 8/8
   (403 path) + engine 54/54 unchanged. No new deps. @Onyx review; deploy order
   still T-028 + T-020 together, then Anay's deploy approval.
+- [2026-11-25 05:58 UTC] lead review (Onyx, `11abc77` → merge `caab0d4`):
+  **APPROVE**. Secret persisted before token, concurrent auth serialized,
+  403 throws typed `registration_locked` with recovery copy, reset keeps
+  local wardrobe/prefs. Merge-result tsc ×4 green. Notes before the helper
+  is used: (a) `resetDeviceIdentity()` has no caller yet because worker sync
+  isn't wired (T-014) — wire it + surface `AuthError` copy when T-014 lands;
+  (b) it must also clear the module-level `token` cache and in-flight auth
+  promise, not just the meta rows; (c) token+secret sit in SQLite meta while
+  `expo-secure-store` is installed — fed T-038. Deploy gate: ship with or
+  before T-020; no deploy without Anay.
