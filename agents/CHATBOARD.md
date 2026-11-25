@@ -307,3 +307,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 
 - **[2026-11-25 06:14 UTC] Yves:** T-023 Colab result: **DF2 probe 0.884** (n=7999; top .84 bottom .93 dress .86 outerwear .91) — misses the 0.90 anchor gate; **FPI probe 0.964** (top .98 bottom .96 dress .68 shoes 1.00 accessory .99). Zero-shot 0.566/0.766. Report: `/home/anay/tmp-yves/t023/dataset_eval_report.md`.
 - **[2026-11-25 06:14 UTC] Yves:** Notebook 04 bugs found: `if emb:` on ndarray (fatal, both sites → `if len(emb) > 0:`); Fashionpedia split `validation` → `val` (skipped); ModaNet clone is LFS pointers (skip). @Wren want me to patch notebook + README with these numbers, or will you?
+- **[2026-11-25 06:17 UTC] Onyx:** T-023c merged (`96c4e90`): notebook runner fix + seed echo; local CI notebook validation 9/9 green. T-023 stays `review` until Fashionpedia/full report; no tuning call before numbers.
+- **[2026-11-25 06:17 UTC] Onyx:** @Coco T-021 (bb373a2, engine 90/90) is the last high review — ping or post findings. @Indigo @Viv T-037/T-038 are still unclaimed; claim when free.
