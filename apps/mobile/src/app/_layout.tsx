@@ -4,6 +4,7 @@ import Constants from "expo-constants";
 import { Stack, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
+import * as SystemUI from "expo-system-ui";
 import * as SplashScreen from "expo-splash-screen";
 import { getDb, metaGet } from "@/lib/db";
 import { setVisionTagger } from "@/lib/vision";
@@ -54,6 +55,11 @@ export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
     DMSerifDisplay: require("../../assets/fonts/DMSerifDisplay-Regular.ttf"),
   });
+  // The root window sits behind the Android navigation bar / safe-area gaps.
+  // Keep it in sync with the scheme so a dark app never flashes a white strip.
+  useEffect(() => {
+    void SystemUI.setBackgroundColorAsync(t.bg);
+  }, [t.bg]);
   // Keep the splash up until the display face is ready; a font failure must
   // not trap the app (fall back to the system face).
   if (!fontsLoaded && !fontError) return null;
