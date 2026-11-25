@@ -102,6 +102,20 @@ export function logError(stage: string, message: string): void {
   append(stage, message, "error");
 }
 
+async function appendLine(dir: Directory, batch: string): Promise<void> {
+  // Expo SDK 58: File.write() does not create a missing file, and
+  // File.create() fails its canWrite() permission check when the external
+  // file does not exist yet. Directory.createFile() validates the (existing,
+  // writable) directory and then creates the file — the only bootstrap that
+  // works on external storage. Device-verified by Yves (T-036).
+  let file = new File(dir, LOG_NAME);
+  if (!file.exists) {
+    dir.createFile(LOG_NAME, "text/plain");
+    file = new File(dir, LOG_NAME);
+  }
+  await file.write(batch, { append: true });
+}
+
 async function flush(): Promise<void> {
   if (flushing || pending.length === 0) return;
   flushing = true;
@@ -111,18 +125,13 @@ async function flush(): Promise<void> {
     if (!cachedDir) cachedDir = await target();
     const file = new File(cachedDir, LOG_NAME);
     await rotateIfNeeded(file, cachedDir);
-    const current = new File(cachedDir, LOG_NAME);
-    // Expo SDK 58 File.write does not create a missing file.
-    if (!current.exists) current.create();
-    await current.write(batch, { append: true });
+    await appendLine(cachedDir, batch);
   } catch {
     // Retry once on the internal document directory, then drop silently.
     try {
       externalUnavailable = true;
       cachedDir = Paths.document;
-      const fallback = new File(cachedDir, LOG_NAME);
-      if (!fallback.exists) fallback.create();
-      await fallback.write(batch, { append: true });
+      await appendLine(cachedDir, batch);
     } catch {
       // Disk logging is diagnostic only.
     }
