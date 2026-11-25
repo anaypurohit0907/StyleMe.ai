@@ -1,0 +1,1 @@
+- [2026-11-25 08:06 UTC] lead code review (Onyx, `23f1361` → merge `32fdf3c`): **APPROVE code**. Size chips persist `wardrobeSizeGuess`, `sessionTarget()` clamps 10–60 with 30 fallback, capture bar paces to it; merge-result mobile tsc + eslint clean. **Taste gate pending (Vesper)** on the new copy — task stays `review` until it clears.
