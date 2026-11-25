@@ -48,7 +48,7 @@ const subtypeMeta = require("../../assets/vision/subtype_mobilenet.json") as {
   labels: string[];
   slot_by_label: Record<string, string>;
 };
-const slotMeta = require("../../assets/vision/slot_product_mobilenet.json") as { labels: string[] };
+const slotMeta = require("../../assets/vision/slot_background_aug.json") as { labels: string[] };
 
 function groupRows(group: string): { values: string[]; rows: number[][] } {
   const values: string[] = [];
@@ -322,7 +322,7 @@ class OnnxTagger implements VisionTagger {
   private loadSlot(): Promise<import("onnxruntime-react-native").InferenceSession> {
     if (!this.slotSession) {
       this.slotSession = (async () => {
-        const asset = Asset.fromModule(require("../../assets/vision/slot_product_mobilenet.onnx"));
+        const asset = Asset.fromModule(require("../../assets/vision/slot_background_aug.onnx"));
         await asset.downloadAsync();
         const path = (asset.localUri ?? asset.uri).replace(/^file:\/\//, "");
         return ort().InferenceSession.create(path, { executionProviders: ["cpu"] });

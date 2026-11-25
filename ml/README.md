@@ -103,3 +103,17 @@ Frozen MobileCLIP embeddings had no subtype signal (0.149 / 0.285). A small **Mo
 | MobileNetV3-Small | 8 subtypes (shirt, t-shirt, sweater, tank, trousers, shorts, skirt, dress) | **0.690** |
 
 Shipped as `subtype_mobilenet.onnx` (6MB) with a confidence gate (0.6). Confident subtypes nudge formality (t-shirt/shorts → casual; shirt/trousers → formal) and feed the engine's occasion rule. Training script: `ml/experiments/train_subtype_mobilenet.py`.
+
+## Background-augmented slot head (T-009)
+
+Same MobileNetV3-Small/FPI data, two recipes, 770-image holdout (seed 0):
+
+| recipe | white bg | synthetic bed/floor |
+|---|---|---|
+| baseline (current) | **0.953** | 0.387 |
+| background-augmented | 0.891 | **0.925** |
+
+Compositing FPI cutouts onto procedural beds/floors buys **+53.8 pp** on cluttered
+backgrounds for **−6.2 pp** on white. Exported as `slot_background_aug.onnx` and
+shipped through the `vision-v2` bundle; `slot_product_mobilenet` remains the A/B
+baseline. Train: `ml/experiments/train_slot_background_aug.py`.

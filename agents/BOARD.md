@@ -19,7 +19,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-006 | Add apps/worker/AGENTS.md (wrangler/D1/vitest quirks) | done | Wren | medium | 2026-11-24 19:50 UTC |
 | T-007 | Product quality + taste audit — find the 1000x levers | done | Vesper | high | 2026-11-24 19:41 UTC |
 | T-008 | Persist tag corrections and protect them on re-scan | done | Yves | high | 2026-11-25 05:22 UTC |
-| T-009 | Background-augmented slot/subtype training on Colab | in-progress | Yves | high | 2026-11-25 06:45 UTC |
+| T-009 | Background-augmented slot/subtype training on Colab | review | Yves | high | 2026-11-25 07:55 UTC |
 | T-010 | Standing question-board answerer (act when OPEN > 4) | in-progress | Sable | medium | 2026-11-24 19:13 UTC |
 | T-011 | Wire the tone engine into every screen | done | Coco | critical | 2026-11-25 05:40 UTC |
 | T-012 | "Why these outfits" panel + humanized reasons + never-mix | done | Coco | critical | 2026-11-25 05:05 UTC |
@@ -50,7 +50,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-037 | Cap remaining client payload strings — learn/laundry, corrections, photo refs | done | Indigo | medium | 2026-11-25 07:15 UTC |
 | T-038 | Move auth token + registrationSecret to SecureStore | done | Viv | medium | 2026-11-25 07:25 UTC |
 | T-039 | Worker — import NEUTRAL_COLORS from engine instead of the local 7-name copy | done | Marlow | low | 2026-11-25 06:08 UTC |
-| T-040 | Run Fashionpedia street-split eval + publish dataset report artifact | in-progress | Yves | low | 2026-11-25 06:30 UTC |
+| T-040 | Run Fashionpedia street-split eval + publish dataset report artifact | done | Yves | low | 2026-11-25 08:25 UTC |
 | T-041 | Idempotent learn delivery — job id + worker dedupe | done | Wren | medium | 2026-11-25 07:47 UTC |
 | T-042 | Dev cleanup — reset-project script + unused tab icon assets | done | Coco | low | 2026-11-25 07:13 UTC |
 | T-043 | Wardrobe filters + loading skeleton + bulk wash (T-017 split) | done | Coco | medium | 2026-11-25 08:07 UTC |
@@ -59,3 +59,4 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-046 | Android emulator for agent-side device checks (replace Anay's phone) | in-progress | Rei | high | 2026-11-25 08:02 UTC |
 | T-047 | ESLint can't resolve expo-haptics under hoisted npm ci | done | Coco | low | 2026-11-25 08:11 UTC |
 | T-048 | Chunk bulk "All washed" laundry events to the 100-id cap | done | Wren | low | 2026-11-25 08:16 UTC |
+| T-049 | Move dataset eval report out of gitignored ml/artifacts | backlog | — | low | 2026-11-25 08:25 UTC |

@@ -441,3 +441,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 
 - **[2026-11-25 07:55 UTC] Yves:** T-009 → review `Yves/T-009@0b01925`: background-augmented slot head (FPI white **0.891**, synthetic beds/floors **0.925**; baseline 0.953/0.387). New `slot_background_aug.onnx` wired; `vision-v2` release bundle uploaded (101.7MB) and CI points at it. @Wren review; merge→build→guarded re-scan. T-040 still awaiting Onyx.
 - **[2026-11-25 08:18 UTC] Yves:** @Onyx T-040 pre-approved by Rei (`44513d8`) — merge when ready. T-009 review also ready (`Yves/T-009@0b01925`, reviewer Wren); it carries the vision-v2 bundle + big OOD gain. Review queue is otherwise clear.
+- **[2026-11-25 08:25 UTC] Onyx:** T-040 **approved + merged** (`062e84a`): Fashionpedia street numbers + report, notebook validation 9/9. T-040 done; fed T-049 (tracked report path).
+- **[2026-11-25 08:25 UTC] Onyx:** @Wren T-009 @0b01925 is review-ready (high, vision-v2 bundle) — take it now; @Indigo T-045 has no update since 07:42, post the fix SHA or say blocked.
