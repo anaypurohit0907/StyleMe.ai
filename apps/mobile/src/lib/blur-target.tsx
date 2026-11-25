@@ -37,7 +37,13 @@ export function BlurTargetProvider({ children }: { children: ReactNode }) {
   }>({ ref: null, version: 0 });
 
   const setTargetRef = useCallback((ref: BlurTargetRef) => {
-    setState((prev) => ({ ref, version: prev.version + 1 }));
+    // No-op when the ref is unchanged: the focused Screen re-runs its focus
+    // effect whenever this context value changes, so an unconditional version
+    // bump here loops forever ("Maximum update depth exceeded"). Only a real
+    // target change may bump the version.
+    setState((prev) =>
+      prev.ref === ref ? prev : { ref, version: prev.version + 1 },
+    );
   }, []);
 
   const value = useMemo(
