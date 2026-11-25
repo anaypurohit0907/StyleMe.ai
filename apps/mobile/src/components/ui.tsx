@@ -14,9 +14,60 @@ import {
   type StyleProp,
   type ViewStyle,
 } from "react-native";
+import Animated, {
+  SnappySpringConfig,
+  useAnimatedStyle,
+  useReducedMotion,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { radius, space, type } from "@styleme/design";
 import { useTheme } from "@/lib/theme";
+
+/** Reanimated 4 has no built-in Animated Pressable — build it once. */
+export const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+/**
+ * Shared press feedback: scale 0.97 + opacity dip, spring-settled, skipped
+ * entirely when the OS reduce-motion setting is on. All state lives in
+ * shared values so the worklet owns every frame — nothing snaps.
+ */
+export function usePressFeedback(opts?: { disabled?: boolean }) {
+  const disabled = opts?.disabled ?? false;
+  const pressed = useSharedValue(0);
+  const isDisabled = useSharedValue(disabled ? 1 : 0);
+  // Props → shared value sync at render: the standard reanimated pattern.
+  isDisabled.value = disabled ? 1 : 0;
+  const reduce = useReducedMotion();
+
+  const style = useAnimatedStyle(() => {
+    const canMove = !reduce && !isDisabled.value;
+    return {
+      transform: [
+        {
+          scale: canMove
+            ? withSpring(pressed.value ? 0.97 : 1, SnappySpringConfig)
+            : 1,
+        },
+      ],
+      opacity: withTiming(isDisabled.value ? 0.4 : pressed.value ? 0.85 : 1, {
+        duration: 90,
+      }),
+    };
+  });
+
+  return {
+    style,
+    onPressIn: () => {
+      pressed.value = 1;
+    },
+    onPressOut: () => {
+      pressed.value = 0;
+    },
+  };
+}
 
 export function Screen({ children, style }: { children: ReactNode; style?: StyleProp<ViewStyle> }) {
   const t = useTheme();
@@ -81,16 +132,20 @@ export function Btn({
   loading?: boolean;
 }) {
   const t = useTheme();
+  const fb = usePressFeedback({ disabled: disabled || loading });
   const bg = variant === "primary" ? t.accent : variant === "danger" ? t.bad : "transparent";
   const fg = variant === "ghost" ? t.ink : t.onAccent;
   return (
-    <Pressable
+    <AnimatedPressable
       onPress={onPress}
+      onPressIn={fb.onPressIn}
+      onPressOut={fb.onPressOut}
       disabled={disabled || loading}
-      style={({ pressed }) => [
+      style={[
         s.btn,
-        { backgroundColor: bg, opacity: disabled ? 0.4 : pressed ? 0.8 : 1 },
+        { backgroundColor: bg },
         variant === "ghost" && [s.ghost, { borderColor: t.line }],
+        fb.style,
       ]}>
       {loading ? (
         <View style={s.btnLoading}>
@@ -100,7 +155,7 @@ export function Btn({
       ) : (
         <Text style={[s.btnText, { color: fg }]}>{label}</Text>
       )}
-    </Pressable>
+    </AnimatedPressable>
   );
 }
 
@@ -114,17 +169,20 @@ export function Chip({
   onPress: () => void;
 }) {
   const t = useTheme();
+  const fb = usePressFeedback();
   return (
-    <Pressable
+    <AnimatedPressable
       onPress={onPress}
-      style={({ pressed }) => [
+      onPressIn={fb.onPressIn}
+      onPressOut={fb.onPressOut}
+      style={[
         s.chip,
         { backgroundColor: t.surface, borderColor: t.line },
         selected && { backgroundColor: t.ink, borderColor: t.ink },
-        pressed && { opacity: 0.75 },
+        fb.style,
       ]}>
       <Text style={[s.chipText, { color: t.ink }, selected && { color: t.bg }]}>{label}</Text>
-    </Pressable>
+    </AnimatedPressable>
   );
 }
 
