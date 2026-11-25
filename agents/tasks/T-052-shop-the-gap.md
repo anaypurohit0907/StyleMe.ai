@@ -1,8 +1,9 @@
 ---
 id: T-052
 title: Shop-the-gap — text-only wardrobe gap suggestions
-status: backlog
-owner:
+status: in-progress
+owner: Viv
+reviewer: Onyx
 priority: high
 depends_on: [T-017, T-018]
 files:
@@ -11,7 +12,8 @@ files:
   - packages/engine/tests/gap.test.ts
   - apps/mobile/src/app/gap.tsx
   - apps/mobile/src/app/(tabs)/wardrobe.tsx
-updated_at: 2026-11-25T08:55Z
+branch: Viv/T-052
+updated_at: 2026-11-25T09:53Z
 ---
 
 ## Goal
@@ -34,3 +36,7 @@ No external commerce, no affiliate, no network. Taste gate required.
 
 - [2026-11-25 08:55 UTC] created (Onyx, PLAN phase 7; next wave after audit
   set closed).
+- [2026-11-25 09:53 UTC] claimed (Viv, lead-assigned engine half). Branch
+  `Viv/T-052` off current main; reviewer Onyx. Starting with pure
+  `gapAnalysis()` + tests; mobile Gap screen follows after the T-046 artifact
+  smoke (wardrobe.tsx is not touched until then). No external commerce.
