@@ -16,12 +16,95 @@ import type {
   ToneProfile,
   WardrobeSync,
 } from "@styleme/schema";
-import { metaGet, metaSet } from "./db";
+import * as SecureStore from "expo-secure-store";
+import { getDb, metaGet, metaSet } from "./db";
 
 const DEFAULT_BASE = process.env.EXPO_PUBLIC_API_BASE ?? "http://192.168.1.10:8787"; // set EXPO_PUBLIC_API_BASE for your wrangler dev IP / deployed URL
 export const API_BASE: string = DEFAULT_BASE;
 
+type AuthItem = "token" | "registrationSecret";
+
+const SECURE_KEYS: Record<AuthItem, string> = {
+  token: "styleme.auth.token",
+  registrationSecret: "styleme.auth.registrationSecret",
+};
+
+let secureStoreAvailable: Promise<boolean> | null = null;
+
+function canUseSecureStore(): Promise<boolean> {
+  if (!secureStoreAvailable) {
+    secureStoreAvailable = SecureStore.isAvailableAsync().catch(() => false);
+  }
+  return secureStoreAvailable;
+}
+
+/** One-time cleanup of the plaintext value after a successful secure write. */
+async function deleteLegacyMeta(key: AuthItem): Promise<void> {
+  const db = await getDb();
+  await db.runAsync("DELETE FROM meta WHERE key = ?", key);
+}
+
+async function secureGet(item: AuthItem): Promise<string | null> {
+  if (!(await canUseSecureStore())) return null;
+  try {
+    return await SecureStore.getItemAsync(SECURE_KEYS[item]);
+  } catch {
+    return null;
+  }
+}
+
+async function secureSet(item: AuthItem, value: string): Promise<boolean> {
+  if (!(await canUseSecureStore())) return false;
+  try {
+    await SecureStore.setItemAsync(SECURE_KEYS[item], value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function secureDelete(item: AuthItem): Promise<void> {
+  if (!(await canUseSecureStore())) return;
+  try {
+    await SecureStore.deleteItemAsync(SECURE_KEYS[item]);
+  } catch {
+    // Missing/invalidated key is already deleted for our purposes.
+  }
+}
+
+/** Read a token/secret from SecureStore, migrating the legacy SQLite value once. */
+export async function getAuthItem(item: AuthItem): Promise<string | null> {
+  const secure = await secureGet(item);
+  if (secure) return secure;
+  const legacy = await metaGet(item);
+  if (!legacy) return null;
+  if (await secureSet(item, legacy)) {
+    await deleteLegacyMeta(item).catch(() => {});
+  }
+  return legacy;
+}
+
+/** Write to SecureStore; only fall back to SQLite where the platform has none. */
+export async function setAuthItem(item: AuthItem, value: string): Promise<void> {
+  if (await secureSet(item, value)) {
+    await deleteLegacyMeta(item).catch(() => {});
+    return;
+  }
+  await metaSet(item, value);
+}
+
+export async function deleteAuthItem(item: AuthItem): Promise<void> {
+  await secureDelete(item);
+  await deleteLegacyMeta(item).catch(() => {});
+}
+
 let token: string | null = null;
+
+/** Drop the module-level token so a recovery/rotation takes effect immediately. */
+export function clearAuthCache(): void {
+  token = null;
+  authInFlight = null;
+}
 
 export type AuthErrorCode = "registration_locked" | "auth_failed";
 
@@ -53,12 +136,12 @@ async function ensureAuth(deviceId: string, onboarding?: Record<string, unknown>
 }
 
 async function authenticate(deviceId: string, onboarding?: Record<string, unknown>): Promise<string> {
-  const cached = await metaGet("token");
+  const cached = await getAuthItem("token");
   if (cached) {
     token = cached;
     return cached;
   }
-  const registrationSecret = await metaGet("registrationSecret");
+  const registrationSecret = await getAuthItem("registrationSecret");
   const res = await fetch(`${API_BASE}/v1/auth/device`, {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -92,10 +175,10 @@ async function authenticate(deviceId: string, onboarding?: Record<string, unknow
   // Persist the one-time secret before the token: if the second write fails,
   // the next attempt can still prove possession and recover the account.
   if (body.registrationSecret) {
-    await metaSet("registrationSecret", body.registrationSecret);
+    await setAuthItem("registrationSecret", body.registrationSecret);
   }
   token = body.token;
-  await metaSet("token", body.token);
+  await setAuthItem("token", body.token);
   return body.token;
 }
 
