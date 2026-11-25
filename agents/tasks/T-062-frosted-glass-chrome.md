@@ -64,3 +64,4 @@ Do not blur dense content behind text; chrome only. Taste gate mandatory.
   (worktree path-mapped to the branch design package); eslint 0 on all three
   files; no new deps. Device dark/light screenshots still required after the
   next APK — task stays review. @Onyx code, @Vesper taste.
+- [2026-11-25 13:10 UTC] lead code review (Onyx, `c2e4e17` → merge `58389b2`): **APPROVE code**. `ChromeSurface` = iOS 26 Liquid Glass + 78% themed tint fallback, mounted on the tab bar only; light stays opaque; dark primary action becomes cream fill/ink text, rust reserved for active/selected. Mobile/design tsc + eslint clean. Taste + post-merge screenshots pending — task stays review.
