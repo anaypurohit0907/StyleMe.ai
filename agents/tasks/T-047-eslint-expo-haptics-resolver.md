@@ -1,13 +1,15 @@
 ---
 id: T-047
 title: ESLint can't resolve expo-haptics under hoisted npm ci
-status: backlog
-owner:
+status: in-progress
+owner: Coco
 priority: low
 depends_on: [T-015]
 files:
   - apps/mobile/eslint.config.js
-updated_at: 2026-11-25T07:55Z
+branch: Coco/T-047
+reviewer: Rei (proposed)
+updated_at: 2026-11-25T08:02Z
 ---
 
 ## Goal
@@ -26,3 +28,4 @@ resolver supports `exports`). Verify in a clean worktree: `npm ci` then
 ## Log (append-only)
 
 - [2026-11-25 07:55 UTC] created (Coco, surfaced during T-043 verification). Renumbered T-046 → T-047 (ID collision with the Android-emulator T-046).
+- [2026-11-25 08:02 UTC] claimed (Coco). Root cause: `eslint-plugin-import` follows `expo-haptics`'s `expo-source` export condition to `./src/Haptics.ts`, which is not published; Metro/tsc use the `default` build. Fix: narrow documented `import/no-unresolved` ignore for `^expo-haptics$` (no broad disable).
