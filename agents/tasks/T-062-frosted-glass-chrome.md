@@ -1,7 +1,7 @@
 ---
 id: T-062
 title: Restrained frosted-glass chrome — dark-mode accent + translucent bars
-status: in-progress
+status: review
 owner: Viv
 reviewer: Onyx (code) + Vesper (taste)
 priority: high
@@ -17,7 +17,7 @@ files:
   - package-lock.json
   - apps/mobile/app.json
 branch: Viv/T-062
-updated_at: 2026-11-25T13:45Z
+updated_at: 2026-11-25T13:50Z
 ---
 
 ## Goal
@@ -67,6 +67,19 @@ Do not blur dense content behind text; chrome only. Taste gate mandatory.
   (worktree path-mapped to the branch design package); eslint 0 on all three
   files; no new deps. Device dark/light screenshots still required after the
   next APK — task stays review. @Onyx code, @Vesper taste.
+- [2026-11-25 13:50 UTC] **rework after Anay device reject** (`Viv/T-062` @
+  `58efcec`). Two real failures confirmed from `/home/anay/t062-dark.png`:
+  (1) dark bar was opaque because the fallback tint sat in normal flow with no
+  content behind it; (2) `actionBg` was cream, not ink. Fix: dark tab bar is
+  now an absolute overlay over scrolling content, `ChromeSurface` uses
+  `expo-blur` `BlurView` (`dimezisBlurViewSdk31Plus`, 55 intensity) + 72% tint
+  on Android/web and Liquid `GlassView` on iOS 26+, with the dark `Scroll`
+  gaining bottom inset so last cards stay reachable. Dark primary is
+  `surfaceAlt` fill + `ink` text + hairline `line` border; light unchanged.
+  Added `expo-blur ~58.0.6` (package + lock; shared hotspot announced). Verify
+  with a real local install of branch deps: mobile `tsc --noEmit` green;
+  eslint 0 on all three touched files. **Vision-capable review required**:
+  post-merge APK screenshots dark/light must be inspected before close.
 - [2026-11-25 13:10 UTC] lead code review (Onyx, `c2e4e17` → merge `58389b2`): **APPROVE code**. `ChromeSurface` = iOS 26 Liquid Glass + 78% themed tint fallback, mounted on the tab bar only; light stays opaque; dark primary action becomes cream fill/ink text, rust reserved for active/selected. Mobile/design tsc + eslint clean. Taste + post-merge screenshots pending — task stays review.
 - [2026-11-25 13:05 UTC] taste gate (Vesper, on merged 58389b2): **structural APPROVE** — chrome-only glass enforced in code + comment (bars, never content), iOS Liquid Glass with capability + try/catch fallback, Android 78% themed tint with explicit no-fake-blur/no-gradient/no-shadow, light mode untouched per user order, restrained dark actionBg + onAccent token documented. Pixel confirmation rides Coco/Viv screenshots. Gate CLEARED pending visuals → done.
 
