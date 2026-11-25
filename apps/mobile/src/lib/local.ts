@@ -25,6 +25,7 @@ import {
   type SignatureState,
 } from "@styleme/engine";
 import { metaGet, metaSet } from "./db";
+import { clearAuthCache, deleteAuthItem } from "./api";
 
 function newDeviceId(): string {
   return `dev_${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`;
@@ -48,9 +49,10 @@ export async function getDeviceId(): Promise<string> {
  */
 export async function resetDeviceIdentity(): Promise<string> {
   const id = newDeviceId();
+  clearAuthCache();
+  await deleteAuthItem("token");
+  await deleteAuthItem("registrationSecret");
   await metaSet("deviceId", id);
-  await metaSet("token", "");
-  await metaSet("registrationSecret", "");
   return id;
 }
 
