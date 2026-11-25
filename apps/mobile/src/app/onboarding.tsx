@@ -1,18 +1,20 @@
 import { useMemo, useState } from "react";
 import { TextInput, View, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
-import { colors, radius, space } from "@styleme/design";
+import { radius, space } from "@styleme/design";
 import { emptyPreference } from "@styleme/schema";
 import { Btn, Caption, Chip, Screen, Scroll, Title } from "@/components/ui";
 import { getDeviceId, savePrefs } from "@/lib/local";
 import { metaSet } from "@/lib/db";
 import { detectAndSaveTone } from "@/lib/tone";
+import { useTheme } from "@/lib/theme";
 
 const VIBES = ["minimal", "street", "classic", "bold", "cozy"];
 const LAUNDRY = ["rarely (I have options)", "weekly", "constantly"];
 
 export default function Onboarding() {
   const router = useRouter();
+  const t = useTheme();
   const [step, setStep] = useState(0);
   const [name, setName] = useState("");
   const [city, setCity] = useState("");
@@ -62,7 +64,14 @@ export default function Onboarding() {
       <Scroll style={{ paddingTop: space.xl }}>
         <View style={s.dots}>
           {[0, 1, 2].map((i) => (
-            <View key={i} style={[s.dot, i <= step && { backgroundColor: colors.accent }]} />
+            <View
+              key={i}
+              style={[
+                s.dot,
+                { backgroundColor: t.line },
+                i <= step && { backgroundColor: t.accent },
+              ]}
+            />
           ))}
         </View>
 
@@ -74,23 +83,23 @@ export default function Onboarding() {
               value={name}
               onChangeText={setName}
               placeholder="What should I call you?"
-              placeholderTextColor={colors.inkFaint}
-              style={s.input}
+              placeholderTextColor={t.inkFaint}
+              style={[s.input, { backgroundColor: t.surface, borderColor: t.line, color: t.ink }]}
               autoFocus
             />
             <TextInput
               value={city}
               onChangeText={setCity}
               placeholder="City (for weather) — optional"
-              placeholderTextColor={colors.inkFaint}
-              style={s.input}
+              placeholderTextColor={t.inkFaint}
+              style={[s.input, { backgroundColor: t.surface, borderColor: t.line, color: t.ink }]}
             />
             <TextInput
               value={words}
               onChangeText={setWords}
               placeholder="Describe your style in your own words — optional"
-              placeholderTextColor={colors.inkFaint}
-              style={[s.input, s.words]}
+              placeholderTextColor={t.inkFaint}
+              style={[s.input, s.words, { backgroundColor: t.surface, borderColor: t.line, color: t.ink }]}
               multiline
             />
           </>
@@ -134,16 +143,13 @@ export default function Onboarding() {
 
 const s = StyleSheet.create({
   dots: { flexDirection: "row", gap: space.s, marginBottom: space.l },
-  dot: { width: 28, height: 4, borderRadius: 2, backgroundColor: colors.line },
+  dot: { width: 28, height: 4, borderRadius: 2 },
   input: {
-    backgroundColor: colors.surface,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: colors.line,
     borderRadius: radius.md,
     paddingHorizontal: space.m,
     paddingVertical: space.m,
     fontSize: 16,
-    color: colors.ink,
     marginTop: space.s,
   },
   wrap: { flexDirection: "row", flexWrap: "wrap", gap: space.s, marginTop: space.s },
