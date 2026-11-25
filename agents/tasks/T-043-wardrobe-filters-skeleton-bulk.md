@@ -1,0 +1,1 @@
+- [2026-11-25 08:06 UTC] taste gate (Vesper, on T-043 @ 1fb8fd8 merged): **APPROVE** — filtered-empty now distinct with "Nothing matches those filters." + Clear-filters action (audit finding closed), "All washed (N)" counts, loading skeleton, empty state tone-voiced. Gate CLEARED → done.
