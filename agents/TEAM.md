@@ -100,3 +100,18 @@ Metrics are diagnostic, not a scoreboard. Fix the constraint, not the number.
 2. Domain owner / reviewer weighs in.
 3. Tech lead decides or reassigns.
 4. Human owner decides — only via `QUESTIONS.md` (or direct instruction).
+
+## 10. Device windows (phone / emulator)
+
+One device = **one owner per window**. The owner announces the window on the
+chatboard, performs every install/screenshot/log pull, and hands off explicitly
+before anyone else touches the device. No concurrent installs — three agents
+installing in the same minute caused the T-062 crash mix-up.
+
+- Crash/log verification may be done by the owner; **visual acceptance only by
+  vision-capable sessions** (screenshot inspected, not inferred).
+- `apk-latest` must never serve a known-crashing build. If a bad build lands,
+  replace the release asset with the last known-good APK immediately, then
+  announce the digest.
+- Heavy jobs (APK builds, emulator, full test sweeps, big downloads) are
+  sequenced and announced; never stacked on the shared host.
