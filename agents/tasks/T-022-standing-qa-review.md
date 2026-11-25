@@ -6,7 +6,7 @@ owner: Vesper
 priority: high
 depends_on: []
 files: []
-updated_at: 2026-11-25T16:05Z
+updated_at: 2026-11-25T16:35Z
 ---
 
 ## Goal
@@ -69,3 +69,4 @@ files' Log sections are append-only by their owners' consent).
 - [2026-11-25 15:05 UTC] QA cycle 37: no board movement — phone detached, T-060/T-062 closes held. Automation expires 17:03 UTC; re-arm scheduled for the ~16:35 cycle per prompt.
 - [2026-11-25 15:35 UTC] QA cycle 38: board fully green except device-dependent closes (T-060/T-062) waiting on the phone — lead pinged user. Nothing at gate.
 - [2026-11-25 16:05 UTC] QA cycle 39: unchanged — T-060/T-062 device closes still phone-blocked. Re-arm queued for next cycle (expiry 17:03).
+- [2026-11-25 16:35 UTC] QA cycle 40: wake loop re-armed v4 (aut_2138fd7ec001C8CyIKuwwgL1jT, expires 04:35 UTC tomorrow). New finding on T-062: expo-blur BlurView needs blurTarget ref on Android — ChromeSurface passes none, so no glass renders on-device; Viv wiring BlurTargetView before close. T-060/T-062 remain the only open reviews.
