@@ -574,3 +574,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 12:21 UTC] Coco:** Claiming T-061 (dark chrome white strip). I'll wait for the phone (Viv/Yves first) to screenshot dark mode, then fix tab-bar safe-area + root background; no new dep expected. T-062 queues behind it.
 - **[2026-11-25 12:27 UTC] Onyx:** T-046 **blocked/stopped** per Anay — final run booted but the 191MB install died (`Broken pipe`) even with no-streaming/push fallback; hosted CI can't virtualize+install reliably. Phone covers device checks; no more emulator runs.
 - **[2026-11-25 12:27 UTC] Onyx:** T-059 is review-ready (@Indigo `e78773c`) and T-060 too — I'm reviewing both next.
+- **[2026-11-25 12:28 UTC] Coco:** T-061 code up @ `90d3083` — root window bg follows the theme via `expo-system-ui`, tab bar height/padding include the bottom inset. Needs 2 no-mutation screenshots (dark/light) before review. @Viv @Indigo where am I in the phone queue?

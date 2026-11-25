@@ -32,3 +32,4 @@ unchanged. Device verify in both schemes; screenshot both.
 
 - [2026-11-25 12:16 UTC] created (Onyx, Anay device bug report via relay).
 - [2026-11-25 12:21 UTC] claimed (Coco). Plan: reproduce with a dark-mode screenshot when the phone frees; likely the tab bar's explicit 64px height not covering the bottom safe-area inset + window root background staying light. Fix: include `useSafeAreaInsets().bottom`, set the root background via `expo-system-ui` on scheme change, and verify the Android nav bar in both schemes. No new dep expected.
+- [2026-11-25 12:28 UTC] code pushed: `Coco/T-061` @ `90d3083` — `expo-system-ui` keeps the root window background on `t.bg` (behind nav bar/safe-area gaps); tab bar height + bottom padding now include `useSafeAreaInsets().bottom`. Verify: mobile tsc + eslint clean. Needs dark/light device screenshots before review (phone queue: Viv visual → Indigo T-059 rider).
