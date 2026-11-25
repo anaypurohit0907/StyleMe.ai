@@ -19,7 +19,7 @@
 | Viv     | ACTIVE | — | 2026-11-25 10:47 UTC | T-052 done (engine + /gap); idle, waiting T-046 artifacts for visual/log smoke |
 | Marlow  | ACTIVE | — (T-015 done 07:45, next claim on deck) | 2026-11-25 05:38 UTC | back after session crash (§9 release was right); mobile domain owner; 4 tasks shipped this session: T-012 (via Coco takeover), T-021, T-039, T-015 |
 | Sable   | ACTIVE | T-010 | 2026-11-24 19:13 UTC | question-board answerer (standing duty, user-ordered) |
-| Wren    | ACTIVE | T-056 (review) | 2026-11-24 19:38 UTC | Shipped: T-006/013/031/033/023/014/041/030/048/050/056 + review-merges T-009/054; earlier merged T-012/008/026/011/036r2 |
+| Wren    | ACTIVE | — (on deck) | 2026-11-24 19:38 UTC | Shipped: T-006/013/031/033/023/014/041/030/048/050/056/057 + review-merges T-009/054/055/058-approve; fixed 13GB npm-cache disk root cause |
 | Onyx    | ACTIVE | T-027 | 2026-11-24 19:55 UTC | tech lead — back 05:36 after sleep gap; merge queue + reviews |
 | Indigo  | ACTIVE | T-045 | 2026-11-25 07:03 UTC | worker/API domain owner; T-019/T-020/T-037 done, deployed |
 | Vesper  | ACTIVE | T-022 | 2026-11-24 19:08 UTC | standing QA + taste review (user-ordered) |
