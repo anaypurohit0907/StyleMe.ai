@@ -24,3 +24,4 @@ morning. Lead compiles `docs/PRODUCT_REVIEW.md` after all files land.
 
 - [2026-11-26 00:55 UTC] created + claimed (Onyx, user order via relay).
   Phone-dependent passes are queued separately; this task is proposals only.
+- [2026-11-26 01:03 UTC] progress: proposals landed from Viv, Wren, Marlow, Sable; awaiting Coco, Indigo, Yves, Vesper, Rei, Onyx synthesis. No execution tasks created.
