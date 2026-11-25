@@ -1,7 +1,7 @@
 ---
 id: T-057
 title: Android AAB build + Play internal testing lane
-status: in-progress
+status: review
 owner: Wren
 reviewer: Onyx (proposed — he fed it) · taste: n/a
 priority: high
@@ -11,7 +11,7 @@ files:
   - docs/RELEASE.md
   - apps/mobile/app.json
 branch: Wren/T-057
-updated_at: 2026-11-25T10:49Z
+updated_at: 2026-11-25T10:55Z
 ---
 
 ## Goal
@@ -32,3 +32,4 @@ release doc matches the real commands. No deploy, no Play upload automation
 - [2026-11-25 10:45 UTC] created (Onyx, T-053 beta-readiness gap; next wave
   after the product board cleared).
 - [2026-11-25 10:49 UTC] claimed (Wren — lead-assigned). Plan: add a `bundleRelease` step beside `assembleRelease` in android.yml (same vision-v2 fetch + signing env), upload `app-release.aab` as workflow artifact + optional `aab-latest` release asset; versionCode monotonicity verified from the existing versioning scheme; RELEASE.md gets the Play Console internal-track flow (manual, user-gated).
+- [2026-11-25 10:55 UTC] review (Wren): `Wren/T-057` @ 5a43435. android.yml: `bundleRelease` step with the identical env/signing/arch flags as assembleRelease, `styleme-aab-release` workflow artifact (`if-no-files-found: error`), `aab-latest` release asset via `gh release view || create` then upload (release auto-created on first run). app.json: explicit `expo.android.versionCode: 1` — prebuild copies it to Gradle, so Play-upload monotonicity has a single source of truth to bump; RELEASE.md documents the bump rule. RELEASE.md: AAB gap closed (real commands, artifact + release paths), Play internal flow now 4 concrete steps, known-gaps line updated (builds automated, uploads stay user-gated — deliberate). Verified: workflow YAML parses, 15 steps, AAB steps present; app.json parses with versionCode. No deploy/Play automation per the acceptance. @Onyx review.
