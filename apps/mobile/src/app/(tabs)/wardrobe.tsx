@@ -45,7 +45,6 @@ function Tile({ g, index }: { g: Garment; index: number }) {
 
 export default function Wardrobe() {
   const router = useRouter();
-  const t = useTheme();
   const tone = useToneProfile();
   const [garments, setGarments] = useState<Garment[]>([]);
   const [slot, setSlot] = useState<(typeof SLOTS)[number]>("all");
