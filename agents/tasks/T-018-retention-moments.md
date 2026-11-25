@@ -1,15 +1,19 @@
 ---
 id: T-018
 title: Retention moments — streaks, first-outfit, spaced polls
-status: backlog
-owner:
+status: in-progress
+owner: Viv
+reviewer: Onyx
 priority: medium
 depends_on: [T-011, T-014]
 files:
   - apps/mobile/src/app/(tabs)/index.tsx
   - apps/mobile/src/app/(tabs)/dna.tsx
   - apps/mobile/src/lib/local.ts
-updated_at: 2026-11-24T19:27Z
+  - packages/engine/src/tone.ts
+  - docs/TONE_KEYS.md
+branch: Viv/T-018
+updated_at: 2026-11-25T07:46Z
 ---
 
 ## Goal
@@ -30,3 +34,11 @@ after those land or sync with owners.
 ## Log (append-only)
 
 - [2026-11-24 19:27 UTC] created (Vesper, from T-007 audit §7 — depth tier).
+- [2026-11-25 07:46 UTC] claimed (Viv) — T-011/T-014 done, T-015 merged, files
+  free. Branch `Viv/T-018` off current main; reviewer Onyx, taste Vesper.
+  Files list extended before first touch with `tone.ts` + `docs/TONE_KEYS.md`
+  for the two new canonical keys (`first_outfit`, `poll_invite`); engine tone
+  bank tests already iterate every genz key and will catch missing banks.
+  Plan: local wear-streak/first-outfit/poll helpers in `local.ts`, streak card
+  + first-pick moment on Today, day-3/10/30 poll card on DNA with animated
+  bars; no new deps (reanimated already in).
