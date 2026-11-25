@@ -16,8 +16,9 @@ packages/
   schema/     Shared zod types (single source of truth)
   engine/     Pure TS recommendation engine (rules + learning + exploration)
   design/     Design tokens
-ml/           Four Colab notebooks + taxonomy + artifacts
+ml/           Colab notebooks 00–04 + taxonomy + artifacts
 docs/PLAN.md  Product/architecture plan
+docs/RELEASE.md  Release train, beta gates, rollback
 ```
 
 ## Quickstart
@@ -68,6 +69,10 @@ on-device with no laptop/Metro. Tester guide: [`docs/TESTING.md`](docs/TESTING.m
 
 ## Deploy the worker
 
+The deploy is **Anay-gated**. Use [`docs/RELEASE.md`](docs/RELEASE.md) for the
+full release train (migration inventory, deploy order, smoke tests, rollback).
+For a fresh worker install:
+
 ```bash
 cd apps/worker
 npx wrangler login
@@ -82,10 +87,11 @@ Then set `EXPO_PUBLIC_API_BASE=https://styleme.<subdomain>.workers.dev` for the 
 
 ## Status
 
-- Engine: 40 tests green (including the 1,000-user uniqueness simulation).
-- Worker: 8 tests green; D1/R2 schema + routes complete; deploy pending Cloudflare auth.
-- ML: notebooks 00–03 run on a T4; ONNX parity exact; probes shipped.
-- App: onboarding, Today (3 outfits), Wardrobe, Capture + tag editor, item detail, Style DNA; local SQLite + offline engine. ONNX tagger is wired behind a dev-build check; Expo Go uses a deterministic mock tagger.
+- Engine: 71 tests green (including the 1,000-user uniqueness simulation).
+- Worker: 23 tests green; D1 migrations through `0003` are live, `0004` is pending for the next approved deploy.
+- ML: notebooks 00–04 run on a T4; ONNX parity exact; probes + background-augmented slot head shipped (`vision-v2`).
+- App: onboarding, Today (3 outfits), Wardrobe, Capture + tag editor, item detail, Style DNA, streak/first-outfit/polls, dark mode, motion; local SQLite + offline engine. ONNX tagger is wired behind a dev-build check; Expo Go uses a deterministic mock tagger.
+- Release: arm64 APK auto-builds from `main`; test guide [`docs/TESTING.md`](docs/TESTING.md), release/beta checklist [`docs/RELEASE.md`](docs/RELEASE.md).
 
 ## License
 

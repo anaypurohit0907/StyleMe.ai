@@ -41,6 +41,10 @@ Photos stay on-device; the worker stores attributes + embeddings, never photos. 
 - Response shape changes must update `packages/schema` first — mobile imports the same types.
 - Deploy flow (D1 migrations + `JWT_SECRET` + `wrangler deploy`) is README § "Deploy the worker" — run migrations before deploy, never after.
 
+Release window checklist (migration inventory, exact deploy order, beta gates,
+rollback): `docs/RELEASE.md`. As of 2026-11-25, `0004_learn_dedupe.sql` is
+pending and deploys with the next approved worker release.
+
 ## Deploy runbook (auth proof-of-possession, since 0003)
 
 - **Order matters:** mobile T-028 (registrationSecret storage) must ship in the same window or BEFORE the worker deploy — old APKs only send `registrationSecret` after T-028; a pre-T-028 install that loses its cached token gets a hard 403 (re-onboard under a fresh device id is the only recovery).
