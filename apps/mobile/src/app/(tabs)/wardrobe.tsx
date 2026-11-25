@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
 import type { Garment } from "@styleme/schema";
-import { colors, paletteSwatch, radius, space } from "@styleme/design";
+import { paletteSwatch, radius, space } from "@styleme/design";
 import { Btn, Caption, Chip, Empty, Screen, Scroll, Title } from "@/components/ui";
 import { listGarments } from "@/lib/db";
 import { useTheme } from "@/lib/theme";
