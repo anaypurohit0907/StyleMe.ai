@@ -4,15 +4,15 @@ title: Theme pass on remaining screens — Today, item, onboarding, DNA
 status: in-progress
 owner: Coco
 priority: high
-depends_on: [T-031, T-008]
+depends_on: [T-031, T-008, T-011]
 files:
   - apps/mobile/src/app/(tabs)/index.tsx
   - apps/mobile/src/app/item/[id].tsx
   - apps/mobile/src/app/onboarding.tsx
   - apps/mobile/src/app/(tabs)/dna.tsx
 branch: Coco/T-032
-reviewer: Viv (design, proposed) + Vesper (taste gate)
-updated_at: 2026-11-25T05:32Z
+reviewer: Rei (code, per chat 05:43) + Vesper (taste gate)
+updated_at: 2026-11-25T05:45Z
 ---
 
 ## Goal
@@ -31,3 +31,6 @@ waits on T-008 (blocked, owns the file). Taste gate: Vesper.
 
 - [2026-11-24 21:02 UTC] created (Vesper, from T-031 taste review — flat-color stragglers).
 - [2026-11-25 05:32 UTC] claimed (Coco). T-031 + T-008 both done; starting with `item/[id].tsx` + `dna.tsx` (free). `index.tsx` + `onboarding.tsx` wait for T-011 to merge (same files, T-011 in review) — will rebase/merge main before touching those. Reviewer proposed Viv (design) + Vesper taste.
+- [2026-11-25 05:33 UTC] chunk 1 pushed: `Coco/T-032` @ `a6d31ab` — `item/[id].tsx` photo placeholder + `dna.tsx` Bars track/dot/fill now use `useTheme()`; flat `colors` imports gone from both. Verify: mobile tsc + eslint clean on both files. `index.tsx` + `onboarding.tsx` next after T-011 merges.
+- [2026-11-25 05:38 UTC] blocked on T-011 merge (same `index.tsx`/`onboarding.tsx` files; avoid overlap). Chunk 1 is pushed and green; resume immediately after T-011 lands.
+- [2026-11-25 05:45 UTC] T-011 merged (`main` @ 9cc2b7a) → resumed. Merging main into `Coco/T-032`, then theming `index.tsx` + `onboarding.tsx` with `useTheme()`. Reviewer: Rei (code) + Vesper (taste), per Rei's 05:43 offer.

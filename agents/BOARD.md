@@ -21,7 +21,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-008 | Persist tag corrections and protect them on re-scan | done | Yves | high | 2026-11-25 05:22 UTC |
 | T-009 | Background-augmented slot/subtype training on Colab | backlog | — | high | 2026-11-24 19:12 UTC |
 | T-010 | Standing question-board answerer (act when OPEN > 4) | in-progress | Sable | medium | 2026-11-24 19:13 UTC |
-| T-011 | Wire the tone engine into every screen | review | Coco | critical | 2026-11-25 05:30 UTC |
+| T-011 | Wire the tone engine into every screen | done | Coco | critical | 2026-11-25 05:40 UTC |
 | T-012 | "Why these outfits" panel + humanized reasons + never-mix | done | Coco | critical | 2026-11-25 05:05 UTC |
 | T-013 | Capture batch loop — make the 3-minute setup real | done | Wren | critical | 2026-11-24 20:41 UTC |
 | T-014 | Close the learning loop end-to-end (app ↔ worker) | backlog | — | high | 2026-11-24 19:38 UTC |
@@ -31,17 +31,19 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-018 | Retention moments — streaks, first-outfit, spaced polls | backlog | — | medium | 2026-11-24 19:38 UTC |
 | T-019 | Worker tenant scoping — fix cross-user garment overwrite | done | Indigo | critical | 2026-11-24 19:53 UTC |
 | T-020 | Worker auth hardening, validation, rate limits | in-progress | Indigo | critical | 2026-11-24 19:56 UTC |
-| T-021 | Engine integrity pass — coat diversity, accessories, explore math, tests | backlog | — | high | 2026-11-24 19:38 UTC |
+| T-021 | Engine integrity pass — coat diversity, accessories, explore math, tests | in-progress | Marlow | high | 2026-11-25 05:38 UTC |
 | T-022 | Standing QA + taste review of tasks reaching review status | in-progress | Vesper | high | 2026-11-24 19:47 UTC |
 | T-023 | Evaluate + adopt public clothing dataset for slot scoring/training | review | Wren | high | 2026-11-24 20:11 UTC |
 | T-024 | Structured logging — terminal/logfile instead of reading the screen | done | Yves | high | 2026-11-25 05:15 UTC |
 | T-025 | Original brand asset pack — app icon, splash, adaptive/monochrome icons | done | Viv | high | 2026-11-24 20:08 UTC |
 | T-026 | Mobile lint hygiene — fix pre-existing expo lint errors | done | Coco | low | 2026-11-25 05:27 UTC |
 | T-027 | Establish tech lead role + proper SWE team process | in-progress | Onyx | high | 2026-11-24 19:56 UTC |
-| T-028 | Mobile — store + resend device registrationSecret (worker T-020 pairing) | backlog | — | high | 2026-11-24 20:04 UTC |
+| T-028 | Mobile — store + resend device registrationSecret (worker T-020 pairing) | in-progress | Viv | high | 2026-11-25 05:39 UTC |
 | T-029 | Standing reviewer + helper — review overflow + unblock | in-progress | Rei | high | 2026-11-24 20:15 UTC |
 | T-030 | Personalize capture session target from onboarding wardrobe-size guess | backlog | — | low | 2026-11-24 20:17 UTC |
 | T-031 | Dark-mode token wiring — useTheme + hardcoded hex cleanup (T-016 split) | done | Wren | high | 2026-11-25 05:07 UTC |
-| T-032 | Theme pass on remaining screens — Today, item, onboarding, DNA | in-progress | Coco | high | 2026-11-25 05:32 UTC |
-| T-033 | Theme token cleanup — onAccent token + unused colors import | backlog | — | low | 2026-11-25 05:07 UTC |
+| T-032 | Theme pass on remaining screens — Today, item, onboarding, DNA | in-progress | Coco | high | 2026-11-25 05:45 UTC |
+| T-033 | Theme token cleanup — onAccent token + unused colors import | done | Wren | low | 2026-11-25 05:38 UTC |
 | T-034 | Log rotation polish — load backup tail + accurate startup hint | backlog | — | low | 2026-11-25 05:15 UTC |
+| T-036 | Fix external log file creation — T-024 device regression | review | Coco | high | 2026-11-25 05:44 UTC |
+| T-035 | Reproducible mobile lint — commit ESLint flat config + devDeps | backlog | — | low | 2026-11-25 05:41 UTC |

@@ -74,7 +74,7 @@ export function Btn({
 }) {
   const t = useTheme();
   const bg = variant === "primary" ? t.accent : variant === "danger" ? t.bad : "transparent";
-  const fg = variant === "ghost" ? t.ink : "#FFFFFF";
+  const fg = variant === "ghost" ? t.ink : t.onAccent;
   return (
     <Pressable
       onPress={onPress}

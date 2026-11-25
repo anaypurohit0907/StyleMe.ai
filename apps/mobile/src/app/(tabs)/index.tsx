@@ -6,6 +6,7 @@ import { colors, occasionLabel, occasions, paletteSwatch, radius, space } from "
 import { Btn, Caption, Card, Chip, Empty, Screen, Scroll, Title } from "@/components/ui";
 import { OutfitBadge, Toast, WhyPanel } from "@/components/why-panel";
 import { listGarments, logWear, metaGet, upsertGarment } from "@/lib/db";
+import { useToneProfile, voice } from "@/lib/tone";
 import {
   getWeather,
   loadPrefs,
@@ -19,8 +20,13 @@ import {
 /** React purity lint: keep the impure clock call out of the component body. */
 const nowMs = () => Date.now();
 
+function capitalize(value: string): string {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
 export default function Today() {
   const router = useRouter();
+  const tone = useToneProfile();
   const [garments, setGarments] = useState<Garment[]>([]);
   const [available, setAvailable] = useState<Garment[]>([]);
   const [occasion, setOccasion] = useState<Occasion>("casual");
@@ -136,8 +142,9 @@ export default function Today() {
   }
 
   const hour = new Date().getHours();
-  const part = hour < 12 ? "Morning" : hour < 18 ? "Afternoon" : "Evening";
-  const greeting = name ? `${part}, ${name}` : "Today";
+  const partKey =
+    hour < 12 ? "greeting_morning" : hour < 18 ? "greeting_afternoon" : "greeting_evening";
+  const greeting = name ? `${capitalize(voice(partKey, tone))}, ${name}` : "Today";
   const bestScore = today ? Math.max(...today.outfits.map((o) => o.score)) : 0;
 
   async function seedDemo() {
@@ -170,8 +177,8 @@ export default function Today() {
           <View style={{ flex: 1 }}>
             <Title>{greeting}</Title>
             <Caption>
-              {Math.round(weather.tempC)}°{weather.isRaining ? " · rain" : ""} ·{" "}
-              {available.length} pieces ready
+              {voice("weather_line", tone)} · {Math.round(weather.tempC)}°
+              {weather.isRaining ? " · rain" : ""} · {available.length} pieces ready
             </Caption>
           </View>
           <Btn label="Shuffle" variant="ghost" onPress={() => setSeed((x) => x + 1)} />

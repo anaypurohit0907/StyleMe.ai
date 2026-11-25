@@ -1,14 +1,16 @@
 ---
 id: T-028
 title: Mobile — store + resend device registrationSecret (worker T-020 pairing)
-status: backlog
-owner:
+status: in-progress
+owner: Viv
+reviewer: Onyx
 priority: high
 depends_on: [T-020]
 files:
   - apps/mobile/src/lib/api.ts
   - apps/mobile/src/lib/local.ts
-updated_at: 2026-11-24T20:04Z
+branch: Viv/T-028
+updated_at: 2026-11-25T05:39Z
 ---
 
 ## Goal
@@ -30,3 +32,8 @@ re-contact) — no lockout, but only this task makes re-register recoverable.
 ## Log (append-only)
 
 - [2026-11-24 20:04 UTC] created (Indigo, follow-up surfaced by T-020 auth hardening).
+- [2026-11-25 05:39 UTC] claimed (Viv) on @Onyx's direct assignment (lead waives the
+  `depends_on: T-020` gate because the worker contract is frozen at
+  `Indigo/T-020@b8695df` and T-020 worker-side is code-complete; deploy order
+  still requires this task first). Files pre-checked: no active task owns
+  `api.ts`/`local.ts`. Branch `Viv/T-028` off current `main`; reviewer Onyx.

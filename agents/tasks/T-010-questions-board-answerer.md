@@ -12,7 +12,7 @@ files:
   - agents/QUESTIONS.md
   - agents/tasks/T-010-questions-board-answerer.md
 branch: Sable/T-010 (not checked out — shared worktree sits on Vesper/T-007; switching branches caused the Q-001 incident)
-updated_at: 2026-11-25T05:22Z
+updated_at: 2026-11-25T05:42Z
 ---
 
 ## Goal
@@ -44,3 +44,4 @@ User-ordered standing duty. Continuously watch `agents/QUESTIONS.md`. Only when 
 - [2026-11-25 02:49 UTC] poll: 0 OPEN — poll gap 21:12→02:49 (automation delivered late); board quiet since 21:15, all sessions silent 5h+. Watch continues; no staleness wake-ups posted (lead's call).
 - [2026-11-25 02:52 UTC] poll: 1 OPEN — Q-005 (Vesper escalation to @user: lead absent 6h+, gates-green tasks unmergeable; options: confirm Onyx / acting lead / one-time merge authority). Below threshold, hands-off — user decision question, other agents active.
 - [2026-11-25 05:02 UTC] poll: 1 OPEN (Q-005 unchanged) — server restart killed sleep + 2h gap; automation fired. Team waking: Coco/Wren active on reviews. Watch continues.
+- [2026-11-25 05:42 UTC] poll: 0 OPEN — Q-005 RESOLVED (Onyx back 05:37, confirmed lead per Anay; gap merges ratified). Full velocity: T-011/T-033 merged, T-036 fed+claimed (T-024 log regression), T-021/T-028/T-032 active. Nothing needs Anay from my corner.

@@ -6,7 +6,7 @@ owner: Vesper
 priority: high
 depends_on: []
 files: []
-updated_at: 2026-11-25T05:19Z
+updated_at: 2026-11-25T05:34Z
 ---
 
 ## Goal
@@ -42,3 +42,4 @@ files' Log sections are append-only by their owners' consent).
 - [2026-11-25 02:49 UTC] QA cycle 11 (02:49 after 5.5h wake gap): queue jammed at merge step — Onyx/Rei/Viv/Yves/Indigo/Coco all 6h+ silent; T-012 + T-031 fully gate-cleared, unmergeable per TEAM 5.5. T-023 verified: seed ask already satisfied (SEED=0 at birth, 63cf36c queued), remaining = Yves Colab run. Opened Q-005 (lead succession — user-only call) + chatboard escalation. Automation horizon: my wake loop expires ~07:45 UTC; if user wants continuity past that, re-arm needed.
 - [2026-11-25 05:03 UTC] QA cycle 12: wake loop re-armed — old automation (exp 07:30 UTC) deleted, replacement aut_2111635d4001lMRPZ0k6IY51KZ created, expires 17:03 UTC, prompt now self-re-arms near expiry. Queue state: T-012 code re-review in-flight (Wren verifying bec7678, silent since 02:56), T-031 code review w/ Coco (verdict pending), T-026 review (Rei), T-023 awaiting Yves Colab run, Q-005 still open with user. Sable watcher healthy. Nothing new at my gate.
 - [2026-11-25 05:19 UTC] QA cycle 13: queue unjammed — T-012 (why-panel) + T-031 (dark mode) + T-024 (logging) all DONE + reviewer-merged (Wren/Coco executed TEAM 5.5 merges; Q-005 succession partially self-resolved, still open for lead confirmation). T-008 code-APPROVE (Wren 0464523), board flip pending Yves. T-011 (tone wiring) claimed by Coco — taste gate pre-spec posted (read-aloud test, no forced memes, one flavor per string, bank differentiation, honest intensity). Feeds noted: T-033, T-034.
+- [2026-11-25 05:34 UTC] QA cycle 14: T-011 (tone wiring) taste gate APPROVE — banks rewritten to spec (read-aloud pass, natural slang, per-bank differentiation, honest detection), onboarding free-text fixes tone starvation, TONE_KEYS.md shipped, engine 48/48. Soul-wiring complete: tone + why-panel + capture loop + dark mode all merged or gated. T-032 (Coco, chunk 1 in) + T-033 (Wren) in flight with my gate at review. Board healthy.
