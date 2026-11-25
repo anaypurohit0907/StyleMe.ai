@@ -1,9 +1,11 @@
-name: Emulator smoke (arm64)
+name: Emulator smoke (x86_64)
 
 # Agent-side device checks without a physical phone.
-# Manual run: Actions → "Emulator smoke (arm64)" → Run workflow.
-# Uses a macOS arm64 runner (HVF-accelerated AVD) and the published arm64
-# release APK, so no local Gradle build and no x86_64 image are needed.
+# Manual run: Actions → "Emulator smoke (x86_64)" → Run workflow.
+# macOS-13 (Intel) gives the x86_64 AVD hardware acceleration (HVF); the
+# ubuntu runners do not expose /dev/kvm, and macOS-14 arm64 is not available
+# to this repo. Builds the release APK for x86_64, boots API 34, installs,
+# screenshots, and pulls styleme.log.
 
 on:
   workflow_dispatch:
@@ -18,30 +20,72 @@ concurrency:
 
 jobs:
   smoke:
-    runs-on: macos-14
-    timeout-minutes: 45
+    runs-on: macos-13
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download latest release APK
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Fetch vision bundle
         run: |
-          mkdir -p artifacts
+          mkdir -p apps/mobile/assets/vision
           curl -fL --retry 3 \
-            "https://github.com/${{ github.repository }}/releases/download/apk-latest/app-release.apk" \
-            -o artifacts/app-release.apk
-          ls -lh artifacts/app-release.apk
+            "https://github.com/${{ github.repository }}/releases/download/vision-v2/styleme_vision_v2.zip" \
+            -o /tmp/vision.zip
+          unzip -o /tmp/vision.zip -d apps/mobile/assets/vision
+          ls -lh apps/mobile/assets/vision
+
+      - name: Generate native project (x86_64 release)
+        working-directory: apps/mobile
+        env:
+          EXPO_PUBLIC_API_BASE: https://styleme-api.style-me.workers.dev
+          EXPO_PUBLIC_VISION: onnx
+        run: npx expo prebuild --platform android --clean --no-install
+
+      - name: Configure release signing
+        working-directory: apps/mobile
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          STYLEME_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          STYLEME_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          STYLEME_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > android/app/styleme-release.keystore
+          python3 scripts/configure-signing.py
+
+      - name: Build x86_64 release APK
+        working-directory: apps/mobile/android
+        env:
+          EXPO_PUBLIC_API_BASE: https://styleme-api.style-me.workers.dev
+          EXPO_PUBLIC_VISION: onnx
+          STYLEME_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          STYLEME_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          STYLEME_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon --max-workers=4 \
+            -PreactNativeArchitectures=x86_64 \
+            -Pandroid.enableMinifyInReleaseBuilds=false \
+            -Pandroid.enablePngCrunchInReleaseBuilds=false
 
       - name: Boot AVD, install, capture
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 34
           target: google_apis
-          arch: arm64-v8a
+          arch: x86_64
           profile: pixel_6
           disable-animations: true
           emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot
           script: |
-            adb install -r artifacts/app-release.apk
+            adb install -r apps/mobile/android/app/build/outputs/apk/release/app-release.apk
             adb shell am start -W -n com.o_anay.styleme/.MainActivity
             sleep 25
             adb shell pidof com.o_anay.styleme

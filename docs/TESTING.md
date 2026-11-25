@@ -93,17 +93,17 @@ in GitHub Actions and replaces the `apk-latest` release asset.
 
 ## Agent-side emulator (no phone)
 
-Use the **Emulator smoke (arm64)** GitHub workflow. It runs on a macOS arm64
-runner (HVF-accelerated), downloads the published arm64 release APK
-(`apk-latest`), boots an API 34 `google_apis` arm64 AVD, installs, launches,
-screenshots, and pulls the log:
+Use the **Emulator smoke (x86_64)** GitHub workflow. It runs on a macOS-13
+Intel runner (HVF-accelerated AVD), builds the release APK for `x86_64`
+(`EXPO_PUBLIC_VISION=onnx` + the `vision-v2` bundle), boots an API 34
+`google_apis` AVD, installs, launches, screenshots, and pulls the log:
 
-1. GitHub → **Actions** → **Emulator smoke (arm64)** → **Run workflow**.
+1. GitHub → **Actions** → **Emulator smoke (x86_64)** → **Run workflow**.
 2. Download the `emulator-smoke` artifact: `emulator.png`, `styleme.log`,
    `logcat.txt`.
 
-Why not local: the release APK is arm64-only, and this repo's host segfaults in
-QEMU ~60–90 s into every AVD boot (API 34 and 36, all GPU/accel workarounds).
-The macOS arm64 runner has working hardware acceleration for the arm64 image.
+Why not local: this repo's host segfaults in QEMU ~60–90 s into every AVD boot
+(API 34 and 36, all GPU/accel workarounds). The ubuntu runners do not expose
+`/dev/kvm`; macOS-13 Intel provides HVF acceleration for the x86_64 image.
 
 The workflow is manual (`workflow_dispatch`); it does not run on every push.
