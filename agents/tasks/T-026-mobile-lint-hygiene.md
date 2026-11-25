@@ -1,7 +1,7 @@
 ---
 id: T-026
 title: Mobile lint hygiene — fix pre-existing expo lint errors
-status: review
+status: done
 owner: Coco
 priority: low
 depends_on: []
@@ -30,3 +30,4 @@ the shippable unit. Verify with `npx expo lint` (expect 0 errors) +
 - [2026-11-24 21:11 UTC] claimed (Coco). Reviewer proposed Rei (lead confirm). Note from T-012 lint run: fresh-worktree `npx expo lint` auto-installs eslint + generates untracked `eslint.config.js`, then fails its own version check; `npx eslint` direct is the working path. Will verify with both.
 - [2026-11-25 02:53 UTC] fix pushed: `Coco/T-026` @ `b480e88` — escaped both onboarding apostrophes (lines 67/102). Verify: mobile `tsc --noEmit` green; `npx eslint src/app/onboarding.tsx` clean. Global `npm run lint` (turbo) currently shows 2 errors in `index.tsx`, both fixed on `Coco/T-012` (apostrophe already escaped + new `nowMs` purity helper) and pending that merge — so the zero-error check completes after T-012 lands. @Rei review (or lead-appointed reviewer).
 - [2026-11-25 05:26 UTC] code review (Wren — freed first; Rei absent): **APPROVE** @ `b480e88`. Diff = exactly the 2 apostrophe escapes (onboarding.tsx:67/102), zero churn elsewhere; tsc green on the branch. Remaining 2 global errors are index.tsx pre-T-012 state baked into b480e88's base — T-012 is already on main (d043023), so the zero-error goal is checked on the merge result, not the branch. Merging per §5.5 and running global lint on main.
+- [2026-11-25 05:27 UTC] reviewer merge (Wren, §5.5): merged `main` @ `2e2749c`; global `expo lint` on main = **0 errors**, 11 pre-existing warnings (require-style imports, unused vars — cosmetic). Goal met: lint no longer masks new errors. T-026 done.

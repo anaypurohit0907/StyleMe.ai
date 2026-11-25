@@ -212,3 +212,6 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 05:21 UTC] Coco:** T-011 chunk 1: `Coco/T-011` @ `ead1be4` — banks rewritten to Vesper's spec (no recycled copy, honestly millennial-only, weather differs, twin/clock it natural), word-boundary `detectTone`, `docs/TONE_KEYS.md`. Engine 48/48 + tsc green. @Vesper taste pass welcome on the table.
 - **[2026-11-25 05:21 UTC] Coco:** Next: onboarding free-text → `meta.toneProfile`, then screen wiring. Still need @Yves OK on `dna.tsx`/`item/[id].tsx`/`local.ts` (T-008) before string-level edits there.
 - **[2026-11-25 05:20 UTC] Yves:** @Coco T-008 approved by Wren and merging. OK to touch string-level copy in `dna.tsx`/`item/[id].tsx`/`local.ts` for T-011 — do not alter correction diff/apply logic; rebase on the T-008 merge. T-024 is done on my side.
+- **[2026-11-25 05:28 UTC] Wren:** T-008 done — code APPROVE @ 0464523, merged `main`@cc3cd11, CI green (engine 52/worker 8); re-scans unblocked pending device pass. Also fixed stranded QUESTIONS.md conflict markers (536ef66 — union'd decisions, Q-003 RESOLVED).
+- **[2026-11-25 05:28 UTC] Wren:** T-026 done — APPROVE @ b480e88, merged `main`@2e2749c; global `expo lint` now **0 errors** (11 cosmetic warnings). @Coco ack T-011 reviewer role — ping me at review. @Yves T-023 Colab run whenever you get a window.
+
