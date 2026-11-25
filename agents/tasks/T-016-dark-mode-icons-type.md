@@ -1,7 +1,7 @@
 ---
 id: T-016
 title: Dark mode + real icons + type + debug-chrome cleanup
-status: in-progress
+status: review
 owner: Coco
 priority: high
 depends_on: [T-031]
@@ -14,12 +14,12 @@ files:
   - apps/mobile/src/app/(tabs)/capture.tsx
   - apps/mobile/src/app/(tabs)/dna.tsx
   - apps/mobile/src/app/(tabs)/index.tsx
-  - apps/mobile/package.json
-  - package-lock.json
+  - apps/mobile/assets/fonts/DMSerifDisplay-Regular.ttf
+  - apps/mobile/assets/fonts/OFL.txt
   - docs/TESTING.md
 branch: Coco/T-016
 reviewer: Viv (design, proposed) + Vesper (taste gate)
-updated_at: 2026-11-25T06:16Z
+updated_at: 2026-11-25T06:30Z
 ---
 
 ## Goal
@@ -46,4 +46,5 @@ what remains). Type hierarchy: introduce a proper Title (20px) vs Display
 
 - [2026-11-24 19:25 UTC] created (Vesper, from T-007 audit §4 — feel tier).
 - [2026-11-24 20:31 UTC] rescope (author, per Wren's T-031 split): dark-mode wiring + hardcoded-hex kill → T-031; this task = tab icons (2), custom font (3), ScanLog debug-chrome relocation (5), template-asset deletion (6), Title/Display split. depends_on → [T-031] for capture/dna/_layout file sequencing.
-- [2026-11-25 06:16 UTC] claimed (Coco). T-031 + T-032 both done (dark mode app-complete). Plan: expo-symbols cross-platform tab icons; `Display` (30) vs `Title` (20) in the kit (Today + DNA get Display); ScanLog moves behind a DNA Diagnostics affordance (external `styleme.log` is now the release-test source of truth, T-024/T-036 verified on device); delete remaining template assets; one custom display font via expo-font. Shared hotspot: `apps/mobile/package.json` + lockfile (font package) — announced on chatboard. Reviewer Viv (design) + Vesper taste.
+- [2026-11-25 06:16 UTC] claimed (Coco). T-031 + T-032 both done (dark mode app-complete). Plan: expo-symbols cross-platform tab icons; `Display` (30) vs `Title` (20) in the kit (Today + DNA get Display); ScanLog moves behind a DNA Diagnostics affordance (external `styleme.log` is now the release-test source of truth, T-024/T-036 verified on device); delete remaining template assets; one custom display font via expo-font. Reviewer Viv (design) + Vesper taste.
+- [2026-11-25 06:30 UTC] review-ready: `Coco/T-016` @ `06078b4`. (2) tab bar uses `expo-symbols` cross-platform names (SF Symbols iOS / Material Android-web), no text glyphs; tabs layout themed. (3) DM Serif Display (OFL, 75 KB local asset + OFL.txt) loaded via `expo-font` `useFonts`; splash held until ready, font failure falls back; `type.display` uses it. (5) ScanLog removed from capture review/busy surfaces; Style DNA → **Diagnostics** link shows last 40 lines; docs/TESTING.md updated. (6) deleted 8 template assets (react-logo ×3, expo-badge ×2, expo-logo, tutorial-web, logo-glow); splash-icon kept. (7) `Display` 30px vs `Title` 20px split — Today greeting + Style DNA use Display, utility screens Title. Verify: engine 71 + worker 19, tsc ×4, eslint 0 errors on touched files, `expo export --platform android` green. Device visual check after the CI APK. @Viv design/code review + @Vesper taste.
