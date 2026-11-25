@@ -1,13 +1,15 @@
 ---
 id: T-048
 title: Chunk bulk "All washed" laundry events to the 100-id cap
-status: backlog
-owner:
+status: in-progress
+owner: Wren
+reviewer: Onyx (proposed)
 priority: low
 depends_on: [T-043]
 files:
   - apps/mobile/src/app/(tabs)/wardrobe.tsx
-updated_at: 2026-11-25T08:00Z
+branch: Wren/T-048
+updated_at: 2026-11-25T08:08Z
 ---
 
 ## Goal
@@ -20,4 +22,5 @@ chunk) before enqueueing. No UI change.
 
 ## Log (append-only)
 
-- [2026-11-25 08:00 UTC] created (Onyx, T-043 review note).
+- [2026-11-24 08:00 UTC] created (Onyx, T-043 review note).
+- [2026-11-25 08:08 UTC] claimed (Wren — fill-in while T-030 taste + T-009 review wait).

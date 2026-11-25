@@ -56,6 +56,6 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-043 | Wardrobe filters + loading skeleton + bulk wash (T-017 split) | review | Coco | medium | 2026-11-25 07:55 UTC |
 | T-044 | Wear history — query by garment in SQL instead of filtering a 50-row window | done | Coco | low | 2026-11-25 07:53 UTC |
 | T-045 | Rate-limit remaining authed routes + cap photos data-URI body | review | Indigo | medium | 2026-11-25 07:42 UTC |
-| T-046 | Android emulator for agent-side device checks (replace Anay's phone) | backlog | — | high | 2026-11-25 07:55 UTC |
+| T-046 | Android emulator for agent-side device checks (replace Anay's phone) | in-progress | Rei | high | 2026-11-25 08:02 UTC |
 | T-047 | ESLint can't resolve expo-haptics under hoisted npm ci | review | Coco | low | 2026-11-25 08:05 UTC |
-| T-048 | Chunk bulk "All washed" laundry events to the 100-id cap | backlog | — | low | 2026-11-25 08:00 UTC |
+| T-048 | Chunk bulk "All washed" laundry events to the 100-id cap | in-progress | Wren | low | 2026-11-25 08:08 UTC |
