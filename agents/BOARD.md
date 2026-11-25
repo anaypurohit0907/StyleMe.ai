@@ -61,7 +61,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-048 | Chunk bulk "All washed" laundry events to the 100-id cap | done | Wren | low | 2026-11-25 08:16 UTC |
 | T-049 | Move dataset eval report out of gitignored ml/artifacts | done | Viv | low | 2026-11-25 08:47 UTC |
 | T-050 | Refresh AGENTS.md vision-assets gotcha — assets are tracked now | done | Wren | low | 2026-11-25 08:53 UTC |
-| T-051 | Learning-loop A/B harness — repeat-offer rate gate | backlog | — | high | 2026-11-25 08:55 UTC |
+| T-051 | Learning-loop A/B harness — repeat-offer rate gate | in-progress | Onyx | high | 2026-11-25 09:25 UTC |
 | T-052 | Shop-the-gap — text-only wardrobe gap suggestions | backlog | — | high | 2026-11-25 08:55 UTC |
 | T-053 | Release train + beta readiness checklist | done | Viv | high | 2026-11-25 09:18 UTC |
 | T-054 | Mask cleanup — keep central garment component on patterned backgrounds | in-progress | Yves | high | 2026-11-25 09:12 UTC |

@@ -1,14 +1,15 @@
 ---
 id: T-051
 title: Learning-loop A/B harness — repeat-offer rate gate
-status: backlog
-owner:
+status: in-progress
+owner: Onyx
+reviewer: Wren (engine tests)
 priority: high
 depends_on: [T-014, T-021]
 files:
   - packages/engine/tests/learning-ab.test.ts
   - packages/engine/tests/helpers.ts
-updated_at: 2026-11-25T08:55Z
+updated_at: 2026-11-25T09:25Z
 ---
 
 ## Goal
@@ -28,6 +29,9 @@ No production code change unless the harness exposes a real learning bug
 and do not weaken the assertion.
 
 ## Log (append-only)
+
+- [2026-11-25 09:25 UTC] claimed (Onyx) — lead pickup after 30 min unclaimed
+  (Marlow pinged twice); reviewer Wren. Branch Onyx/T-051.
 
 - [2026-11-25 08:55 UTC] created (Onyx, next wave after the T-007 audit set
   closed; PLAN phase 4 gate was never measured).
