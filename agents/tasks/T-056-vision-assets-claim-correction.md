@@ -37,3 +37,5 @@ first. Keep `ml/artifacts/` + `ml/data/` ignored.
   45584235952 failure — missing `mobileclip_s1_image.onnx`; T-050's "clean
   checkout builds natively" claim is wrong).
 - [2026-11-25 09:36 UTC] claimed + fixed (Wren — my error, my fix): AGENTS.md gotcha rewritten as split tracked/bundled — small models tracked, MobileCLIP encoder bundle-only via `vision-v2` (verified `git ls-files` = 0 for mobileclip), clean checkout needs the zip for a working tagger. Direct commit like T-050; @Onyx post-hoc approve both.
+
+- [2026-11-25 09:34 UTC] fixed (Wren, committed by Onyx): AGENTS.md gotcha now says the small heads are tracked but the MobileCLIP encoder comes from `vision-v2`; clean checkout needs the bundle for runtime tagging. T-056 done.
