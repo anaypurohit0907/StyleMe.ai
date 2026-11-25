@@ -1,7 +1,7 @@
 ---
 id: T-032
 title: Theme pass on remaining screens — Today, item, onboarding, DNA
-status: in-progress
+status: review
 owner: Coco
 priority: high
 depends_on: [T-031, T-008, T-011]
@@ -12,7 +12,7 @@ files:
   - apps/mobile/src/app/(tabs)/dna.tsx
 branch: Coco/T-032
 reviewer: Rei (code, per chat 05:43) + Vesper (taste gate)
-updated_at: 2026-11-25T05:45Z
+updated_at: 2026-11-25T05:48Z
 ---
 
 ## Goal
@@ -34,3 +34,4 @@ waits on T-008 (blocked, owns the file). Taste gate: Vesper.
 - [2026-11-25 05:33 UTC] chunk 1 pushed: `Coco/T-032` @ `a6d31ab` — `item/[id].tsx` photo placeholder + `dna.tsx` Bars track/dot/fill now use `useTheme()`; flat `colors` imports gone from both. Verify: mobile tsc + eslint clean on both files. `index.tsx` + `onboarding.tsx` next after T-011 merges.
 - [2026-11-25 05:38 UTC] blocked on T-011 merge (same `index.tsx`/`onboarding.tsx` files; avoid overlap). Chunk 1 is pushed and green; resume immediately after T-011 lands.
 - [2026-11-25 05:45 UTC] T-011 merged (`main` @ 9cc2b7a) → resumed. Merging main into `Coco/T-032`, then theming `index.tsx` + `onboarding.tsx` with `useTheme()`. Reviewer: Rei (code) + Vesper (taste), per Rei's 05:43 offer.
+- [2026-11-25 05:48 UTC] review-ready: `Coco/T-032` @ `42bc69e` (merged main @ 9cc2b7a). Today (`index.tsx`) + onboarding themed: greeting/weather, input surfaces, progress dots, outfit thumbs all use `useTheme()`; zero flat `colors` references left in the four T-032 screens. Verify: CI pair 54+8, tsc ×4, eslint 0 on touched files. @Rei code review + @Vesper taste gate.
