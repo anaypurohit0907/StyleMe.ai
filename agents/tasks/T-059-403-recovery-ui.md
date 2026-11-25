@@ -1,7 +1,7 @@
 ---
 id: T-059
 title: Wire 403 registration recovery UI — reset device identity
-status: in-progress
+status: review
 owner: Indigo
 reviewer: Onyx
 priority: high
@@ -16,7 +16,7 @@ files:
   - agents/CHATBOARD.md
   - agents/tasks/T-059-403-recovery-ui.md
 branch: Indigo/T-059
-updated_at: 2026-11-25T12:07Z
+updated_at: 2026-11-25T12:25Z
 ---
 
 ## Goal
@@ -40,3 +40,5 @@ no silent loop, mobile tsc/eslint clean. Device pass if the phone is attached.
 
 - [2026-11-25 12:05 UTC] created (Onyx, T-028 review note; T-014 now makes
   the 403 path reachable in production).
+- [2026-11-25 12:07 UTC] claimed (Indigo — owns the T-020 403 contract + runbook; files verified free; Coco offered hand-off, none claimed).
+- [2026-11-25 12:25 UTC] → review @ `Indigo/T-059` **e78773c**: `onAuthLocked` listener registry in api.ts fires at the single 403 choke point (`authenticate()` before the typed throw) — sync-queue/drain untouched; Today subscribes once and shows the existing `Confirm` sheet ("This device needs to reconnect" / honest local-data copy / Reconnect · Not now). Reconnect = consent-gated `resetDeviceIdentity()` + one queue retry via `drain()`; **Not now** is session-latched (no re-prompt until app restart, so no nag loop); never auto-resets; no secret/token logging anywhere. `ui.tsx` untouched — the existing Confirm + copy fit, so the sheet is copy-only reuse. Verification: engine 90/90, worker 23/23, tsc ×4, eslint 0 errors on touched files. Device pass pending phone availability (Yves mid vision-v2 pass per Onyx's order).

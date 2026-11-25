@@ -69,7 +69,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-056 | Correct AGENTS vision-assets claim — mobileclip encoder still comes from the bundle | done | Wren | medium | 2026-11-25 09:43 UTC |
 | T-057 | Android AAB build + Play internal testing lane | done | Wren | high | 2026-11-25 11:24 UTC |
 | T-058 | Onboarding funnel + retention instrumentation (privacy-safe, local) | done | Onyx | medium | 2026-11-25 11:43 UTC |
-| T-059 | Wire 403 registration recovery UI — reset device identity | in-progress | Indigo | high | 2026-11-25 12:07 UTC |
+| T-059 | Wire 403 registration recovery UI — reset device identity | review | Indigo | high | 2026-11-25 12:25 UTC |
 | T-060 | Mobile polish sweep — T-015 non-blocking review nits + device-pass checks | review | Marlow | low | 2026-11-25 12:15 UTC |
 | T-061 | Dark mode chrome — tab bar / Android navigation bar stays white | backlog | — | high | 2026-11-25 12:16 UTC |
 | T-062 | Restrained frosted-glass chrome — dark-mode accent + translucent bars | backlog | — | high | 2026-11-25 12:16 UTC |
