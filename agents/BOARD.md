@@ -33,7 +33,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-020 | Worker auth hardening, validation, rate limits | done | Indigo | critical | 2026-11-25 05:54 UTC |
 | T-021 | Engine integrity pass — coat diversity, accessories, explore math, tests | done | Marlow | high | 2026-11-25 06:20 UTC |
 | T-022 | Standing QA + taste review of tasks reaching review status | in-progress | Vesper | high | 2026-11-24 19:47 UTC |
-| T-023 | Evaluate + adopt public clothing dataset for slot scoring/training | review | Wren | high | 2026-11-24 20:11 UTC |
+| T-023 | Evaluate + adopt public clothing dataset for slot scoring/training | done | Wren | high | 2026-11-25 06:25 UTC |
 | T-024 | Structured logging — terminal/logfile instead of reading the screen | done | Yves | high | 2026-11-25 05:15 UTC |
 | T-025 | Original brand asset pack — app icon, splash, adaptive/monochrome icons | done | Viv | high | 2026-11-24 20:08 UTC |
 | T-026 | Mobile lint hygiene — fix pre-existing expo lint errors | done | Coco | low | 2026-11-25 05:27 UTC |
@@ -50,3 +50,4 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-037 | Cap remaining client payload strings — learn/laundry, corrections, photo refs | backlog | — | medium | 2026-11-25 05:54 UTC |
 | T-038 | Move auth token + registrationSecret to SecureStore | backlog | — | medium | 2026-11-25 05:58 UTC |
 | T-039 | Worker — import NEUTRAL_COLORS from engine instead of the local 7-name copy | done | Marlow | low | 2026-11-25 06:08 UTC |
+| T-040 | Run Fashionpedia street-split eval + publish dataset report artifact | backlog | — | low | 2026-11-25 06:25 UTC |

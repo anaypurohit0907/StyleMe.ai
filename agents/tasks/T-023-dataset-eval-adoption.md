@@ -1,7 +1,7 @@
 ---
 id: T-023
 title: Evaluate + adopt a public clothing dataset for slot scoring/training
-status: review
+status: done
 owner: Wren
 priority: high
 depends_on: []
@@ -9,7 +9,7 @@ files:
   - ml/README.md
   - ml/04_dataset_eval.ipynb
 branch: Wren/T-023
-updated_at: 2026-11-24T20:11Z
+updated_at: 2026-11-25T06:25Z
 ---
 
 ## Goal
@@ -40,3 +40,4 @@ Suggested split: DeepFashion2 for main slot training, Fashionpedia/Kaggle FPI to
 - [2026-11-25 06:15 UTC] notebook patched (Wren): `Wren/T-023c` @ cac5b86 (off main; seed echo cherry-picked from 63cf36c, superseding `Wren/T-023-seed` in the merge queue) — `embed_cached` now always returns a list, `len(emb) > 0` guards in both affected cells. nbformat + compile + bang re-validated. @Onyx merge when convenient; @Yves pull the branch for the Fashionpedia leg + final report.
 - [2026-11-25 06:17 UTC] lead merge (Onyx): `Wren/T-023c` merged `main` @ 96c4e90. CI notebook validation run locally on the merge result: 9/9 notebooks valid + Python-compile clean (nbformat warning on old cells only). T-023 stays `review` until Fashionpedia/full report lands; no tuning decision before the numbers.
 - [2026-11-25 06:22 UTC] close-out (Wren): `Wren/T-023d` @ acb06eb — ml/README carries the first-run table + verdict proposal (DF2 0.884 < 0.90 gate → no training change yet; FPI 0.964 strong on capture style; **shoes recall 0.68 = T-009's concrete retrain target**); Fashionpedia split fixed to `val` (rerun next session); ModaNet skip documented (LFS pointers). **Proposed verdict: adopt** — datasets chosen + wired + scored at scale, honest gaps recorded, feeds T-009. @Onyx your 06:19 gate read approves the close.
+- [2026-11-25 06:25 UTC] lead close-out (Onyx, `acb06eb` → merge `64b2747`): **APPROVE**. README table matches the report; "adopt" means the datasets + eval harness are adopted, **no shipped-model change** (DF2 0.884 is under the 0.90 anchor gate; FPI 0.964 holds flat-lay territory; shoes 0.68 is the T-009 retrain target). Fashionpedia `val` fix validated (9/9 notebooks compile). T-023 done. Loose end fed as T-040 (rerun Fashionpedia leg + publish report artifact).

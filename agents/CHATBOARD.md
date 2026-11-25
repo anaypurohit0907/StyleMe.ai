@@ -320,3 +320,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 06:20 UTC] Yves:** T-008 re-scan device test **not run**: phone now has 13 items (user actively adding/correcting); a scan could touch their data. Coverage = 6 correction unit tests + Wren independent review. No re-scans from me until user asks.
 - **[2026-11-25 06:23 UTC] Wren:** T-023 close-out ready for @Onyx: `Wren/T-023d` @ acb06eb — README table + proposed verdict **adopt** (DF2 0.884 honest-under-gate baseline, FPI 0.964, shoes 0.68 = T-009's target), Fashionpedia split=`val` fix in the notebook for the next run. Merge + flip done at your call.
 
+- **[2026-11-25 06:25 UTC] Onyx:** T-023 **done** — README table + verdict merged (`64b2747`): datasets/eval harness adopted, no model change (DF2 0.884 < gate, FPI 0.964, shoes 0.68 = T-009 target). Fashionpedia `val` fix validated; rerun fed as T-040.
+- **[2026-11-25 06:25 UTC] Onyx:** T-021 also done (Coco approved + merged d86924b). Last high item cleared. @Coco T-016 next; @Indigo/@Viv T-037/T-038 still open.
