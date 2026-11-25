@@ -504,4 +504,123 @@ describe("worker API", () => {
       vi.unstubAllGlobals();
     }
   });
+
+  it("registration race: losing the INSERT race means 403, not 500", async () => {
+    const deviceId = "device-race-000000001";
+    // The racer won: the row exists with their hash…
+    env.DB.users.set(deviceId, {
+      id: deviceId,
+      locale: null,
+      onboarding: null,
+      tone: null,
+      prefs: "{}",
+      explore_state: "{}",
+      created_at: 1,
+      reg_secret_hash: "a".repeat(64),
+    });
+    // …but this caller's pre-check reads stale (race window modeled by the mock).
+    env.DB.suppressUserGetOnce = deviceId;
+    const r = await app.request(
+      "/v1/auth/device",
+      {
+        method: "POST",
+        headers: { "content-type": "application/json", "cf-connecting-ip": "198.51.100.12" },
+        body: JSON.stringify({ deviceId }),
+      },
+      env as never,
+    );
+    expect(r.status).toBe(403);
+    // The winner's hash survives — the loser must not have overwritten it.
+    expect(env.DB.users.get(deviceId)?.reg_secret_hash).toBe("a".repeat(64));
+  });
+
+  it("payload caps: oversized or malformed syncs are 400s", async () => {
+    // 501 upserts > cap.
+    const many = Array.from({ length: 501 }, (_, i) => garment(`bulk${i}`));
+    const tooMany = await call(
+      "/v1/wardrobe/sync",
+      { method: "POST", body: JSON.stringify({ upserts: many, deletions: [], ts: NOW }) },
+      true,
+    );
+    expect(tooMany.status).toBe(400);
+
+    // Bad garment id charset (also guards the "+"-joined pickedId contract).
+    const badId = await call(
+      "/v1/wardrobe/sync",
+      {
+        method: "POST",
+        body: JSON.stringify({ upserts: [{ ...garment("t1"), id: "bad id+" }], deletions: [], ts: NOW }),
+      },
+      true,
+    );
+    expect(badId.status).toBe(400);
+
+    // Oversized embedding.
+    const badEmbedding = await call(
+      "/v1/wardrobe/sync",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          upserts: [{ ...garment("t1"), embedding: "A".repeat(5000) }],
+          deletions: [],
+          ts: NOW,
+        }),
+      },
+      true,
+    );
+    expect(badEmbedding.status).toBe(400);
+  });
+
+  it("recommend: weather outside physical bounds is a 400", async () => {
+    const r = await call(
+      "/v1/recommend",
+      {
+        method: "POST",
+        body: JSON.stringify({ occasion: "office", now: NOW, weather: { tempC: 100, isRaining: false } }),
+      },
+      true,
+    );
+    expect(r.status).toBe(400);
+  });
+
+  it("auth: junk onboarding is a 400, shaped onboarding passes", async () => {
+    const junk = await app.request(
+      "/v1/auth/device",
+      {
+        method: "POST",
+        headers: { "content-type": "application/json", "cf-connecting-ip": "198.51.100.13" },
+        body: JSON.stringify({ deviceId: "device-onb-000000001", onboarding: { deep: { nested: { blob: true } } } }),
+      },
+      env as never,
+    );
+    expect(junk.status).toBe(400);
+
+    const ok = await app.request(
+      "/v1/auth/device",
+      {
+        method: "POST",
+        headers: { "content-type": "application/json", "cf-connecting-ip": "198.51.100.13" },
+        body: JSON.stringify({ deviceId: "device-onb-000000002", onboarding: { city: "Berlin", laundry: "weekly" } }),
+      },
+      env as never,
+    );
+    expect(ok.status).toBe(200);
+    expect(JSON.parse(env.DB.users.get("device-onb-000000002")!.onboarding as string).city).toBe("Berlin");
+  });
+
+  it("ScoredOutfit contract: dress+shoes (2 ids) is valid, 1 id is not", async () => {
+    const { ScoredOutfitSchema } = await import("@styleme/schema");
+    const two = ScoredOutfitSchema.safeParse({
+      garmentIds: ["d1", "s1"],
+      score: 0.5,
+      reasons: [{ rule: "r", score: 0.5, text: "t" }],
+    });
+    expect(two.success).toBe(true);
+    const one = ScoredOutfitSchema.safeParse({
+      garmentIds: ["d1"],
+      score: 0.5,
+      reasons: [{ rule: "r", score: 0.5, text: "t" }],
+    });
+    expect(one.success).toBe(false);
+  });
 });

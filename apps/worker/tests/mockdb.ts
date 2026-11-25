@@ -29,6 +29,11 @@ class Stmt {
     const sql = this.key();
     const [p0] = this.params;
     if (sql.startsWith("SELECT * FROM users")) {
+      // Test hook: model a stale-read race window — one missed read.
+      if (this.db.suppressUserGetOnce === p0) {
+        this.db.suppressUserGetOnce = null;
+        return { results: [] };
+      }
       const row = this.db.users.get(p0 as string) ?? null;
       return { results: row ? [row] : [] };
     }
@@ -48,19 +53,30 @@ class Stmt {
     const sql = this.key();
     const p = this.params;
     if (sql.startsWith("INSERT INTO users")) {
-      this.db.users.set(p[0] as string, {
-        id: p[0],
-        locale: p[1],
-        onboarding: p[2],
-        tone: p[3],
-        prefs: p[4],
-        explore_state: p[5],
-        created_at: p[6],
-        reg_secret_hash: p[7] ?? null,
-      });
+      const id = p[0] as string;
+      const existing = this.db.users.get(id);
+      if (existing) {
+        // Faithful to SQLite: ON CONFLICT DO NOTHING is a no-op; a plain
+        // duplicate INSERT is a constraint violation (never a false-green).
+        if (!sql.includes("ON CONFLICT")) {
+          throw new Error(`UNIQUE constraint failed: users.id (${id})`);
+        }
+      } else {
+        this.db.users.set(id, {
+          id,
+          locale: p[1],
+          onboarding: p[2],
+          tone: p[3],
+          prefs: p[4],
+          explore_state: p[5],
+          created_at: p[6],
+          reg_secret_hash: p[7] ?? null,
+        });
+      }
     } else if (sql.startsWith("UPDATE users SET reg_secret_hash")) {
+      // Conditional on NULL, like the real SQL (first-writer-wins).
       const u = this.db.users.get(p[1] as string);
-      if (u) u.reg_secret_hash = p[0];
+      if (u && u.reg_secret_hash == null) u.reg_secret_hash = p[0];
     } else if (sql.startsWith("UPDATE users SET onboarding")) {
       const u = this.db.users.get(p[2] as string);
       if (u) {
@@ -144,6 +160,8 @@ export class MockD1 {
   wearLog: Row[] = [];
   laundry: Row[] = [];
   toneCache = new Map<string, { copy: string }>();
+  /** Test hook: next `SELECT * FROM users` for this id misses once (race window). */
+  suppressUserGetOnce: string | null = null;
 
   /** Row lookup with the same tenant scoping the real schema enforces. */
   garment(userId: string, id: string): Row | undefined {

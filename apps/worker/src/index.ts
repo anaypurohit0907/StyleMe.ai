@@ -14,6 +14,7 @@ import {
   emptyPreference,
   LaundryEventSchema,
   LearnEventSchema,
+  OnboardingSchema,
   RecommendContextSchema,
   WardrobeSyncSchema,
   type RecommendResponse,
@@ -115,6 +116,15 @@ app.post("/v1/auth/device", async (c) => {
     return c.json({ error: "rate limited" }, 429);
   }
   const registrationSecret = typeof body?.registrationSecret === "string" ? body.registrationSecret : undefined;
+  // Onboarding is free-form but bounded — reject junk before it reaches D1.
+  let onboarding: Record<string, unknown> | undefined;
+  if (body?.onboarding !== undefined && body?.onboarding !== null) {
+    const parsedOnboarding = OnboardingSchema.safeParse(body.onboarding);
+    if (!parsedOnboarding.success) {
+      return c.json({ error: "invalid onboarding", issues: parsedOnboarding.error.issues.slice(0, 3) }, 400);
+    }
+    onboarding = parsedOnboarding.data as Record<string, unknown>;
+  }
   const existing = await getUser(c.env.DB, deviceId);
   if (existing) {
     // Proof-of-possession: never re-register silently for an existing user.
@@ -134,13 +144,30 @@ app.post("/v1/auth/device", async (c) => {
   }
   // First registration: onboarding is stored only here (an attacker knowing
   // the device id must not be able to overwrite the real user's onboarding),
-  // and the one-time secret is returned exactly once.
-  const onboarding =
-    body?.onboarding && typeof body.onboarding === "object"
-      ? (body.onboarding as Record<string, unknown>)
-      : undefined;
+  // and the one-time secret is returned exactly once. If a concurrent call
+  // wins the INSERT race, created=false and the existing-user rules apply.
   const secret = generateRegistrationSecret();
-  await ensureUser(c.env.DB, deviceId, onboarding, undefined, await hashRegistrationSecret(secret));
+  const { user: created, created: won } = await ensureUser(
+    c.env.DB,
+    deviceId,
+    onboarding,
+    undefined,
+    await hashRegistrationSecret(secret),
+  );
+  if (!won) {
+    if (created.regSecretHash === null) {
+      // Racer created a legacy-shaped row (no hash): upgrade path.
+      const upgradeSecret = generateRegistrationSecret();
+      await setUserRegSecretHash(c.env.DB, deviceId, await hashRegistrationSecret(upgradeSecret));
+      const token = await mintToken(c.env.JWT_SECRET, deviceId);
+      return c.json({ token, userId: deviceId, registrationSecret: upgradeSecret });
+    }
+    if (!(await verifyRegistrationSecret(registrationSecret, created.regSecretHash))) {
+      return c.json({ error: "device already registered; valid registrationSecret required" }, 403);
+    }
+    const token = await mintToken(c.env.JWT_SECRET, deviceId);
+    return c.json({ token, userId: deviceId });
+  }
   const token = await mintToken(c.env.JWT_SECRET, deviceId);
   return c.json({ token, userId: deviceId, registrationSecret: secret });
 });
@@ -179,7 +206,7 @@ app.post("/v1/recommend", auth, async (c) => {
   if (!rateLimit(`rec:${userId}`, 10)) return c.json({ error: "rate limited" }, 429);
   const body = await c.req.json().catch(() => ({}));
 
-  const user = await ensureUser(c.env.DB, userId);
+  const { user } = await ensureUser(c.env.DB, userId);
   const garments = await listGarments(c.env.DB, userId);
   if (garments.length === 0) {
     return c.json({ outfits: [], note: "wardrobe empty — add items first", ts: Date.now() });
@@ -267,7 +294,7 @@ app.post("/v1/learn", auth, async (c) => {
   if (!ev.success) return c.json({ error: "invalid learn event" }, 400);
 
   const d = ev.data;
-  const user = await ensureUser(c.env.DB, userId);
+  const { user } = await ensureUser(c.env.DB, userId);
   const garments = await listGarments(c.env.DB, userId);
   const garmentMap = new Map(garments.map((g) => [g.id, g]));
 
@@ -354,7 +381,7 @@ app.post("/v1/learn", auth, async (c) => {
 
 app.get("/v1/tone", auth, async (c) => {
   const userId = c.get("userId");
-  const user = await ensureUser(c.env.DB, userId);
+  const { user } = await ensureUser(c.env.DB, userId);
   const profile = user.tone ?? { bank: "none" as const, intensity: 0 };
   const day = new Date().toISOString().slice(0, 10);
 

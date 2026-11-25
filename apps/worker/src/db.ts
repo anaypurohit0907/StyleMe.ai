@@ -106,7 +106,18 @@ export async function syncWardrobe(
 }
 
 export async function setUserRegSecretHash(db: D1Database, id: string, hash: string): Promise<void> {
-  await db.prepare("UPDATE users SET reg_secret_hash = ? WHERE id = ?").bind(hash, id).run();
+  // Conditional on NULL: a concurrent legacy-upgrade must not overwrite the
+  // hash another caller just minted (first-writer-wins).
+  await db
+    .prepare("UPDATE users SET reg_secret_hash = ? WHERE id = ? AND reg_secret_hash IS NULL")
+    .bind(hash, id)
+    .run();
+}
+
+export interface EnsureUserResult {
+  user: UserRow;
+  /** true only when this call created the row (registration race safe). */
+  created: boolean;
 }
 
 export async function ensureUser(
@@ -115,8 +126,8 @@ export async function ensureUser(
   onboarding?: Record<string, unknown>,
   tone?: ToneProfile,
   regSecretHash?: string,
-): Promise<UserRow> {
-  const existing = await db.prepare("SELECT * FROM users WHERE id = ?").bind(id).first();
+): Promise<EnsureUserResult> {
+  const existing = await getUser(db, id);
   if (existing) {
     if (onboarding || tone) {
       await db
@@ -124,11 +135,13 @@ export async function ensureUser(
         .bind(onboarding ? JSON.stringify(onboarding) : null, tone ? JSON.stringify(tone) : null, id)
         .run();
     }
-    return mapUser((await db.prepare("SELECT * FROM users WHERE id = ?").bind(id).first()) as Record<string, unknown>)!;
+    return { user: (await getUser(db, id))!, created: false };
   }
+  // ON CONFLICT DO NOTHING: a concurrent registration may win the INSERT —
+  // re-read and compare the stored hash to decide who created the row.
   await db
     .prepare(
-      "INSERT INTO users (id, locale, onboarding, tone, prefs, explore_state, created_at, reg_secret_hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO users (id, locale, onboarding, tone, prefs, explore_state, created_at, reg_secret_hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(id) DO NOTHING",
     )
     .bind(
       id,
@@ -141,5 +154,7 @@ export async function ensureUser(
       regSecretHash ?? null,
     )
     .run();
-  return mapUser((await db.prepare("SELECT * FROM users WHERE id = ?").bind(id).first()) as Record<string, unknown>)!;
+  const after = (await getUser(db, id))!;
+  const created = regSecretHash != null && after.regSecretHash === regSecretHash;
+  return { user: after, created };
 }
