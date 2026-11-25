@@ -4,7 +4,7 @@ import { useFocusEffect } from "expo-router";
 import type { PreferenceVector } from "@styleme/schema";
 import { emptyPreference } from "@styleme/schema";
 import { paletteSwatch, space } from "@styleme/design";
-import { Btn, Caption, Card, Screen, Scroll, Title } from "@/components/ui";
+import { Btn, Caption, Card, Display, Screen, Scroll, TextLink, Title } from "@/components/ui";
 import { ScanLog } from "@/components/scan-log";
 import { loadPrefs, savePrefs } from "@/lib/local";
 import { applyCorrections } from "@styleme/schema/corrections";
@@ -51,6 +51,7 @@ export default function DNA() {
   const [retagging, setRetagging] = useState(false);
   const [retagProgress, setRetagProgress] = useState("");
   const [retagStage, setRetagStage] = useState("");
+  const [diagnosticsOpen, setDiagnosticsOpen] = useState(false);
   const cancelRef = useRef(false);
 
   useFocusEffect(
@@ -147,7 +148,7 @@ export default function DNA() {
   return (
     <Screen>
       <Scroll>
-        <Title>Style DNA</Title>
+        <Display>Style DNA</Display>
         <Caption>
           Learned from {prefs.n} pick{prefs.n === 1 ? "" : "s"}. Transparent and resettable.
         </Caption>
@@ -191,9 +192,18 @@ export default function DNA() {
             always moves on.
           </Caption>
         )}
-        <ScanLog limit={14} />
-
         <Btn label="Reset what I've learned" variant="danger" onPress={() => void reset()} />
+
+        {/* Debug chrome is tucked away; the pullable styleme.log is the
+            release-test source of truth (docs/TESTING.md). */}
+        {diagnosticsOpen ? (
+          <>
+            <ScanLog limit={40} title="Diagnostics" />
+            <TextLink label="Hide diagnostics" onPress={() => setDiagnosticsOpen(false)} />
+          </>
+        ) : (
+          <TextLink label="Diagnostics" onPress={() => setDiagnosticsOpen(true)} />
+        )}
       </Scroll>
     </Screen>
   );

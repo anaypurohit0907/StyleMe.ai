@@ -1,10 +1,12 @@
 import { Platform, StyleSheet, Text } from "react-native";
 import { Caption, Card } from "@/components/ui";
-import { colors, space } from "@styleme/design";
+
 import { usePipelineLogs } from "@/lib/pipeline-log";
+import { useTheme } from "@/lib/theme";
 
 /** On-screen tail of the vision pipeline log. Release builds cannot rely on logcat. */
 export function ScanLog({ limit = 10, title = "Scan log" }: { limit?: number; title?: string }) {
+  const t = useTheme();
   const logs = usePipelineLogs();
   const tail = logs.slice(-limit);
   return (
@@ -14,7 +16,7 @@ export function ScanLog({ limit = 10, title = "Scan log" }: { limit?: number; ti
         <Caption>No scan activity yet.</Caption>
       ) : (
         tail.map((entry) => (
-          <Text key={entry.id} style={s.line}>
+          <Text key={entry.id} style={[s.line, { color: t.inkSoft }]}>
             {entry.text}
           </Text>
         ))
@@ -28,6 +30,5 @@ const s = StyleSheet.create({
     fontFamily: Platform.select({ android: "monospace", ios: "Menlo", default: "monospace" }),
     fontSize: 10,
     lineHeight: 14,
-    color: colors.inkSoft,
   },
 });

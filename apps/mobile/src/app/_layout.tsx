@@ -3,6 +3,7 @@ import { Platform, useColorScheme } from "react-native";
 import Constants from "expo-constants";
 import { Stack, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { getDb, metaGet } from "@/lib/db";
 import { setVisionTagger } from "@/lib/vision";
@@ -48,6 +49,12 @@ function Gate() {
 export default function RootLayout() {
   const t = useTheme();
   const scheme = useColorScheme();
+  const [fontsLoaded, fontError] = useFonts({
+    DMSerifDisplay: require("../../assets/fonts/DMSerifDisplay-Regular.ttf"),
+  });
+  // Keep the splash up until the display face is ready; a font failure must
+  // not trap the app (fall back to the system face).
+  if (!fontsLoaded && !fontError) return null;
   return (
     <>
       <StatusBar style={scheme === "dark" ? "light" : "dark"} />

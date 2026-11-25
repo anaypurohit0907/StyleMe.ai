@@ -5,7 +5,6 @@ import { useRouter } from "expo-router";
 import type { Fit, GarmentAttrs, Pattern, Slot } from "@styleme/schema";
 import { paletteSwatch, radius, space } from "@styleme/design";
 import { AddedChip, Btn, Caption, Card, Chip, Progress, Screen, Scroll, Swatch, TextLink, Title } from "@/components/ui";
-import { ScanLog } from "@/components/scan-log";
 import { upsertGarment } from "@/lib/db";
 import { newGarment, persistPhoto } from "@/lib/local";
 import { segmentGarment } from "@/lib/segment";
@@ -282,7 +281,6 @@ export default function Capture() {
               setCameraReady(false);
             }}
           />
-          <ScanLog limit={8} title="Last capture" />
         </Scroll>
       </Screen>
     );
@@ -353,7 +351,6 @@ export default function Capture() {
         <View style={[s.busyOverlay, { backgroundColor: t.overlayStrong }]}>
           <ActivityIndicator color={t.accent} size="large" />
           <Caption>{stage || "Working…"}</Caption>
-          <ScanLog limit={5} title="Pipeline" />
         </View>
       )}
     </Screen>
