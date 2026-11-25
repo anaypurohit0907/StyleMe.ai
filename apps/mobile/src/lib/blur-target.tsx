@@ -37,7 +37,11 @@ export function BlurTargetProvider({ children }: { children: ReactNode }) {
   }>({ ref: null, version: 0 });
 
   const setTargetRef = useCallback((ref: BlurTargetRef) => {
-    setState((prev) => ({ ref, version: prev.version + 1 }));
+    // Bail when the same ref is re-registered: every focus-effect run would
+    // otherwise bump `version`, change the context value, re-create the
+    // focus callback, and re-run the effect — an infinite render loop
+    // ("Maximum update depth exceeded", T-062 device crash).
+    setState((prev) => (prev.ref === ref ? prev : { ref, version: prev.version + 1 }));
   }, []);
 
   const value = useMemo(
