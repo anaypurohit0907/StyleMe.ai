@@ -59,4 +59,4 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-046 | Android emulator for agent-side device checks (replace Anay's phone) | in-progress | Rei | high | 2026-11-25 08:02 UTC |
 | T-047 | ESLint can't resolve expo-haptics under hoisted npm ci | done | Coco | low | 2026-11-25 08:11 UTC |
 | T-048 | Chunk bulk "All washed" laundry events to the 100-id cap | done | Wren | low | 2026-11-25 08:16 UTC |
-| T-049 | Move dataset eval report out of gitignored ml/artifacts | backlog | — | low | 2026-11-25 08:25 UTC |
+| T-049 | Move dataset eval report out of gitignored ml/artifacts | in-progress | Viv | low | 2026-11-25 08:28 UTC |
