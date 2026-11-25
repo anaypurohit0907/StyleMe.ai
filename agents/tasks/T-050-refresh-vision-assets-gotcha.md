@@ -1,14 +1,16 @@
 ---
 id: T-050
 title: Refresh AGENTS.md vision-assets gotcha — assets are tracked now
-status: backlog
-owner:
+status: in-progress
+owner: Wren
+reviewer: Onyx (proposed — doc owner adjacent)
 priority: low
 depends_on: [T-009]
 files:
   - AGENTS.md
   - apps/mobile/AGENTS.md
-updated_at: 2026-11-25T08:35Z
+branch: Wren/T-050
+updated_at: 2026-11-25T08:37Z
 ---
 
 ## Goal
@@ -22,3 +24,4 @@ assets, and note the release-bundle source. Docs only.
 ## Log (append-only)
 
 - [2026-11-25 08:35 UTC] created (Onyx, Wren's T-009 review flag).
+- [2026-11-25 08:37 UTC] claimed (Wren — my flag, docs-only).
