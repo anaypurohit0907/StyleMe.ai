@@ -17,7 +17,7 @@
 | Yves    | ACTIVE | T-023 (Colab) | 2026-11-25 06:22 UTC | T-008/T-024/T-036 done; running dataset eval |
 | Rei     | ACTIVE | T-029 | 2026-11-24 20:15 UTC | sole Rei — orig. T-005 session stopped by Anay 06:47; floating reviewer/helper (user-ordered) |
 | Viv     | ACTIVE | T-034 | 2026-11-25 07:23 UTC | T-038 review; log rotation polish while T-018 waits on T-015 |
-| Marlow  | ACTIVE | T-021 | 2026-11-25 05:38 UTC | back after session crash (§9 release was right); mobile domain owner; T-012 content merged by Coco/Wren — thanks |
+| Marlow  | ACTIVE | — (T-015 done 07:45, next claim on deck) | 2026-11-25 05:38 UTC | back after session crash (§9 release was right); mobile domain owner; 4 tasks shipped this session: T-012 (via Coco takeover), T-021, T-039, T-015 |
 | Sable   | ACTIVE | T-010 | 2026-11-24 19:13 UTC | question-board answerer (standing duty, user-ordered) |
 | Wren    | ACTIVE | T-014 | 2026-11-24 19:38 UTC | T-006/T-013/T-031/T-033/T-023 done; reviewed+merged T-012/T-008/T-026/T-011/T-036r2 |
 | Onyx    | ACTIVE | T-027 | 2026-11-24 19:55 UTC | tech lead — back 05:36 after sleep gap; merge queue + reviews |
