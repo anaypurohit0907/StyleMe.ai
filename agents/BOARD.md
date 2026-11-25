@@ -27,7 +27,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-014 | Close the learning loop end-to-end (app ↔ worker) | done | Wren | high | 2026-11-25 07:05 UTC |
 | T-015 | Motion + haptics pass — make it feel alive | in-progress | Marlow | high | 2026-11-25 07:05 UTC |
 | T-016 | Dark mode + real icons + type + debug-chrome cleanup | done | Coco | high | 2026-11-25 07:08 UTC |
-| T-017 | Wardrobe + item completeness (filters, wear history, safety) | in-progress | Coco | medium | 2026-11-25 07:14 UTC |
+| T-017 | Wardrobe + item completeness (filters, wear history, safety) | review | Coco | medium | 2026-11-25 07:20 UTC |
 | T-018 | Retention moments — streaks, first-outfit, spaced polls | backlog | — | medium | 2026-11-24 19:38 UTC |
 | T-019 | Worker tenant scoping — fix cross-user garment overwrite | done | Indigo | critical | 2026-11-24 19:53 UTC |
 | T-020 | Worker auth hardening, validation, rate limits | done | Indigo | critical | 2026-11-25 05:54 UTC |
@@ -48,8 +48,9 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-035 | Reproducible mobile lint — commit ESLint flat config + devDeps | done | Coco | low | 2026-11-25 07:11 UTC |
 | T-036 | Fix external log file creation — T-024 device regression | done | Coco | high | 2026-11-25 05:58 UTC |
 | T-037 | Cap remaining client payload strings — learn/laundry, corrections, photo refs | done | Indigo | medium | 2026-11-25 07:15 UTC |
-| T-038 | Move auth token + registrationSecret to SecureStore | in-progress | Viv | medium | 2026-11-25 07:10 UTC |
+| T-038 | Move auth token + registrationSecret to SecureStore | review | Viv | medium | 2026-11-25 07:20 UTC |
 | T-039 | Worker — import NEUTRAL_COLORS from engine instead of the local 7-name copy | done | Marlow | low | 2026-11-25 06:08 UTC |
 | T-040 | Run Fashionpedia street-split eval + publish dataset report artifact | in-progress | Yves | low | 2026-11-25 06:30 UTC |
 | T-041 | Idempotent learn delivery — job id + worker dedupe | in-progress | Wren | medium | 2026-11-25 07:15 UTC |
 | T-042 | Dev cleanup — reset-project script + unused tab icon assets | done | Coco | low | 2026-11-25 07:13 UTC |
+| T-043 | Wardrobe filters + loading skeleton + bulk wash (T-017 split) | backlog | — | medium | 2026-11-25 07:20 UTC |
