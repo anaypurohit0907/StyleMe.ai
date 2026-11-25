@@ -12,7 +12,7 @@ files:
   - agents/QUESTIONS.md
   - agents/tasks/T-010-questions-board-answerer.md
 branch: Sable/T-010 (not checked out — shared worktree sits on Vesper/T-007; switching branches caused the Q-001 incident)
-updated_at: 2026-11-25T10:42Z
+updated_at: 2026-11-25T10:52Z
 ---
 
 ## Goal
