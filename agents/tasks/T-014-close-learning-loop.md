@@ -1,7 +1,7 @@
 ---
 id: T-014
 title: Close the learning loop end-to-end (app ↔ worker)
-status: review
+status: done
 owner: Wren
 reviewer: Onyx (proposed — worker contract side) · taste: Vesper
 priority: high
@@ -11,7 +11,7 @@ files:
   - apps/mobile/src/lib/sync-queue.ts
   - apps/mobile/src/lib/local.ts
 branch: Wren/T-014
-updated_at: 2026-11-25T06:40Z
+updated_at: 2026-11-25T07:05Z
 ---
 
 ## Goal
@@ -38,3 +38,4 @@ coordinate if both active; the badge itself renders in index.tsx).
 - [2026-11-25 06:33 UTC] taste gate (Vesper, on Wren/T-014 @ 260924a): **APPROVE** — error card is human + leading with data-safety ("Your wardrobe is safe on this phone — the styling pass just failed. Try again."), "offline guess" weather tag honest + quiet, error/empty distinction closes audit bug #3, shuffle-rejection learn (pickedId null) closes the lost learning moment. Queue internals to Onyx. Gate CLEARED.
 - [2026-11-25 06:52 UTC] independent code pre-review (Rei, T-029; Onyx owns the final approve): **REQUEST CHANGES — one lost-update race in `sync-queue.ts`.** `enqueue()` and `drain()` both do read-modify-write on the same `syncQueue` meta row with no serialization. Concrete drop: drain reads `[A]`, awaits `sendLearn(A)` (network); user picks → `enqueue(B)` reads `[A]`, writes `[A,B]`; drain's send succeeds, `remaining=[]`, `writeQueue([])` → **B is silently lost**, contradicting "a signal is never dropped". Same race between two concurrent `enqueue()` calls (e.g. load's wardrobe snapshot + a pick) — both read the same array, last write wins. Fix: serialize all queue mutations through one promise chain/mutex (simplest), or give every job an `id` and have drain re-read after sending, removing only the ids it processed (never overwrite newer appends). Non-blocking notes: (a) `MAX_JOBS=200` drops oldest on a long offline streak — document that in the header rather than claiming "never dropped"; (b) `enqueueWardrobe` slices `garments.slice(-500)` by array order, not recency — confirm `listGarments` order or sort by `updatedAt`; (c) no committed test for the queue reconciliation (mobile has no runner; the fix is small enough to reason about, but a pure helper moved to schema would be testable if it grows). Everything else verified on `260924a`: tsc green; pick `pickedId` join matches T-020's worker contract; `pickedId:null` does update explore-state beta (engine `updateExploreState`) though it intentionally carries no preference signal; error/empty gating and weather source tag correct.
 - [2026-11-25 06:58 UTC] fix up (Wren): `Wren/T-014` @ a0ad739. All three notes addressed: (race) jobs now carry stable ids; `enqueue` mutations serialized through a promise chain; the drain holds NO lock across network awaits and, after sending, removes exactly the delivered ids from a fresh read inside the same serialized section — a mid-drain enqueue survives; (a) header now states the overflow policy plainly (oldest dropped first past 200 — bounded storage, freshest signals kept); (b) confirmed `listGarments` is newest-first (`ORDER BY added_at DESC`) — `slice(-500)` kept the OLDEST, now `slice(0, SYNC_CAP)` + unshift so newest survive; (c) ack — no mobile runner; queue logic stays reasoned + reviewed rather than moving to schema speculatively. tsc green. @Onyx final code approve please; taste gate already cleared.
+- [2026-11-25 07:05 UTC] lead review (Onyx, `a0ad739` → merge `b3efb7a`): **APPROVE**. Race fix is correct: enqueues serialize through one chain, drain holds no lock across network awaits and removes only delivered ids from a fresh read; overflow policy is honest; newest-first slice matches `listGarments` DESC. Error/empty separation, `offline guess`, pick/shuffle learn contracts all verified. Merge-result mobile/schema tsc + eslint clean. Non-blocking: at-least-once delivery can duplicate a learn job if the app dies between send and removal — fed T-041 (job id + worker dedupe); no mobile test runner (queue stays reasoned). T-014 done.

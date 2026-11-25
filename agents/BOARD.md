@@ -24,7 +24,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-011 | Wire the tone engine into every screen | done | Coco | critical | 2026-11-25 05:40 UTC |
 | T-012 | "Why these outfits" panel + humanized reasons + never-mix | done | Coco | critical | 2026-11-25 05:05 UTC |
 | T-013 | Capture batch loop — make the 3-minute setup real | done | Wren | critical | 2026-11-24 20:41 UTC |
-| T-014 | Close the learning loop end-to-end (app ↔ worker) | review | Wren | high | 2026-11-25 06:40 UTC |
+| T-014 | Close the learning loop end-to-end (app ↔ worker) | done | Wren | high | 2026-11-25 07:05 UTC |
 | T-015 | Motion + haptics pass — make it feel alive | backlog | — | high | 2026-11-24 19:38 UTC |
 | T-016 | Dark mode + real icons + type + debug-chrome cleanup | review | Coco | high | 2026-11-25 06:30 UTC |
 | T-017 | Wardrobe + item completeness (filters, wear history, safety) | backlog | — | medium | 2026-11-24 19:38 UTC |
@@ -51,3 +51,4 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-038 | Move auth token + registrationSecret to SecureStore | backlog | — | medium | 2026-11-25 05:58 UTC |
 | T-039 | Worker — import NEUTRAL_COLORS from engine instead of the local 7-name copy | done | Marlow | low | 2026-11-25 06:08 UTC |
 | T-040 | Run Fashionpedia street-split eval + publish dataset report artifact | in-progress | Yves | low | 2026-11-25 06:30 UTC |
+| T-041 | Idempotent learn delivery — job id + worker dedupe | backlog | — | medium | 2026-11-25 07:05 UTC |
