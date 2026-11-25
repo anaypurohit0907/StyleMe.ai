@@ -102,8 +102,8 @@ export const CorrectionSchema = z.object({
     "subtype",
     "nickname",
   ]),
-  from: z.string(),
-  to: z.string(),
+  from: z.string().max(64),
+  to: z.string().max(64),
   at: z.number(),
 });
 export type Correction = z.infer<typeof CorrectionSchema>;
@@ -123,11 +123,11 @@ export const GarmentSchema = z.object({
   attrs: GarmentAttrsSchema,
   status: GarmentStatusSchema.default("available"),
   /** Original camera photo, kept for re-segmentation. */
-  originalRef: z.string().optional(),
+  originalRef: z.string().max(512).optional(),
   /** 512-d mobileclip embedding (base64) for novelty + future search. Optional in MVP. */
   embedding: z.string().max(4096).optional(),
   /** Local file ref on the device; R2 key when backed up. */
-  photoRef: z.string(),
+  photoRef: z.string().max(512),
   addedAt: z.number(),
   /** Last worn epoch ms, null if never. Drives rotation cooldowns. */
   lastWornAt: z.number().nullable().default(null),
@@ -205,20 +205,20 @@ export type RecommendResponse = z.infer<typeof RecommendResponseSchema>;
 
 export const LearnEventSchema = z.object({
   /** garmentIds of each outfit offered, in offer order. */
-  suggestedIds: z.array(z.array(z.string()).min(1)),
+  suggestedIds: z.array(z.array(z.string().min(1).max(64)).min(1).max(6)).max(20),
   /**
    * "+"-joined garmentId string of the picked outfit (same shape the
    * client received in the suggestion), or null if the user dismissed
    * everything ("not today" — no negative signal is taken).
    */
-  pickedId: z.string().nullable(),
+  pickedId: z.string().max(512).nullable(),
   context: RecommendContextSchema,
   ts: z.number(),
 });
 export type LearnEvent = z.infer<typeof LearnEventSchema>;
 
 export const LaundryEventSchema = z.object({
-  garmentIds: z.array(z.string()).min(1),
+  garmentIds: z.array(z.string().min(1).max(64)).min(1).max(100),
   event: z.enum(["in_wash", "washed"]),
   /** When washed=true: available_at. When in_wash: expected back date (nullable). */
   expectedAvailableAt: z.number().nullable().default(null),
@@ -229,7 +229,7 @@ export type LaundryEvent = z.infer<typeof LaundryEventSchema>;
 export const WardrobeSyncSchema = z.object({
   /** Caps keep one request from shipping an entire D1 row budget. */
   upserts: z.array(GarmentSchema).max(500),
-  deletions: z.array(z.string()).max(500),
+  deletions: z.array(z.string().min(1).max(64)).max(500),
   ts: z.number(),
 });
 export type WardrobeSync = z.infer<typeof WardrobeSyncSchema>;

@@ -12,9 +12,11 @@ files:
   - apps/mobile/src/app/(tabs)/capture.tsx
   - apps/mobile/package.json
   - package-lock.json
+  - apps/mobile/src/app/item/[id].tsx
+  - apps/mobile/src/app/(tabs)/dna.tsx
 branch: Marlow/T-015
 reviewer: Viv (design, proposed) + Vesper (taste gate) — lead confirm
-updated_at: 2026-11-25T07:05Z
+updated_at: 2026-11-25T07:22Z
 ---
 
 ## Goal
@@ -34,3 +36,4 @@ spinning splash theatrics; the motion vocabulary is short, soft, confident.
 
 - [2026-11-24 19:24 UTC] created (Vesper, from T-007 audit §4 — feel tier).
 - [2026-11-25 07:05 UTC] claimed (Marlow — mobile domain owner). Deps T-012/T-013/T-014 all done. Sequencing around Coco's in-review T-016 (owns ui.tsx/index.tsx/capture.tsx until merge + the package.json font wave): starting with wardrobe.tsx (conflict-free) + reduce-motion infra + docs pass; overlap files + `expo install expo-haptics` land after T-016 merges. Branch Marlow/T-015 off main.
+- [2026-11-25 07:22 UTC] T-016 merged 07:08 → overlap files free; T-035 merged (b1575ed) → lockfile wave clear. Files list extended BEFORE first touch: + item/[id].tsx ("washed it" haptic) and + dna.tsx (re-scan completion haptic — `retagAll()`), both in the task's haptics spec, both unowned (conflicts grepped). Docs pass done per mobile AGENTS.md: SDK 58 reanimated 4.7.1 (babel plugin auto via babel-preset-expo — no config needed), worklets 0.13.0 present, `useReducedMotion(): boolean`, layout anims available; expo-haptics ~58.0.8 (impact/notification/selection APIs).

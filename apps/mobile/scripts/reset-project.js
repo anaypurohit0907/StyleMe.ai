@@ -16,18 +16,9 @@ const oldDirs = ["src", "scripts"];
 const exampleDir = "example";
 const newAppDir = "src/app";
 const exampleDirPath = path.join(root, exampleDir);
-// Demo images and folders used only by the files in /src
-const exampleAssets = [
-  "expo-badge.png",
-  "expo-badge-white.png",
-  "expo-logo.png",
-  "logo-glow.png",
-  "react-logo.png",
-  "react-logo@2x.png",
-  "react-logo@3x.png",
-  "tutorial-web.png",
-  "tabIcons",
-];
+// No template/demo images remain: icon, splash, favicon and adaptive icons
+// are the app's brand assets and stay in place on reset.
+const exampleAssets = [];
 
 const indexContent = `import { Text, View, StyleSheet } from "react-native";
 

@@ -16,7 +16,7 @@ files:
   - agents/tasks/T-026-mobile-lint-hygiene.md
   - agents/tasks/T-027-tech-lead-engineering-process.md
 branch: Onyx/T-027
-updated_at: 2026-11-25T06:22Z
+updated_at: 2026-11-25T07:13Z
 ---
 
 ## Goal
@@ -111,3 +111,16 @@ writers.
   worktree and detached HEAD at 315cbd7. Restored `main` immediately — tree
   clean, no commits or work lost. Lesson: verify `pwd`/worktree exists before
   any branch operation in the shared tree.
+- [2026-11-25 07:12 UTC] cleared the review queue: T-014 (b3efb7a, learning
+  loop), T-016 (b402823, symbols/font/diagnostics), T-035 (b1575ed,
+  reproducible lint) all approved+merged; T-021/T-023 closed earlier. Fed
+  T-041 (idempotent learn) + T-042 (dev cleanup). Main pushed; CI pair green
+  on the last full run. Next wave: T-037/T-040 in flight, T-017/T-018/T-041/
+  T-042 backlog, T-009/T-015 with Yves/Marlow. Heartbeat automation armed
+  (10 min) so the lead seat does not go dark.
+- [2026-11-25 07:10 UTC] health check: forced CI pair + tsc ×4 green on main
+  after the T-014/T-016/T-035/T-037 wave; review queue empty. In flight:
+  T-041 (Wren, idempotent learn), T-040 (Yves, Fashionpedia report), T-009
+  (Yves, training), T-015 (Marlow, motion). T-017/T-018/T-042 backlog.
+  Lead heartbeat automation `aut_21183d7e900129C37TyK6JPWg8` active every
+  10 min — the seat no longer goes dark when the session sleeps.

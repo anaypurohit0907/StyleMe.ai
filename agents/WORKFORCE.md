@@ -13,7 +13,7 @@
 
 | Name    | Status | Task | Since (UTC)      | Notes |
 |---------|--------|------|------------------|-------|
-| Coco    | ACTIVE | T-016 | 2026-11-24 21:06 UTC | T-011/T-032/T-036 merged; device log pull verified; now T-016 icons/type/debug-chrome |
+| Coco    | ACTIVE | T-042 (review) | 2026-11-24 21:06 UTC | T-016 merged b402823; T-035 @e5fd517 + T-042 @76b5f8d in review; device visual check queued |
 | Yves    | ACTIVE | T-023 (Colab) | 2026-11-25 06:22 UTC | T-008/T-024/T-036 done; running dataset eval |
 | Rei     | ACTIVE | T-029 | 2026-11-24 20:15 UTC | sole Rei — orig. T-005 session stopped by Anay 06:47; floating reviewer/helper (user-ordered) |
 | Viv     | ACTIVE | T-028 | 2026-11-25 05:38 UTC | mobile registrationSecret + 403 recovery (T-020 deploy gate) |
