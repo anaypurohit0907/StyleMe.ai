@@ -16,7 +16,7 @@ files:
   - agents/tasks/T-026-mobile-lint-hygiene.md
   - agents/tasks/T-027-tech-lead-engineering-process.md
 branch: Onyx/T-027
-updated_at: 2026-11-25T05:45Z
+updated_at: 2026-11-25T05:46Z
 ---
 
 ## Goal
@@ -79,3 +79,7 @@ writers.
   Reviewer confirmations: T-021 → Coco, T-036 → Wren, T-032 → Onyx + Vesper,
   T-028 → Onyx. Cleaned three broken package symlinks from the shared tree;
   T-036 duplicate frontmatter ID already fixed by Coco.
+- [2026-11-25 05:46 UTC] main health: forced CI pair green (engine 54, worker
+  8) + tsc ×4 @ 02589f8. T-032 code review delegated to Rei (Vesper taste);
+  T-020 worker-side pre-review logged — approve pending schema caps + race
+  fixes; T-028/T-032/T-036 in progress.
