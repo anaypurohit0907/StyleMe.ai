@@ -127,10 +127,13 @@ the visual + log smoke; never infer a pass from the local AVD.
 | Gate | Target | How measured |
 |---|---|---|
 | Crash-free sessions | ≥ 99.5% | Play Console vitals after internal track, plus tester reports; no crash SDK ships yet |
-| Onboarding funnel | name/city → vibes → laundry → first capture → first wear | manually tallied per tester until analytics exists; record drop-off step |
+| Onboarding funnel | name/city → vibes → laundry → first capture → first wear | Style DNA → **Diagnostics** shows local counters (`onboarding_*`, `first_capture`, `first_wear`, `wear_logged`, `streak_milestone`, `poll_answered`); counts only, no PII/network |
 | Testers | 5 | Play internal testing list + install confirmation |
-| Retention | 2 weeks | tester check-in / wear_log review; no server analytics yet |
+| Retention | 2 weeks | tester check-in + the same local Diagnostics counters; no server analytics yet |
 | Worker smoke | `/health` ok, auth 400/403 paths, one sync | commands above |
+
+Funnel counters are device-local and privacy-safe: no device id, photos, or
+content; they survive restarts and are shown only in Diagnostics.
 
 ### Play internal testing
 

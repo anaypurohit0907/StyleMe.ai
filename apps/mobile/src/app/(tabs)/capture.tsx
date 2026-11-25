@@ -7,7 +7,7 @@ import { useRouter } from "expo-router";
 import type { Fit, GarmentAttrs, Pattern, Slot } from "@styleme/schema";
 import { paletteSwatch, radius, space } from "@styleme/design";
 import { AddedChip, Btn, Caption, Card, Chip, Progress, Screen, Scroll, Swatch, TextLink, Title } from "@/components/ui";
-import { upsertGarment } from "@/lib/db";
+import { bumpFunnel, upsertGarment } from "@/lib/db";
 import { loadSessionTarget, newGarment, persistPhoto } from "@/lib/local";
 import { segmentGarment } from "@/lib/segment";
 import { getVisionTagger } from "@/lib/vision";
@@ -132,6 +132,8 @@ export default function Capture() {
       const originalRef = originalUri ? await persistPhoto(originalUri, draftId) : undefined;
       await upsertGarment(newGarment(draftId, attrs, uri, originalRef));
       log("capture", `saved ${draftId} photo=${uri.split("/").pop() ?? uri}`);
+      const saves = await bumpFunnel("capture_saved");
+      if (saves === 1) await bumpFunnel("first_capture");
       setSessionCount((n) => n + 1);
       setFlash({ thumb: uri });
       // The camera branch remounts CameraView — it isn't ready until onCameraReady fires again.
