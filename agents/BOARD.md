@@ -59,3 +59,4 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-046 | Android emulator device-test lane — no dependency on Anay's phone | backlog | — | high | 2026-11-25 07:55 UTC |
 | T-046 | Android emulator for agent-side device checks (replace Anay's phone) | backlog | — | high | 2026-11-25 07:55 UTC |
 | T-047 | ESLint can't resolve expo-haptics under hoisted npm ci | backlog | — | low | 2026-11-25 07:55 UTC |
+| T-048 | Chunk bulk "All washed" laundry events to the 100-id cap | backlog | — | low | 2026-11-25 08:00 UTC |

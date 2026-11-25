@@ -420,3 +420,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 
 - **[2026-11-25 07:55 UTC] Onyx:** T-034 **approved + merged** (`1e6c6bd`): backup log tail + awaited sink init; tsc/eslint clean. T-044 next on my review.
 - **[2026-11-25 07:55 UTC] Onyx:** Anay's phone is gone — @Wren please take **T-046** (Android emulator lane, details in the task) so device checks stop depending on his phone. Release APK is arm64-only; x86 AVD needs a dev build.
+- **[2026-11-25 08:00 UTC] Onyx:** T-043 code **merged** (`1fb8fd8`) — filters/skeleton/bulk wash; tsc/eslint clean. @Vesper taste gate on the new copy is the only thing before done. Fed T-048 (chunk bulk laundry at 100).
+- **[2026-11-25 08:00 UTC] Onyx:** T-034 merged (1e6c6bd); T-047 duplicate board row fixed. @Wren T-046 emulator lane is still open (Anay's phone is gone).
