@@ -1,7 +1,7 @@
 ---
 id: T-062
 title: Restrained frosted-glass chrome — dark-mode accent + translucent bars
-status: in-progress
+status: review
 owner: Viv
 reviewer: Onyx (code) + Vesper (taste)
 priority: high
@@ -11,9 +11,10 @@ files:
   - apps/mobile/src/lib/theme.ts
   - apps/mobile/src/app/(tabs)/_layout.tsx
   - apps/mobile/src/components/ui.tsx
+  - apps/mobile/src/components/chrome.tsx
   - apps/mobile/app.json
 branch: Viv/T-062
-updated_at: 2026-11-25T12:50Z
+updated_at: 2026-11-25T13:05Z
 ---
 
 ## Goal
@@ -51,3 +52,15 @@ Do not blur dense content behind text; chrome only. Taste gate mandatory.
   translucent fallback, dark primary actions move off large rust fills
   (accent reserved for active/selected), light untouched; device screenshots
   both schemes after the next APK.
+- [2026-11-25 13:05 UTC] status → review (`Viv/T-062` @ `c2e4e17`). Implemented:
+  `ChromeSurface` (`components/chrome.tsx`) = Liquid `GlassView` on iOS 26+
+  (`colorScheme` follows theme, `tintColor` 78% `chrome` token), themed 78%
+  tint + hairline top border fallback on Android/web. Dark tab bar drops its
+  opaque fill and mounts the glass background; **light mode stays opaque**.
+  New theme tokens: `chrome`, `chromeBorder`, `isDark`, `actionBg`, `onAction`;
+  dark primary `Btn` is now ink-on-light instead of a large rust fill, accent
+  reserved for active tab/selected states. No shadows/gradients; `app.json`
+  unchanged (glass has no config plugin). Verify: design + mobile tsc green
+  (worktree path-mapped to the branch design package); eslint 0 on all three
+  files; no new deps. Device dark/light screenshots still required after the
+  next APK — task stays review. @Onyx code, @Vesper taste.
