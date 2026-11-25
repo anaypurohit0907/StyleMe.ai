@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import app from "../src/index";
-import { makeEnv, type MockEnv } from "./mockdb";
+import { gkey, makeEnv, type MockEnv } from "./mockdb";
 import { updatePreference } from "@styleme/engine";
 
 /**
@@ -202,6 +202,87 @@ describe("worker API", () => {
     expect(typeof tone.copy.pick_one).toBe("string");
     const tone2R = await call("/v1/tone", undefined, true);
     expect((await tone2R.json()).copy).toEqual(tone.copy);
+  });
+
+  it("learn delivery is idempotent per jobId — a retry never double-learns (T-041)", async () => {
+    const body = (jobId: string, ts: number) => ({
+      suggestedIds: [["t1", "b1", "s1"]],
+      pickedId: "t1+b1+s1",
+      context: { occasion: "casual", mood: "none", weather: { tempC: 18, isRaining: false }, now: ts },
+      ts,
+      jobId,
+    });
+
+    const first = await call("/v1/learn", { method: "POST", body: JSON.stringify(body("queue-job-001", NOW)) }, true);
+    expect(first.status).toBe(200);
+    const firstBody = (await first.json()) as { ok: boolean; deduped?: boolean; n: number };
+    expect(firstBody.ok).toBe(true);
+    expect(firstBody.deduped).toBeUndefined();
+    expect(typeof firstBody.n).toBe("number");
+    const prefsAfterFirst = env.DB.users.get(USER_A)?.prefs;
+    const wearLogAfterFirst = env.DB.wearLog.length;
+
+    // The retry the client sends if it dies between send and queue-removal.
+    const retry = await call(
+      "/v1/learn",
+      { method: "POST", body: JSON.stringify(body("queue-job-001", NOW)) },
+      true,
+    );
+    expect(retry.status).toBe(200);
+    const retryBody = (await retry.json()) as { ok: boolean; deduped?: boolean; n?: number };
+    expect(retryBody.deduped).toBe(true);
+    expect(retryBody.n).toBeUndefined();
+    // Nothing moved: no second wear-log row, prefs byte-identical.
+    expect(env.DB.wearLog.length).toBe(wearLogAfterFirst);
+    expect(env.DB.users.get(USER_A)?.prefs).toBe(prefsAfterFirst);
+
+    // A different job id still learns normally — the gate isn't stuck.
+    const second = await call(
+      "/v1/learn",
+      { method: "POST", body: JSON.stringify(body("queue-job-002", NOW + 60_000)) },
+      true,
+    );
+    expect(second.status).toBe(200);
+    const secondBody = (await second.json()) as { deduped?: boolean; n: number };
+    expect(secondBody.deduped).toBeUndefined();
+    expect(secondBody.n).toBe(firstBody.n + 1);
+  });
+
+  it("learn dedupe: a failed apply forgets the job id — the retry re-applies (T-041)", async () => {
+    const send = (jobId: string) =>
+      call(
+        "/v1/learn",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            suggestedIds: [["t1", "b1", "s1"]],
+            pickedId: "t1+b1+s1",
+            context: { occasion: "casual", mood: "none", weather: { tempC: 18, isRaining: false }, now: NOW },
+            ts: NOW,
+            jobId,
+          }),
+        },
+        true,
+      );
+
+    // The apply blows up mid-write (injected DB failure) — the worker must
+    // release the dedupe row so nothing is poisoned.
+    env.DB.failNextUsersPrefsUpdate = true;
+    const failed = await send("queue-job-flaky");
+    expect(failed.status).toBe(500);
+    expect(env.DB.learnEvents.has(gkey(USER_A, "queue-job-flaky"))).toBe(false);
+
+    // Same job id, clean retry — the signal applies exactly once.
+    const retry = await send("queue-job-flaky");
+    expect(retry.status).toBe(200);
+    const retryBody = (await retry.json()) as { ok: boolean; deduped?: boolean; n: number };
+    expect(retryBody.ok).toBe(true);
+    expect(retryBody.deduped).toBeUndefined();
+    expect(env.DB.learnEvents.has(gkey(USER_A, "queue-job-flaky"))).toBe(true);
+
+    // And a further retry of the same id dedupes as designed.
+    const again = await send("queue-job-flaky");
+    expect((await again.json()).deduped).toBe(true);
   });
 
   it("tenant isolation: same garment id across users — no overwrite, no cross-effects", async () => {
