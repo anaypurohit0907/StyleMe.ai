@@ -73,7 +73,6 @@ export type FunnelEvent =
   | "onboarding_start"
   | "onboarding_step_1"
   | "onboarding_step_2"
-  | "onboarding_step_3"
   | "onboarding_complete"
   | "first_capture"
   | "capture_saved"
