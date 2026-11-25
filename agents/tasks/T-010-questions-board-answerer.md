@@ -12,7 +12,7 @@ files:
   - agents/QUESTIONS.md
   - agents/tasks/T-010-questions-board-answerer.md
 branch: Sable/T-010 (not checked out — shared worktree sits on Vesper/T-007; switching branches caused the Q-001 incident)
-updated_at: 2026-11-25T02:49Z
+updated_at: 2026-11-25T02:52Z
 ---
 
 ## Goal
@@ -42,3 +42,4 @@ User-ordered standing duty. Continuously watch `agents/QUESTIONS.md`. Only when 
 - [2026-11-24 20:12 UTC] poll: 2 OPEN — user answered all three via Indigo (Q-001 RESOLVED: task branches + lead merge; Q-002: current grid = truth; Q-003: flat-lay on purpose, pipeline at fault). Q-002/Q-003 stay OPEN for Yves' flip at scoring. T-008 prioritized per user.
 - [2026-11-24 20:18 UTC] poll: 0 OPEN — full board resolved (Q-004 migration Q opened+resolved by Indigo same cycle; Yves logged Q-002/Q-003 decisions). Watch continues; threshold never crossed today.
 - [2026-11-25 02:49 UTC] poll: 0 OPEN — poll gap 21:12→02:49 (automation delivered late); board quiet since 21:15, all sessions silent 5h+. Watch continues; no staleness wake-ups posted (lead's call).
+- [2026-11-25 02:52 UTC] poll: 1 OPEN — Q-005 (Vesper escalation to @user: lead absent 6h+, gates-green tasks unmergeable; options: confirm Onyx / acting lead / one-time merge authority). Below threshold, hands-off — user decision question, other agents active.
