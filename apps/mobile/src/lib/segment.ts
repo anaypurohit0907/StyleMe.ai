@@ -13,7 +13,7 @@ import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import jpeg from "jpeg-js";
 import type { InferenceSession } from "onnxruntime-react-native";
 import { encodePngRgba } from "./png";
-import { errorText, log, withTimeout } from "./pipeline-log";
+import { errorText, log, logWarn, withTimeout } from "./pipeline-log";
 
 type OrtModule = typeof import("onnxruntime-react-native");
 let ortModule: OrtModule | null = null;
@@ -95,7 +95,7 @@ async function prepare(uri: string): Promise<{
     temp = new File(prepared.uri);
     log("cutout", `prepared ${prepared.width}x${prepared.height} (${Date.now() - start}ms)`);
   } catch (err) {
-    log("cutout", `prepare failed, decoding original: ${errorText(err)}`);
+    logWarn("cutout", `prepare failed, decoding original: ${errorText(err)}`);
   }
 
   try {

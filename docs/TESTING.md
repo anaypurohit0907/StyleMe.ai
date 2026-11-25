@@ -55,11 +55,27 @@ Useful lines:
 - `prepared 1024x1219` — photo was normalized (rotation baked in).
 - `mask ... cov=0.42 bbox=... useMask=true` — cutout found the garment.
 - `useMask=false` — mask looked wrong, so the full photo was kept.
-- `slot model -> top` / `subtype model -> t-shirt conf=0.81` — classifier output.
-- `FAILED ... timed out` — that item was skipped; the scan moved on.
+- `slot model -> top conf=0.62 [top=0.62 bottom=0.21 ...]` / `subtype model -> t-shirt conf=0.81` — classifier output.
+- `FAILED ... timed out` / `ERROR` — that item was skipped; the scan moved on.
 
-The log is also appended to `pipeline.log` in the app's document directory and
-reloaded on the next launch, so a crash does not erase the last step.
+## Logs from a laptop
+
+Release builds write the same lines to an **app-specific external file** that
+`adb` can read without root:
+
+```bash
+adb pull /sdcard/Android/data/com.o_anay.styleme/files/styleme.log
+tail -f styleme.log
+# or stream directly:
+adb shell tail -f /sdcard/Android/data/com.o_anay.styleme/files/styleme.log
+```
+
+- Format: `2026-11-24T20:32:10.123Z [scan] message` (UTC; `WARN`/`ERROR` for levels).
+- Rotates at 2 MB; the previous file is `styleme.log.1`.
+- The in-app card still shows the last 14 lines and loads the previous tail on
+  launch, so a crash does not erase the last step.
+- Dev/Metro: `npx expo start` prints the same `[StyleMe]` lines in the terminal.
+- iOS/Expo Go fall back to the app document directory.
 
 ## Known limits
 

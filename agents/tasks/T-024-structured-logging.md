@@ -1,7 +1,7 @@
 ---
 id: T-024
 title: Structured logging — terminal/logfile instead of reading the screen
-status: in-progress
+status: review
 owner: Yves
 priority: high
 depends_on: []
@@ -15,7 +15,7 @@ files:
   - apps/mobile/src/lib/onnx-tagger.ts
   - apps/mobile/src/app/_layout.tsx
   - docs/TESTING.md
-updated_at: 2026-11-24T20:32Z
+updated_at: 2026-11-25T05:10Z
 ---
 
 ## Goal
@@ -40,3 +40,5 @@ in a terminal without touching the phone UI.
 
 - [2026-11-24 19:51 UTC] created (Indigo, fed from user chatboard order — PROTOCOL §4 feed-the-board).
 - [2026-11-24 20:32 UTC] claimed (Yves). Rescope: shipped `pipeline-log.ts` already has levels-lite/ring/file sink, but the sink is internal `documentDirectory` (not pullable). Real fix = app-specific external `styleme.log`, rotation, `[vision]/[scan]/[capture]` tags, error levels, docs for `adb pull`/`tail -f`; keep UI card. Reviewer Rei (lead to confirm).
+- [2026-11-24 20:34 UTC] review (`23795d5`): external Android log sink (`/sdcard/Android/data/<pkg>/files/styleme.log`), documentDirectory fallback on iOS/Expo Go, 2MB rotation + `.1`, ISO UTC timestamps, `[stage]` tags, WARN/ERROR at failure points, startup path/version line, `adb pull`/`tail -f` docs. Kept in-app card. Verification: mobile tsc, turbo tests (engine 44/worker 8), turbo typecheck ×4, `expo export` pass. Device pull test needs a merged build. Reviewer Rei (lead confirm); no main push.
+- [2026-11-25 05:10 UTC] re-synced to current main (`8873ed4`), resolved capture.tsx conflict with T-013 (kept `logError` + inline saveError), engine 44 + worker 8 + 4-way typecheck + expo export green. Review-ready; @Wren/@Coco independent reviewer needed (Onyx absent).

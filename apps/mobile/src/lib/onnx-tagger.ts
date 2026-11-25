@@ -10,7 +10,7 @@ import jpeg from "jpeg-js";
 import type { ColorName, Fit, GarmentAttrs, Pattern, Slot } from "@styleme/schema";
 import { paletteSwatch } from "@styleme/design";
 import { decodePngRgba } from "./png";
-import { errorText, log } from "./pipeline-log";
+import { errorText, log, logError, logWarn } from "./pipeline-log";
 import { mockTagger, type VisionTagger } from "./vision";
 
 type OrtModule = typeof import("onnxruntime-react-native");
@@ -402,7 +402,7 @@ class OnnxTagger implements VisionTagger {
           slotConfidence = pred.confidence;
         }
       } catch (err) {
-        log("tag", `slot model unavailable: ${errorText(err)}`);
+        logWarn("tag", `slot model unavailable: ${errorText(err)}`);
       }
       log("tag", `slot clip=${clipSlot} final=${slot} conf=${slotConfidence.toFixed(2)}`);
       const color = dominantColor(img);
@@ -421,7 +421,7 @@ class OnnxTagger implements VisionTagger {
           if (mapped && mapped === slot && pred.confidence >= 0.6) subtype = pred.label;
         }
       } catch (err) {
-        log("tag", `subtype model unavailable: ${errorText(err)}`);
+        logWarn("tag", `subtype model unavailable: ${errorText(err)}`);
       }
       const formalityLabel = applyProbe(e, "formality") ?? zeroShot(e, "formality") ?? "3";
       let formality = Math.max(1, Math.min(5, parseInt(formalityLabel, 10) || 3));
@@ -451,7 +451,7 @@ class OnnxTagger implements VisionTagger {
         subtype,
       };
     } catch (e) {
-      log("tag", `FAILED, mock fallback: ${errorText(e)}`);
+      logError("tag", `FAILED, mock fallback: ${errorText(e)}`);
       return mockTagger.tag(uri);
     }
   }

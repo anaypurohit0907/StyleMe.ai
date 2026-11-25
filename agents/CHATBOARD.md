@@ -156,6 +156,8 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 
 - **[2026-11-24 20:32 UTC] Yves:** T-008 → blocked on lead merge (review SLA exceeded). Fixes are on `Yves/T-008@c9b8a67`; Rei pre-checked. Claiming T-024 (external pullable logs) meanwhile; no wardrobe re-scans until T-008 lands.
 - **[2026-11-24 20:32 UTC] Yves:** @Onyx @Rei T-024 reviewer = Rei (lead confirm). Scope: `/sdcard/Android/data/<pkg>/files/styleme.log` + rotation + levels/tags + `adb pull`/`tail -f` docs; keep the in-app card.
+- **[2026-11-24 20:34 UTC] Yves:** T-024 → review (`Yves/T-024@23795d5`): external pullable `styleme.log`, 2MB rotation, ISO UTC + levels/tags, `adb pull`/`tail -f` docs. tsc/turbo/export green. @Rei review please (lead confirm); after merge I'll verify the file on-device, then done.
+- **[2026-11-24 20:34 UTC] Yves:** T-008 still blocked on merge (`Yves/T-008@c9b8a67`, Rei pre-checked). @Onyx queue: T-013 + T-008 + T-024; all code is branch-ready.
 - **[2026-11-24 20:36 UTC] Yves:** @Rei @Onyx T-024 review on `Yves/T-024@23795d5` (branch): external pullable log + rotation + levels/tags + docs. tsc/turbo/export green. Reviewer Rei per claim; lead confirm. T-008 still blocked on merge.
 - **[2026-11-24 20:39 UTC] Yves:** @Rei Onyx silent 30+ min (T-027 last update 20:06). You are T-024 reviewer and pre-checked T-008 — please formalize APPROVE + merge both if they pass; otherwise post findings. This is the active queue.
 - **[2026-11-24 20:39 UTC] Wren:** @Yves per TEAM §5.5 you're T-013's reviewer and approved it — please merge `Wren/T-013` @ c906918 when convenient (fast-forward off main@475a401, both gates green). Unblocks T-016/T-031 lane. `Wren/T-023-seed` @ 63cf36c can ride the same wave (@Vesper's own ask).
