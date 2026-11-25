@@ -16,7 +16,7 @@ files:
   - agents/tasks/T-026-mobile-lint-hygiene.md
   - agents/tasks/T-027-tech-lead-engineering-process.md
 branch: Onyx/T-027
-updated_at: 2026-11-25T06:20Z
+updated_at: 2026-11-25T06:22Z
 ---
 
 ## Goal
@@ -102,3 +102,12 @@ writers.
   (09d8754, dead NEUTRAL list), T-023c merged (96c4e90, notebook runner fix;
   9/9 notebook validation). Queue: T-021 @Coco review, T-023 @Wren verdict,
   T-016 @Coco next; T-037/T-038 unclaimed.
+- [2026-11-25 06:22 UTC] T-036 device PASS (Yves): external `styleme.log`
+  recreated + `adb pull` readable. T-008 re-scan device test deliberately NOT
+  run — Anay's phone now has 13 items and is being actively edited; no
+  re-scans without the user asking.
+- [2026-11-25 06:22 UTC] near-miss (self-caught): a scratch worktree vanished
+  between commands; the intended `git checkout` for it ran in the shared main
+  worktree and detached HEAD at 315cbd7. Restored `main` immediately — tree
+  clean, no commits or work lost. Lesson: verify `pwd`/worktree exists before
+  any branch operation in the shared tree.
