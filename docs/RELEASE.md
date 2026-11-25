@@ -99,28 +99,23 @@ Check: boot to Today, tag one capture, one logged wear, Style DNA diagnostics
 opens, `styleme.log` contains the startup + scan lines. The previous file is
 `styleme.log.1`; the app loads its tail at the next launch (T-034).
 
-### Emulator lane (x86_64) — use CI, not this host
+### Emulator lane — blocked (T-046)
 
-The CI APK is arm64-only; x86_64 needs its own build. Local AVDs are **not
-supported on this host**: API 36 and API 34 images both segfault ~60–90 s into
-boot across every GPU/accel/CPU workaround tried (T-046). Do not claim a local
-device pass.
+No working emulator lane as of 2026-11-25. Do not claim a device pass from an
+emulator until this section changes.
 
-The supported path is the `Rei/T-046` CI lane: `.github/workflows/emulator.yml`
-("Emulator smoke (x86_64)") builds the same release APK for x86_64, boots an
-API 34 AVD on the runner's KVM, installs, screenshots, and pulls the log.
+- **Local host**: QEMU segfaults 60–90 s into every AVD boot (API 34/36, all
+  GPU/accel/CPU workarounds).
+- **ubuntu-latest runners**: no `/dev/kvm`; TCG cannot boot API 34 in 600 s.
+- **macos-14 arm64**: runner configuration not available to this repo.
+- **macos-15-intel**: API 30 boots (338–841 s), then the emulator dies on the
+  first post-boot `settings` / `adb install` call (`Broken pipe`); API 34 does
+  not boot in 600 s.
+- **macos-15 arm64**: emulator never connects to adb.
 
-```bash
-gh workflow run emulator.yml --ref main   # after T-046 merges
-gh run list --workflow=emulator.yml --limit 5
-gh run watch <run-id>
-gh run download <run-id> -n emulator-smoke
-# artifact: emulator.png, styleme.log, logcat.txt (14-day retention)
-```
-
-T-046 acceptance is still pending the first green run (`45584235952` was in
-progress at 09:21 UTC). Use the downloaded `emulator.png` / `styleme.log` for
-the visual + log smoke; never infer a pass from the local AVD.
+Device checks require a physical Android phone (arm64 APK) or a self-hosted
+runner with working KVM/nested virtualization. Revisit T-046 when either
+exists.
 
 ## 4. Beta gates
 

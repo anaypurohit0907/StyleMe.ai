@@ -90,3 +90,21 @@ adb shell tail -f /sdcard/Android/data/com.o_anay.styleme/files/styleme.log
 
 Every push to `main` that touches `apps/mobile/**` builds a new arm64 release APK
 in GitHub Actions and replaces the `apk-latest` release asset.
+
+## Device checks without a phone — currently blocked
+
+No working emulator lane as of 2026-11-25. Evidence (T-046):
+
+- **Local host**: QEMU segfaults 60–90 s into every boot — API 34 and 36, all
+  GPU/accel/CPU workarounds, 1–2 GB RAM.
+- **ubuntu-latest runners**: no `/dev/kvm`; the action disables HW accel and
+  TCG cannot finish booting API 34 in 600 s.
+- **macos-14 arm64**: runner configuration not available to this repo.
+- **macos-15-intel**: API 30 boots (338–841 s) but the emulator process dies on
+  the first post-boot `settings`/`adb install` call (`Broken pipe`); API 34
+  does not boot in 600 s.
+- **macos-15 arm64**: emulator never connects to adb.
+
+Use a physical Android phone (arm64 APK) or a self-hosted runner with working
+KVM/nested virtualization. Revisit T-046 when either exists; do not claim an
+emulator device pass from the current lanes.
