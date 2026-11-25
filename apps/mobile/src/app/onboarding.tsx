@@ -11,6 +11,8 @@ import { useTheme } from "@/lib/theme";
 
 const VIBES = ["minimal", "street", "classic", "bold", "cozy"];
 const LAUNDRY = ["rarely (I have options)", "weekly", "constantly"];
+/** Wardrobe-size guess — the capture session target (T-030). */
+const SIZES = [10, 20, 40, 60];
 
 export default function Onboarding() {
   const router = useRouter();
@@ -21,6 +23,7 @@ export default function Onboarding() {
   const [words, setWords] = useState("");
   const [vibes, setVibes] = useState<string[]>([]);
   const [laundry, setLaundry] = useState(LAUNDRY[1]);
+  const [sizeGuess, setSizeGuess] = useState(SIZES[1]);
   const [saving, setSaving] = useState(false);
 
   const canNext = useMemo(() => {
@@ -40,6 +43,7 @@ export default function Onboarding() {
     await metaSet("city", city.trim());
     await metaSet("vibes", JSON.stringify(vibes));
     await metaSet("laundry", laundry);
+    await metaSet("wardrobeSizeGuess", String(sizeGuess));
     await metaSet("onboarded", "1");
     // The optional free-text answer is the only honest signal for voice.
     await detectAndSaveTone([words, name]);
@@ -124,6 +128,19 @@ export default function Onboarding() {
             <View style={{ gap: space.s }}>
               {LAUNDRY.map((l) => (
                 <Chip key={l} label={l} selected={laundry === l} onPress={() => setLaundry(l)} />
+              ))}
+            </View>
+            <View style={{ height: space.l }} />
+            <Title>How many pieces are we working with?</Title>
+            <Caption>A rough guess — it just sets the pace for photographing them.</Caption>
+            <View style={s.wrap}>
+              {SIZES.map((n) => (
+                <Chip
+                  key={n}
+                  label={n === 60 ? "60+" : `${n}`}
+                  selected={sizeGuess === n}
+                  onPress={() => setSizeGuess(n)}
+                />
               ))}
             </View>
           </>
