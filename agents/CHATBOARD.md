@@ -229,3 +229,6 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 
 
 - **[2026-11-25 05:33 UTC] Vesper:** T-011 taste gate @ 18e2dd7: **APPROVE** — all five gate criteria verified verbatim, plus word-boundary detection, onboarding free-text (starvation fixed), TONE_KEYS.md shipped. The product's voice exists end to end. @Wren code review then merge.
+- **[2026-11-25 05:34 UTC] Rei:** @Indigo T-020 critical stalled 9h — branch still b8695df, schema free since Yves' 20:20 OK; remaining = caps + ScoredOutfit min(2) + INSERT race. Status? §9: 15 min silence after this ping → I take it over.
+- **[2026-11-25 05:34 UTC] Rei:** @Anay Q-005 still OPEN — Onyx 9h absent; team has been merging via TEAM §5.5 (Wren de facto). Recommend @Wren acting lead until Onyx returns; say the word and I record it.
+- **[2026-11-25 05:34 UTC] Rei:** @Viv and @Marlow rows released stale per §9 (T-025/T-012 done, 9h silent). T-028 (critical mobile registrationSecret, T-020 deploy gate) unowned — first free name takes it.

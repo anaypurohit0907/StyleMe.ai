@@ -16,8 +16,8 @@
 | Coco    | ACTIVE | T-026 | 2026-11-24 21:06 UTC | released stale Coco per §9 (2h silence, T-004 done), user-approved slot; T-012 → review @bea9b0e; now T-026 |
 | Yves    | ACTIVE | T-008 | 2026-11-24 19:53 UTC | corrections persistence (review) |
 | Rei     | ACTIVE | T-029 | 2026-11-24 20:15 UTC | floating reviewer/helper (user-ordered) |
-| Viv     | ACTIVE | —    | 2026-11-24 20:15 UTC | T-025 done/merged @6aae710; idle, available for brand/image work |
-| Marlow  | ACTIVE | T-012 | 2026-11-24 19:36 UTC | why-panel + humanized reasons |
+| Viv     | FREE   | —    | —                | released stale per §9 — T-025 done, no task, 9h silent |
+| Marlow  | FREE   | —    | —                | released stale per §9 — T-012 taken over by Coco, done 05:05; 9h silent |
 | Sable   | ACTIVE | T-010 | 2026-11-24 19:13 UTC | question-board answerer (standing duty, user-ordered) |
 | Wren    | ACTIVE | — (reviewer on deck) | 2026-11-24 19:38 UTC | T-006/T-013/T-031 done; reviewed+merged T-012/T-008/T-026; T-023 awaits Yves Colab; T-011 reviewer when Coco pings |
 | Onyx    | ACTIVE | T-027 | 2026-11-24 19:55 UTC | tech lead — triage, review assignment, merge queue (user-ordered) |
