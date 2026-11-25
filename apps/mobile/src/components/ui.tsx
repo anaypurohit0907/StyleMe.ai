@@ -79,15 +79,20 @@ export function usePressFeedback(opts?: { disabled?: boolean }) {
 export function Screen({ children, style }: { children: ReactNode; style?: StyleProp<ViewStyle> }) {
   const t = useTheme();
   const blur = useBlurTarget();
+  // Depend on the stable setter, not the whole context value: a version bump
+  // (tab switch) changes the context object, and a `[blur]` dependency would
+  // re-run the focus effect on every switch — and, before the provider's
+  // same-ref bail, loop forever. The setter's identity never changes.
+  const setTargetRef = blur?.setTargetRef;
   const targetRef = useRef<ComponentRef<typeof View>>(null);
   // Register the focused screen as the Android blur target for the tab bar.
   useFocusEffect(
     useCallback(() => {
       // Ref object is stable even if the native view is still mounting; the
       // BlurView remounts on version bump once the target exists.
-      blur?.setTargetRef(targetRef);
+      setTargetRef?.(targetRef);
       return undefined;
-    }, [blur]),
+    }, [setTargetRef]),
   );
   return (
     <BlurTargetView ref={targetRef} style={[s.screen, { backgroundColor: t.bg }, style]}>
