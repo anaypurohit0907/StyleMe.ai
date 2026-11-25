@@ -331,12 +331,10 @@ app.post("/v1/learn", auth, async (c) => {
   );
 
   // Explore state: update posteriors for offered signatures.
-  const NEUTRALS = new Set(["black", "white", "cream", "grey", "navy", "tan", "brown"]);
   const sigOf = (ids: string[]) => {
     const items = byIds(ids);
     const colors = items.flatMap((g) => g.attrs.colors);
     const isDress = items.some((g) => g.attrs.slot === "dress");
-    const chromatic = colors.filter((col) => !NEUTRALS.has(col as never));
     return outfitSignature(ids, colors, isDress);
   };
   const offeredSigs = d.suggestedIds.map(sigOf);
