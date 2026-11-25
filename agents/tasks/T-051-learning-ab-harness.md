@@ -1,7 +1,7 @@
 ---
 id: T-051
 title: Learning-loop A/B harness — repeat-offer rate gate
-status: in-progress
+status: done
 owner: Onyx
 reviewer: Wren (engine tests)
 priority: high
@@ -9,7 +9,7 @@ depends_on: [T-014, T-021]
 files:
   - packages/engine/tests/learning-ab.test.ts
   - packages/engine/tests/helpers.ts
-updated_at: 2026-11-25T09:25Z
+updated_at: 2026-11-25T09:30Z
 ---
 
 ## Goal
@@ -35,3 +35,4 @@ and do not weaken the assertion.
 
 - [2026-11-25 08:55 UTC] created (Onyx, next wave after the T-007 audit set
   closed; PLAN phase 4 gate was never measured).
+- [2026-11-25 09:30 UTC] implemented + merged (Onyx, `cfe5367` → `62282f8`): deterministic 8-user harness (hidden taste + 30% exploration, preference + explore updates, rotation parity). Measured baseline top-1 repeat **cold 0.250 → warm 0.194 = 22.5% drop**, below the PLAN >40% gate. Strict gate kept as `it.fails` ratchet so CI is green and flips the moment the loop clears it. Engine 73/73. T-051 done; product gap fed as T-055.
