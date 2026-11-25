@@ -1,7 +1,7 @@
 ---
 id: T-009
 title: Background-augmented slot/subtype training on Colab
-status: review
+status: done
 owner: Yves
 priority: high
 depends_on: [T-023]
