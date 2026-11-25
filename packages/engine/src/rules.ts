@@ -87,22 +87,39 @@ export const colorRule: Rule = (items, rc) => {
 // 3. Formality match
 // ---------------------------------------------------------------------------
 
+/** Light mood read on the formality center (context.mood, consumed here). */
+const MOOD_FORMALITY_NUDGE: Record<string, number> = {
+  high: 0.25,
+  focused: 0.15,
+  chill: -0.25,
+  tired: -0.15,
+  none: 0,
+};
+
 export const formalityRule: Rule = (items, rc) => {
   const band = OCCASION_BANDS[rc.context.occasion];
-  // Blend occasion center with the user's learned center of gravity.
-  const center = 0.7 * band.center + 0.3 * rc.prefs.formalityCenter;
+  // Blend occasion center with the user's learned center of gravity, plus a
+  // light mood nudge — "focused" dresses up a touch, "chill" dresses down.
+  const center =
+    0.7 * band.center +
+    0.3 * rc.prefs.formalityCenter +
+    (MOOD_FORMALITY_NUDGE[rc.context.mood] ?? 0);
+  // Weighted average: an accessory (mass 0.3) must influence the outfit's
+  // formality read by 0.3, not dilute the average by a full seat — the
+  // unweighted mean let attachments launder a sloppy outfit's deviation.
   let dev = 0;
+  let wSum = 0;
   let over2 = 0;
   let dev2 = 0;
   for (const g of items) {
     const w = g.attrs.slot === "shoes" ? 0.8 : g.attrs.slot === "accessory" ? 0.3 : 1;
     const d = Math.abs(g.attrs.formality - center);
     dev += d * w;
+    wSum += w;
     if (d > 2) over2++;
     if (d === 2) dev2++;
   }
-  const n = items.length || 1;
-  const avgDev = dev / n;
+  const avgDev = wSum > 0 ? dev / wSum : 0;
   let score: number;
   if (over2 > 0) score = -0.3;
   else if (avgDev <= 0.25) score = 1.0;

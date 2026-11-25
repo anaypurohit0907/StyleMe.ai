@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { emptyPreference } from "@styleme/schema";
 import type { Garment } from "@styleme/schema";
 import { updateExploreState, recommend, updatePreference } from "../src";
+import { NEUTRAL_COLORS } from "../src/color";
 import { makeContext, makeWardrobe, pickIndex } from "./helpers";
 
 /**
@@ -85,11 +86,10 @@ describe("uniqueness invariant (1000-user simulation)", () => {
             : { picked: null, garments: garmentMap, occasion: context.occasion },
         );
         // Keep explore state lightweight: top-3 signatures only.
-        const NEUTRALS = ["black", "white", "cream", "grey", "navy", "tan", "brown"];
         const sigs = res.outfits.slice(0, 3).map((o) => {
           const colors = o.garmentIds.flatMap((id) => garmentMap.get(id)!.attrs.colors);
           const isDress = o.garmentIds.some((id) => garmentMap.get(id)!.attrs.slot === "dress");
-          const chromatic = colors.filter((c) => !NEUTRALS.includes(c));
+          const chromatic = colors.filter((c) => !(NEUTRAL_COLORS as readonly string[]).includes(c));
           return `${isDress ? "dress" : "pair"}:${chromatic[0] ?? "mono"}`;
         });
         const pickedSig = picked ? (sigs[res.outfits.indexOf(picked)] ?? null) : null;
@@ -100,8 +100,10 @@ describe("uniqueness invariant (1000-user simulation)", () => {
 
     // 1. Personal daily variety: the probe user's top-1 over 40 days is not
     //    a single repeated outfit, and they were offered a real menu.
-    expect(probeTop1s.size).toBeGreaterThanOrEqual(8); // not one look 40 days
-    expect(probeOffered.size).toBeGreaterThanOrEqual(15); // menu breadth
+    // (Tightened from 8/15 after observing 17/35 on the current engine —
+    // generous thresholds let monotony creep back in unnoticed.)
+    expect(probeTop1s.size).toBeGreaterThanOrEqual(12); // not one look 40 days
+    expect(probeOffered.size).toBeGreaterThanOrEqual(24); // menu breadth
 
     // 2. No global herd on the final day.
     const lastDay = top1sByDay.get(DAYS - 1)!;
@@ -117,7 +119,7 @@ describe("uniqueness invariant (1000-user simulation)", () => {
         pairs++;
       }
     }
-    expect(total / pairs).toBeGreaterThan(0.01);
+    expect(total / pairs).toBeGreaterThan(0.05);
 
     // 4. Exploration state accumulated.
     expect(Object.keys(explore[999]!).length).toBeGreaterThan(0);

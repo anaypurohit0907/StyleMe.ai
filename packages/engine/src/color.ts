@@ -41,6 +41,15 @@ export const PALETTE: Record<ColorName, ColorDef> = {
   rust: { name: "rust", h: 18, s: 0.6, l: 0.42, neutral: false, temp: "warm" },
 };
 
+/**
+ * The single source of truth for which palette entries behave as neutrals
+ * (black, white, cream, grey, navy, tan, brown — the "power neutrals").
+ * Import this everywhere instead of re-listing the seven names.
+ */
+export const NEUTRAL_COLORS: readonly ColorName[] = (Object.keys(PALETTE) as ColorName[]).filter(
+  (c) => PALETTE[c]!.neutral,
+);
+
 export function isNeutral(c: ColorName): boolean {
   return PALETTE[c]?.neutral ?? false;
 }

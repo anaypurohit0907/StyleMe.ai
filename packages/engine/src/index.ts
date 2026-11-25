@@ -29,7 +29,7 @@ import {
   type EngineWeights,
   type RuleCtx,
 } from "./rules";
-import { colorHarmony } from "./color";
+import { colorHarmony, isNeutral } from "./color";
 import { exploreScore, hashSeed, mulberry32, outfitSignature, type SignatureState } from "./explore";
 
 export { DEFAULT_WEIGHTS, OCCASION_BANDS };
@@ -75,6 +75,11 @@ export interface RecommendMeta {
   exploredSignatures: string[];
   /** Slots the wardrobe can't fill at all (app should prompt to add). */
   missingSlots: string[];
+  /**
+   * Slots the user owns but nothing is wearable right now (everything is
+   * in the wash / retired) — e.g. "all your shoes are in the wash".
+   */
+  unavailableSlots: string[];
   /** True when the season filter emptied the wardrobe and was relaxed. */
   seasonFallback: boolean;
   /**
@@ -97,7 +102,7 @@ export function recommend(input: RecommendInput): RecommendResult {
     context,
     prefs,
     wardrobeHasNeutral: wardrobe.some((g) =>
-      g.attrs.colors.some((c) => isNeutralColor(c)),
+      g.attrs.colors.some((c) => isNeutral(c as ColorName)),
     ),
   };
 
@@ -120,12 +125,64 @@ export function recommend(input: RecommendInput): RecommendResult {
 
   const wantOuter = context.weather.tempC < 19 || context.weather.isRaining;
 
+  // Attachment pools pre-sorted by formality once, picked once: the best
+  // coat for the occasion/user center (sort hoisted out of the scoring
+  // loop — it used to re-sort per candidate for an identical answer).
+  const outerByFormality = [...options.outerwear].sort(
+    (a, b) => a.attrs.formality - b.attrs.formality,
+  );
+  const accessoryByFormality = [...options.accessories].sort(
+    (a, b) => a.attrs.formality - b.attrs.formality,
+  );
+  const occasionCenter =
+    0.7 * OCCASION_BANDS[context.occasion].center + 0.3 * prefs.formalityCenter;
+
+  /** Closest-to-center garment from a formality-sorted pool (O(n) scan). */
+  const closestByFormality = (pool: Garment[], center: number): Garment | null => {
+    if (pool.length === 0) return null;
+    let best = pool[0]!;
+    let bestD = Math.abs(pool[0]!.attrs.formality - center);
+    for (let i = 1; i < pool.length; i++) {
+      const d = Math.abs(pool[i]!.attrs.formality - center);
+      if (d < bestD) {
+        bestD = d;
+        best = pool[i]!;
+      }
+    }
+    return best;
+  };
+
+  // Engine attachments: the contextually-right coat (cold/rain) and one
+  // harmony-safe accessory (neutral, or a color already in the outfit).
+  const coat = wantOuter ? closestByFormality(outerByFormality, occasionCenter) : null;
+  const wornSafeAccessory = (a: Garment, cand: Candidate): boolean => {
+    if (cand.items.length === 0) return false;
+    const chromatic = new Set(
+      cand.items.flatMap((g) => g.attrs.colors).filter((c) => !isNeutral(c as ColorName)),
+    );
+    return a.attrs.colors.every((c) => isNeutral(c as ColorName) || chromatic.has(c));
+  };
+  const accessory = options.accessories.length > 0
+    ? closestByFormality(
+        accessoryByFormality.filter((a) => a.attrs.colors.every((c) => isNeutral(c as ColorName))),
+        occasionCenter,
+      )
+    : null;
+  const attach = (cand: Candidate): Garment[] => {
+    const extra: Garment[] = [];
+    if (coat) extra.push(coat);
+    if (accessory && wornSafeAccessory(accessory, cand)) extra.push(accessory);
+    return extra;
+  };
+
   interface Scored {
     outfit: ScoredOutfit;
     base: number;
     sig: string;
     final: number;
     explored: boolean;
+    /** Ids the engine attached (coat/accessory) — exempt from reuse tax. */
+    attached: Set<string>;
   }
   const scored: Scored[] = [];
   const skippedNeverMix = new Map<string, [ColorName, ColorName]>();
@@ -134,17 +191,8 @@ export function recommend(input: RecommendInput): RecommendResult {
     const comp = completenessRule(cand.items, rc);
     if (!Number.isFinite(comp.score)) continue;
 
-    // Attach outerwear when contextually right: pick the one closest to
-    // the candidate's formality center (a formal suit + puffer is a crime).
-    let items = cand.items;
-    if (wantOuter && options.outerwear.length > 0) {
-      const center =
-        0.7 * OCCASION_BANDS[context.occasion].center + 0.3 * prefs.formalityCenter;
-      const best = [...options.outerwear].sort(
-        (a, b) => Math.abs(a.attrs.formality - center) - Math.abs(b.attrs.formality - center),
-      )[0]!;
-      items = [...cand.items, best];
-    }
+    const extra = attach(cand);
+    const items = extra.length > 0 ? [...cand.items, ...extra] : cand.items;
 
     const reasons: RuleReason[] = [{ rule: "completeness", score: comp.score, text: comp.text }];
     let total = comp.score;
@@ -177,6 +225,7 @@ export function recommend(input: RecommendInput): RecommendResult {
       sig,
       final: total,
       explored: false,
+      attached: new Set(extra.map((g) => g.id)),
     });
   }
 
@@ -221,7 +270,10 @@ export function recommend(input: RecommendInput): RecommendResult {
   kept.sort((a, b) => b.final - a.final);
 
   // Greedy diversity: penalize reusing the same garment across options so the
-  // three cards are actually different outfits, not one outfit with a swapped top.
+  // three cards are actually different outfits, not one outfit with a swapped
+  // top. Engine-attached pieces (the occasion's coat, the safe accessory)
+  // are exempt: every option legitimately wears them, and taxing a shared
+  // coat 0.35 per option used to eat the whole diversity budget (audit F-coat).
   const REUSE_PENALTY = 0.35;
   const pool = [...kept];
   const top: Scored[] = [];
@@ -232,7 +284,9 @@ export function recommend(input: RecommendInput): RecommendResult {
     let bestScore = -Infinity;
     for (let i = 0; i < pool.length; i++) {
       const candidate = pool[i]!;
-      const reuse = candidate.outfit.garmentIds.filter((id) => chosenIds.has(id)).length;
+      const reuse = candidate.outfit.garmentIds.filter(
+        (id) => chosenIds.has(id) && !candidate.attached.has(id),
+      ).length;
       const adjusted = candidate.final - reuse * REUSE_PENALTY;
       if (adjusted > bestScore) {
         bestScore = adjusted;
@@ -247,11 +301,15 @@ export function recommend(input: RecommendInput): RecommendResult {
 
   // Missing-slot introspection so the app can say "add shoes".
   // Body is satisfied by (top AND bottom) OR dress. Shoes always required.
+  // Status-aware: a slot the user owns but can't fill right now (everything
+  // in the wash) is a different message than "you don't own shoes".
   const slotsOwned = new Set(wardrobe.map((g) => g.attrs.slot));
+  const slotsAvailable = new Set(wardrobe.filter((g) => g.status === "available").map((g) => g.attrs.slot));
   const missingSlots: string[] = [];
   if (!slotsOwned.has("shoes")) missingSlots.push("shoes");
   const hasPair = slotsOwned.has("top") && slotsOwned.has("bottom");
   if (!hasPair && !slotsOwned.has("dress")) missingSlots.push("top + bottom (or a dress)");
+  const unavailableSlots = [...slotsOwned].filter((s) => !slotsAvailable.has(s));
 
   return {
     outfits: top.map((s) => s.outfit),
@@ -262,6 +320,7 @@ export function recommend(input: RecommendInput): RecommendResult {
       candidatesScored: kept.length,
       exploredSignatures,
       missingSlots,
+      unavailableSlots,
       seasonFallback,
       skippedNeverMix: [...skippedNeverMix.values()],
       seed,
@@ -291,10 +350,6 @@ export function blendWeights(
 }
 
 // ---------------------------------------------------------------------------
-
-function isNeutralColor(c: string): boolean {
-  return ["black", "white", "cream", "grey", "navy", "tan", "brown"].includes(c);
-}
 
 function round3(n: number): number {
   return Math.round(n * 1000) / 1000;
