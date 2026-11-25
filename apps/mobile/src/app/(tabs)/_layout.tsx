@@ -27,9 +27,12 @@ export default function TabsLayout() {
         tabBarActiveTintColor: t.accent,
         tabBarInactiveTintColor: t.inkFaint,
         tabBarStyle: {
-          // Dark mode: the glass surface owns the fill (78% tint). Light mode
-          // stays the opaque surface the user already approved.
+          // Dark mode: the glass surface owns the fill and overlays the
+          // scrolling content so the translucency is actually visible.
+          // Light mode stays the opaque surface the user already approved.
+          position: t.isDark ? "absolute" : "relative",
           backgroundColor: t.isDark ? "transparent" : t.surface,
+          borderTopWidth: t.isDark ? 0 : StyleSheet.hairlineWidth,
           borderTopColor: t.isDark ? "transparent" : t.line,
           // Custom height must include the bottom safe-area inset, otherwise
           // the inset shows the window background (white in dark mode).

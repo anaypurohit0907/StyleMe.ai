@@ -22,7 +22,7 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { radius, space, type } from "@styleme/design";
 import { useTheme } from "@/lib/theme";
 
@@ -83,10 +83,19 @@ export function Screen({ children, style }: { children: ReactNode; style?: Style
 }
 
 export function Scroll({ children, style }: { children: ReactNode; style?: StyleProp<ViewStyle> }) {
+  const t = useTheme();
+  const insets = useSafeAreaInsets();
+  // The dark tab bar is an absolute glass overlay; keep the last card clear
+  // of it. Light mode keeps the original layout/padding.
+  const tabBarSpace = t.isDark ? 64 + insets.bottom : 0;
   return (
     <ScrollView
       style={{ flex: 1 }}
-      contentContainerStyle={[s.scroll, style]}
+      contentContainerStyle={[
+        s.scroll,
+        { paddingBottom: space.xxl + tabBarSpace },
+        style,
+      ]}
       showsVerticalScrollIndicator={false}>
       {children}
     </ScrollView>
@@ -151,6 +160,7 @@ export function Btn({
       style={[
         s.btn,
         { backgroundColor: bg },
+        variant === "primary" && t.isDark && { borderWidth: StyleSheet.hairlineWidth, borderColor: t.line },
         variant === "ghost" && [s.ghost, { borderColor: t.line }],
         fb.style,
       ]}>

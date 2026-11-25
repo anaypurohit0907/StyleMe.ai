@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Platform, StyleSheet, View, type StyleProp, type ViewStyle } from "react-native";
+import { BlurView } from "expo-blur";
 import {
   GlassView,
   isGlassEffectAPIAvailable,
@@ -47,11 +48,20 @@ export function ChromeSurface({
       style={[
         style,
         {
-          backgroundColor: t.chrome,
+          overflow: "hidden",
           borderTopWidth: StyleSheet.hairlineWidth,
           borderTopColor: t.chromeBorder,
         },
       ]}>
+      {/* Android/web: real Dimezis blur where the platform supports it; the
+          overlay keeps the 72% tint even when blur is unavailable. */}
+      <BlurView
+        intensity={t.isDark ? 55 : 30}
+        tint={t.isDark ? "dark" : "light"}
+        blurMethod="dimezisBlurViewSdk31Plus"
+        style={StyleSheet.absoluteFill}
+      />
+      <View style={[StyleSheet.absoluteFill, { backgroundColor: t.chrome }]} />
       {children}
     </View>
   );
