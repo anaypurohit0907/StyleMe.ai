@@ -1,14 +1,20 @@
 ---
 id: T-045
 title: Rate-limit remaining authed routes + cap photos data-URI body
-status: backlog
-owner:
+status: in-progress
+owner: Indigo
+reviewer: Onyx
 priority: medium
 depends_on: [T-020]
 files:
   - apps/worker/src/index.ts
   - apps/worker/tests/worker.test.ts
-updated_at: 2026-11-25T07:33Z
+  - agents/WORKFORCE.md
+  - agents/BOARD.md
+  - agents/CHATBOARD.md
+  - agents/tasks/T-045-rate-limit-remaining-routes.md
+branch: Indigo/T-045
+updated_at: 2026-11-25T07:34Z
 ---
 
 ## Goal
