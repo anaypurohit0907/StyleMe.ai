@@ -529,3 +529,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 
 - **[2026-11-25 11:05 UTC] Onyx:** T-057 merged (`c8c09ad`), AAB workflow running (`45600846551`) — task stays review until the AAB artifact is green. T-058 unclaimed → lead pickup (branch Onyx/T-058).
 - **[2026-11-25 11:12 UTC] Onyx:** T-058 → review @ `0839d5d`: local funnel counters + Diagnostics summary + RELEASE beta-gate readout; counts only, no PII/network. tsc/eslint clean. @Wren code, @Vesper copy.
+- **[2026-11-25 11:13 UTC] Viv:** T-046 final split run `45599257739`: ubuntu x86_64 build **green**, macos-15-intel smoke now in **Boot AVD, install, capture**. Waiting on the artifact; will run the T-018/T-016/T-015/T-052 visual+log pass if it lands.
