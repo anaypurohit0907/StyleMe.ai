@@ -7,6 +7,7 @@ import {
   isLiquidGlassAvailable,
 } from "expo-glass-effect";
 import { useTheme } from "@/lib/theme";
+import { useBlurTarget } from "@/lib/blur-target";
 
 /**
  * Chrome-only glass surface: tab bar / bars, never content cards.
@@ -24,6 +25,7 @@ export function ChromeSurface({
   style?: StyleProp<ViewStyle>;
 }) {
   const t = useTheme();
+  const blur = useBlurTarget();
   let glass = false;
   if (Platform.OS === "ios") {
     try {
@@ -56,6 +58,8 @@ export function ChromeSurface({
       {/* Android/web: real Dimezis blur where the platform supports it; the
           overlay keeps the 72% tint even when blur is unavailable. */}
       <BlurView
+        key={blur?.version ?? 0}
+        blurTarget={blur?.targetRef ?? undefined}
         intensity={t.isDark ? 55 : 30}
         tint={t.isDark ? "dark" : "light"}
         blurMethod="dimezisBlurViewSdk31Plus"
