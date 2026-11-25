@@ -16,6 +16,9 @@ import {
   type Weather,
 } from "@/lib/local";
 
+/** React purity lint: keep the impure clock call out of the component body. */
+const nowMs = () => Date.now();
+
 export default function Today() {
   const router = useRouter();
   const [garments, setGarments] = useState<Garment[]>([]);
@@ -120,7 +123,7 @@ export default function Today() {
   async function pick(outfit: ScoredOutfit) {
     if (!today) return;
     await recordPick(available, outfit, today.outfits, today.context);
-    await logWear(outfit.garmentIds, occasion, Date.now());
+    await logWear(outfit.garmentIds, occasion, nowMs());
     setPicked(outfit);
   }
 
