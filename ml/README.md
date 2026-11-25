@@ -45,7 +45,7 @@ Verdict (T-023/T-040): the shipped slot head holds flat-lay/e-commerce territory
 (FPI 0.964) and sits just under the anchor gate on DF2 (0.884). The measured gaps are
 **dress recall 0.68** on FPI and the street/worn collapse on Fashionpedia (0.534 vs 0.884);
 both are concrete targets for T-009's background-augmented retrain. Full per-slot report:
-`ml/artifacts/dataset_eval_report.md`.
+[`docs/DATASET_EVAL.md`](../docs/DATASET_EVAL.md) (tracked; the raw JSON/caches stay in `ml/artifacts/`).
 
 ## Results (MobileCLIP-S1, 256px, 512-d)
 

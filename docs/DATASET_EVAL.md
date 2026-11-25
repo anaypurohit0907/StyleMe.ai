@@ -1,5 +1,8 @@
 # StyleMe — dataset slot benchmark (notebook 04)
 
+> Tracked canonical report. Notebook 04 writes raw outputs to
+> `ml/artifacts/dataset_eval_report.{md,json}`; merge reviewed numbers here.
+
 | dataset | model | acc | n | per-slot recall |
 |---|---|---|---|---|
 | deepfashion2 | zero-shot | 0.566 | 7999 | top 0.81, bottom 0.22, dress 0.73, outerwear 0.51 |
