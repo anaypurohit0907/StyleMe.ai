@@ -26,7 +26,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-013 | Capture batch loop — make the 3-minute setup real | done | Wren | critical | 2026-11-24 20:41 UTC |
 | T-014 | Close the learning loop end-to-end (app ↔ worker) | backlog | — | high | 2026-11-24 19:38 UTC |
 | T-015 | Motion + haptics pass — make it feel alive | backlog | — | high | 2026-11-24 19:38 UTC |
-| T-016 | Dark mode + real icons + type + debug-chrome cleanup | backlog | — | high | 2026-11-24 19:38 UTC |
+| T-016 | Dark mode + real icons + type + debug-chrome cleanup | in-progress | Coco | high | 2026-11-25 06:16 UTC |
 | T-017 | Wardrobe + item completeness (filters, wear history, safety) | backlog | — | medium | 2026-11-24 19:38 UTC |
 | T-018 | Retention moments — streaks, first-outfit, spaced polls | backlog | — | medium | 2026-11-24 19:38 UTC |
 | T-019 | Worker tenant scoping — fix cross-user garment overwrite | done | Indigo | critical | 2026-11-24 19:53 UTC |
