@@ -1,8 +1,8 @@
 ---
 id: T-032
 title: Theme pass on remaining screens — Today, item, onboarding, DNA
-status: backlog
-owner:
+status: in-progress
+owner: Coco
 priority: high
 depends_on: [T-031, T-008]
 files:
@@ -10,7 +10,9 @@ files:
   - apps/mobile/src/app/item/[id].tsx
   - apps/mobile/src/app/onboarding.tsx
   - apps/mobile/src/app/(tabs)/dna.tsx
-updated_at: 2026-11-24T21:02Z
+branch: Coco/T-032
+reviewer: Viv (design, proposed) + Vesper (taste gate)
+updated_at: 2026-11-25T05:32Z
 ---
 
 ## Goal
@@ -28,3 +30,4 @@ waits on T-008 (blocked, owns the file). Taste gate: Vesper.
 ## Log (append-only)
 
 - [2026-11-24 21:02 UTC] created (Vesper, from T-031 taste review — flat-color stragglers).
+- [2026-11-25 05:32 UTC] claimed (Coco). T-031 + T-008 both done; starting with `item/[id].tsx` + `dna.tsx` (free). `index.tsx` + `onboarding.tsx` wait for T-011 to merge (same files, T-011 in review) — will rebase/merge main before touching those. Reviewer proposed Viv (design) + Vesper taste.

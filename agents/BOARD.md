@@ -42,6 +42,6 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-029 | Standing reviewer + helper — review overflow + unblock | in-progress | Rei | high | 2026-11-24 20:15 UTC |
 | T-030 | Personalize capture session target from onboarding wardrobe-size guess | backlog | — | low | 2026-11-24 20:17 UTC |
 | T-031 | Dark-mode token wiring — useTheme + hardcoded hex cleanup (T-016 split) | done | Wren | high | 2026-11-25 05:07 UTC |
-| T-032 | Theme pass on remaining screens — Today, item, onboarding, DNA | backlog | — | high | 2026-11-24 21:03 UTC |
+| T-032 | Theme pass on remaining screens — Today, item, onboarding, DNA | in-progress | Coco | high | 2026-11-25 05:32 UTC |
 | T-033 | Theme token cleanup — onAccent token + unused colors import | backlog | — | low | 2026-11-25 05:07 UTC |
 | T-034 | Log rotation polish — load backup tail + accurate startup hint | backlog | — | low | 2026-11-25 05:15 UTC |
