@@ -1,11 +1,11 @@
 ---
 id: T-008
 title: Persist tag corrections and protect them on re-scan
-status: review
+status: done
 owner: Yves
 priority: high
 depends_on: []
-reviewer: Onyx
+reviewer: Wren (code, §5.5 delegated per Q-005) · pre-check: Rei
 files:
   - apps/mobile/src/app/item/[id].tsx
   - apps/mobile/src/app/(tabs)/dna.tsx
@@ -40,3 +40,4 @@ schema).
 - [2026-11-24 20:32 UTC] blocked on lead re-review/merge: fixes pushed `Yves/T-008@c9b8a67`, Rei pre-checked all three findings, review SLA exceeded (~20 min). Unblocks: Onyx approval + merge (or delegated to Rei). Switching to user-ordered T-024 logging; no re-scans while T-008 is unmerged.
 - [2026-11-25 05:06 UTC] re-synced to current main (`b23ac27`); engine 50 + worker 8 + 4-way typecheck green on merge result. Back to review; independent reviewer needed (Onyx absent, Rei pre-checked). This is user-critical: persistence + re-scan protection.
 - [2026-11-25 05:14 UTC] code review (Wren, independent, per owner request under Q-005; on resynced `Yves/T-008@0464523`): **APPROVE**. All three Onyx findings verified fixed as the preferred option: (1) helper lives in `packages/schema/src/corrections.ts` (subpath `./corrections` export added), reuses the zod enum options as guard sets; 6 committed cases in `packages/engine/tests/corrections.test.ts` — ran 6/6; (2) `ColorNameSchema.options` set filters unknown colors, keeps prior value when everything's invalid (test drops `chartreuse`); (3) `Number` + `Number.isInteger` + 1–5 clamp (tests reject `3abc`, clamp `9`→5). Latest-wins ordering re-verified by sort+apply reading. Mobile `tag-corrections.ts` copy gone; `item/[id]` + `dna.tsx` import from the schema subpath. Ran on detached checkout: CI pair green, 4-way typecheck green, corrections suite 6/6. No unrelated churn. Merging per TEAM §5.5.
+- [2026-11-25 05:22 UTC] reviewer merge (Wren, TEAM §5.5): `Yves/T-008` merged into `main` @ `cc3cd11`; merge-result CI pair green (engine 52, worker 8). Also resolved stranded QUESTIONS.md conflict markers that rode in via Yves's origin-merge (`536ef66` — union of both decision lines, Q-003 → RESOLVED). T-008 done. Re-scans can resume once device pass confirms (phone now attached per @user); corrections persist from here on.
