@@ -12,13 +12,18 @@ import { useToneProfile, voice } from "@/lib/tone";
 import { useTheme } from "@/lib/theme";
 import { drain, enqueueLearn, enqueueWardrobe } from "@/lib/sync-queue";
 import {
+  claimStreakCelebration,
+  getWearCount,
+  getWearStreak,
   getWeather,
+  isStreakMilestone,
   loadPrefs,
   recommendLocal,
   recordPick,
   savePrefs,
   type LocalToday,
   type Weather,
+  type WearStreak,
 } from "@/lib/local";
 
 /** React purity lint: keep the impure clock call out of the component body. */
@@ -40,6 +45,8 @@ export default function Today() {
   const [today, setToday] = useState<LocalToday | null>(null);
   const [loading, setLoading] = useState(true);
   const [picked, setPicked] = useState<ScoredOutfit | null>(null);
+  const [firstOutfit, setFirstOutfit] = useState(false);
+  const [streak, setStreak] = useState<WearStreak>({ days: 0 });
   const [seed, setSeed] = useState(0);
   const [name, setName] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; undo?: () => void } | null>(null);
@@ -49,6 +56,7 @@ export default function Today() {
   const load = useCallback(async () => {
     setLoading(true);
     setPicked(null);
+    setFirstOutfit(false);
     setError(false);
     try {
       const all = await listGarments();
@@ -58,6 +66,7 @@ export default function Today() {
       const w = await getWeather();
       setWeather(w);
       setName(await metaGet("name"));
+      setStreak(await getWearStreak());
       if (free.length >= 3) {
         const result = await recommendLocal(free, occasion, w, seed);
         // Keep the result even when a never-mix rule emptied it — the skip
@@ -145,6 +154,7 @@ export default function Today() {
 
   async function pick(outfit: ScoredOutfit) {
     if (!today) return;
+    const isFirstOutfit = (await getWearCount()) === 0;
     await recordPick(available, outfit, today.outfits, today.context);
     await logWear(outfit.garmentIds, occasion, nowMs());
     // Learning loop: the pick is the strongest signal — queue it for the worker.
@@ -156,7 +166,15 @@ export default function Today() {
     });
     // Confirmed: a short success haptic, not a celebration.
     void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    setFirstOutfit(isFirstOutfit);
     setPicked(outfit);
+
+    const nextStreak = await getWearStreak();
+    setStreak(nextStreak);
+    // One tone-voiced milestone toast per streak per day, never on every pick.
+    if (await claimStreakCelebration(nextStreak.days)) {
+      showToast(voice("streak", tone, "streak"));
+    }
   }
 
   /**
@@ -243,6 +261,19 @@ export default function Today() {
           <Caption key={`${a}|${b}`}>Skipped {a} + {b} combos — you said never.</Caption>
         ))}
 
+        {streak.days >= 2 && (
+          <Card
+            style={{
+              gap: space.xs,
+              borderColor: isStreakMilestone(streak.days) ? t.accent : t.line,
+            }}>
+            <Caption>{voice("streak", tone, "streak")}</Caption>
+            <Title>
+              {streak.days} days in a row
+            </Title>
+          </Card>
+        )}
+
         {loading && (
           <Card style={{ alignItems: "center", gap: space.s }}>
             <ActivityIndicator color={t.accent} />
@@ -259,9 +290,9 @@ export default function Today() {
         )}
 
         {picked && (
-          <Card style={{ borderColor: t.ok }}>
-            <Caption>Worn.</Caption>
-            <Title>Logged it.</Title>
+          <Card style={{ borderColor: firstOutfit ? t.accent : t.ok }}>
+            <Caption>{firstOutfit ? voice("first_outfit", tone, "first") : "Worn."}</Caption>
+            <Title>{firstOutfit ? "First one's logged." : "Logged it."}</Title>
             <Caption>It rests for a couple of days so you don&apos;t repeat it.</Caption>
           </Card>
         )}

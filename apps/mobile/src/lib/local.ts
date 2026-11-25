@@ -24,7 +24,7 @@ import {
   outfitSignature,
   type SignatureState,
 } from "@styleme/engine";
-import { metaGet, metaSet } from "./db";
+import { getDb, metaGet, metaSet } from "./db";
 import { clearAuthCache, deleteAuthItem } from "./api";
 
 function newDeviceId(): string {
@@ -83,6 +83,185 @@ export const loadSessionTarget = sessionTarget;
 
 export async function savePrefs(p: PreferenceVector): Promise<void> {
   await metaSet("prefs", JSON.stringify(p));
+}
+
+// --- retention signals (streak / first outfit / spaced polls) ----------------
+
+const DAY_MS = 86_400_000;
+const STREAK_MILESTONES: readonly number[] = [3, 7, 14, 30];
+
+/** Local calendar day ordinal — DST-safe because only Y/M/D are compared. */
+function dayOrdinal(ms: number): number {
+  const d = new Date(ms);
+  return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / DAY_MS);
+}
+
+function clampPref(v: number): number {
+  return Math.max(-1, Math.min(1, v));
+}
+
+export interface WearStreak {
+  /** Consecutive days ending today (or yesterday, before today's pick). */
+  days: number;
+}
+
+/** Consecutive local calendar days with at least one logged wear. */
+export async function getWearStreak(now = Date.now()): Promise<WearStreak> {
+  const db = await getDb();
+  const rows = await db.getAllAsync<{ worn_at: number }>("SELECT worn_at FROM wear_log");
+  const days = new Set<number>();
+  for (const row of rows) {
+    if (Number.isFinite(row.worn_at)) days.add(dayOrdinal(row.worn_at));
+  }
+  const today = dayOrdinal(now);
+  let cursor = days.has(today) ? today : days.has(today - 1) ? today - 1 : null;
+  if (cursor === null) return { days: 0 };
+  let count = 0;
+  while (days.has(cursor)) {
+    count += 1;
+    cursor -= 1;
+  }
+  return { days: count };
+}
+
+export async function getWearCount(): Promise<number> {
+  const db = await getDb();
+  const row = await db.getFirstAsync<{ n: number }>("SELECT COUNT(*) AS n FROM wear_log");
+  return row?.n ?? 0;
+}
+
+export function isStreakMilestone(days: number): boolean {
+  return STREAK_MILESTONES.includes(days);
+}
+
+/** True once per streak milestone per local day; drives the celebration card. */
+export async function claimStreakCelebration(days: number, now = Date.now()): Promise<boolean> {
+  if (!isStreakMilestone(days)) return false;
+  const today = dayOrdinal(now);
+  const raw = await metaGet("streakCelebration");
+  try {
+    const prev = JSON.parse(raw ?? "null") as { day?: number; days?: number } | null;
+    if (prev?.day === today && prev.days === days) return false;
+  } catch {
+    // Corrupt marker: celebrate once and reset it.
+  }
+  try {
+    await metaSet("streakCelebration", JSON.stringify({ day: today, days }));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export type PollTable = "colors" | "patterns" | "fits";
+export interface PollOption {
+  key: string;
+  label: string;
+}
+export interface Poll {
+  day: number;
+  table: PollTable;
+  question: string;
+  options: PollOption[];
+}
+
+const POLLS: readonly Poll[] = [
+  {
+    day: 3,
+    table: "patterns",
+    question: "More stripes or solids?",
+    options: [
+      { key: "striped", label: "Stripes" },
+      { key: "solid", label: "Solids" },
+    ],
+  },
+  {
+    day: 10,
+    table: "fits",
+    question: "Relaxed or tailored?",
+    options: [
+      { key: "relaxed", label: "Relaxed" },
+      { key: "slim", label: "Tailored" },
+    ],
+  },
+  {
+    day: 30,
+    table: "colors",
+    question: "Rust or navy?",
+    options: [
+      { key: "rust", label: "Rust" },
+      { key: "navy", label: "Navy" },
+    ],
+  },
+];
+
+async function loadPollDays(): Promise<number[]> {
+  const raw = await metaGet("pollsShown");
+  try {
+    const parsed = JSON.parse(raw ?? "[]") as unknown;
+    return Array.isArray(parsed) ? parsed.filter((n): n is number => typeof n === "number") : [];
+  } catch {
+    return [];
+  }
+}
+
+async function wardrobeAgeDays(now: number): Promise<number> {
+  const db = await getDb();
+  const row = await db.getFirstAsync<{ first: number | null }>(
+    "SELECT MIN(added_at) AS first FROM garments",
+  );
+  if (typeof row?.first !== "number") return 0;
+  return Math.max(0, dayOrdinal(now) - dayOrdinal(row.first));
+}
+
+/** The latest spaced poll the user has unlocked but not answered yet. */
+export async function getPendingPoll(now = Date.now()): Promise<Poll | null> {
+  const age = await wardrobeAgeDays(now);
+  if (age < 3) return null;
+  const shown = await loadPollDays();
+  const pending = POLLS.filter((poll) => age >= poll.day && !shown.includes(poll.day)).sort(
+    (a, b) => b.day - a.day,
+  )[0];
+  return pending ? { ...pending, options: [...pending.options] } : null;
+}
+
+/**
+ * Apply a one-tap poll answer as an explicit taste signal. This is stronger
+ * than a passive pick (0.25 vs the EWA's 0.15 step) and never counts as a
+ * pick, so `n` confidence stays honest. Returns the updated vector.
+ */
+export async function answerPoll(poll: Poll, choice: string): Promise<PreferenceVector> {
+  if (!poll.options.some((o) => o.key === choice)) {
+    throw new Error(`unknown poll choice: ${choice}`);
+  }
+  const prefs = await loadPrefs();
+  const next: PreferenceVector = {
+    ...prefs,
+    colors: { ...prefs.colors },
+    patterns: { ...prefs.patterns },
+    fits: { ...prefs.fits },
+    neverMix: [...prefs.neverMix],
+  };
+  const bump = (table: Record<string, number>, key: string, delta: number) => {
+    table[key] = clampPref((table[key] ?? 0) + delta);
+  };
+  const other = poll.options.find((o) => o.key !== choice);
+  if (poll.table === "colors") {
+    bump(next.colors, choice, 0.25);
+    if (other) bump(next.colors, other.key, -0.1);
+  } else if (poll.table === "patterns") {
+    bump(next.patterns, choice, 0.25);
+    if (other) bump(next.patterns, other.key, -0.1);
+  } else {
+    bump(next.fits, choice, 0.25);
+    if (other) bump(next.fits, other.key, -0.1);
+  }
+  await savePrefs(next);
+  // Answering the newest poll retires every earlier milestone too.
+  const shown = await loadPollDays();
+  const retired = POLLS.filter((p) => p.day <= poll.day).map((p) => p.day);
+  await metaSet("pollsShown", JSON.stringify([...new Set([...shown, ...retired])]));
+  return next;
 }
 
 export async function loadExplore(): Promise<Record<string, SignatureState>> {
