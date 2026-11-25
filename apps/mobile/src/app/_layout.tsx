@@ -16,7 +16,9 @@ function Gate() {
   const router = useRouter();
   useEffect(() => {
     (async () => {
-      void initPipelineLog();
+      // Resolve the sink before announcing its path: an un-awaited init can
+      // make logFileHint() claim the external file before target() confirms it.
+      await initPipelineLog();
       log(
         "app",
         `started v${Constants.expoConfig?.version ?? "?"} on ${Platform.OS}; log=${logFileHint()}`,

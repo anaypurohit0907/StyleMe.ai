@@ -94,6 +94,10 @@ export function log(stage: string, message: string): void {
   append(stage, message, "info");
 }
 
+export function logDebug(stage: string, message: string): void {
+  append(stage, message, "debug");
+}
+
 export function logWarn(stage: string, message: string): void {
   append(stage, message, "warn");
 }
@@ -149,7 +153,11 @@ export async function initPipelineLog(): Promise<void> {
     if (!cachedDir) cachedDir = await target();
     const initial = new File(cachedDir, LOG_NAME);
     await rotateIfNeeded(initial, cachedDir);
-    const file = new File(cachedDir, LOG_NAME);
+    // A rotation moves the live file to styleme.log.1 before this read, so
+    // prefer the live tail but fall back to the backup — otherwise the last
+    // run's evidence disappears exactly when the log got large.
+    const live = new File(cachedDir, LOG_NAME);
+    const file = live.exists && live.size > 0 ? live : new File(cachedDir, `${LOG_NAME}.1`);
     if (!file.exists || file.size === 0) return;
     const text = await file.text();
     const lines = text.split("\n").filter(Boolean).slice(-40);
@@ -157,9 +165,6 @@ export async function initPipelineLog(): Promise<void> {
     const prior = lines.map((line) => ({ id: ++seq, text: line }));
     entries = [...prior, ...entries].slice(-MAX_ENTRIES);
     emit();
-    if (file.size > FILE_LIMIT) {
-      await file.write(`${lines.slice(-120).join("\n")}\n`);
-    }
   } catch {
     // Previous log is optional.
   }
