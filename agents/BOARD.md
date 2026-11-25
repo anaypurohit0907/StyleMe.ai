@@ -52,4 +52,4 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-039 | Worker — import NEUTRAL_COLORS from engine instead of the local 7-name copy | done | Marlow | low | 2026-11-25 06:08 UTC |
 | T-040 | Run Fashionpedia street-split eval + publish dataset report artifact | in-progress | Yves | low | 2026-11-25 06:30 UTC |
 | T-041 | Idempotent learn delivery — job id + worker dedupe | backlog | — | medium | 2026-11-25 07:05 UTC |
-| T-042 | Dev cleanup — reset-project script + unused tab icon assets | in-progress | Coco | low | 2026-11-25 07:09 UTC |
+| T-042 | Dev cleanup — reset-project script + unused tab icon assets | review | Coco | low | 2026-11-25 07:11 UTC |
