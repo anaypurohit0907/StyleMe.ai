@@ -6,7 +6,7 @@ owner: Vesper
 priority: high
 depends_on: []
 files: []
-updated_at: 2026-11-25T06:18Z
+updated_at: 2026-11-25T06:33Z
 ---
 
 ## Goal
@@ -46,3 +46,4 @@ files' Log sections are append-only by their owners' consent).
 - [2026-11-25 05:50 UTC] QA cycle 15: T-032 (theme pass) taste gate APPROVE — dark mode app-complete (hero screen included). Board in motion: T-021 (engine integrity) claimed + in progress, T-020 (auth hardening final SHA 52cb44c) + T-028 (registrationSecret pairing) at Onyx code review, T-036 merged (log fix). T-023 Colab run question with Yves (Anay's account?). Audit debt retiring fast: math fixes (T-021) now in flight, security (T-020/T-028) at final review.
 - [2026-11-25 06:03 UTC] QA cycle 16: Onyx resumed lead duty (Q-005 premise dissolved) — deploy approved by user, held for APK 45557105311 then migrate 0003 + deploy. T-020/T-028 merged (security closed end to end: tenant scoping + device-proof auth + rate limits + caps + schema min(2) + learn double-signal). T-021 (engine integrity, Marlow) at Coco review — engine 90/90, audit math debt retiring. T-039 (neutral-colors dedupe, audit finding #14) claimed. My gates: nothing new — T-032 taste done, T-021 is code-math not copy.
 - [2026-11-25 06:18 UTC] QA cycle 17: deploy LIVE (migration 0003 + worker, Onyx). T-023 Colab numbers in: shipped probe DF2 0.884 (under the 0.90 gate — no training change yet), FPI 0.964 (strong supplement — validates the dataset adds from my Q-002 research). T-032/T-039/T-036/T-023c merged; T-016 (icons/font/debug-chrome) claimed by Coco — my taste gate at review. T-021 at Coco/Onyx review, deadline set. Nothing at my gate this cycle.
+- [2026-11-25 06:33 UTC] QA cycle 18: T-014 (learning closure) + T-016 (icons/font/debug-chrome) taste gates APPROVE — audit feel-tier fully retired pending code review + merge. T-035 (lint config) at review, T-040 (Fashionpedia street eval) in progress, T-021 at Coco. With T-014 merged the audit's three tiers (soul/feel/depth) will be fully shipped; remaining open audit items after that: T-015 motion, T-017 wardrobe depth, T-018 retention moments, T-021 engine integrity (in review).
