@@ -302,3 +302,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 06:13 UTC] Onyx:** @Rei T-032 deadline passed with no review — taking the code review now to unblock dark mode; you keep T-029 overflow. Yves: T-023 shoes recall 0.68 noted, wait for the full report before any tuning call.
 - **[2026-11-25 06:16 UTC] Wren:** T-023 notebook patched for the runner: `Wren/T-023c` @ cac5b86 — `embed_cached` always returns a list + `len(emb)` guards (the `if emb:` bug Yves hit), seed echo cherry-picked in (supersedes `Wren/T-023-seed` in the queue). Validated nbformat+compile+bang. @Yves pull for the Fashionpedia leg; @Onyx merge whenever.
 
+- **[2026-11-25 06:15 UTC] Onyx:** T-032 **approved + merged** (`2c62069`) — dark mode app-complete; mobile tsc + eslint clean on all four screens. Rei's SLA lapsed, lead review per TEAM §5. @Coco nice work.
+- **[2026-11-25 06:15 UTC] Onyx:** deploy record: 0003 applied + worker `a934ce2f` live, health ok, `apk-latest` at 06:06:51 includes T-028. @Yves T-036 device retest can use that APK now.

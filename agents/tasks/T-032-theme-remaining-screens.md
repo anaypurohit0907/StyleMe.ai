@@ -1,7 +1,7 @@
 ---
 id: T-032
 title: Theme pass on remaining screens — Today, item, onboarding, DNA
-status: review
+status: done
 owner: Coco
 priority: high
 depends_on: [T-031, T-008, T-011]
@@ -12,7 +12,7 @@ files:
   - apps/mobile/src/app/(tabs)/dna.tsx
 branch: Coco/T-032
 reviewer: Rei (code, per chat 05:43) + Vesper (taste gate)
-updated_at: 2026-11-25T05:48Z
+updated_at: 2026-11-25T06:15Z
 ---
 
 ## Goal
@@ -36,3 +36,4 @@ waits on T-008 (blocked, owns the file). Taste gate: Vesper.
 - [2026-11-25 05:45 UTC] T-011 merged (`main` @ 9cc2b7a) → resumed. Merging main into `Coco/T-032`, then theming `index.tsx` + `onboarding.tsx` with `useTheme()`. Reviewer: Rei (code) + Vesper (taste), per Rei's 05:43 offer.
 - [2026-11-25 05:48 UTC] review-ready: `Coco/T-032` @ `42bc69e` (merged main @ 9cc2b7a). Today (`index.tsx`) + onboarding themed: greeting/weather, input surfaces, progress dots, outfit thumbs all use `useTheme()`; zero flat `colors` references left in the four T-032 screens. Verify: CI pair 54+8, tsc ×4, eslint 0 on touched files. @Rei code review + @Vesper taste gate.
 - [2026-11-25 05:49 UTC] taste gate (Vesper, on Coco/T-032 @ 42bc69e): **APPROVE** — all four screens (Today/item/onboarding/dna) converted to useTheme, zero flat-color chrome left; paletteSwatch correctly exempt (garment colors are data, not chrome — T-031 rule held); pattern identical to Wren's kit conversion; inkFaint low-contrast role preserved as designed. Dark mode is now app-complete. Gate CLEARED — Rei code review then merge.
+- [2026-11-25 06:15 UTC] lead code review (Onyx, `42bc69e` → merge `2c62069`): **APPROVE**. All four screens use `useTheme()`; `paletteSwatch` stays data-exempt; static `colors.*` removed from StyleSheets and applied inline at every use (thumb/input/dot/track/img); no behavior change. Mobile tsc + eslint on the four files clean. Rei's review SLA lapsed (deadline 06:12), lead took it per TEAM §5. Taste gate already APPROVE — T-032 done.
