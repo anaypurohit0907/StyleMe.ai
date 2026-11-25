@@ -54,10 +54,19 @@ export type ThemeColors = {
   line: string;
   overlayStrong: string;
   overlaySoft: string;
+  /** Translucent chrome tint for glass bars (dark uses ink-based tint). */
+  chrome: string;
+  chromeBorder: string;
+  /** Whether this scheme is dark (used by the glass chrome / motion fallbacks). */
+  isDark: boolean;
   accent: string;
   accentSoft: string;
   /** Text/icon color on accent- and bad-filled surfaces — white in both themes. */
   onAccent: string;
+  /** Primary action fill: rust in light, restrained ink in dark. */
+  actionBg: string;
+  /** Text/icon on the primary action fill. */
+  onAction: string;
   ok: string;
   warn: string;
   bad: string;
@@ -74,9 +83,14 @@ export const themes: Record<"light" | "dark", ThemeColors> = {
     line: "#E5E1D8",
     overlayStrong: "rgba(250,249,247,0.97)",
     overlaySoft: "rgba(250,249,247,0.92)",
+    chrome: "rgba(255,255,255,0.78)",
+    chromeBorder: "rgba(229,225,216,0.76)",
+    isDark: false,
     accent: "#B4552D",
     accentSoft: "#F3E2D7",
     onAccent: "#FFFFFF",
+    actionBg: "#B4552D",
+    onAction: "#FFFFFF",
     ok: "#3E7C4F",
     warn: "#B07C1F",
     bad: "#A83A32",
@@ -91,9 +105,14 @@ export const themes: Record<"light" | "dark", ThemeColors> = {
     line: "#2E2E2B",
     overlayStrong: "rgba(17,17,16,0.97)",
     overlaySoft: "rgba(17,17,16,0.92)",
+    chrome: "rgba(28,28,26,0.78)",
+    chromeBorder: "rgba(46,46,43,0.72)",
+    isDark: true,
     accent: "#B4552D",
     accentSoft: "#F3E2D7",
     onAccent: "#FFFFFF",
+    actionBg: "#F2F0EB",
+    onAction: "#111110",
     ok: "#3E7C4F",
     warn: "#B07C1F",
     bad: "#A83A32",

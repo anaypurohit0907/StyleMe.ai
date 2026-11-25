@@ -137,8 +137,11 @@ export function Btn({
 }) {
   const t = useTheme();
   const fb = usePressFeedback({ disabled: disabled || loading });
-  const bg = variant === "primary" ? t.accent : variant === "danger" ? t.bad : "transparent";
-  const fg = variant === "ghost" ? t.ink : t.onAccent;
+  const bg = variant === "primary" ? t.actionBg : variant === "danger" ? t.bad : "transparent";
+  // Dark mode keeps rust for active/selected states only — the primary action
+  // is a restrained ink-on-light fill instead of a large accent block.
+  const fg =
+    variant === "ghost" ? t.ink : variant === "danger" ? t.onAccent : t.onAction;
   return (
     <AnimatedPressable
       onPress={onPress}
