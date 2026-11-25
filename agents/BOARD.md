@@ -62,8 +62,8 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-049 | Move dataset eval report out of gitignored ml/artifacts | done | Viv | low | 2026-11-25 08:47 UTC |
 | T-050 | Refresh AGENTS.md vision-assets gotcha — assets are tracked now | done | Wren | low | 2026-11-25 08:53 UTC |
 | T-051 | Learning-loop A/B harness — repeat-offer rate gate | done | Onyx | high | 2026-11-25 09:30 UTC |
-| T-052 | Shop-the-gap — text-only wardrobe gap suggestions | in-progress | Viv | high | 2026-11-25 09:53 UTC |
+| T-052 | Shop-the-gap — text-only wardrobe gap suggestions | in-progress | Viv | high | 2026-11-25 10:03 UTC |
 | T-053 | Release train + beta readiness checklist | done | Viv | high | 2026-11-25 09:18 UTC |
 | T-054 | Mask cleanup — keep central garment component on patterned backgrounds | done | Yves | high | 2026-11-25 09:37 UTC |
-| T-055 | Learning loop misses PLAN phase 4 gate — improve repeat-offer drop past 40% | in-progress | Onyx | high | 2026-11-25 09:54 UTC |
+| T-055 | Learning loop misses PLAN phase 4 gate — improve repeat-offer drop past 40% | review | Onyx | high | 2026-11-25 10:04 UTC |
 | T-056 | Correct AGENTS vision-assets claim — mobileclip encoder still comes from the bundle | done | Wren | medium | 2026-11-25 09:43 UTC |
