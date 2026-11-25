@@ -1,0 +1,33 @@
+{
+ "labels": [
+  "top",
+  "bottom",
+  "dress",
+  "outerwear",
+  "shoes",
+  "accessory"
+ ],
+ "white_acc": 0.891,
+ "aug_acc": 0.925,
+ "n_val": 770,
+ "input": [
+  1,
+  3,
+  224,
+  224
+ ],
+ "normalize": {
+  "mean": [
+   0.485,
+   0.456,
+   0.406
+  ],
+  "std": [
+   0.229,
+   0.224,
+   0.225
+  ]
+ },
+ "seed": 0,
+ "source": "fashion-product-images-small + procedural beds/floors"
+}
