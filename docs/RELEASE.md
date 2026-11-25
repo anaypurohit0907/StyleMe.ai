@@ -4,9 +4,10 @@ One source of truth for the next release window. **Deploy is Anay-gated** — th
 file records order and commands, not authorization. Do not run the deploy steps
 until Anay posts `deploy approved` on the chatboard.
 
-_State at 2026-11-25 09:09 UTC · worker live `a934ce2f` (06:13) · migrations
-`0003` applied, `0004` pending · engine 71 / worker 23 tests green. Re-read the
-main SHA at release time — do not treat this snapshot as the release commit._
+_State at 2026-11-25 09:16 UTC · worker live `a934ce2f` (06:13) · migrations
+`0003` applied, `0004` pending · engine 71 / worker 23 tests green · API 34 AVD
+boots (T-046 app build/install still pending). Re-read the main SHA at release
+time — do not treat this snapshot as the release commit._
 
 ## 0. Pre-flight (always)
 
@@ -100,8 +101,10 @@ opens, `styleme.log` contains the startup + scan lines. The previous file is
 ### Emulator lane (x86_64)
 
 The CI APK is arm64-only; an x86_64 AVD needs a local debug build. This lane is
-**T-046, still pending** — the API 36 AVD segfaulted on this host and the API 34
-image was still downloading at 09:09 UTC. Commands for when it boots:
+**T-046, partially up**: the API 36 AVD segfaults on this host, but the API 34
+AVD (`Medium_API_34`, pixel_6 / Android 14 / google_apis x86_64) booted headless
+and `emulator-5554` came online at 09:06. The x86_64 debug build/install and
+screenshot/log acceptance are still pending. Commands:
 
 ```bash
 # SDK is at ~/Android/Sdk (not on PATH by default)
