@@ -28,7 +28,8 @@ Rules:
 | `why_these` | why-panel | clock it — here's why | the thinking behind it | why we picked these |
 | `in_laundry` | wardrobe status | it's in the wash, fr | it's in the laundry | currently in the laundry |
 | `washed_back` | wardrobe status | back from the wash, fresh | fresh from the laundry | returned from the laundry |
-| `wardrobe_ready` | wardrobe empty | wardrobe locked in | wardrobe's set | your wardrobe is ready |
+| `wardrobe_ready` | wardrobe header | wardrobe locked in | wardrobe's set | your wardrobe is ready |
+| `wardrobe_empty` | wardrobe empty | empty rack — let's cook | your wardrobe's waiting | nothing here yet |
 | `new_item_added` | capture save | new piece, added | added to your rotation | added to your wardrobe |
 | `save_confirmation` | capture save | saved — it's in the rotation | saved to your rotation | saved to your wardrobe |
 | `gap_suggestion` | wardrobe gap | your wardrobe needs this | your wardrobe could use this | a gap your wardrobe could fill |

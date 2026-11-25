@@ -12,6 +12,7 @@ import { segmentGarment } from "@/lib/segment";
 import { getVisionTagger } from "@/lib/vision";
 import { errorText, log, logError, logWarn } from "@/lib/pipeline-log";
 import { useTheme } from "@/lib/theme";
+import { useToneProfile, voice } from "@/lib/tone";
 
 const SLOTS: Slot[] = ["top", "bottom", "dress", "outerwear", "shoes", "accessory"];
 const PATTERNS: Pattern[] = ["solid", "striped", "check", "floral", "graphic", "animal", "other"];
@@ -25,6 +26,7 @@ const FLASH_MS = 1600;
 export default function Capture() {
   const router = useRouter();
   const t = useTheme();
+  const tone = useToneProfile();
   const cameraRef = useRef<CameraView>(null);
   const [permission, requestPermission] = useCameraPermissions();
   const [uri, setUri] = useState<string | null>(null);
@@ -304,9 +306,13 @@ export default function Capture() {
       />
       <View pointerEvents="none" style={s.guide} />
       {flash ? (
-        <View pointerEvents="none" style={s.flash}>
+        <View
+          pointerEvents="none"
+          style={s.flash}
+          accessible
+          accessibilityLabel={voice("save_confirmation", tone, flash.thumb)}>
           <Image source={{ uri: flash.thumb }} style={[s.flashThumb, { backgroundColor: t.surfaceAlt }]} />
-          <AddedChip label="Added ✓" />
+          <AddedChip label={voice("new_item_added", tone, flash.thumb)} />
         </View>
       ) : null}
       {!cameraReady && (
