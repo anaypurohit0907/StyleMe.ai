@@ -8,7 +8,7 @@ import type { Fit, GarmentAttrs, Pattern, Slot } from "@styleme/schema";
 import { paletteSwatch, radius, space } from "@styleme/design";
 import { AddedChip, Btn, Caption, Card, Chip, Progress, Screen, Scroll, Swatch, TextLink, Title } from "@/components/ui";
 import { upsertGarment } from "@/lib/db";
-import { newGarment, persistPhoto } from "@/lib/local";
+import { loadSessionTarget, newGarment, persistPhoto } from "@/lib/local";
 import { segmentGarment } from "@/lib/segment";
 import { getVisionTagger } from "@/lib/vision";
 import { errorText, log, logError, logWarn } from "@/lib/pipeline-log";
@@ -21,7 +21,7 @@ const FITS: Fit[] = ["slim", "regular", "relaxed", "oversized"];
 const SEASONS = ["warm", "cool", "all"] as const;
 const MATERIALS = ["light", "medium", "heavy"] as const;
 const COLOR_NAMES = Object.keys(paletteSwatch);
-const SESSION_TARGET = 30; // PLAN.md §5: 30 items ≈ 3 min setup
+const DEFAULT_SESSION_TARGET = 30; // fallback — the real target comes from onboarding (T-030)
 const FLASH_MS = 1600;
 
 export default function Capture() {
@@ -42,6 +42,7 @@ export default function Capture() {
   const [cameraError, setCameraError] = useState<string | null>(null);
   const [cameraKey, setCameraKey] = useState(0);
   const [sessionCount, setSessionCount] = useState(0);
+  const [sessionTarget, setSessionTarget] = useState(DEFAULT_SESSION_TARGET);
   const [flash, setFlash] = useState<{ thumb: string } | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
 
@@ -52,6 +53,19 @@ export default function Capture() {
       void requestPermission();
     }
   }, [permission, requestPermission]);
+
+  // The progress bar paces to the wardrobe-size guess from onboarding.
+  useEffect(() => {
+    let alive = true;
+    loadSessionTarget()
+      .then((n) => {
+        if (alive) setSessionTarget(n);
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   // The "Added ✓" confirmation is a brief flash, then the camera is all that matters.
   useEffect(() => {
@@ -339,7 +353,7 @@ export default function Capture() {
       <View style={[s.camBar, { backgroundColor: t.overlaySoft }]}>
         {sessionCount > 0 ? (
           <Progress
-            value={Math.min(1, sessionCount / SESSION_TARGET)}
+            value={Math.min(1, sessionCount / sessionTarget)}
             label={`${sessionCount} added this session`}
           />
         ) : null}

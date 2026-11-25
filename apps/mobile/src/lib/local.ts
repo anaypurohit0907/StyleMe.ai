@@ -66,6 +66,21 @@ export async function loadPrefs(): Promise<PreferenceVector> {
   }
 }
 
+/**
+ * Capture session target from the onboarding wardrobe-size guess (T-030).
+ * Clamped 10–60 so a stale or odd value can't make the progress bar
+ * meaningless; 30 is the fallback when the guess was never stored.
+ */
+export async function sessionTarget(): Promise<number> {
+  const raw = await metaGet("wardrobeSizeGuess");
+  const n = raw === null ? NaN : Number(raw);
+  if (!Number.isFinite(n)) return 30;
+  return Math.max(10, Math.min(60, Math.round(n)));
+}
+
+/** Alias used by the capture screen — same value, friendlier name there. */
+export const loadSessionTarget = sessionTarget;
+
 export async function savePrefs(p: PreferenceVector): Promise<void> {
   await metaSet("prefs", JSON.stringify(p));
 }
