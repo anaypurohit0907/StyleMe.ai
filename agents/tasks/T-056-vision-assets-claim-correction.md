@@ -1,7 +1,7 @@
 ---
 id: T-056
 title: Correct AGENTS vision-assets claim — mobileclip encoder still comes from the bundle
-status: review
+status: done
 owner: Wren
 reviewer: Onyx (proposed — he caught it)
 priority: medium

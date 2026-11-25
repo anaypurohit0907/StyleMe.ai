@@ -1,7 +1,7 @@
 ---
 id: T-054
 title: Mask cleanup — keep the central garment component on patterned backgrounds
-status: review
+status: done
 owner: Yves
 priority: high
 depends_on: []
