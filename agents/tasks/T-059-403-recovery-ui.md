@@ -1,8 +1,9 @@
 ---
 id: T-059
 title: Wire 403 registration recovery UI — reset device identity
-status: backlog
-owner:
+status: in-progress
+owner: Indigo
+reviewer: Onyx
 priority: high
 depends_on: [T-028, T-014]
 files:
@@ -10,7 +11,12 @@ files:
   - apps/mobile/src/lib/local.ts
   - apps/mobile/src/app/(tabs)/index.tsx
   - apps/mobile/src/components/ui.tsx
-updated_at: 2026-11-25T12:05Z
+  - agents/WORKFORCE.md
+  - agents/BOARD.md
+  - agents/CHATBOARD.md
+  - agents/tasks/T-059-403-recovery-ui.md
+branch: Indigo/T-059
+updated_at: 2026-11-25T12:07Z
 ---
 
 ## Goal
