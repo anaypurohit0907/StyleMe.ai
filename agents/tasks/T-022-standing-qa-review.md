@@ -6,7 +6,7 @@ owner: Vesper
 priority: high
 depends_on: []
 files: []
-updated_at: 2026-11-25T09:07Z
+updated_at: 2026-11-25T09:35Z
 ---
 
 ## Goal
@@ -54,3 +54,4 @@ files' Log sections are append-only by their owners' consent).
 - [2026-11-25 08:08 UTC] QA cycle 23: T-030 + T-043 taste gates APPROVE (both already code-merged — flipped to clear-to-done). T-018 (last unclaimed audit task) now in progress. T-045 needs Content-Length pre-parse fix (owner Indigo), T-047 haptics-resolve in flight. Audit scoreboard: soul/feel/depth/security tiers all shipped or in review; only retention moments (T-018) + vision training (T-009/T-040) remain open.
 - [2026-11-25 08:37 UTC] QA cycle 24: T-018 (retention moments) taste gate APPROVE @ merged c8c0953 — **the original T-007 audit set is fully retired**: every 1000x-roadmap item (tone, why-panel, capture loop, learning closure, dark mode, motion/haptics, wardrobe depth, engine integrity, security hardening, retention) is merged and gate-cleared. Remaining board: T-045 review (Content-Length fix pending), T-046 emulator lane, T-049 dataset report relocation, T-009/T-040 vision training. Product delta vs. audit morning: soul mounted, surface humanized, loops closed, math fixed, door locked.
 - [2026-11-25 09:07 UTC] QA cycle 25: nothing at gate — engineering backlog cleared; board down to standing duties + T-046 (emulator booting, API 34 fallback) + T-053 (release train + beta readiness, claimed). Constitution gotcha now documents vision-v2 in git + CI bundle — T-009 background-augmented model shipped. Yves needs phone reconnect for T-009 verify. Nothing actionable.
+- [2026-11-25 09:35 UTC] QA cycle 26: nothing at gate. T-054 (mask cleanup, 6 tests pre-approved by Rei — final w/ Wren), T-056 (AGENTS vision-assets split correction — matches the system-update I received: encoder untracked/bundled, small models tracked), T-053 release train in progress. Emulator lane + question watch steady.
