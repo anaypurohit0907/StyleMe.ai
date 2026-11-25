@@ -104,3 +104,4 @@ and will not install on an x86_64 AVD. Build a debug/dev x86_64 APK locally:
   (API 34, google_apis, x86_64, pixel_6) installs/launches and uploads
   `emulator.png`, `styleme.log`, `logcat.txt`. Temporary push trigger on the
   branch for the first run: workflow `45584235952` (in progress).
+- [2026-11-25 11:55 UTC] CI run `45603304885` progress (Onyx review): API 30 AVD **booted** (841s) and settings/animation steps passed; failure is now `adb install` on the 191MB APK — `cmd: Failure calling service package: Broken pipe (32)` after ~3.5 min. Infra, not app. Next lever: `adb install --no-streaming -r` or `adb push` + `pm install -r /data/local/tmp/app.apk` with a longer timeout; keep the 30-min boot budget.
