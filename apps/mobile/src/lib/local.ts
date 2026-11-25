@@ -26,11 +26,31 @@ import {
 } from "@styleme/engine";
 import { metaGet, metaSet } from "./db";
 
+function newDeviceId(): string {
+  return `dev_${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`;
+}
+
 export async function getDeviceId(): Promise<string> {
   const existing = await metaGet("deviceId");
   if (existing) return existing;
-  const id = `dev_${Math.random().toString(36).slice(2)}${Date.now().toString(36)}`;
+  const id = newDeviceId();
   await metaSet("deviceId", id);
+  return id;
+}
+
+/**
+ * Recovery for a lost/invalid worker registration secret (auth 403): rotate to
+ * a fresh device id and clear the cached token + secret so the next
+ * `ensureAuth` registers as a new worker user. Local wardrobe, onboarding and
+ * learned preferences stay intact — the old worker-side identity is abandoned
+ * because there is no proof left to reclaim it. Callers can retry the failed
+ * request immediately; no re-onboarding is required by this helper.
+ */
+export async function resetDeviceIdentity(): Promise<string> {
+  const id = newDeviceId();
+  await metaSet("deviceId", id);
+  await metaSet("token", "");
+  await metaSet("registrationSecret", "");
   return id;
 }
 

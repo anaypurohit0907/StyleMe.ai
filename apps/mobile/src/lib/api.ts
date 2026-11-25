@@ -23,20 +23,77 @@ export const API_BASE: string = DEFAULT_BASE;
 
 let token: string | null = null;
 
+export type AuthErrorCode = "registration_locked" | "auth_failed";
+
+/** Typed auth failure so callers can distinguish a lost registration secret
+ * (recover with a fresh device id) from a generic worker/network failure. */
+export class AuthError extends Error {
+  readonly status: number;
+  readonly code: AuthErrorCode;
+
+  constructor(message: string, status: number, code: AuthErrorCode) {
+    super(message);
+    this.name = "AuthError";
+    this.status = status;
+    this.code = code;
+  }
+}
+
+let authInFlight: Promise<string> | null = null;
+
 async function ensureAuth(deviceId: string, onboarding?: Record<string, unknown>): Promise<string> {
   if (token) return token;
+  if (authInFlight) return authInFlight;
+  // Serialize concurrent first calls: two register requests from the same
+  // install would race the worker's first-registration INSERT.
+  authInFlight = authenticate(deviceId, onboarding).finally(() => {
+    authInFlight = null;
+  });
+  return authInFlight;
+}
+
+async function authenticate(deviceId: string, onboarding?: Record<string, unknown>): Promise<string> {
   const cached = await metaGet("token");
   if (cached) {
     token = cached;
     return cached;
   }
+  const registrationSecret = await metaGet("registrationSecret");
   const res = await fetch(`${API_BASE}/v1/auth/device`, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ deviceId, onboarding }),
+    body: JSON.stringify({
+      deviceId,
+      onboarding,
+      ...(registrationSecret ? { registrationSecret } : {}),
+    }),
   });
-  if (!res.ok) throw new Error(`auth failed: ${res.status}`);
-  const body = (await res.json()) as { token: string };
+  if (res.status === 403) {
+    token = null;
+    throw new AuthError(
+      "This device is already registered and its saved sign-in secret is missing or invalid. Reset the app identity to reconnect.",
+      403,
+      "registration_locked",
+    );
+  }
+  if (!res.ok) {
+    const detail = await res.text().catch(() => "");
+    throw new AuthError(
+      `auth failed: ${res.status}${detail ? ` — ${detail.slice(0, 200)}` : ""}`,
+      res.status,
+      "auth_failed",
+    );
+  }
+  const body = (await res.json()) as {
+    token: string;
+    userId?: string;
+    registrationSecret?: string;
+  };
+  // Persist the one-time secret before the token: if the second write fails,
+  // the next attempt can still prove possession and recover the account.
+  if (body.registrationSecret) {
+    await metaSet("registrationSecret", body.registrationSecret);
+  }
   token = body.token;
   await metaSet("token", body.token);
   return body.token;
