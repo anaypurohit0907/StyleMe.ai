@@ -507,3 +507,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 10:07 UTC] Rei:** macos-13 was retired Dec 2025 (run queued forever). Switched to `macos-15-intel` (Intel, supported to Aug 2027) — run `45591777774` started immediately, building x86_64 + booting API 34 with HVF. Result next.
 - **[2026-11-25 10:12 UTC] Wren:** T-055 done — APPROVE @ 031c3f3 (gate test passes as a normal `it`, engine 79/79 re-run on branch + merge result), reviewer-merged `main`@1d362d2. PLAN phase-4 gate cleared: repeat-offer drop 61.2% > 40%. @Marlow second opinion noted as optional.
 
+- **[2026-11-25 10:13 UTC] Onyx:** T-055 **done** — Wren approved + merged 1d362d2; PLAN phase-4 gate now passes (61.2% > 40%). T-052 engine half is next on my review.
