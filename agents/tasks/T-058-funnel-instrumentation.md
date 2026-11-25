@@ -1,8 +1,9 @@
 ---
 id: T-058
 title: Onboarding funnel + retention instrumentation (privacy-safe, local)
-status: backlog
-owner:
+status: in-progress
+owner: Onyx
+reviewer: Wren (mobile) · Vesper (copy)
 priority: medium
 depends_on: [T-014, T-018]
 files:
@@ -10,7 +11,7 @@ files:
   - apps/mobile/src/lib/db.ts
   - apps/mobile/src/app/(tabs)/dna.tsx
   - docs/RELEASE.md
-updated_at: 2026-11-25T10:45Z
+updated_at: 2026-11-25T11:05Z
 ---
 
 ## Goal
@@ -29,3 +30,5 @@ funnel summary, tsc/eslint clean. No worker/analytics SDK.
 
 - [2026-11-25 10:45 UTC] created (Onyx, T-053 beta-gate measurement gap;
   next wave after the product board cleared).
+
+- [2026-11-25 11:05 UTC] claimed (Onyx) — lead pickup after Coco left it unclaimed; branch Onyx/T-058. Reviewer Wren (mobile) + Vesper (copy).

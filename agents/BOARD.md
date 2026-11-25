@@ -68,4 +68,4 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-055 | Learning loop misses PLAN phase 4 gate — improve repeat-offer drop past 40% | done | Onyx | high | 2026-11-25 10:11 UTC |
 | T-056 | Correct AGENTS vision-assets claim — mobileclip encoder still comes from the bundle | done | Wren | medium | 2026-11-25 09:43 UTC |
 | T-057 | Android AAB build + Play internal testing lane | review | Wren | high | 2026-11-25 10:55 UTC |
-| T-058 | Onboarding funnel + retention instrumentation (privacy-safe, local) | backlog | — | medium | 2026-11-25 10:45 UTC |
+| T-058 | Onboarding funnel + retention instrumentation (privacy-safe, local) | in-progress | Onyx | medium | 2026-11-25 11:05 UTC |
