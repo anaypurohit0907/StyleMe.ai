@@ -5,9 +5,10 @@ import * as Haptics from "expo-haptics";
 import { useFocusEffect, useRouter } from "expo-router";
 import type { ColorName, Garment, Occasion, ScoredOutfit } from "@styleme/schema";
 import { occasionLabel, occasions, paletteSwatch, radius, space } from "@styleme/design";
-import { Btn, Caption, Card, Chip, Display, Empty, Screen, Scroll, Title } from "@/components/ui";
+import { Btn, Caption, Card, Chip, Confirm, Display, Empty, Screen, Scroll, Title } from "@/components/ui";
 import { OutfitBadge, Toast, WhyPanel } from "@/components/why-panel";
 import { bumpFunnel, listGarments, logSuggestion, logWear, metaGet, upsertGarment } from "@/lib/db";
+import { onAuthLocked } from "@/lib/api";
 import { useToneProfile, voice } from "@/lib/tone";
 import { useTheme } from "@/lib/theme";
 import { drain, enqueueLearn, enqueueWardrobe } from "@/lib/sync-queue";
@@ -20,6 +21,7 @@ import {
   loadPrefs,
   recommendLocal,
   recordPick,
+  resetDeviceIdentity,
   savePrefs,
   type LocalToday,
   type Weather,
@@ -51,7 +53,25 @@ export default function Today() {
   const [name, setName] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; undo?: () => void } | null>(null);
   const [error, setError] = useState(false);
+  // T-059: worker registration is locked (403 registration_locked). Offer the
+  // consent-gated recovery once per session — never auto-reset.
+  const [reconnect, setReconnect] = useState(false);
+  const reconnectDismissed = useRef(false);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return onAuthLocked(() => {
+      if (!reconnectDismissed.current) setReconnect(true);
+    });
+  }, []);
+
+  async function confirmReconnect() {
+    setReconnect(false);
+    // Local wardrobe/prefs stay; the old worker identity is abandoned and a
+    // fresh device id registers on the next drain — retry the queue once.
+    await resetDeviceIdentity();
+    void drain();
+  }
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -400,6 +420,18 @@ export default function Today() {
           }
         />
       )}
+      <Confirm
+        visible={reconnect}
+        title="This device needs to reconnect"
+        body="Your wardrobe and preferences stay right here on this phone. The old cloud link is signed out and can't be recovered without its security key — reconnecting starts a fresh one."
+        confirmLabel="Reconnect"
+        cancelLabel="Not now"
+        onConfirm={() => void confirmReconnect()}
+        onCancel={() => {
+          reconnectDismissed.current = true;
+          setReconnect(false);
+        }}
+      />
     </Screen>
   );
 }
