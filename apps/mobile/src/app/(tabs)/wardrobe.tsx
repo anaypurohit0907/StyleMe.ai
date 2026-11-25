@@ -6,12 +6,14 @@ import { paletteSwatch, radius, space } from "@styleme/design";
 import { Btn, Caption, Chip, Empty, Screen, Scroll, Title } from "@/components/ui";
 import { listGarments } from "@/lib/db";
 import { useTheme } from "@/lib/theme";
+import { useToneProfile, voice } from "@/lib/tone";
 
 const SLOTS = ["all", "top", "bottom", "dress", "outerwear", "shoes", "accessory"] as const;
 
 export default function Wardrobe() {
   const router = useRouter();
   const t = useTheme();
+  const tone = useToneProfile();
   const [garments, setGarments] = useState<Garment[]>([]);
   const [slot, setSlot] = useState<(typeof SLOTS)[number]>("all");
 
@@ -42,7 +44,7 @@ export default function Wardrobe() {
 
         {shown.length === 0 ? (
           <Empty
-            title="Nothing here yet."
+            title={voice("wardrobe_empty", tone)}
             body="Photograph a piece and it lands here, tagged and ready."
             action={<Btn label="Add clothes" onPress={() => router.push("/(tabs)/capture")} />}
           />

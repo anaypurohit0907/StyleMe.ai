@@ -12,6 +12,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import type { ColorName, Garment, ScoredOutfit } from "@styleme/schema";
 import { isNeutral, SLOT_MASS } from "@styleme/engine";
 import { colors, radius, space, type as typo } from "@styleme/design";
+import { useToneProfile, voice } from "@/lib/tone";
 
 /**
  * The two colors most worth binding to a never-mix rule in this outfit:
@@ -60,6 +61,7 @@ export function WhyPanel({
   onNeverMix: (pair: [ColorName, ColorName]) => void;
 }) {
   const [open, setOpen] = useState(false);
+  const tone = useToneProfile();
   const reasons = outfit.reasons
     .filter((r) => r.score > 0.05)
     .sort((a, b) => b.score - a.score)
@@ -68,9 +70,9 @@ export function WhyPanel({
     <View style={{ gap: space.s }}>
       <Pressable
         onPress={() => setOpen((x) => !x)}
-        accessibilityLabel={open ? "Hide the reasons" : "Why this outfit"}
+        accessibilityLabel={open ? "Hide the reasons" : voice("why_these", tone)}
         style={({ pressed }) => [p.toggle, pressed && { opacity: 0.6 }]}>
-        <Text style={p.toggleText}>{open ? "Hide the why" : "Why this"}</Text>
+        <Text style={p.toggleText}>{open ? "Hide the why" : voice("why_these", tone)}</Text>
       </Pressable>
       {open &&
         (reasons.length > 0 ? (
