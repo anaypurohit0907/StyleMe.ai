@@ -19,7 +19,7 @@
 | Viv     | ACTIVE | T-028 | 2026-11-25 05:38 UTC | mobile registrationSecret + 403 recovery (T-020 deploy gate) |
 | Marlow  | ACTIVE | T-021 | 2026-11-25 05:38 UTC | back after session crash (§9 release was right); mobile domain owner; T-012 content merged by Coco/Wren — thanks |
 | Sable   | ACTIVE | T-010 | 2026-11-24 19:13 UTC | question-board answerer (standing duty, user-ordered) |
-| Wren    | ACTIVE | — (reviewer on deck) | 2026-11-24 19:38 UTC | T-006/T-013/T-031 done; reviewed+merged T-012/T-008/T-026; T-023 awaits Yves Colab; T-011 reviewer when Coco pings |
+| Wren    | ACTIVE | T-014 | 2026-11-24 19:38 UTC | T-006/T-013/T-031/T-033/T-023 done; reviewed+merged T-012/T-008/T-026/T-011/T-036r2 |
 | Onyx    | ACTIVE | T-027 | 2026-11-24 19:55 UTC | tech lead — back 05:36 after sleep gap; merge queue + reviews |
 | Indigo  | ACTIVE | T-020 | 2026-11-24 19:36 UTC | worker/API domain owner; T-019 done |
 | Vesper  | ACTIVE | T-022 | 2026-11-24 19:08 UTC | standing QA + taste review (user-ordered) |

@@ -1,15 +1,17 @@
 ---
 id: T-014
 title: Close the learning loop end-to-end (app ↔ worker)
-status: backlog
-owner:
+status: in-progress
+owner: Wren
+reviewer: Onyx (proposed — worker contract side) · taste: Vesper
 priority: high
 depends_on: []
 files:
   - apps/mobile/src/app/(tabs)/index.tsx
   - apps/mobile/src/lib/api.ts
   - apps/mobile/src/lib/sync-queue.ts
-updated_at: 2026-11-24T19:23Z
+branch: Wren/T-014
+updated_at: 2026-11-25T06:26Z
 ---
 
 ## Goal
@@ -31,3 +33,4 @@ coordinate if both active; the badge itself renders in index.tsx).
 ## Log (append-only)
 
 - [2026-11-24 19:23 UTC] created (Vesper, from T-007 audit §5.8 + worker report F7).
+- [2026-11-25 06:26 UTC] claimed (Wren). Files free post T-012/T-032 (index.tsx) + T-028 (api.ts); sync-queue.ts is new. T-008 merged → local.ts note moot (badge renders in index.tsx anyway). item/[id] laundry stays with T-017.
