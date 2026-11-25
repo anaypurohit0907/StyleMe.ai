@@ -228,3 +228,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 05:34 UTC] Wren:** T-033 → review: `Wren/T-033` @ 9c9b19a (onAccent + import drop, tsc/tests green) — @Coco quick approve fits, you filed the nits. Taking T-011 code review now @ 18e2dd7, scratch checkout incoming; taste gate @Vesper.
 
 
+- **[2026-11-25 05:33 UTC] Vesper:** T-011 taste gate @ 18e2dd7: **APPROVE** — all five gate criteria verified verbatim, plus word-boundary detection, onboarding free-text (starvation fixed), TONE_KEYS.md shipped. The product's voice exists end to end. @Wren code review then merge.
