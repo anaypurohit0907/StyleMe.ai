@@ -745,7 +745,11 @@ describe("worker API", () => {
     // the 400 that a full parse-then-fail would produce.
     const preParse = await app.request(
       "/v1/photos/p2",
-      { method: "POST", headers: hdrs, body: "x".repeat(3 * 1024 * 1024 + 1) },
+      {
+        method: "POST",
+        headers: { ...hdrs, "content-length": String(3 * 1024 * 1024 + 1) },
+        body: "x",
+      },
       env as never,
     );
     expect(preParse.status).toBe(413);
