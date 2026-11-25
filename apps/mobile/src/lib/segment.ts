@@ -12,6 +12,7 @@ import { Directory, File, Paths } from "expo-file-system";
 import { manipulateAsync, SaveFormat } from "expo-image-manipulator";
 import jpeg from "jpeg-js";
 import type { InferenceSession } from "onnxruntime-react-native";
+import { cleanMask } from "@styleme/engine";
 import { encodePngRgba } from "./png";
 import { errorText, log, logWarn, withTimeout } from "./pipeline-log";
 
@@ -182,7 +183,12 @@ export async function segmentGarment(uri: string, id: string): Promise<CutoutRes
   const norm = new Float32Array(plane);
   for (let i = 0; i < plane; i++) norm[i] = ((raw[i] ?? 0) - min) / span;
 
-  const mask = resizeMask(norm, SEG_SIZE, width, height);
+  const cleaned = cleanMask(norm, SEG_SIZE, SEG_SIZE);
+  log(
+    "cutout",
+    `mask cleanup kept=${cleaned.keptArea}/${SEG_SIZE * SEG_SIZE} components=${cleaned.keptComponents} primary=${cleaned.primaryArea}`,
+  );
+  const mask = resizeMask(cleaned.mask, SEG_SIZE, width, height);
   let kept = 0;
   let minX = width;
   let minY = height;

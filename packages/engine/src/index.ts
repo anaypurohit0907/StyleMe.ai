@@ -354,3 +354,4 @@ export function blendWeights(
 function round3(n: number): number {
   return Math.round(n * 1000) / 1000;
 }
+export { cleanMask, type MaskCleanupResult } from "./mask";
