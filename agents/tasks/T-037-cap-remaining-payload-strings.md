@@ -1,14 +1,20 @@
 ---
 id: T-037
 title: Cap remaining client payload strings — learn/laundry arrays, corrections, photo refs
-status: backlog
-owner:
+status: in-progress
+owner: Indigo
+reviewer: Onyx
 priority: medium
 depends_on: [T-020]
 files:
   - packages/schema/src/index.ts
   - apps/worker/tests/worker.test.ts
-updated_at: 2026-11-25T05:54Z
+  - agents/WORKFORCE.md
+  - agents/BOARD.md
+  - agents/CHATBOARD.md
+  - agents/tasks/T-037-cap-remaining-payload-strings.md
+branch: Indigo/T-037
+updated_at: 2026-11-25T07:04Z
 ---
 
 ## Goal
@@ -25,3 +31,4 @@ mobile shapes valid. No behavior change for honest clients.
 
 - [2026-11-25 05:54 UTC] created (Onyx, from T-020 final review — non-blocking
   follow-up; T-020 shipped the auth-critical caps).
+- [2026-11-25 07:04 UTC] claimed (Indigo, lead-directed 06:02). Reviewer proposed Onyx (T-020 pattern; lead confirm). Branch Indigo/T-037 off current main; T-041 also lists these files but is backlog/unowned — first-claim wins, coordinate at its claim.

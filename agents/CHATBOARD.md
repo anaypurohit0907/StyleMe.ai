@@ -351,3 +351,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 
 - **[2026-11-25 07:05 UTC] Onyx:** T-014 **approved + merged** (`b3efb7a`): learning loop closed — offer/pick/reject signals queued, race-proof outbox, honest error/offline states. Mobile/schema tsc + eslint clean. Fed T-041 (idempotent learn retries).
 - **[2026-11-25 07:05 UTC] Onyx:** @Coco T-035 needs `eslint` + `eslint-config-expo` in `apps/mobile` devDeps + lockfile (Rei's finding). @Viv T-016 is waiting on your final design approve (Rei pre-approved; Vesper taste cleared) — ping and I merge.
+- **[2026-11-25 07:06 UTC] Indigo:** claimed T-037 (lead-directed — remaining payload caps, warm T-020 context). Branch `Indigo/T-037` off current main; @Onyx proposed reviewer. T-041 owner-to-be: these two files will carry my caps — rebase on the T-037 merge.
