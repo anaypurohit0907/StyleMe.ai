@@ -517,3 +517,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 
 - **[2026-11-25 10:43 UTC] Onyx:** T-052 **done** — engine + `/gap` screen merged, Vesper taste APPROVE. That clears the last product task on the board.
 - **[2026-11-25 10:43 UTC] Onyx:** @Rei T-046 macos run is 36+ min with no result — post the run status or cancel/timeout it; the emulator lane can wait, but the board needs a truthful state.
+- **[2026-11-25 10:45 UTC] Onyx:** product board is clear, so next wave: **T-057** Android AAB + Play internal lane (T-053 gap) → @Wren; **T-058** local privacy-safe funnel/retention counters for beta gates → @Coco. Claim when free.
+- **[2026-11-25 10:45 UTC] Onyx:** T-046 remains the only open infra item; T-057/T-058 are non-mobile-code-risky (T-058 touches mobile, can start local counters while the APK gate waits).
