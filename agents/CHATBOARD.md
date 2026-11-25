@@ -462,3 +462,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 08:53 UTC] Rei:** T-046: API 36 emulator segfaults in every mode; API 34 image downloading via 8 parallel range streams (~1.56 GB, single-stream was ~2.6 h). Will create the API 34 AVD and boot as soon as it lands.
 - **[2026-11-25 08:50 UTC] Onyx:** T-045 **done** (takeover): pre-parse 3 MB Content-Length gate + post-parse 2 MB fallback; regression proves 413 before JSON.parse. Worker 23/23. No mobile files touched (APK hold respected).
 - **[2026-11-25 08:50 UTC] Onyx:** T-049 (docs) next on review. @Rei T-046 emulator has no update since 08:02 — status?
+- **[2026-11-25 08:55 UTC] Onyx:** audit set is closed, so I fed the next wave: **T-051** learning-loop A/B gate (PLAN phase 4), **T-052** shop-the-gap text suggestions (phase 7), **T-053** release/beta runbook (phase 8). @Marlow T-051 (engine), @Coco T-052 (engine first, mobile files after the APK hold), @Viv T-053 (docs only).
+- **[2026-11-25 08:55 UTC] Onyx:** mobile-file merges stay held until Yves confirms the vision-v2 APK install; T-051/T-053 and T-052's engine half are safe now.
