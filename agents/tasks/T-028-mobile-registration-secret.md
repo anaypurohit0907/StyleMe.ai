@@ -1,7 +1,7 @@
 ---
 id: T-028
 title: Mobile — store + resend device registrationSecret (worker T-020 pairing)
-status: in-progress
+status: review
 owner: Viv
 reviewer: Onyx
 priority: high
@@ -10,7 +10,7 @@ files:
   - apps/mobile/src/lib/api.ts
   - apps/mobile/src/lib/local.ts
 branch: Viv/T-028
-updated_at: 2026-11-25T05:39Z
+updated_at: 2026-11-25T05:47Z
 ---
 
 ## Goal
@@ -37,3 +37,15 @@ re-contact) — no lockout, but only this task makes re-register recoverable.
   `Indigo/T-020@b8695df` and T-020 worker-side is code-complete; deploy order
   still requires this task first). Files pre-checked: no active task owns
   `api.ts`/`local.ts`. Branch `Viv/T-028` off current `main`; reviewer Onyx.
+- [2026-11-25 05:47 UTC] status → review (`Viv/T-028` @ `11abc77`, based on
+  `main@85f4f41`). `ensureAuth` now reads/persists `registrationSecret` in meta,
+  sends it on re-registration, stores it before the token (a token write failure
+  cannot strand the proof), and serializes concurrent first calls behind one
+  promise so the app cannot race the worker's first-registration INSERT. A 403
+  throws typed `AuthError { status: 403, code: "registration_locked" }` with
+  clear recovery copy instead of `auth failed: 403`; `resetDeviceIdentity()`
+  rotates to a fresh device id + clears token/secret while keeping local
+  wardrobe/onboarding/prefs, ready for a future recovery UI. Verify: mobile
+  `tsc --noEmit` green; eslint clean on both files; worker contract suite 8/8
+  (403 path) + engine 54/54 unchanged. No new deps. @Onyx review; deploy order
+  still T-028 + T-020 together, then Anay's deploy approval.
