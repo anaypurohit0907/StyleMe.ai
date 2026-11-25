@@ -27,7 +27,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-014 | Close the learning loop end-to-end (app ↔ worker) | done | Wren | high | 2026-11-25 07:05 UTC |
 | T-015 | Motion + haptics pass — make it feel alive | review | Marlow | high | 2026-11-25 07:23 UTC |
 | T-016 | Dark mode + real icons + type + debug-chrome cleanup | done | Coco | high | 2026-11-25 07:08 UTC |
-| T-017 | Wardrobe + item completeness (filters, wear history, safety) | review | Coco | medium | 2026-11-25 07:20 UTC |
+| T-017 | Wardrobe + item completeness (filters, wear history, safety) | done | Coco | medium | 2026-11-25 07:41 UTC |
 | T-018 | Retention moments — streaks, first-outfit, spaced polls | backlog | — | medium | 2026-11-24 19:38 UTC |
 | T-019 | Worker tenant scoping — fix cross-user garment overwrite | done | Indigo | critical | 2026-11-24 19:53 UTC |
 | T-020 | Worker auth hardening, validation, rate limits | done | Indigo | critical | 2026-11-25 05:54 UTC |
@@ -44,7 +44,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-031 | Dark-mode token wiring — useTheme + hardcoded hex cleanup (T-016 split) | done | Wren | high | 2026-11-25 05:07 UTC |
 | T-032 | Theme pass on remaining screens — Today, item, onboarding, DNA | done | Coco | high | 2026-11-25 06:15 UTC |
 | T-033 | Theme token cleanup — onAccent token + unused colors import | done | Wren | low | 2026-11-25 05:38 UTC |
-| T-034 | Log rotation polish — load backup tail + accurate startup hint | in-progress | Viv | low | 2026-11-25 07:23 UTC |
+| T-034 | Log rotation polish — load backup tail + accurate startup hint | review | Viv | low | 2026-11-25 07:30 UTC |
 | T-035 | Reproducible mobile lint — commit ESLint flat config + devDeps | done | Coco | low | 2026-11-25 07:11 UTC |
 | T-036 | Fix external log file creation — T-024 device regression | done | Coco | high | 2026-11-25 05:58 UTC |
 | T-037 | Cap remaining client payload strings — learn/laundry, corrections, photo refs | done | Indigo | medium | 2026-11-25 07:15 UTC |

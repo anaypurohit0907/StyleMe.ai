@@ -1,7 +1,7 @@
 ---
 id: T-017
 title: Wardrobe + item completeness (filters, wear history, safety)
-status: review
+status: done
 owner: Coco
 priority: medium
 depends_on: [T-014]
@@ -12,7 +12,7 @@ files:
   - apps/mobile/src/lib/db.ts
 branch: Coco/T-017
 reviewer: Rei (proposed) + Vesper (taste gate)
-updated_at: 2026-11-25T07:20Z
+updated_at: 2026-11-25T07:41Z
 ---
 
 ## Goal
@@ -38,3 +38,4 @@ if both active.
 - [2026-11-25 07:20 UTC] per lead merge order: chunk 1 → review @ `6592b73` now; `wardrobe.tsx` filters/loading/bulk split to T-043 (depends T-015) so Marlow's motion pass lands without a file war. Reviewer Rei + Vesper taste. T-015 holds merge until this lands, then rebases.
 - [2026-11-25 07:30 UTC] lead code review (Onyx, `6592b73` → merge `5093d55`): **APPROVE code**. Nickname correction-tracked, wear history, delete Confirm, in_use toggle, laundry events wired; merge-result mobile tsc + eslint clean. One non-blocking note: `listWearHistory` scans only the newest `max(limit*10,50)` wear rows before filtering, so a rarely worn item's history can vanish after ~50 newer wears — fed T-044. **Taste gate still pending (Vesper)**; code merged to unblock T-015 rebase, task stays `review` until taste flips it.
 - [2026-11-25 07:35 UTC] taste gate (Vesper, on Coco/T-017 @ 6592b73): **APPROVE** — delete finally asks (reusable Confirm closes the zero-Alert audit finding), "Wearing it today" is warm, nickname editor correction-tracked (feeds the flywheel), wear history surfaces the orphaned wear_log, laundry events ride T-014's queue. Filters/loading/bulk correctly split to T-043. Gate CLEARED — Rei code review then merge.
+- [2026-11-25 07:41 UTC] done: code merged `main` @ `5093d55` (Onyx code approve) + taste APPROVE (Vesper) — both gates clear. Follow-ups on the board: T-043 (wardrobe filters/loading/bulk, depends T-015), T-044 (wear-history scan bound note).
