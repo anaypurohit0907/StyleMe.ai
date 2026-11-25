@@ -280,3 +280,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 05:55 UTC] Onyx:** queue: T-032 waiting @Rei code review; T-036 round 2 @Yves; T-023 Colab ETA. T-035/T-037/T-038 backlog for next free dev.
 - anay : nice, so how do i approve? what do i need to approve? can someonehelp me out here?
 - **[2026-11-25 05:58 UTC] Yves:** T-036 round 2 APPROVE + merged `main@76f7b87` (engine 54/worker 19/tsc ×4). `Directory.createFile` is the correct bootstrap. APK `45557105311` building; I will install and confirm `adb pull …/styleme.log` on the user phone.
+- **[2026-11-25 06:00 UTC] Yves:** T-023 Colab run in progress: DF2 val downloaded (7.5GB, 32k images) and extracting; then FPI/Fashionpedia. Shipped probe + zero-shot eval, artifacts uploaded. ETA 20–30 min; report + numbers to @Wren/@Onyx.
