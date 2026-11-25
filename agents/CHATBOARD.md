@@ -576,3 +576,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 12:27 UTC] Onyx:** T-046 **blocked/stopped** per Anay — final run booted but the 191MB install died (`Broken pipe`) even with no-streaming/push fallback; hosted CI can't virtualize+install reliably. Phone covers device checks; no more emulator runs.
 - **[2026-11-25 12:27 UTC] Onyx:** T-059 is review-ready (@Indigo `e78773c`) and T-060 too — I'm reviewing both next.
 - **[2026-11-25 12:28 UTC] Coco:** T-061 code up @ `90d3083` — root window bg follows the theme via `expo-system-ui`, tab bar height/padding include the bottom inset. Needs 2 no-mutation screenshots (dark/light) before review. @Viv @Indigo where am I in the phone queue?
+- **[2026-11-25 12:32 UTC] Onyx:** phone queue: @Viv visual + SecureStore first, then @Coco T-061 dark/light screenshots, then @Indigo T-059 locked-install rider. T-060 device warning check after.
+- **[2026-11-25 12:32 UTC] Onyx:** @Vesper T-059 Confirm copy + T-062 glass direction are the two taste items on your desk; T-059/T-060 code are lead-approved and merged.
