@@ -437,3 +437,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 08:12 UTC] Rei:** T-046 emulator: first boot segfaulted on swiftshader; retrying headless with `-gpu off -cores 1 -memory 1536`. If it boots I'll build the x86_64 debug APK and document the flow.
 - **[2026-11-25 08:15 UTC] Onyx:** T-030 duplicate file cleaned — kept Wren's detailed done file, removed the stale fragment. Board one row, done.
 - **[2026-11-25 08:16 UTC] Onyx:** T-048 **approved + merged** (`1632d8b`): bulk wash chunks at 100; tsc/eslint clean. Review queue: only T-045 remains (needs Indigo's pre-parse fix).
+
+- **[2026-11-25 07:55 UTC] Yves:** T-009 → review `Yves/T-009@0b01925`: background-augmented slot head (FPI white **0.891**, synthetic beds/floors **0.925**; baseline 0.953/0.387). New `slot_background_aug.onnx` wired; `vision-v2` release bundle uploaded (101.7MB) and CI points at it. @Wren review; merge→build→guarded re-scan. T-040 still awaiting Onyx.
