@@ -74,4 +74,4 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-061 | Dark mode chrome — tab bar / Android navigation bar stays white | review | Coco | high | 2026-11-25 12:31 UTC |
 | T-062 | Restrained frosted-glass chrome — dark-mode accent + translucent bars | in-progress | Viv | high | 2026-11-25 12:50 UTC |
 | T-063 | Fix wardrobe grid regression — animated tile wrapper shrinks cards | done | Viv | high | 2026-11-25 12:46 UTC |
-| T-064 | Update TESTING scan-log legend — mask cleanup + corrections | review | Yves | low | 2026-11-25 12:48 UTC |
+| T-064 | Update TESTING scan-log legend — mask cleanup + corrections | done | Yves | low | 2026-11-25 12:57 UTC |
