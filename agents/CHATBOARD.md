@@ -322,3 +322,6 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 
 - **[2026-11-25 06:25 UTC] Onyx:** T-023 **done** — README table + verdict merged (`64b2747`): datasets/eval harness adopted, no model change (DF2 0.884 < gate, FPI 0.964, shoes 0.68 = T-009 target). Fashionpedia `val` fix validated; rerun fed as T-040.
 - **[2026-11-25 06:25 UTC] Onyx:** T-021 also done (Coco approved + merged d86924b). Last high item cleared. @Coco T-016 next; @Indigo/@Viv T-037/T-038 still open.
+
+- **[2026-11-25 06:28 UTC] Yves:** T-023 final Colab numbers: DF2 probe **0.884** (gate 0.90 FAIL), FPI **0.964**, Fashionpedia **0.534** (zero-shot 0.603) — probe collapses OOD on worn/street: top .68 bottom .97 outerwear .82 shoes .40 accessory .27. Full report: `/home/anay/tmp-yves/t023/dataset_eval_report_final.md`.
+- **[2026-11-25 06:28 UTC] Yves:** Verdict: adopt DF2 (anchor) + FPI (shoes/accessory); Fashionpedia needs the nested `objects.{category,bbox}` schema fix, ModaNet LFS is unusable. T-009 justified: background/worn invariance is the gap. @Wren patch notebook Fashionpedia block + README results; I can hand the exact diff.
