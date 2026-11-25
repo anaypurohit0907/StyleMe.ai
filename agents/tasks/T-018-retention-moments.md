@@ -1,7 +1,7 @@
 ---
 id: T-018
 title: Retention moments — streaks, first-outfit, spaced polls
-status: review
+status: done
 owner: Viv
 reviewer: Onyx
 priority: medium
@@ -13,7 +13,7 @@ files:
   - packages/engine/src/tone.ts
   - docs/TONE_KEYS.md
 branch: Viv/T-018
-updated_at: 2026-11-25T08:02Z
+updated_at: 2026-11-25T08:43Z
 ---
 
 ## Goal
@@ -51,6 +51,22 @@ after those land or sync with owners.
   age (earliest `added_at`) at day 3/10/30, one card at a time, highest
   unlocked wins; answering nudges the chosen attribute +0.25 / other −0.1,
   retires earlier milestones, leaves `n` honest, and `BarFill` animates the
+  bars.
+- [2026-11-25 08:32 UTC] independent pre-review (Rei, T-029; Onyx owns the
+  approve): **APPROVE, no blocking findings** @ `55925e8`. Verified on a
+  worktree: mobile tsc green, eslint 0 on the three touched files. Logic read:
+  `dayOrdinal` compares local Y/M/D via UTC ordinals (DST-safe), streak keeps
+  alive on today-or-yesterday, celebration is once per milestone per local
+  day; poll unlock uses `MIN(added_at)` wardrobe age, newest unlocked wins,
+  answering retires every earlier milestone and leaves `prefs.n` untouched
+  (honest confidence); first-outfit check runs before `logWear`; tone keys
+  `streak`/`first_outfit`/`poll_invite` exist in all three banks. Non-blocking:
+  (a) `getWearStreak` loads every `wear_log` row — fine at beta scale, a
+  `GROUP BY date(worn_at,'unixepoch','localtime')` query would scale better;
+  (b) the poll lives only on Style DNA, so users who never open that tab never
+  see it — acceptable product choice, note for T-022 taste; (c) `BarFill`
+  starts at the target width and animates only on changes (no first-render
+  flash) — good. Taste gate (Vesper) remains.
   affected bar via reanimated (reduce-motion aware). Copy goes through two new
   tone keys (`first_outfit`, `poll_invite`) in all three banks + TONE_KEYS.
   Verify: mobile/engine `tsc` green; eslint 0 on all three files; engine 71/71
@@ -59,3 +75,4 @@ after those land or sync with owners.
   taste (streak/first-outfit copy + poll questions).
 - [2026-11-25 08:35 UTC] lead code review (Onyx, `55925e8` → merge `c8c0953`): **APPROVE code**. Streak math is local-day/DST-safe, milestone toast once per day, first-outfit moment correct, polls are wardrobe-age gated and one-at-a-time, poll signal never inflates `n`. Merge-result mobile/engine tsc + eslint clean. **Taste gate pending (Vesper)** on the new copy — task stays `review`.
 - [2026-11-25 08:37 UTC] taste gate (Vesper, on merged c8c0953): **APPROVE** — first-outfit moment is tasteful (accent border, not confetti; "First one's logged." + per-bank voice), poll invite "quick taste check, twin" is exactly the persona, polls failure-safe + feed the vector, streak copy lands in all three banks. Gate CLEARED → done. **This closes the last open item of the original T-007 audit set.**
+- [2026-11-25 08:43 UTC] close (Onyx): taste gate APPROVE recorded (Vesper 08:37); code merged @ c8c0953. T-018 done.
