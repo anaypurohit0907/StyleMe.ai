@@ -135,9 +135,15 @@ the visual + log smoke; never infer a pass from the local AVD.
 ### Play internal testing
 
 1. Create the app in Play Console (package `com.o_anay.styleme`); upload an AAB.
-   **Gap:** CI currently publishes an APK only — production/internal Play needs
-   `bundleRelease` (or EAS `eas build -p android`), tracked as a follow-up.
-2. Testing → Internal testing → create release → add 5 tester emails.
+   CI builds a signed `app-release.aab` on every main push touching mobile
+   (`android.yml`: `bundleRelease` with the same vision-v2 fetch + signing
+   setup as the APK). Download it from the run's `styleme-aab-release`
+   artifact, or grab `aab-latest` from the repo releases.
+   **Versioning:** `versionCode` lives in `apps/mobile/app.json`
+   (`expo.android.versionCode`) — prebuild copies it into Gradle. Play rejects
+   a repeated code, so bump it in the same commit as any Play upload.
+2. Testing → Internal testing → create release → upload the AAB manually
+   (no Play automation ships — uploads stay user-gated); add 5 tester emails.
 3. Testers opt in via the Play link, install, run the §3 checklist.
 4. Promote to closed beta only after the crash-free + retention gates hold.
 
@@ -171,7 +177,8 @@ data was not cleared — say so honestly to testers.
 
 - No in-app 403 recovery UI (helper ready; T-028 note).
 - No crash/analytics SDK; beta gates rely on Play vitals + manual tallies.
-- No AAB/Play upload in CI; internal testing needs a separate build path.
+- AAB builds in CI (`bundleRelease`) but Play uploads stay manual — deliberate,
+  deploy/upload automation is user-gated.
 - iOS has no CI build/signing lane yet.
 - Emulator x86_64 lane pending (T-046); do not claim device checks before it boots.
 - ModaNet/Fashionpedia corpora are non-commercial licensed — eval/research only

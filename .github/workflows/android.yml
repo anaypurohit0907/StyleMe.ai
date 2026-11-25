@@ -92,11 +92,33 @@ jobs:
             -Pandroid.enableMinifyInReleaseBuilds=false \
             -Pandroid.enablePngCrunchInReleaseBuilds=false
 
+      - name: Build release AAB
+        working-directory: apps/mobile/android
+        env:
+          EXPO_PUBLIC_API_BASE: https://styleme-api.style-me.workers.dev
+          EXPO_PUBLIC_VISION: onnx
+          STYLEME_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          STYLEME_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          STYLEME_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          ./gradlew bundleRelease --no-daemon --max-workers=4 \
+            -PreactNativeArchitectures=arm64-v8a \
+            -Pandroid.enableMinifyInReleaseBuilds=false \
+            -Pandroid.enablePngCrunchInReleaseBuilds=false
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: styleme-arm64-release
           path: apps/mobile/android/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: styleme-aab-release
+          path: apps/mobile/android/app/build/outputs/bundle/release/*.aab
           if-no-files-found: error
           retention-days: 30
 
@@ -106,3 +128,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release upload apk-latest             apps/mobile/android/app/build/outputs/apk/release/app-release.apk             --clobber
+
+      - name: Publish to aab-latest release
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view aab-latest --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 \
+            || gh release create aab-latest --repo "$GITHUB_REPOSITORY" --title "AAB latest" --notes "Auto-published signed release AAB for Play internal testing."
+          gh release upload aab-latest             apps/mobile/android/app/build/outputs/bundle/release/app-release.aab             --clobber
