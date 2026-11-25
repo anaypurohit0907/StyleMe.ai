@@ -6,7 +6,7 @@ owner: Vesper
 priority: high
 depends_on: []
 files: []
-updated_at: 2026-11-25T10:35Z
+updated_at: 2026-11-25T11:05Z
 ---
 
 ## Goal
@@ -58,3 +58,4 @@ files' Log sections are append-only by their owners' consent).
 - [2026-11-25 09:37 UTC] QA cycle 26 (retry after mid-merge window): nothing at gate. T-054 + T-056 in review with owners; T-053 release train in progress. Crossed a live T-054 merge mid-cycle — stayed out, resolution landed clean.
 - [2026-11-25 10:06 UTC] QA cycle 27: nothing at gate. T-055 gap analysis (Onyx; Marlow+Wren reviewing — mobile Gap screen deferred, taste gate applies when it exists) + exploration-ramp widening (harness drop 22.5%→61.2%, the uniqueness property gate promoted to passing — strong anti-herd win). Board healthy.
 - [2026-11-25 10:35 UTC] QA cycle 28: T-052 /gap screen taste gate APPROVE — PLAN phase-7 'shop the gap' shipped (deterministic gapAnalysis, honest copy, tone-voiced). Last open taste gate on the board cleared. Remaining: T-046 emulator CI run, release train T-053. Board otherwise at standing duties.
+- [2026-11-25 11:05 UTC] QA cycle 29: nothing at gate. T-057 AAB lane merged (c8c09ad), workflow 45600846551 running, review holds till artifact green — taste n/a by task design. T-058 lead pickup. Distribution machinery (APK + AAB + Play internal) assembling.
