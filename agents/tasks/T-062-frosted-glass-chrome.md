@@ -2,7 +2,7 @@
 id: T-062
 title: Restrained frosted-glass chrome — dark-mode accent + translucent bars
 status: review
-owner: Viv
+owner: Onyx
 reviewer: Onyx (code) + Vesper (taste)
 priority: high
 depends_on: [T-061]
@@ -17,7 +17,7 @@ files:
   - package-lock.json
   - apps/mobile/app.json
 branch: Viv/T-062
-updated_at: 2026-11-25T13:50Z
+updated_at: 2026-11-25T17:08Z
 ---
 
 ## Goal
@@ -86,3 +86,6 @@ Do not blur dense content behind text; chrome only. Taste gate mandatory.
 - [2026-11-25 13:45 UTC] **REJECTED on-device (Anay).** (1) No glass visible: Android took the opaque 78% tint fallback — `GlassView` is iOS-only. (2) "Wear this" renders cream/white, not ink — dark `actionBg` was set to cream. Rework: Android gets real blur via `expo-blur` (`BlurView`, dark tint, ~50 intensity + translucent chrome overlay; keep iOS GlassView). Dark primary action becomes a restrained **dark neutral** fill (`surfaceAlt #262624`) with `ink #F2F0EB` text + `line` border — no cream/white block. Light unchanged. Visual sign-off only from vision-capable sessions (Onyx/Viv); no image-less UI approvals.
 - [2026-11-25 14:00 UTC] lead code review — rework (Onyx, `58efcec` → merge `d4eca32`): **APPROVE code**. Dark tab bar is an absolute overlay with `expo-blur` Dimezis blur (SDK 31+) + 72% tint, Scroll reserves tab-bar space, dark primary = `surfaceAlt` + ink + hairline border; light unchanged. Mobile tsc + eslint clean after installing `expo-blur`. **Visual acceptance pending** — no close until Viv + Onyx inspect the next APK screenshots.
 - [2026-11-25 16:15 UTC] lead code blocker (Onyx): Android BlurView requires `blurTarget` (ref to a `BlurTargetView`); without it `expo-blur` falls back to `none` blur. Current `ChromeSurface` passes no target, so the visual would still fail. Viv to wire a shared `BlurTargetView` + ref before close.
+
+- [2026-11-25 17:05 UTC] **takeover (Onyx, §9):** Viv silent 50+ min after the blurTarget blocker; owner switched to Onyx, branch stays `Viv/T-062`. Implementing shared `BlurTargetView` + ref context (screen content as target, tab-bar BlurView as overlay) and re-verifying code; visual still needs a device.
+- [2026-11-25 17:08 UTC] takeover fix (Onyx, `c27d933` → merge `0a13df2`): shared `BlurTargetProvider`/context; every `Screen` wraps its content in a `BlurTargetView` and registers the ref on focus; `ChromeSurface` passes `blurTarget` + version-key remount so the Android BlurView attaches to the real screen content. Root provider added. Mobile tsc + eslint clean; APK `45661536367` building. Needs independent code review (Wren/Rei) + visual phone.
