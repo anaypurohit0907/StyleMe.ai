@@ -37,6 +37,13 @@ export function Scroll({ children, style }: { children: ReactNode; style?: Style
   );
 }
 
+/** Screen hero type — serif display, one per screen. */
+export function Display({ children }: { children: ReactNode }) {
+  const t = useTheme();
+  return <Text style={[s.display, { color: t.ink }]}>{children}</Text>;
+}
+
+/** Utility screen title — 20px, system sans. */
 export function Title({ children }: { children: ReactNode }) {
   const t = useTheme();
   return <Text style={[s.title, { color: t.ink }]}>{children}</Text>;
@@ -198,7 +205,8 @@ export function TextLink({ label, onPress }: { label: string; onPress: () => voi
 const s = StyleSheet.create({
   screen: { flex: 1 },
   scroll: { padding: space.m, paddingBottom: space.xxl, gap: space.m },
-  title: { ...type.display },
+  display: { ...type.display },
+  title: { ...type.title },
   body: { ...type.body },
   caption: { ...type.caption },
   card: {

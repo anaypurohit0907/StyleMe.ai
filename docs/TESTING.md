@@ -42,13 +42,14 @@ this one (Android rejects signature changes on update).
 
 ## Scan log (for bug reports)
 
-Release builds do not print console logs to `adb logcat`. Instead, every
-capture and re-scan step is shown on screen:
+Release builds do not print console logs to `adb logcat`. The pullable
+`styleme.log` is the source of truth (see below); the in-app tail is tucked
+away as diagnostics:
 
-- **Add** → take a photo → the busy overlay shows the current step, and the
-  review screen keeps the last 8 lines under **Last capture**.
-- **Style DNA** → **Re-scan wardrobe tags** → the button and the **Scan log**
-  card show progress and the last 14 lines.
+- **Add** → take a photo → the busy overlay shows the current step.
+- **Style DNA** → **Re-scan wardrobe tags** → the button shows progress.
+- **Style DNA** → tap **Diagnostics** (bottom link) → last 40 in-memory lines.
+  Tap **Hide diagnostics** to put it away.
 
 Useful lines:
 
@@ -72,8 +73,8 @@ adb shell tail -f /sdcard/Android/data/com.o_anay.styleme/files/styleme.log
 
 - Format: `2026-11-24T20:32:10.123Z [scan] message` (UTC; `WARN`/`ERROR` for levels).
 - Rotates at 2 MB; the previous file is `styleme.log.1`.
-- The in-app card still shows the last 14 lines and loads the previous tail on
-  launch, so a crash does not erase the last step.
+- Style DNA → **Diagnostics** shows the last 40 in-memory lines; the file is
+  authoritative and survives a crash.
 - Dev/Metro: `npx expo start` prints the same `[StyleMe]` lines in the terminal.
 - iOS/Expo Go fall back to the app document directory.
 

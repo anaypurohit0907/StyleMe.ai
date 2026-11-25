@@ -3,7 +3,7 @@ import { ActivityIndicator, Image, Pressable, StyleSheet, View } from "react-nat
 import { useFocusEffect, useRouter } from "expo-router";
 import type { ColorName, Garment, Occasion, ScoredOutfit } from "@styleme/schema";
 import { occasionLabel, occasions, paletteSwatch, radius, space } from "@styleme/design";
-import { Btn, Caption, Card, Chip, Empty, Screen, Scroll, Title } from "@/components/ui";
+import { Btn, Caption, Card, Chip, Display, Empty, Screen, Scroll, Title } from "@/components/ui";
 import { OutfitBadge, Toast, WhyPanel } from "@/components/why-panel";
 import { listGarments, logSuggestion, logWear, metaGet, upsertGarment } from "@/lib/db";
 import { useToneProfile, voice } from "@/lib/tone";
@@ -213,7 +213,7 @@ export default function Today() {
       <Scroll>
         <View style={s.head}>
           <View style={{ flex: 1 }}>
-            <Title>{greeting}</Title>
+            <Display>{greeting}</Display>
             <Caption>
               {voice("weather_line", tone)} · {Math.round(weather.tempC)}°
               {weather.source === "fallback" ? " · offline guess" : ""}
