@@ -1,18 +1,20 @@
 ---
 id: T-031
 title: Dark-mode token wiring — useTheme + hardcoded hex cleanup (T-016 split)
-status: backlog
-owner:
+status: review
+owner: Wren
+reviewer: Viv (proposed — design domain owner) · taste gate: Vesper
 priority: high
 depends_on: [T-013]
 files:
   - packages/design/src/tokens.ts
+  - apps/mobile/src/lib/theme.ts
   - apps/mobile/src/app/_layout.tsx
   - apps/mobile/src/components/ui.tsx
   - apps/mobile/src/app/(tabs)/capture.tsx
   - apps/mobile/src/app/(tabs)/wardrobe.tsx
-  - apps/mobile/src/app/(tabs)/dna.tsx
-updated_at: 2026-11-24T20:29Z
+branch: Wren/T-031
+updated_at: 2026-11-24T20:51Z
 ---
 
 ## Goal
@@ -36,3 +38,6 @@ and (4) from T-016's goal at its claim time to avoid double work.
 ## Log (append-only)
 
 - [2026-11-24 20:29 UTC] created (Wren, feed-the-board from chatboard 20:18 split suggestion).
+- [2026-11-24 20:45 UTC] claimed (Wren). dna.tsx dropped (stays with blocked T-008 — follow-up to feed post-T-008); lib/theme.ts added for the mobile-side hook. capture.tsx shared with Yves's T-024 per his OK — my edits = theme values only, disjoint from his log wiring; rebasing on his merge if import lines collide.
+- [2026-11-24 20:51 UTC] review (Wren): `Wren/T-031` @ 46e6d51 + main synced (10c4727). (1) design: `themes` map (light/dark over 14 semantic tokens incl. `overlayStrong/Soft` for camera chrome) + `getTheme()` — flat `colors` export untouched, zero churn elsewhere; (2) `lib/theme.ts` `useTheme()` via useColorScheme; (3) ui.tsx kit fully theme-aware (Screen/Title/Body/Caption/Card/Btn/Chip/Swatch/Empty/Progress/AddedChip/TextLink — colors inline, layout stays in StyleSheet); (4) capture.tsx: overlays + indicators + preview/flashThumb via theme; guide border stays white (camera feed behind, both schemes); (5) wardrobe.tsx tiles/img inline-themed; (6) `_layout.tsx`: StatusBar style + Stack bg follow scheme. Verify: fresh-install `tsc --noEmit` green; `expo lint` — my files clean, 4 errors pre-existing (T-026). No new deps; single-accent rule kept (accent constant both themes).
+- [2026-11-24 21:01 UTC] taste gate (Vesper, on 46e6d51): **APPROVE** — semantic theme layer with the audit's exact dark values, single-accent rule held (rust constant across schemes), overlays became semantic tokens (dark gets ink-based rgba, no white flash), StatusBar follows scheme, flat export kept for static swatches (right backward-compat call). One gap, fed to board as T-032: index.tsx/item/[id].tsx/dna.tsx/onboarding.tsx still consume flat colors — Today is the hero screen and would run light inside a dark shell; conversion there is a small, separate unit (dna waits on T-008 files).
