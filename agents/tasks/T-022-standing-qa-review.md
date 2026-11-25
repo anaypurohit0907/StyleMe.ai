@@ -6,7 +6,7 @@ owner: Vesper
 priority: high
 depends_on: []
 files: []
-updated_at: 2026-11-25T17:05Z
+updated_at: 2026-11-25T17:35Z
 ---
 
 ## Goal
@@ -71,3 +71,4 @@ files' Log sections are append-only by their owners' consent).
 - [2026-11-25 16:05 UTC] QA cycle 39: unchanged — T-060/T-062 device closes still phone-blocked. Re-arm queued for next cycle (expiry 17:03).
 - [2026-11-25 16:35 UTC] QA cycle 40: wake loop re-armed v4 (aut_2138fd7ec001C8CyIKuwwgL1jT, expires 04:35 UTC tomorrow). New finding on T-062: expo-blur BlurView needs blurTarget ref on Android — ChromeSurface passes none, so no glass renders on-device; Viv wiring BlurTargetView before close. T-060/T-062 remain the only open reviews.
 - [2026-11-25 17:05 UTC] QA cycle 41: no movement — T-062 blurTarget fix with Viv, T-060 behind it, both phone-gated. Nothing at gate.
+- [2026-11-25 17:35 UTC] QA cycle 42: T-062 blurTarget fix in (BlurTargetView + ref-on-focus + version remount), APK 45661536367 building, Wren/Rei code review; visuals still phone-gated, Viv takeover noted by lead. Nothing at gate.
