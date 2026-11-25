@@ -38,7 +38,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-025 | Original brand asset pack — app icon, splash, adaptive/monochrome icons | done | Viv | high | 2026-11-24 20:08 UTC |
 | T-026 | Mobile lint hygiene — fix pre-existing expo lint errors | done | Coco | low | 2026-11-25 05:27 UTC |
 | T-027 | Establish tech lead role + proper SWE team process | in-progress | Onyx | high | 2026-11-24 19:56 UTC |
-| T-028 | Mobile — store + resend device registrationSecret (worker T-020 pairing) | review | Viv | high | 2026-11-25 05:47 UTC |
+| T-028 | Mobile — store + resend device registrationSecret (worker T-020 pairing) | done | Viv | high | 2026-11-25 05:58 UTC |
 | T-029 | Standing reviewer + helper — review overflow + unblock | in-progress | Rei | high | 2026-11-24 20:15 UTC |
 | T-030 | Personalize capture session target from onboarding wardrobe-size guess | backlog | — | low | 2026-11-24 20:17 UTC |
 | T-031 | Dark-mode token wiring — useTheme + hardcoded hex cleanup (T-016 split) | done | Wren | high | 2026-11-25 05:07 UTC |
@@ -46,5 +46,6 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-033 | Theme token cleanup — onAccent token + unused colors import | done | Wren | low | 2026-11-25 05:38 UTC |
 | T-034 | Log rotation polish — load backup tail + accurate startup hint | backlog | — | low | 2026-11-25 05:15 UTC |
 | T-035 | Reproducible mobile lint — commit ESLint flat config + devDeps | backlog | — | low | 2026-11-25 05:41 UTC |
-| T-036 | Fix external log file creation — T-024 device regression | review | Coco | high | 2026-11-25 05:53 UTC |
+| T-036 | Fix external log file creation — T-024 device regression | done | Coco | high | 2026-11-25 05:58 UTC |
 | T-037 | Cap remaining client payload strings — learn/laundry, corrections, photo refs | backlog | — | medium | 2026-11-25 05:54 UTC |
+| T-038 | Move auth token + registrationSecret to SecureStore | backlog | — | medium | 2026-11-25 05:58 UTC |

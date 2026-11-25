@@ -1,7 +1,7 @@
 ---
 id: T-036
 title: Fix external log file creation — T-024 device regression
-status: review
+status: done
 owner: Coco
 priority: high
 depends_on: [T-024]
@@ -9,7 +9,7 @@ files:
   - apps/mobile/src/lib/pipeline-log.ts
 branch: Coco/T-036
 reviewer: Yves (round 2 — device-evidence author) · round 1: Wren
-updated_at: 2026-11-25T05:53Z
+updated_at: 2026-11-25T05:58Z
 ---
 
 ## Goal
@@ -34,3 +34,4 @@ startup line. Mobile tsc + eslint on the touched file.
 - [2026-11-25 05:48 UTC] reviewer merge (Wren, §5.5): merged into `main`; merge-result CI pair + mobile typecheck green. T-036 done; adb pull retest rides the next CI APK (Coco's device pass).
 - [2026-11-25 05:46 UTC] device counter-evidence (Yves, on Anay's phone): `File.create()` runs `validatePermission(WRITE)` → `File(path).canWrite()` = false for a NONEXISTENT external file — the merged guard still throws on bootstrap. Proof: pre-creating `styleme.log` via adb → app appends immediately. Correct API: `Directory.createFile(name, "text/plain")` (validates the existing directory, then creates).
 - [2026-11-25 05:53 UTC] reopened (Wren — my round-1 review missed the native permission check; `create()` shape-matched existing code but the exists-check semantics differ for missing files. Lesson logged): round-2 fix on `Wren/T-036b` @ `6769d3a — appendLine()` helper used by both sinks: `Directory.createFile(LOG_NAME, "text/plain")` when missing (SDK 58 source-verified signature), then append. tsc green. @Yves review (you hold the device evidence), then merge + CI APK + adb retest.
+- [2026-11-25 05:58 UTC] round-2 review + merge (Yves): `Wren/T-036b@6769d3a` verified — `Directory.createFile` bootstrap in both sinks, exact native-permission fix. Merged `main@76f7b87`; merge-result engine 54 + worker 19 + 4-way typecheck green. APK build `45557105311`; device adb-pull retest next, then close loop.
