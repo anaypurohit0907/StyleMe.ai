@@ -5,7 +5,7 @@ import { useFocusEffect, useRouter } from "expo-router";
 import type { Garment, GarmentStatus } from "@styleme/schema";
 import { isNeutral } from "@styleme/engine";
 import { paletteSwatch, radius, space } from "@styleme/design";
-import { Btn, Caption, Chip, Empty, Screen, Scroll, Title, usePressFeedback, AnimatedPressable } from "@/components/ui";
+import { Btn, Caption, Chip, Empty, Screen, Scroll, TextLink, Title, usePressFeedback, AnimatedPressable } from "@/components/ui";
 import { listGarments, setGarmentStatus } from "@/lib/db";
 import { enqueueLaundry } from "@/lib/sync-queue";
 import { useTheme } from "@/lib/theme";
@@ -126,6 +126,7 @@ export default function Wardrobe() {
           </View>
           <Btn label="Add" onPress={() => router.push("/(tabs)/capture")} />
         </View>
+        <TextLink label="What to add next" onPress={() => router.push("/gap")} />
 
         <View style={s.chips}>
           {SLOTS.map((s0) => (
@@ -172,13 +173,23 @@ export default function Wardrobe() {
           <Empty
             title={voice("wardrobe_empty", tone)}
             body="Photograph a piece and it lands here, tagged and ready."
-            action={<Btn label="Add clothes" onPress={() => router.push("/(tabs)/capture")} />}
+            action={
+              <View style={{ gap: space.s, alignSelf: "stretch" }}>
+                <Btn label="Add clothes" onPress={() => router.push("/(tabs)/capture")} />
+                <TextLink label="What to add next" onPress={() => router.push("/gap")} />
+              </View>
+            }
           />
         ) : shown.length === 0 ? (
           <Empty
             title="Nothing matches those filters."
             body={filtersActive ? "Try a different slot, status, or color." : "Nothing here yet."}
-            action={<Btn label="Clear filters" variant="ghost" onPress={clearFilters} />}
+            action={
+              <View style={{ gap: space.s, alignSelf: "stretch" }}>
+                <Btn label="Clear filters" variant="ghost" onPress={clearFilters} />
+                <TextLink label="What to add next" onPress={() => router.push("/gap")} />
+              </View>
+            }
           />
         ) : (
           <View style={s.grid}>
