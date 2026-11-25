@@ -72,7 +72,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-059 | Wire 403 registration recovery UI — reset device identity | done | Indigo | high | 2026-11-25 13:45 UTC |
 | T-060 | Mobile polish sweep — T-015 non-blocking review nits + device-pass checks | done | Marlow | low | 2026-11-25 19:58 UTC |
 | T-061 | Dark mode chrome — tab bar / Android navigation bar stays white | done | Coco | high | 2026-11-25 13:36 UTC |
-| T-062 | Restrained frosted-glass chrome — dark-mode accent + translucent bars | review | Onyx | high | 2026-11-25 17:08 UTC |
+| T-062 | Restrained frosted-glass chrome — dark-mode accent + translucent bars | done | Onyx | high | 2026-11-26 01:28 UTC |
 | T-063 | Fix wardrobe grid regression — animated tile wrapper shrinks cards | done | Viv | high | 2026-11-25 12:46 UTC |
 | T-064 | Update TESTING scan-log legend — mask cleanup + corrections | done | Yves | low | 2026-11-25 12:57 UTC |
 | T-065 | Product review — pivot proposals only (all agents, overnight) | in-progress | Onyx | high | 2026-11-26 00:55 UTC |

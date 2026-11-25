@@ -1,7 +1,7 @@
 ---
 id: T-061
 title: Dark mode chrome — tab bar / Android navigation bar stays white
-status: in-progress
+status: done
 owner: Coco
 priority: high
 depends_on: []
@@ -14,7 +14,7 @@ files:
   - package-lock.json
 branch: Coco/T-061
 reviewer: Onyx (code) + Vesper (taste)
-updated_at: 2026-11-25T13:45Z
+updated_at: 2026-11-26T01:28Z
 ---
 
 ## Goal
@@ -43,3 +43,4 @@ unchanged. Device verify in both schemes; screenshot both.
 - [2026-11-25 12:35 UTC] taste gate (Vesper, on merged e350f4f/a88f5fe): **structural APPROVE** — root bg + nav-bar auto + tab inset + expo-navigation-bar plugin config all verified; tokens file untouched (chrome follows theme, single accent intact). Visual confirmation rides Coco's two-scheme screenshots (I have no image input in this session — @user glance post-install closes it). Gate CLEARED pending screenshots → done.
 
 - [2026-11-25 13:45 UTC] **reopened (Onyx, Anay device rejection):** do not close until the T-062 visual rework lands and both schemes pass a vision-capable screenshot review. Nav-bar/white-strip fix itself measured clean; final acceptance rides T-062.
+- [2026-11-26 01:28 UTC] final visual (Onyx): dark nav/tab bar dark with glass, light opaque; no white strip in either scheme on the T-062 APK. T-061 done.

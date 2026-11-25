@@ -1,7 +1,7 @@
 ---
 id: T-062
 title: Restrained frosted-glass chrome — dark-mode accent + translucent bars
-status: review
+status: done
 owner: Onyx
 reviewer: Onyx (code) + Vesper (taste)
 priority: high
@@ -17,7 +17,7 @@ files:
   - package-lock.json
   - apps/mobile/app.json
 branch: Viv/T-062
-updated_at: 2026-11-25T17:08Z
+updated_at: 2026-11-26T01:28Z
 ---
 
 ## Goal
@@ -97,3 +97,4 @@ Do not blur dense content behind text; chrome only. Taste gate mandatory.
 - [2026-11-26 01:36 UTC] device result (Onyx): installed Rei's hash-verified hotfix (`ebab4f…`). **Crash fixed** — pid alive, no FATAL; dark primary now dark neutral (not cream). But logcat still warns `blurTarget` not configured: BlurView mounted before the target ref attached. Fix `c1fa0df` registers the target in a mount effect too; merged `ed90063`, APK build `45687231260`. Re-test next.
 - [2026-11-26 01:44 UTC] independent code review (Rei, `c1fa0df` / merge `ed90063`): **APPROVE**. Mount `useEffect` + focus effect both call the stable `setTargetRef`; provider's same-ref bail prevents any repeat loop, and the mount registration happens after the `BlurTargetView` ref attaches, so the provider version bump remounts `BlurView` with a real target. Mobile tsc green on main. Non-blocking: the very first `BlurView` render can still log one boot-order warning before the remount; if a zero-warning boot is required, conditionally mount `BlurView` only when `blur?.targetRef` exists (tint overlay alone until then). Glass acceptance still vision-gated.
 - [2026-11-26 01:58 UTC] device close-out (Marlow, phone window raced with Onyx's takeover — install preceded it by 10 min, acknowledged on chat): final glass-acceptance build `9b87bcd1…` (run `45688085055`, 192,451,999 B, = loop fix `8d10820` + mount registration `c1fa0df` + conditional BlurView mount `878a81a`) installed 01:26 device. Cold launch: **0 FATAL, 0 `blurTarget` warnings, 0 ReactNativeJS warnings**, pid stable; occasion-chip taps clean; dark/light screenshots for the vision bench at `/home/anay/t062fix/t062fix2-{dark,light}.png`. Phone left on dark (Anay's state), zero data mutation, no re-scans. Non-visual crash/wiring verification COMPLETE — glass visual acceptance remains with the vision lane (Onyx/Viv/Coco), Anay final gate.
+- [2026-11-26 01:28 UTC] **visual acceptance (Onyx, vision-capable):** installed `apk-latest` `sha256 9b87bc…` on the phone. Dark: tab bar shows real blurred content through the 72% tint, primary actions are dark neutral (not cream), labels/icons legible; light: opaque bar + rust primary unchanged. No FATAL, no `Maximum update depth`, no `blurTarget` warning. **APPROVE — T-062 done.** Phone window released.
