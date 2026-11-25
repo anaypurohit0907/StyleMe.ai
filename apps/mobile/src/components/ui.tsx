@@ -2,7 +2,7 @@
  * Small UI kit. One accent, 8pt grid, one radius language.
  * Every screen gets exactly one primary action.
  */
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import {
   ActivityIndicator,
   Modal,
@@ -31,41 +31,45 @@ export const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 /**
  * Shared press feedback: scale 0.97 + opacity dip, spring-settled, skipped
- * entirely when the OS reduce-motion setting is on. All state lives in
- * shared values so the worklet owns every frame — nothing snaps.
+ * entirely when the OS reduce-motion setting is on. Springs fire from the
+ * press handlers and the animated style is a plain shared-value read —
+ * no animation churn inside the worklet, no shared-value writes during
+ * render (React Compiler clean).
  */
 export function usePressFeedback(opts?: { disabled?: boolean }) {
   const disabled = opts?.disabled ?? false;
-  const pressed = useSharedValue(0);
-  const isDisabled = useSharedValue(disabled ? 1 : 0);
-  // Props → shared value sync at render: the standard reanimated pattern.
-  isDisabled.value = disabled ? 1 : 0;
+  const scale = useSharedValue(1);
+  const opacity = useSharedValue(1);
   const reduce = useReducedMotion();
 
-  const style = useAnimatedStyle(() => {
-    const canMove = !reduce && !isDisabled.value;
-    return {
-      transform: [
-        {
-          scale: canMove
-            ? withSpring(pressed.value ? 0.97 : 1, SnappySpringConfig)
-            : 1,
-        },
-      ],
-      opacity: withTiming(isDisabled.value ? 0.4 : pressed.value ? 0.85 : 1, {
-        duration: 90,
-      }),
-    };
-  });
+  // Disabled look settles via effect — never a shared-value write mid-render.
+  useEffect(() => {
+    opacity.value = withTiming(disabled ? 0.4 : 1, { duration: 90 });
+    if (disabled) scale.value = 1;
+  }, [disabled, opacity, scale]);
 
+  const style = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+    opacity: opacity.value,
+  }));
+
+  const canMove = !reduce && !disabled;
   return {
     style,
+    /* eslint-disable react-hooks/immutability -- reanimated SharedValues
+       are write-by-design (`.value =` is the library's setter); the rule
+       misreads press-handler mutations as render-scope immutability. */
     onPressIn: () => {
-      pressed.value = 1;
+      if (!canMove) return;
+      scale.value = withSpring(0.97, SnappySpringConfig);
+      opacity.value = withTiming(0.85, { duration: 90 });
     },
     onPressOut: () => {
-      pressed.value = 0;
+      if (!canMove) return;
+      scale.value = withSpring(1, SnappySpringConfig);
+      opacity.value = withTiming(1, { duration: 90 });
     },
+    /* eslint-enable react-hooks/immutability */
   };
 }
 
