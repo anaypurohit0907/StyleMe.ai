@@ -1,7 +1,7 @@
 ---
 id: T-041
 title: Idempotent learn delivery — job id + worker dedupe
-status: review
+status: done
 owner: Wren
 reviewer: Onyx (proposed — worker contract) · taste: n/a (no user-facing copy)
 priority: medium
@@ -13,7 +13,7 @@ files:
   - packages/schema/src/index.ts
   - apps/worker/migrations/0004_learn_dedupe.sql
 branch: Wren/T-041
-updated_at: 2026-11-25T07:22Z
+updated_at: 2026-11-25T07:47Z
 ---
 
 ## Goal
@@ -32,3 +32,4 @@ contract unchanged; no behavior change for a single successful send.
 - [2026-11-25 07:22 UTC] review (Wren): `Wren/T-041` @ a12c2d9 (rebased on post-T-037 main). (1) schema: `LearnEvent.jobId` optional ≤64 — absent on old clients, those stay last-write-wins; (2) sync-queue: learn enqueues carry the queue job id; (3) worker: migration 0004 `learn_events(id PK, user_id, ts)` + idx(user_id, ts); learn route gates on `INSERT OR IGNORE` → `{ok, deduped:true}` before any state change, opportunistic 30-day prune per accepted event (client queue ≤200 jobs, month covers every retry window); (4) mockdb: learn_events map + run() now returns D1's `{meta:{changes}}` shape (exact for the dedupe statements); (5) regression test: same jobId twice → second is deduped, prefs byte-identical, wear-log unmoved; different jobId still learns (n advances). Verify: worker 21/21, engine 71/71, tsc ×4 green on the branch. Queue contract unchanged for single sends. @Onyx review.
 - [2026-11-25 07:28 UTC] lead review (Onyx, `a12c2d9`): **REQUEST CHANGES — one loss window.** The dedupe row is inserted *before* `ensureUser` / `updatePreference` / the final `DB.batch`. If any of those fail, the job id is already recorded and the retry is answered `{deduped:true}` → the learn signal is lost, which is worse than the double-count this task exists to prevent. Fix: wrap the apply in try/catch, `DELETE FROM learn_events WHERE user_id = ? AND id = ?` on failure, then rethrow/500 (or move the gate into the same atomic write path with a conditional). Two smaller fixes in the same pass: (a) scope the PK by user — `PRIMARY KEY (user_id, id)` — a global id collision must not suppress another user's event; (b) prune with server time (`Date.now()` / a `created_at` column), not client `d.ts` — a future client ts defeats the 30-day prune. Add a regression test for the failure-cleanup path (MockD1 can inject one failed apply). Everything else (schema jobId, queue id, mock changes, dedupe test) is good.
 - [2026-11-25 07:40 UTC] fix up (Wren): `Wren/T-041` @ 8601765. All three addressed: (loss window) the whole apply (ensureUser → batch) is wrapped — on failure the route DELETES the dedupe row (best-effort, `.catch(() => {})`) then rethrows so Hono's onError 500s; (a) migration 0004 now `PRIMARY KEY (user_id, id)` + idx(user_id, created_at); (b) `created_at` column on server `Date.now()`, prune keyed on it — client ts can't defeat the window. Regression test added: injected `failNextUsersPrefsUpdate` hook → failed apply leaves NO row, clean retry applies (n counts), further retry dedupes; key checks use the exported gkey (tenant-scoped). Verify: worker 22/22 (2 dedupe tests), engine 71/71, tsc ×4. @Onyx re-review.
+- [2026-11-25 07:47 UTC] lead re-review (Onyx, `8601765` → merge `8ca7fc3`): **APPROVE**. Loss window closed — apply wrapped, dedupe row deleted on failure, tenant PK `(user_id,id)`, server-time `created_at` prune, failure-cleanup regression test (500 → row gone → retry applies → third send dedupes). Merge-result worker 22/22 + schema/worker tsc green. T-041 done. **Deploy gate:** migration `0004_learn_dedupe.sql` must be applied before the next worker deploy.
