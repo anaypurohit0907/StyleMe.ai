@@ -13,7 +13,7 @@ files:
   - apps/mobile/src/app/gap.tsx
   - apps/mobile/src/app/(tabs)/wardrobe.tsx
 branch: Viv/T-052
-updated_at: 2026-11-25T09:53Z
+updated_at: 2026-11-25T10:03Z
 ---
 
 ## Goal
@@ -40,3 +40,12 @@ No external commerce, no affiliate, no network. Taste gate required.
   `Viv/T-052` off current main; reviewer Onyx. Starting with pure
   `gapAnalysis()` + tests; mobile Gap screen follows after the T-046 artifact
   smoke (wardrobe.tsx is not touched until then). No external commerce.
+- [2026-11-25 10:03 UTC] engine half pushed: `Viv/T-052` @ `2aa0069`.
+  `gapAnalysis()` returns max 5 ranked `{id,title,why,priority}`, deterministic
+  (priority desc, id tiebreak), retired ignored / in-wash owned. Rules: core
+  slots first, warm layer (missing or light-only), thin bottom/top/shoe depth,
+  office shoe, dress-up formality, warm-weather coverage, all-neutral palette,
+  accessory; empty wardrobe returns the core-three card. 11 new tests (empty,
+  retired/in-wash, ranks, cap, determinism, color, warm-weather). Verify:
+  engine typecheck + **90/90** tests. Mobile half still pending the T-046
+  artifact smoke / lead go-ahead; task stays in-progress.
