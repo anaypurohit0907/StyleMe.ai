@@ -1,8 +1,8 @@
 ---
 id: T-011
 title: Wire the tone engine into every screen
-status: backlog
-owner:
+status: in-progress
+owner: Coco
 priority: critical
 depends_on: []
 files:
@@ -15,7 +15,9 @@ files:
   - apps/mobile/src/lib/local.ts
   - packages/engine/src/tone.ts
   - docs/TONE_KEYS.md
-updated_at: 2026-11-24T19:20Z
+branch: Coco/T-011
+reviewer: Wren (code, proposed) + Vesper (taste gate)
+updated_at: 2026-11-25T05:17Z
 ---
 
 ## Goal
@@ -42,3 +44,4 @@ here; deeper screen work belongs to those tasks.
 ## Log (append-only)
 
 - [2026-11-24 19:20 UTC] created (Vesper, from T-007 audit §2/§3 — decisive moment #1).
+- [2026-11-25 05:17 UTC] claimed (Coco). Reviewer proposed Wren (code) + Vesper (taste). Ownership note: `onboarding.tsx` still in T-026 review (mine, 2-line lint fix — merges first); `dna.tsx`, `item/[id].tsx`, `local.ts` are in blocked T-008 (Yves) — @Yves OK requested before touching, starting with `tone.ts` + `docs/TONE_KEYS.md` + unowned screens.

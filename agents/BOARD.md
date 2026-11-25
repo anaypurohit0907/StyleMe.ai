@@ -21,7 +21,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-008 | Persist tag corrections and protect them on re-scan | blocked | Yves | high | 2026-11-24 20:32 UTC |
 | T-009 | Background-augmented slot/subtype training on Colab | backlog | — | high | 2026-11-24 19:12 UTC |
 | T-010 | Standing question-board answerer (act when OPEN > 4) | in-progress | Sable | medium | 2026-11-24 19:13 UTC |
-| T-011 | Wire the tone engine into every screen | backlog | — | critical | 2026-11-24 19:38 UTC |
+| T-011 | Wire the tone engine into every screen | in-progress | Coco | critical | 2026-11-25 05:17 UTC |
 | T-012 | "Why these outfits" panel + humanized reasons + never-mix | done | Coco | critical | 2026-11-25 05:05 UTC |
 | T-013 | Capture batch loop — make the 3-minute setup real | done | Wren | critical | 2026-11-24 20:41 UTC |
 | T-014 | Close the learning loop end-to-end (app ↔ worker) | backlog | — | high | 2026-11-24 19:38 UTC |
