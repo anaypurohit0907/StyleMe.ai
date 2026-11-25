@@ -37,15 +37,15 @@ First Colab run (Yves, 2026-11-25, shipped probe):
 | dataset | style | probe acc | n | notes |
 |---|---|---|---|---|
 | DeepFashion2 val | consumer photos (anchor) | **0.884** | 7,999 | below the 0.90 gate — no training change shipped on it, but the honest baseline for T-009 |
-| Fashion Product Images | e-commerce flat-lays | **0.964** | 8,476 | strong on our capture style; **shoes recall 0.68** — the measured gap T-009's background-invariant retrain targets |
-| Fashionpedia (HF) | street (worn) | pending | — | split name fixed (`val` not `validation`); rerun with the next Colab session |
+| Fashion Product Images | e-commerce flat-lays | **0.964** | 8,476 | strong on our capture style; **dress recall 0.68** is the weak class (shoes 1.00, accessory 0.99) |
+| Fashionpedia (HF) | street (worn) | **0.534** | 3,853 | zero-shot 0.603; per-slot top 0.68, bottom 0.97, outerwear 0.82, shoes 0.40, accessory 0.27 — clear worn/OOD gap |
 | ModaNet | street (worn) | skipped | — | repo clone yields git-lfs pointers, no bulk images — annotations remain T-009 augmentation labels |
 
-Verdict (T-023, lead-approved gate read): the shipped slot head holds flat-lay/e-commerce
-territory (FPI 0.964) and sits just under the anchor gate on DF2 (0.884); the one measured
-weakness is **shoes recall 0.68**, which becomes the concrete target for T-009's
-background-augmented retrain + more shoes training data. Full report lands in
-`artifacts/dataset_eval_report.md` on the next run.
+Verdict (T-023/T-040): the shipped slot head holds flat-lay/e-commerce territory
+(FPI 0.964) and sits just under the anchor gate on DF2 (0.884). The measured gaps are
+**dress recall 0.68** on FPI and the street/worn collapse on Fashionpedia (0.534 vs 0.884);
+both are concrete targets for T-009's background-augmented retrain. Full per-slot report:
+`ml/artifacts/dataset_eval_report.md`.
 
 ## Results (MobileCLIP-S1, 256px, 512-d)
 
