@@ -28,7 +28,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-015 | Motion + haptics pass — make it feel alive | done | Marlow | high | 2026-11-25 07:45 UTC |
 | T-016 | Dark mode + real icons + type + debug-chrome cleanup | done | Coco | high | 2026-11-25 07:08 UTC |
 | T-017 | Wardrobe + item completeness (filters, wear history, safety) | done | Coco | medium | 2026-11-25 07:41 UTC |
-| T-018 | Retention moments — streaks, first-outfit, spaced polls | backlog | — | medium | 2026-11-24 19:38 UTC |
+| T-018 | Retention moments — streaks, first-outfit, spaced polls | in-progress | Viv | medium | 2026-11-25 07:46 UTC |
 | T-019 | Worker tenant scoping — fix cross-user garment overwrite | done | Indigo | critical | 2026-11-24 19:53 UTC |
 | T-020 | Worker auth hardening, validation, rate limits | done | Indigo | critical | 2026-11-25 05:54 UTC |
 | T-021 | Engine integrity pass — coat diversity, accessories, explore math, tests | done | Marlow | high | 2026-11-25 06:20 UTC |
@@ -40,7 +40,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-027 | Establish tech lead role + proper SWE team process | in-progress | Onyx | high | 2026-11-24 19:56 UTC |
 | T-028 | Mobile — store + resend device registrationSecret (worker T-020 pairing) | done | Viv | high | 2026-11-25 05:58 UTC |
 | T-029 | Standing reviewer + helper — review overflow + unblock | in-progress | Rei | high | 2026-11-24 20:15 UTC |
-| T-030 | Personalize capture session target from onboarding wardrobe-size guess | in-progress | Wren | low | 2026-11-25 07:50 UTC |
+| T-030 | Personalize capture session target from onboarding wardrobe-size guess | review | Wren | low | 2026-11-25 07:57 UTC |
 | T-031 | Dark-mode token wiring — useTheme + hardcoded hex cleanup (T-016 split) | done | Wren | high | 2026-11-25 05:07 UTC |
 | T-032 | Theme pass on remaining screens — Today, item, onboarding, DNA | done | Coco | high | 2026-11-25 06:15 UTC |
 | T-033 | Theme token cleanup — onAccent token + unused colors import | done | Wren | low | 2026-11-25 05:38 UTC |
@@ -53,6 +53,9 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-040 | Run Fashionpedia street-split eval + publish dataset report artifact | in-progress | Yves | low | 2026-11-25 06:30 UTC |
 | T-041 | Idempotent learn delivery — job id + worker dedupe | done | Wren | medium | 2026-11-25 07:47 UTC |
 | T-042 | Dev cleanup — reset-project script + unused tab icon assets | done | Coco | low | 2026-11-25 07:13 UTC |
-| T-043 | Wardrobe filters + loading skeleton + bulk wash (T-017 split) | in-progress | Coco | medium | 2026-11-25 07:50 UTC |
-| T-044 | Wear history — query by garment in SQL instead of filtering a 50-row window | review | Coco | low | 2026-11-25 07:45 UTC |
+| T-043 | Wardrobe filters + loading skeleton + bulk wash (T-017 split) | review | Coco | medium | 2026-11-25 07:55 UTC |
+| T-044 | Wear history — query by garment in SQL instead of filtering a 50-row window | done | Coco | low | 2026-11-25 07:53 UTC |
 | T-045 | Rate-limit remaining authed routes + cap photos data-URI body | review | Indigo | medium | 2026-11-25 07:42 UTC |
+| T-046 | Android emulator for agent-side device checks (replace Anay's phone) | backlog | — | high | 2026-11-25 07:55 UTC |
+| T-047 | Reproducible lint in clean worktrees — expo-haptics exports resolution | backlog | — | low | 2026-11-25 07:55 UTC |
+| T-047 | ESLint can't resolve expo-haptics under hoisted npm ci | backlog | — | low | 2026-11-25 07:55 UTC |
