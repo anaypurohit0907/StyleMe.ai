@@ -5,6 +5,7 @@
 import type { ReactNode } from "react";
 import {
   ActivityIndicator,
+  Modal,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -260,6 +261,43 @@ export function TextLink({ label, onPress }: { label: string; onPress: () => voi
   );
 }
 
+/** Destructive confirmation sheet — one clear question, one clear out. */
+export function Confirm({
+  visible,
+  title,
+  body,
+  confirmLabel = "Confirm",
+  cancelLabel = "Cancel",
+  danger,
+  onConfirm,
+  onCancel,
+}: {
+  visible: boolean;
+  title: string;
+  body: string;
+  confirmLabel?: string;
+  cancelLabel?: string;
+  danger?: boolean;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) {
+  const t = useTheme();
+  return (
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
+      <View style={[s.confirmBackdrop, { backgroundColor: t.overlayStrong }]}>
+        <View style={[s.confirmCard, { backgroundColor: t.surface, borderColor: t.line }]}>
+          <Text style={[s.emptyTitle, { color: t.ink }]}>{title}</Text>
+          <Text style={[s.body, { color: t.inkSoft }]}>{body}</Text>
+          <View style={s.confirmActions}>
+            <Btn label={cancelLabel} variant="ghost" onPress={onCancel} />
+            <Btn label={confirmLabel} variant={danger ? "danger" : "primary"} onPress={onConfirm} />
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+}
+
 const s = StyleSheet.create({
   screen: { flex: 1 },
   scroll: { padding: space.m, paddingBottom: space.xxl, gap: space.m },
@@ -305,4 +343,12 @@ const s = StyleSheet.create({
   },
   addedChipText: { ...type.caption, fontWeight: "600" },
   textLink: { ...type.caption, textDecorationLine: "underline" },
+  confirmBackdrop: { flex: 1, justifyContent: "center", padding: space.l },
+  confirmCard: {
+    borderRadius: radius.md,
+    borderWidth: StyleSheet.hairlineWidth,
+    padding: space.l,
+    gap: space.m,
+  },
+  confirmActions: { flexDirection: "row", justifyContent: "flex-end", gap: space.s },
 });

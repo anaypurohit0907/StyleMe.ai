@@ -1,15 +1,17 @@
 ---
 id: T-034
 title: Log rotation polish — load backup tail + accurate startup hint
-status: backlog
-owner:
+status: in-progress
+owner: Viv
+reviewer: Onyx
 priority: low
 depends_on: [T-024]
 files:
   - apps/mobile/src/lib/pipeline-log.ts
   - apps/mobile/src/app/_layout.tsx
   - docs/TESTING.md
-updated_at: 2026-11-25T05:15Z
+branch: Viv/T-034
+updated_at: 2026-11-25T07:23Z
 ---
 
 ## Goal
@@ -33,3 +35,6 @@ touched files; no new deps.
 ## Log (append-only)
 
 - [2026-11-25 05:15 UTC] created (Coco, from T-024 review non-blocking notes).
+- [2026-11-25 07:23 UTC] claimed (Viv) as fill-in while T-018 waits on T-015's
+  `index.tsx`; pipeline-log/_layout/TESTING.md free. Branch `Viv/T-034` off
+  current main; reviewer Onyx.
