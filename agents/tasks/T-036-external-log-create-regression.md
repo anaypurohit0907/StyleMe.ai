@@ -7,8 +7,8 @@ priority: high
 depends_on: [T-024]
 files:
   - apps/mobile/src/lib/pipeline-log.ts
-branch: Coco/T-035
-reviewer: Wren (lead-confirmed) 
+branch: Coco/T-036
+reviewer: Wren (lead-confirmed)
 updated_at: 2026-11-25T05:48Z
 ---
 
