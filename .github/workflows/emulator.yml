@@ -31,6 +31,15 @@ jobs:
       - name: Install
         run: npm ci
 
+      - name: Fetch vision bundle
+        run: |
+          mkdir -p apps/mobile/assets/vision
+          curl -fL --retry 3 \
+            "https://github.com/${{ github.repository }}/releases/download/vision-v2/styleme_vision_v2.zip" \
+            -o /tmp/vision.zip
+          unzip -o /tmp/vision.zip -d apps/mobile/assets/vision
+          ls -lh apps/mobile/assets/vision
+
       - name: Generate native project (x86_64 release)
         working-directory: apps/mobile
         env:
