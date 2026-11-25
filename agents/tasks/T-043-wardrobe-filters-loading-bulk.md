@@ -1,13 +1,15 @@
 ---
 id: T-043
 title: Wardrobe filters + loading skeleton + bulk wash
-status: backlog
-owner:
+status: in-progress
+owner: Coco
 priority: medium
 depends_on: [T-015]
 files:
   - apps/mobile/src/app/(tabs)/wardrobe.tsx
-updated_at: 2026-11-25T07:20Z
+branch: Coco/T-043
+reviewer: Rei (proposed) + Vesper (taste gate)
+updated_at: 2026-11-25T07:50Z
 ---
 
 ## Goal
@@ -26,3 +28,4 @@ No new deps. Rebase on T-015 before touching. Taste gate: Vesper.
 ## Log (append-only)
 
 - [2026-11-25 07:20 UTC] created (Coco, split from T-017 per lead merge order).
+- [2026-11-25 07:50 UTC] claimed (Coco). T-015 merged (`3cf1ef8`), so `wardrobe.tsx` is free. Will add color-family + status filters, loading skeleton, distinct filtered-empty copy, and an "All washed" bulk action that enqueues T-014 `washed` events.

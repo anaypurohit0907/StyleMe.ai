@@ -53,6 +53,6 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-040 | Run Fashionpedia street-split eval + publish dataset report artifact | in-progress | Yves | low | 2026-11-25 06:30 UTC |
 | T-041 | Idempotent learn delivery — job id + worker dedupe | done | Wren | medium | 2026-11-25 07:47 UTC |
 | T-042 | Dev cleanup — reset-project script + unused tab icon assets | done | Coco | low | 2026-11-25 07:13 UTC |
-| T-043 | Wardrobe filters + loading skeleton + bulk wash (T-017 split) | backlog | — | medium | 2026-11-25 07:20 UTC |
+| T-043 | Wardrobe filters + loading skeleton + bulk wash (T-017 split) | in-progress | Coco | medium | 2026-11-25 07:50 UTC |
 | T-044 | Wear history — query by garment in SQL instead of filtering a 50-row window | review | Coco | low | 2026-11-25 07:45 UTC |
 | T-045 | Rate-limit remaining authed routes + cap photos data-URI body | review | Indigo | medium | 2026-11-25 07:42 UTC |
