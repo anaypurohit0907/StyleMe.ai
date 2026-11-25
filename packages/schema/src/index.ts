@@ -108,14 +108,24 @@ export const CorrectionSchema = z.object({
 });
 export type Correction = z.infer<typeof CorrectionSchema>;
 
+/** Onboarding answers — free-form but bounded; stored once at registration. */
+export const OnboardingSchema = z
+  .record(
+    z.string().max(32),
+    z.union([z.string().max(256), z.number(), z.boolean(), z.array(z.string().max(64)).max(16)]),
+  )
+  .refine((o) => Object.keys(o).length <= 12, { message: "too many onboarding keys" });
+export type Onboarding = z.infer<typeof OnboardingSchema>;
+
 export const GarmentSchema = z.object({
-  id: z.string().min(1),
+  /** Client-generated (e.g. `g_<base36ts>`); also "+"-joined in pickedId, so no "+" allowed. */
+  id: z.string().min(1).max(64).regex(/^[A-Za-z0-9_-]+$/, "id: [A-Za-z0-9_-] only"),
   attrs: GarmentAttrsSchema,
   status: GarmentStatusSchema.default("available"),
   /** Original camera photo, kept for re-segmentation. */
   originalRef: z.string().optional(),
   /** 512-d mobileclip embedding (base64) for novelty + future search. Optional in MVP. */
-  embedding: z.string().optional(),
+  embedding: z.string().max(4096).optional(),
   /** Local file ref on the device; R2 key when backed up. */
   photoRef: z.string(),
   addedAt: z.number(),
@@ -145,7 +155,8 @@ export const MoodSchema = z.enum(["high", "chill", "focused", "tired", "none"]);
 export type Mood = z.infer<typeof MoodSchema>;
 
 export const WeatherContextSchema = z.object({
-  tempC: z.number(),
+  /** Physical bounds — anything outside is a client bug or an attack. */
+  tempC: z.number().min(-60).max(60),
   isRaining: z.boolean(),
 });
 export type WeatherContext = z.infer<typeof WeatherContextSchema>;
@@ -173,7 +184,8 @@ export const RuleReasonSchema = z.object({
 export type RuleReason = z.infer<typeof RuleReasonSchema>;
 
 export const ScoredOutfitSchema = z.object({
-  garmentIds: z.array(z.string()).min(3).max(6),
+  /** Engine legitimately emits dress+shoes outfits (2 ids) on warm days. */
+  garmentIds: z.array(z.string()).min(2).max(6),
   score: z.number(),
   reasons: z.array(RuleReasonSchema),
 });
@@ -215,8 +227,9 @@ export const LaundryEventSchema = z.object({
 export type LaundryEvent = z.infer<typeof LaundryEventSchema>;
 
 export const WardrobeSyncSchema = z.object({
-  upserts: z.array(GarmentSchema),
-  deletions: z.array(z.string()),
+  /** Caps keep one request from shipping an entire D1 row budget. */
+  upserts: z.array(GarmentSchema).max(500),
+  deletions: z.array(z.string()).max(500),
   ts: z.number(),
 });
 export type WardrobeSync = z.infer<typeof WardrobeSyncSchema>;

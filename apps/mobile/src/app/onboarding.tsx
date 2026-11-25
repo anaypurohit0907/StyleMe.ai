@@ -6,6 +6,7 @@ import { emptyPreference } from "@styleme/schema";
 import { Btn, Caption, Chip, Screen, Scroll, Title } from "@/components/ui";
 import { getDeviceId, savePrefs } from "@/lib/local";
 import { metaSet } from "@/lib/db";
+import { detectAndSaveTone } from "@/lib/tone";
 
 const VIBES = ["minimal", "street", "classic", "bold", "cozy"];
 const LAUNDRY = ["rarely (I have options)", "weekly", "constantly"];
@@ -15,6 +16,7 @@ export default function Onboarding() {
   const [step, setStep] = useState(0);
   const [name, setName] = useState("");
   const [city, setCity] = useState("");
+  const [words, setWords] = useState("");
   const [vibes, setVibes] = useState<string[]>([]);
   const [laundry, setLaundry] = useState(LAUNDRY[1]);
   const [saving, setSaving] = useState(false);
@@ -37,6 +39,8 @@ export default function Onboarding() {
     await metaSet("vibes", JSON.stringify(vibes));
     await metaSet("laundry", laundry);
     await metaSet("onboarded", "1");
+    // The optional free-text answer is the only honest signal for voice.
+    await detectAndSaveTone([words, name]);
 
     // Seed the formality center from vibe words; everything else learns.
     const center =
@@ -80,6 +84,14 @@ export default function Onboarding() {
               placeholder="City (for weather) — optional"
               placeholderTextColor={colors.inkFaint}
               style={s.input}
+            />
+            <TextInput
+              value={words}
+              onChangeText={setWords}
+              placeholder="Describe your style in your own words — optional"
+              placeholderTextColor={colors.inkFaint}
+              style={[s.input, s.words]}
+              multiline
             />
           </>
         )}
@@ -135,4 +147,5 @@ const s = StyleSheet.create({
     marginTop: space.s,
   },
   wrap: { flexDirection: "row", flexWrap: "wrap", gap: space.s, marginTop: space.s },
+  words: { minHeight: 76, textAlignVertical: "top" },
 });

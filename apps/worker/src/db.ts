@@ -17,6 +17,7 @@ export interface UserRow {
   tone: ToneProfile | null;
   prefs: PreferenceVector;
   exploreState: Record<string, SignatureState>;
+  regSecretHash: string | null;
   created_at: number;
 }
 
@@ -31,8 +32,17 @@ export function mapUser(row: Record<string, unknown> | null): UserRow | null {
     exploreState: row.explore_state
       ? (JSON.parse(row.explore_state as string) as Record<string, SignatureState>)
       : {},
+    regSecretHash: (row.reg_secret_hash as string | null) ?? null,
     created_at: row.created_at as number,
   };
+}
+
+export async function getUser(db: D1Database, id: string): Promise<UserRow | null> {
+  const row = (await db.prepare("SELECT * FROM users WHERE id = ?").bind(id).first()) as Record<
+    string,
+    unknown
+  > | null;
+  return mapUser(row);
 }
 
 export function mapGarment(row: Record<string, unknown>): Garment {
@@ -95,24 +105,47 @@ export async function syncWardrobe(
   return sync.upserts.length + sync.deletions.length;
 }
 
+export async function setUserRegSecretHash(db: D1Database, id: string, hash: string): Promise<void> {
+  // Conditional on NULL: a concurrent legacy-upgrade must not overwrite the
+  // hash another caller just minted (first-writer-wins).
+  await db
+    .prepare("UPDATE users SET reg_secret_hash = ? WHERE id = ? AND reg_secret_hash IS NULL")
+    .bind(hash, id)
+    .run();
+}
+
+export interface EnsureUserResult {
+  user: UserRow;
+  /** true only when this call created the row (registration race safe). */
+  created: boolean;
+}
+
 export async function ensureUser(
   db: D1Database,
   id: string,
   onboarding?: Record<string, unknown>,
   tone?: ToneProfile,
-): Promise<UserRow> {
-  const existing = await db.prepare("SELECT * FROM users WHERE id = ?").bind(id).first();
+  regSecretHash?: string,
+): Promise<EnsureUserResult> {
+  const existing = await getUser(db, id);
   if (existing) {
+    // Note: a valid JWT is required to reach the authed routes that land
+    // here, so a NULL-hash row can still be ensureUser'd — acceptable; the
+    // secret upgrade only happens in /v1/auth/device.
     if (onboarding || tone) {
       await db
         .prepare("UPDATE users SET onboarding = COALESCE(?, onboarding), tone = COALESCE(?, tone) WHERE id = ?")
         .bind(onboarding ? JSON.stringify(onboarding) : null, tone ? JSON.stringify(tone) : null, id)
         .run();
     }
-    return mapUser((await db.prepare("SELECT * FROM users WHERE id = ?").bind(id).first()) as Record<string, unknown>)!;
+    return { user: (await getUser(db, id))!, created: false };
   }
+  // ON CONFLICT DO NOTHING: a concurrent registration may win the INSERT —
+  // re-read and compare the stored hash to decide who created the row.
   await db
-    .prepare("INSERT INTO users (id, locale, onboarding, tone, prefs, explore_state, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)")
+    .prepare(
+      "INSERT INTO users (id, locale, onboarding, tone, prefs, explore_state, created_at, reg_secret_hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(id) DO NOTHING",
+    )
     .bind(
       id,
       onboarding?.city ? String(onboarding.city) : null,
@@ -121,7 +154,10 @@ export async function ensureUser(
       JSON.stringify(emptyPreference()),
       "{}",
       Date.now(),
+      regSecretHash ?? null,
     )
     .run();
-  return mapUser((await db.prepare("SELECT * FROM users WHERE id = ?").bind(id).first()) as Record<string, unknown>)!;
+  const after = (await getUser(db, id))!;
+  const created = regSecretHash != null && after.regSecretHash === regSecretHash;
+  return { user: after, created };
 }

@@ -33,6 +33,12 @@ describe("detectTone", () => {
     const p = detectTone(["no cap"]);
     expect(p.bank).toBe("none");
   });
+
+  it("matches whole words, not substrings", () => {
+    // "bet" inside "better" and "era" inside "general" must not count.
+    const p = detectTone(["i feel better", "in general", "the weather"]);
+    expect(p.bank).toBe("none");
+  });
 });
 
 describe("toneText", () => {
@@ -42,6 +48,23 @@ describe("toneText", () => {
       for (const k of keys) {
         expect(BANKS[bank]?.[k], `${bank}.${k}`).toBeTruthy();
       }
+    }
+  });
+
+  it("keeps the bank voice rules from the audit", () => {
+    const genz = Object.values(BANKS.genz ?? {}).join(" ").toLowerCase();
+    const millennial = Object.values(BANKS.millennial ?? {}).join(" ").toLowerCase();
+    // "honestly" is a millennial marker, not genz.
+    expect(genz).not.toContain("honestly");
+    // Weather copy must differ per bank.
+    expect(BANKS.genz?.["weather_line"]).not.toBe(BANKS.millennial?.["weather_line"]);
+    // The spec-named genz phrases must actually appear in output copy.
+    expect(genz).toContain("twin");
+    expect(genz).toContain("clock it");
+    // No phrase is recycled within a bank.
+    for (const bank of ["genz", "millennial", "classic"]) {
+      const values = Object.values(BANKS[bank] ?? {});
+      expect(new Set(values).size, `${bank} duplicate copy`).toBe(values.length);
     }
   });
 

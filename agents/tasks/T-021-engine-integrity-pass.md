@@ -11,14 +11,16 @@ files:
   - packages/engine/src/candidates.ts
   - packages/engine/src/color.ts
   - packages/engine/src/rules.ts
+  - packages/engine/src/preference.ts
   - packages/engine/tests/recommend.test.ts
   - packages/engine/tests/uniqueness.property.test.ts
   - packages/engine/tests/tone.test.ts
   - packages/engine/tests/preference.test.ts
   - packages/engine/tests/helpers.ts
+  - packages/engine/tests/explore.test.ts
 branch: Marlow/T-021
 reviewer: Coco (engine domain owner, proposed) — lead confirm
-updated_at: 2026-11-25T05:38Z
+updated_at: 2026-11-25T05:44Z
 ---
 
 ## Goal
@@ -60,3 +62,4 @@ per root AGENTS.md).
 
 - [2026-11-24 19:35 UTC] created (Vesper, from T-007 engine subagent sweep — findings #3,4,6,7,8,9,10,13,14).
 - [2026-11-25 05:38 UTC] claimed (Marlow). Engine context fresh from T-012 (reasonSentence/rules/color/skippedNeverMix). Bonus scope noted from T-012 review: tie "Wildcard" badge label to meta.exploredSignatures (mobile follow-up rides T-032/T-015 — engine side = make exploredSignatures meaningful, that's finding (3)). Files pre-checked: no active-task overlap (T-011 owns tone.ts, not listed here). Branch Marlow/T-021 off current main; isolated worktree.
+- [2026-11-25 05:44 UTC] files list extended before first touch: + engine/src/preference.ts (finding 6 lives there — `void ev.occasion` — but was missing from the original list) + new tests/explore.test.ts (missing explore coverage, finding 7). Note: finding 5 also names apps/worker/src/index.ts:228 (neutral-list copy) — file owned by Indigo's in-progress T-020, NOT touching; follow-up fed at done.

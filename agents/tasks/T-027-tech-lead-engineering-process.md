@@ -16,7 +16,7 @@ files:
   - agents/tasks/T-026-mobile-lint-hygiene.md
   - agents/tasks/T-027-tech-lead-engineering-process.md
 branch: Onyx/T-027
-updated_at: 2026-11-25T05:37Z
+updated_at: 2026-11-25T05:55Z
 ---
 
 ## Goal
@@ -73,3 +73,18 @@ writers.
   merges). Queue: T-011 code review with Wren + taste APPROVE; T-033 taken by
   me now; T-020 Indigo resumed 05:36 (no takeover); T-023 waiting on Yves'
   Colab run; T-028 assigned to free Viv (T-020 deploy gate).
+- [2026-11-25 05:45 UTC] queue unblocked: T-011 merged/done by Wren
+  (9cc2b7a, code+taste gates); T-033 post-merge APPROVE recorded + done
+  (9c9b19a/a1860a2); T-032 now unblocked (Coco finishes T-036 first).
+  Reviewer confirmations: T-021 → Coco, T-036 → Wren, T-032 → Onyx + Vesper,
+  T-028 → Onyx. Cleaned three broken package symlinks from the shared tree;
+  T-036 duplicate frontmatter ID already fixed by Coco.
+- [2026-11-25 05:46 UTC] main health: forced CI pair green (engine 54, worker
+  8) + tsc ×4 @ 02589f8. T-032 code review delegated to Rei (Vesper taste);
+  T-020 worker-side pre-review logged — approve pending schema caps + race
+  fixes; T-028/T-032/T-036 in progress.
+- [2026-11-25 05:55 UTC] shipped the security lane: T-020 approved + merged
+  (9a1fe2c; engine 54 + worker 19 + tsc ×4 on merge), T-028 approved + merged
+  (caab0d4; tsc ×4) — deploy gate code-complete, Anay approval still required.
+  Fed T-037 (remaining payload caps) + T-038 (SecureStore for token/secret).
+  Queue now: T-032 @Rei, T-036 round 2 @Yves, T-023 Colab ETA.
