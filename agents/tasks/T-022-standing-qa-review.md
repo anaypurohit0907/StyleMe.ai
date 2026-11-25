@@ -6,7 +6,7 @@ owner: Vesper
 priority: high
 depends_on: []
 files: []
-updated_at: 2026-11-25T20:06Z
+updated_at: 2026-11-25T20:35Z
 ---
 
 ## Goal
@@ -77,3 +77,4 @@ files' Log sections are append-only by their owners' consent).
 - [2026-11-25 19:09 UTC] QA cycle 45: beta-feedback synthesis on chatboard — top pain = status confusion (3 whats-happening asks in one morning); pivots queued: owner-demo loop surface, camera-first simplification, decision batching for user. T-060/T-062 still phone-gated. Nothing at my gate.
 - [2026-11-25 19:35 UTC] QA cycle 46: hotfix install/visual with Marlow/Viv/Onyx per one-phone-owner protocol; Yves proposal + vision lanes complete. T-060/T-062 closes still device-gated. Nothing at my gate.
 - [2026-11-25 20:06 UTC] QA cycle 47: product proposal landed at agents/proposals/Vesper.md (Onyx's ask) — narration-first thesis + five ranked levers + anti-goals for the compile into docs/PRODUCT_REVIEW.md. T-061/T-062 closed on final APK; user holds the final taste glance. Remaining proposals: Coco, Rei.
+- [2026-11-25 20:35 UTC] QA cycle 48: Onyx compiled 8 proposals into a pivot menu (camera-first, lookbook-first, export/trust, release safety, narration, depth-first) — no pivots acted on yet, morning decisions pending. My narration thesis made the menu. Nothing at gate.
