@@ -16,13 +16,25 @@ import { ScanLog } from "@/components/scan-log";
 import { answerPoll, getPendingPoll, loadPrefs, savePrefs, type Poll } from "@/lib/local";
 import { useToneProfile, voice } from "@/lib/tone";
 import { applyCorrections } from "@styleme/schema/corrections";
-import { listGarments, metaSet, upsertGarment } from "@/lib/db";
+import { bumpFunnel, getFunnel, listGarments, metaSet, upsertGarment, type FunnelEvent } from "@/lib/db";
 import { getVisionTagger } from "@/lib/vision";
 import { segmentGarment } from "@/lib/segment";
 import { errorText, log, logError, withTimeout } from "@/lib/pipeline-log";
 import { useTheme } from "@/lib/theme";
 
 const ITEM_TIMEOUT = 120_000;
+
+/** Beta-gate counters shown in Diagnostics (counts only, no PII). */
+const FUNNEL_ORDER: FunnelEvent[] = [
+  "onboarding_start",
+  "onboarding_complete",
+  "first_capture",
+  "capture_saved",
+  "first_wear",
+  "wear_logged",
+  "streak_milestone",
+  "poll_answered",
+];
 
 function BarFill({ value, color }: { value: number; color: string }) {
   const pct = Math.max(0, Math.min(1, (value + 1) / 2));
@@ -69,14 +81,16 @@ export default function DNA() {
   const [retagProgress, setRetagProgress] = useState("");
   const [retagStage, setRetagStage] = useState("");
   const [diagnosticsOpen, setDiagnosticsOpen] = useState(false);
+  const [funnel, setFunnel] = useState<Partial<Record<FunnelEvent, number>>>({});
   const cancelRef = useRef(false);
 
   useFocusEffect(
     useCallback(() => {
-      void Promise.all([loadPrefs(), getPendingPoll()])
-        .then(([next, pending]) => {
+      void Promise.all([loadPrefs(), getPendingPoll(), getFunnel()])
+        .then(([next, pending, counts]) => {
           setPrefs(next);
           setPoll(pending);
+          setFunnel(counts);
         })
         .catch(() => {
           // A failed poll query must not hide the learned DNA.
@@ -87,8 +101,10 @@ export default function DNA() {
   async function answer(pending: Poll, choice: string) {
     try {
       const next = await answerPoll(pending, choice);
+      await bumpFunnel("poll_answered");
       setPrefs(next);
       setPoll(null);
+      setFunnel(await getFunnel());
       void Haptics.selectionAsync();
     } catch {
       // Keep the poll on screen if the local write failed.
@@ -254,6 +270,14 @@ export default function DNA() {
             release-test source of truth (docs/TESTING.md). */}
         {diagnosticsOpen ? (
           <>
+            <Card style={{ gap: space.xs }}>
+              <Caption>Beta funnel — local counts only</Caption>
+              {FUNNEL_ORDER.map((key) => (
+                <Caption key={key}>
+                  {key.replaceAll("_", " ")}: {funnel[key] ?? 0}
+                </Caption>
+              ))}
+            </Card>
             <ScanLog limit={40} title="Diagnostics" />
             <TextLink label="Hide diagnostics" onPress={() => setDiagnosticsOpen(false)} />
           </>

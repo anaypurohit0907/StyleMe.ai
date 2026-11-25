@@ -65,6 +65,56 @@ export async function metaSet(key: string, value: string): Promise<void> {
   );
 }
 
+// --- privacy-safe funnel counters (T-058) -----------------------------------
+// Counts only. No device id, content, photo, or per-event timestamp leaves
+// this table; the summary is shown in Style DNA → Diagnostics.
+
+export type FunnelEvent =
+  | "onboarding_start"
+  | "onboarding_step_1"
+  | "onboarding_step_2"
+  | "onboarding_step_3"
+  | "onboarding_complete"
+  | "first_capture"
+  | "capture_saved"
+  | "first_wear"
+  | "wear_logged"
+  | "streak_milestone"
+  | "poll_answered";
+
+const FUNNEL_KEY = "funnel";
+
+export async function getFunnel(): Promise<Partial<Record<FunnelEvent, number>>> {
+  const raw = await metaGet(FUNNEL_KEY);
+  if (!raw) return {};
+  try {
+    const parsed = JSON.parse(raw) as unknown;
+    if (!parsed || typeof parsed !== "object") return {};
+    const out: Partial<Record<FunnelEvent, number>> = {};
+    for (const [k, v] of Object.entries(parsed as Record<string, unknown>)) {
+      if (typeof v === "number" && Number.isFinite(v) && v >= 0) {
+        out[k as FunnelEvent] = Math.floor(v);
+      }
+    }
+    return out;
+  } catch {
+    return {};
+  }
+}
+
+/** Increment one counter; returns the new count. Storage failure is silent. */
+export async function bumpFunnel(event: FunnelEvent): Promise<number> {
+  try {
+    const counts = await getFunnel();
+    const next = (counts[event] ?? 0) + 1;
+    counts[event] = next;
+    await metaSet(FUNNEL_KEY, JSON.stringify(counts));
+    return next;
+  } catch {
+    return 0;
+  }
+}
+
 // --- garments ----------------------------------------------------------------
 
 export async function upsertGarment(g: Garment): Promise<void> {

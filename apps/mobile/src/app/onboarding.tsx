@@ -1,11 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { TextInput, View, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { radius, space } from "@styleme/design";
 import { emptyPreference } from "@styleme/schema";
 import { Btn, Caption, Chip, Screen, Scroll, Title } from "@/components/ui";
 import { getDeviceId, savePrefs } from "@/lib/local";
-import { metaSet } from "@/lib/db";
+import { bumpFunnel, metaSet } from "@/lib/db";
 import { detectAndSaveTone } from "@/lib/tone";
 import { useTheme } from "@/lib/theme";
 
@@ -25,6 +25,13 @@ export default function Onboarding() {
   const [laundry, setLaundry] = useState(LAUNDRY[1]);
   const [sizeGuess, setSizeGuess] = useState(SIZES[1]);
   const [saving, setSaving] = useState(false);
+  const funnelStarted = useRef(false);
+
+  useEffect(() => {
+    if (funnelStarted.current) return;
+    funnelStarted.current = true;
+    void bumpFunnel("onboarding_start");
+  }, []);
 
   const canNext = useMemo(() => {
     if (step === 0) return name.trim().length > 0;
@@ -57,6 +64,7 @@ export default function Onboarding() {
     const prefs = emptyPreference();
     prefs.formalityCenter = Math.max(1, Math.min(5, center));
     await savePrefs(prefs);
+    await bumpFunnel("onboarding_complete");
 
     setSaving(false);
     router.replace("/(tabs)");
@@ -148,7 +156,14 @@ export default function Onboarding() {
 
         <View style={{ height: space.l }} />
         {step < 2 ? (
-          <Btn label="Continue" onPress={() => setStep((x) => x + 1)} disabled={!canNext} />
+          <Btn
+            label="Continue"
+            onPress={() => {
+              void bumpFunnel(step === 0 ? "onboarding_step_1" : "onboarding_step_2");
+              setStep((x) => x + 1);
+            }}
+            disabled={!canNext}
+          />
         ) : (
           <Btn label="Start" onPress={finish} loading={saving} />
         )}

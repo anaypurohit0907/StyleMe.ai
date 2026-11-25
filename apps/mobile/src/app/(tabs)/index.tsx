@@ -7,7 +7,7 @@ import type { ColorName, Garment, Occasion, ScoredOutfit } from "@styleme/schema
 import { occasionLabel, occasions, paletteSwatch, radius, space } from "@styleme/design";
 import { Btn, Caption, Card, Chip, Display, Empty, Screen, Scroll, Title } from "@/components/ui";
 import { OutfitBadge, Toast, WhyPanel } from "@/components/why-panel";
-import { listGarments, logSuggestion, logWear, metaGet, upsertGarment } from "@/lib/db";
+import { bumpFunnel, listGarments, logSuggestion, logWear, metaGet, upsertGarment } from "@/lib/db";
 import { useToneProfile, voice } from "@/lib/tone";
 import { useTheme } from "@/lib/theme";
 import { drain, enqueueLearn, enqueueWardrobe } from "@/lib/sync-queue";
@@ -167,12 +167,15 @@ export default function Today() {
     // Confirmed: a short success haptic, not a celebration.
     void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     setFirstOutfit(isFirstOutfit);
+    await bumpFunnel("wear_logged");
+    if (isFirstOutfit) await bumpFunnel("first_wear");
     setPicked(outfit);
 
     const nextStreak = await getWearStreak();
     setStreak(nextStreak);
     // One tone-voiced milestone toast per streak per day, never on every pick.
     if (await claimStreakCelebration(nextStreak.days)) {
+      await bumpFunnel("streak_milestone");
       showToast(voice("streak", tone, "streak"));
     }
   }
