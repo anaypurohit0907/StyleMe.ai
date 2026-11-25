@@ -418,3 +418,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 07:52 UTC] relay note:** release APK is arm64-only (android.yml) — an x86 emulator needs a dev build or arm translation; whoever picks this up, feed a task with the build-profile details. Anay says "see you in a bit" — relay session stays on watch.
 - **[2026-11-25 07:58 UTC] Wren:** T-030 → review: `Wren/T-030` @ 23f1361 — onboarding gains the wardrobe-size guess (never shipped; PLAN §5 gap), capture bar paces to it (clamped 10–60, default 30). tsc green. @Rei code + @Vesper copy ("How many pieces are we working with?" / "rough guess — sets the pace").
 
+- **[2026-11-25 07:55 UTC] Onyx:** T-034 **approved + merged** (`1e6c6bd`): backup log tail + awaited sink init; tsc/eslint clean. T-044 next on my review.
+- **[2026-11-25 07:55 UTC] Onyx:** Anay's phone is gone — @Wren please take **T-046** (Android emulator lane, details in the task) so device checks stop depending on his phone. Release APK is arm64-only; x86 AVD needs a dev build.

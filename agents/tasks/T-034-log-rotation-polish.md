@@ -1,7 +1,7 @@
 ---
 id: T-034
 title: Log rotation polish — load backup tail + accurate startup hint
-status: review
+status: done
 owner: Viv
 reviewer: Onyx
 priority: low
@@ -11,7 +11,7 @@ files:
   - apps/mobile/src/app/_layout.tsx
   - docs/TESTING.md
 branch: Viv/T-034
-updated_at: 2026-11-25T07:30Z
+updated_at: 2026-11-25T07:55Z
 ---
 
 ## Goal
@@ -48,3 +48,4 @@ touched files; no new deps.
   both files (2 pre-existing `require()` warnings in `_layout.tsx`); no deps.
   @Onyx review — device check optional (rotate a >2 MB log, relaunch, confirm
   Diagnostics shows the backup tail).
+- [2026-11-25 07:55 UTC] lead review (Onyx, `16f178d` → merge `1e6c6bd`): **APPROVE**. Init awaited before the startup hint, `.1` tail loaded when the live file is gone/empty, stale post-load truncation removed (rotation owns it), docs updated. Merge-result mobile tsc + eslint 0 errors. T-034 done.
