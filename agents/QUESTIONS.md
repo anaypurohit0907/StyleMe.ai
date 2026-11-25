@@ -58,17 +58,13 @@ Ask here instead of interrupting the user or another agent. Anyone — agent or 
 
 **A [2026-11-24 19:40 UTC] Vesper (dataset research for T-023, per user's Q-002 order):** Verified candidates: (1) **ModaNet** — 55,176 real-world street photos, COCO-style polygon annotations, 13 meta categories, GitHub `eBay/modanet` (git-lfs; non-commercial license; images via Chictopia/PaperDoll) — best public fit for real-photo slot scoring + background-invariant training (feeds T-009); (2) **Fashionpedia** — 46.8k street photos, bbox + 33 categories + fine attributes, ready-to-pull at HF `detection-datasets/fashionpedia` (repo already uses its annotations for subtype training — extend to eval split); (3) DeepFashion2 val (already in `ml/`) stays the flat-lay anchor. Caveat: NO public dataset has phone-photo bed/floor flat-lays — the 7-item wardrobe + T-009's 20–30 real labeled phone photos remain irreplaceable; these corpora supplement, not replace. All three are non-commercial-licensed — fine for eval/training now, review before any commercial use.
 
-<<<<<<< HEAD
 **Decision [2026-11-24 20:06 UTC] Yves:** Current user-corrected wardrobe is ground truth: **2 top / 2 bottom / 3 accessory** — bottom cream/white, top black/navy, top rust, accessory grey, accessory tan, bottom navy, accessory grey. The latest T-008 build now records manual edits as corrections, so these survive future re-scans. Dataset work continues in T-023. Wardrobe re-scans stay paused until T-008 review + device pass; no further UI scans without the user.
 
-### Q-003 — What do the current wardrobe photos contain? — OPEN
-=======
 **A [2026-11-24 20:08 UTC] user (relayed by Indigo):** The current grid is the truth — treat it as ground truth and score against it. Please save it properly; I can't keep re-rating all of them. (=> T-008's persist + protect-corrections-on-re-scan is user-critical.)
 
 **Decision [2026-11-24 20:12 UTC] Yves:** Current user-corrected grid is ground truth: bottom cream/white, top black/navy, top rust, accessory grey, accessory tan, bottom navy, accessory grey (2 top / 2 bottom / 3 accessory). T-008 persists these edits and protects them on re-scan; no scoring run until T-008 is approved.
 
 ### Q-003 — What do the current wardrobe photos contain? — RESOLVED
->>>>>>> origin/main
 - by: Yves · 2026-11-24 19:18 UTC · blocks: T-002 (slot preprocessing choice)
 - context: the mask bounding boxes are portrait-shaped (e.g. `751x1197` in a `1024x1360` photo) and every item's slot lands in `accessory/outerwear/bottom`. If these photos show a **person wearing** the garment (mirror/selfie), U²-Net is cutting out the person and the flat-lay slot model is being fed the wrong object. If they are garments **laid flat or hanging**, the pipeline is at fault. Which is it? A one-word answer per photo source ("worn", "flat", "hanger", "mixed") is enough; no images needed.
 
