@@ -4,10 +4,11 @@ One source of truth for the next release window. **Deploy is Anay-gated** — th
 file records order and commands, not authorization. Do not run the deploy steps
 until Anay posts `deploy approved` on the chatboard.
 
-_State at 2026-11-25 09:16 UTC · worker live `a934ce2f` (06:13) · migrations
-`0003` applied, `0004` pending · engine 71 / worker 23 tests green · API 34 AVD
-boots (T-046 app build/install still pending). Re-read the main SHA at release
-time — do not treat this snapshot as the release commit._
+_State at 2026-11-25 09:24 UTC · worker live `a934ce2f` (06:13) · migrations
+`0003` applied, `0004` pending · engine 71 / worker 23 tests green · local AVDs
+unusable on this host; the T-046 CI x86_64 lane is the device path and its first
+green run is pending. Re-read the main SHA at release time — do not treat this
+snapshot as the release commit._
 
 ## 0. Pre-flight (always)
 
@@ -98,29 +99,28 @@ Check: boot to Today, tag one capture, one logged wear, Style DNA diagnostics
 opens, `styleme.log` contains the startup + scan lines. The previous file is
 `styleme.log.1`; the app loads its tail at the next launch (T-034).
 
-### Emulator lane (x86_64)
+### Emulator lane (x86_64) — use CI, not this host
 
-The CI APK is arm64-only; an x86_64 AVD needs a local debug build. This lane is
-**T-046, partially up**: the API 36 AVD segfaults on this host, but the API 34
-AVD (`Medium_API_34`, pixel_6 / Android 14 / google_apis x86_64) booted headless
-and `emulator-5554` came online at 09:06. The x86_64 debug build/install and
-screenshot/log acceptance are still pending. Commands:
+The CI APK is arm64-only; x86_64 needs its own build. Local AVDs are **not
+supported on this host**: API 36 and API 34 images both segfault ~60–90 s into
+boot across every GPU/accel/CPU workaround tried (T-046). Do not claim a local
+device pass.
+
+The supported path is the `Rei/T-046` CI lane: `.github/workflows/emulator.yml`
+("Emulator smoke (x86_64)") builds the same release APK for x86_64, boots an
+API 34 AVD on the runner's KVM, installs, screenshots, and pulls the log.
 
 ```bash
-# SDK is at ~/Android/Sdk (not on PATH by default)
-~/Android/Sdk/emulator/emulator -avd <api34_avd> \
-  -no-window -no-audio -gpu swiftshader_indirect &
-adb wait-for-device
-cd apps/mobile
-npx expo prebuild -p android
-cd android
-./gradlew assembleDebug -PreactNativeArchitectures=x86_64
-adb install -r app/build/outputs/apk/debug/app-debug.apk
-adb exec-out screencap -p > /tmp/styleme.png
+gh workflow run emulator.yml --ref main   # after T-046 merges
+gh run list --workflow=emulator.yml --limit 5
+gh run watch <run-id>
+gh run download <run-id> -n emulator-smoke
+# artifact: emulator.png, styleme.log, logcat.txt (14-day retention)
 ```
 
-Keep AVD temp on `/home` (`TMPDIR=/home/anay/tmp-avd`); `/tmp` is a small
-tmpfs. Record whether the API 34 image works before claiming a device pass.
+T-046 acceptance is still pending the first green run (`45584235952` was in
+progress at 09:21 UTC). Use the downloaded `emulator.png` / `styleme.log` for
+the visual + log smoke; never infer a pass from the local AVD.
 
 ## 4. Beta gates
 
