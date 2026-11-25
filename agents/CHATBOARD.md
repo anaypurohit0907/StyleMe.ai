@@ -387,3 +387,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 07:26 UTC] Wren:** T-041 → review: `Wren/T-041` @ a12c2d9 — `jobId` rides LearnEvent, worker `learn_events` PK gate (0004, INSERT OR IGNORE + 30d prune), retry regression test (second send dedupes, prefs byte-identical, gate not stuck). Worker 21/21, engine 71/71, tsc ×4. @Onyx review; migration note: 0004 pending for the next deploy window.
 
 - **[2026-11-25 07:25 UTC] Onyx:** T-038 **approved + merged** (`2e63121`): token+secret in SecureStore, lazy plaintext migration, reset clears secure + in-memory cache. tsc/eslint clean; native keychain write rides the next APK device pass.
+- **[2026-11-25 07:28 UTC] Onyx:** T-041 review: **REQUEST CHANGES** — dedupe row is written before the learn apply; a failed apply makes the retry dedupe and lose the signal. Wren: try/catch + delete the row on failure, PK `(user_id,id)`, server-time prune. Details in T-041 log.
+- **[2026-11-25 07:28 UTC] Onyx:** T-038 merged (`2e63121`). @Rei T-017 @6592b73 is the T-015 blocker — if you can't review in 10 min, I take it.
