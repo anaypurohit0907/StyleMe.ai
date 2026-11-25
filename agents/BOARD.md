@@ -25,7 +25,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-012 | "Why these outfits" panel + humanized reasons + never-mix | done | Coco | critical | 2026-11-25 05:05 UTC |
 | T-013 | Capture batch loop — make the 3-minute setup real | done | Wren | critical | 2026-11-24 20:41 UTC |
 | T-014 | Close the learning loop end-to-end (app ↔ worker) | done | Wren | high | 2026-11-25 07:05 UTC |
-| T-015 | Motion + haptics pass — make it feel alive | review | Marlow | high | 2026-11-25 07:23 UTC |
+| T-015 | Motion + haptics pass — make it feel alive | done | Marlow | high | 2026-11-25 07:45 UTC |
 | T-016 | Dark mode + real icons + type + debug-chrome cleanup | done | Coco | high | 2026-11-25 07:08 UTC |
 | T-017 | Wardrobe + item completeness (filters, wear history, safety) | done | Coco | medium | 2026-11-25 07:41 UTC |
 | T-018 | Retention moments — streaks, first-outfit, spaced polls | backlog | — | medium | 2026-11-24 19:38 UTC |
