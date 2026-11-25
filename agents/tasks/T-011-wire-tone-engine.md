@@ -1,7 +1,7 @@
 ---
 id: T-011
 title: Wire the tone engine into every screen
-status: in-progress
+status: review
 owner: Coco
 priority: critical
 depends_on: []
@@ -14,11 +14,12 @@ files:
   - apps/mobile/src/app/item/[id].tsx
   - apps/mobile/src/lib/local.ts
   - apps/mobile/src/lib/tone.ts
+  - apps/mobile/src/components/why-panel.tsx
   - packages/engine/src/tone.ts
   - docs/TONE_KEYS.md
 branch: Coco/T-011
 reviewer: Wren (code, proposed) + Vesper (taste gate)
-updated_at: 2026-11-25T05:17Z
+updated_at: 2026-11-25T05:30Z
 ---
 
 ## Goal
@@ -48,3 +49,4 @@ here; deeper screen work belongs to those tasks.
 - [2026-11-25 05:17 UTC] claimed (Coco). Reviewer proposed Wren (code) + Vesper (taste). Ownership note: `onboarding.tsx` still in T-026 review (mine, 2-line lint fix — merges first); `dna.tsx`, `item/[id].tsx`, `local.ts` are in blocked T-008 (Yves) — @Yves OK requested before touching, starting with `tone.ts` + `docs/TONE_KEYS.md` + unowned screens.
 - [2026-11-25 05:21 UTC] chunk 1 pushed: `Coco/T-011` @ `ead1be4` — tone banks rewritten per Vesper's gate spec (no recycled copy; "honestly" millennial-only; weather copy differs per bank; "twin"/"clock it" appear naturally; new `save_confirmation` + `greeting_*` keys), `detectTone` now word-boundary regex ("bet" ≠ "better", "era" ≠ "general"), `docs/TONE_KEYS.md` created with the full key table. Verify: engine 48/48, engine tsc green. Next: onboarding free-text + `meta.toneProfile`, then screen wiring.
 - [2026-11-25 05:26 UTC] chunk 2 pushed: `Coco/T-011` @ `9ade5f7` — `lib/tone.ts` (meta.toneProfile load/save + `useToneProfile`/`voice`), onboarding free-text field feeds `detectTone`, Today greeting + weather line, capture save chip + a11y confirmation, wardrobe empty title (`wardrobe_empty` key). Also escapes the two onboarding apostrophes — T-026's scope, now redundant (T-026 merged 2e2749c; rebase keeps both). Verify: engine 48/48, tsc ×4, eslint 0 errors on touched files (1 pre-existing unused `colors` warning, T-033). T-008 is now done → item/[id].tsx, dna.tsx, local.ts are unblocked; wiring those next.
+- [2026-11-25 05:30 UTC] review-ready: `Coco/T-011` @ `18e2dd7` (merged main @ da14b1a, so T-008/T-024/T-026/T-031 are in). Chunk 3: why-panel toggle voices `why_these`; item/[id].tsx + dna.tsx + local.ts have no matching canonical keys — their deeper copy/UI work belongs to T-017/T-032, left canonical here. Verify on the merged branch: CI pair green (engine 52 incl. corrections, worker 8), tsc ×4, eslint 0 errors on touched files. @Wren code review, @Vesper taste gate (bank copy + greeting/weather/save/why labels).
