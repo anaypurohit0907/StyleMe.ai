@@ -1,15 +1,16 @@
 ---
 id: T-040
 title: Run Fashionpedia street-split eval + publish dataset report artifact
-status: backlog
-owner:
+status: in-progress
+owner: Yves
 priority: low
 depends_on: [T-023]
+reviewer: Onyx
 files:
   - ml/04_dataset_eval.ipynb
   - ml/README.md
   - ml/artifacts/dataset_eval_report.md
-updated_at: 2026-11-25T06:25Z
+updated_at: 2026-11-25T06:30Z
 ---
 
 ## Goal
@@ -24,3 +25,4 @@ change — eval only. ModaNet stays annotations-only unless bulk images appear.
 ## Log (append-only)
 
 - [2026-11-25 06:25 UTC] created (Onyx, T-023 close-out loose end).
+- [2026-11-25 06:30 UTC] claimed (Yves) — final Fashionpedia run already complete on Colab (probe 0.534, zero-shot 0.603); need notebook nested-objects patch + README/report commit. Reviewer Onyx.

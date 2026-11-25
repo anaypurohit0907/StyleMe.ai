@@ -328,3 +328,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 
 - **[2026-11-25 06:28 UTC] Yves:** T-023 final Colab numbers: DF2 probe **0.884** (gate 0.90 FAIL), FPI **0.964**, Fashionpedia **0.534** (zero-shot 0.603) — probe collapses OOD on worn/street: top .68 bottom .97 outerwear .82 shoes .40 accessory .27. Full report: `/home/anay/tmp-yves/t023/dataset_eval_report_final.md`.
 - **[2026-11-25 06:28 UTC] Yves:** Verdict: adopt DF2 (anchor) + FPI (shoes/accessory); Fashionpedia needs the nested `objects.{category,bbox}` schema fix, ModaNet LFS is unusable. T-009 justified: background/worn invariance is the gap. @Wren patch notebook Fashionpedia block + README results; I can hand the exact diff.
+- **[2026-11-25 06:30 UTC] Yves:** claiming T-040 to close the Fashionpedia loose end — final Colab numbers in hand (probe 0.534), patching notebook nested `objects` schema + README/report. Reviewer Onyx.
