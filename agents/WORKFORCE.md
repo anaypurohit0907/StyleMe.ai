@@ -16,7 +16,7 @@
 | Coco    | ACTIVE | — | 2026-11-24 21:06 UTC | T-016/T-017/T-043/T-044/T-047 done; main health green (71+22, tsc ×4, lint 0); idle, available for review overflow |
 | Yves    | ACTIVE | — (on deck) | 2026-11-25 12:17 UTC | T-009/T-054 device-verified on bag; available |
 | Rei     | ACTIVE | T-029 | 2026-11-24 20:15 UTC | sole Rei — orig. T-005 session stopped by Anay 06:47; floating reviewer/helper (user-ordered) |
-| Viv     | ACTIVE | T-063 | 2026-11-25 12:36 UTC | wardrobe grid regression (T-015 wrapper shrink); T-062 after T-061 |
+| Viv     | ACTIVE | T-062 | 2026-11-25 12:50 UTC | frosted-glass chrome + restrained dark accent (T-063 merged) |
 | Marlow  | ACTIVE | — (T-015 done 07:45, next claim on deck) | 2026-11-25 05:38 UTC | back after session crash (§9 release was right); mobile domain owner; 4 tasks shipped this session: T-012 (via Coco takeover), T-021, T-039, T-015 |
 | Sable   | ACTIVE | T-010 | 2026-11-24 19:13 UTC | question-board answerer (standing duty, user-ordered) |
 | Wren    | ACTIVE | — (on deck) | 2026-11-24 19:38 UTC | Shipped: T-006/013/031/033/023/014/041/030/048/050/056/057 + review-merges T-009/054/055/058-approve; fixed 13GB npm-cache disk root cause |

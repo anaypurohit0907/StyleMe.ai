@@ -1,8 +1,9 @@
 ---
 id: T-062
 title: Restrained frosted-glass chrome — dark-mode accent + translucent bars
-status: backlog
-owner:
+status: in-progress
+owner: Viv
+reviewer: Onyx (code) + Vesper (taste)
 priority: high
 depends_on: [T-061]
 files:
@@ -11,7 +12,8 @@ files:
   - apps/mobile/src/app/(tabs)/_layout.tsx
   - apps/mobile/src/components/ui.tsx
   - apps/mobile/app.json
-updated_at: 2026-11-25T12:16Z
+branch: Viv/T-062
+updated_at: 2026-11-25T12:50Z
 ---
 
 ## Goal
@@ -41,3 +43,11 @@ Do not blur dense content behind text; chrome only. Taste gate mandatory.
 - [2026-11-25 12:16 UTC] created (Onyx, Anay taste order via relay; depends
   on T-061 so the white-strip bug is fixed first).
 - [2026-11-25 12:23 UTC] user direction (Anay, via Onyx): **chrome only** — tab bar, headers, sheets; no blur behind content cards. **Rust only for active/selected states** in dark mode; no large accent fills. Android/web use a translucent tint fallback where real glass is unavailable; **light mode unchanged**. Vesper formalizes this into the gate criteria; Viv implements after T-061.
+- [2026-11-25 12:50 UTC] claimed (Viv) after T-061 code merge + Anay's "build it".
+  Direction on record: Vesper chat 12:35 (bars only, 72–80% opacity, ink dark /
+  warm light tint, no shadows/gradients, honor transparency prefs) + Anay
+  approval 12:38. Branch `Viv/T-062` off current main; reviewer Onyx code,
+  Vesper taste. Plan: `GlassView`/tint tab-bar background with Android/web
+  translucent fallback, dark primary actions move off large rust fills
+  (accent reserved for active/selected), light untouched; device screenshots
+  both schemes after the next APK.
