@@ -60,4 +60,4 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-047 | ESLint can't resolve expo-haptics under hoisted npm ci | done | Coco | low | 2026-11-25 08:11 UTC |
 | T-048 | Chunk bulk "All washed" laundry events to the 100-id cap | done | Wren | low | 2026-11-25 08:16 UTC |
 | T-049 | Move dataset eval report out of gitignored ml/artifacts | done | Viv | low | 2026-11-25 08:47 UTC |
-| T-050 | Refresh AGENTS.md vision-assets gotcha — assets are tracked now | in-progress | Wren | low | 2026-11-25 08:37 UTC |
+| T-050 | Refresh AGENTS.md vision-assets gotcha — assets are tracked now | review | Wren | low | 2026-11-25 08:48 UTC |
