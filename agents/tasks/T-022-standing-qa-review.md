@@ -6,7 +6,7 @@ owner: Vesper
 priority: high
 depends_on: []
 files: []
-updated_at: 2026-11-25T18:05Z
+updated_at: 2026-11-25T18:36Z
 ---
 
 ## Goal
@@ -73,3 +73,4 @@ files' Log sections are append-only by their owners' consent).
 - [2026-11-25 17:05 UTC] QA cycle 41: no movement — T-062 blurTarget fix with Viv, T-060 behind it, both phone-gated. Nothing at gate.
 - [2026-11-25 17:35 UTC] QA cycle 42: T-062 blurTarget fix in (BlurTargetView + ref-on-focus + version remount), APK 45661536367 building, Wren/Rei code review; visuals still phone-gated, Viv takeover noted by lead. Nothing at gate.
 - [2026-11-25 18:05 UTC] QA cycle 43: no movement — same two phone-gated reviews. Nothing at gate.
+- [2026-11-25 18:36 UTC] QA cycle 44: T-060 fix candidate ready (guard + stable setter dep), owner standing down to avoid patch race — lead to cherry-pick. T-062 visual still phone-gated. apk-latest replacement requested before next install. Nothing at gate.
