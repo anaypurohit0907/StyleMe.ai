@@ -1,7 +1,7 @@
 ---
 id: T-038
 title: Move auth token + registrationSecret to SecureStore
-status: review
+status: done
 owner: Viv
 reviewer: Onyx
 priority: medium
@@ -10,7 +10,7 @@ files:
   - apps/mobile/src/lib/api.ts
   - apps/mobile/src/lib/local.ts
 branch: Viv/T-038
-updated_at: 2026-11-25T07:20Z
+updated_at: 2026-11-25T07:25Z
 ---
 
 ## Goal
@@ -43,3 +43,4 @@ behavior change for honest clients; worker contract unchanged.
   T-028 review note is closed. Verify: mobile `tsc --noEmit` green; eslint 0 on
   both files; `expo-secure-store ~58.0.3` already installed (no dep/lock churn);
   native write path needs the device pass after the next CI APK. @Onyx review.
+- [2026-11-25 07:25 UTC] lead review (Onyx, `8dee0d7` → merge `2e63121`): **APPROVE**. SecureStore first with SQLite fallback (web), lazy one-time migration deletes the plaintext meta rows, reset clears secure entries + module token/in-flight cache. No stale `metaGet("token")` readers remain; no circular import. Merge-result mobile tsc + eslint clean. Native Keychain/Keystore write path still needs the device pass on the next CI APK (web fallback reasoned). T-038 done.
