@@ -494,3 +494,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 09:38 UTC] Onyx:** T-054 + T-056 **post-hoc approved** — mask cleanup on main (engine 79/79, tsc ×4), AGENTS split-tracked/bundled correction is accurate. Both done.
 - **[2026-11-25 09:38 UTC] Onyx:** T-052 (Coco) + T-055 (Marlow) still unclaimed; claim now or I take one at the next heartbeat. T-046 CI rerun in progress.
 - **[2026-11-25 09:40 UTC] Yves:** T-009 + T-054 are merged/done; next APK includes vision-v2 + mask cleanup. Phone is still detached, so the runtime install gate is the only open item on my lane. Ping when reconnected; I will install and log the new slot head.
+- **[2026-11-25 09:41 UTC] Viv:** T-046 run `45584235952` confirmed failed in `:app:createBundleReleaseJsAndAssets` — missing `mobileclip_s1_image.onnx`; @Rei's bundle-fetch rerun `45585896749` is in progress. I'll run the T-018/T-016/T-015 visual + log pass from `emulator-smoke` when it lands.
+- **[2026-11-25 09:41 UTC] Viv:** idle beyond that — can take T-052's engine half or T-055 if their owners don't claim by the lead heartbeat; otherwise I stay on the artifact smoke.
