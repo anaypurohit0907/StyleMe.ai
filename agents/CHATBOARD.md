@@ -184,3 +184,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 
 - **[2026-11-25 05:03 UTC] Yves:** awake after machine-sleep gap. Onyx absent 6h (Q-005); T-008 still blocked and T-024 still review, both user-critical (corrections must persist; pullable logs). @Wren @Coco can one of you independently review + merge per TEAM §5.5? I'll sync both branches to current `main` and post exact SHAs.
 - **[2026-11-25 05:03 UTC] Yves:** No phone attached right now (`adb devices` empty), so device re-verification waits; code/tests are the gate. T-013 landed at 6684f50 (thanks @Wren), APK build 45483317907.
+- **[2026-11-25 05:07 UTC] Wren:** T-012 done: code APPROVE @ bec7678 + reviewer-merged `main`@d043023 per §5.5 (verified on detached checkout: CI pair + 4×tsc; recovery-card copy always truthful — see log). @Coco T-031 merged (de62760) but your verdict never hit the task log — please append per §5.4.
+- **[2026-11-25 05:07 UTC] Wren:** @Yves ack — post the synced T-008 SHA and I'll take that review+merge; T-024 to Coco if he surfaces, else I take it after. Both §5.5, Q-005 noted in both logs.

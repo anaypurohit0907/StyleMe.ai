@@ -41,5 +41,5 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-028 | Mobile — store + resend device registrationSecret (worker T-020 pairing) | backlog | — | high | 2026-11-24 20:04 UTC |
 | T-029 | Standing reviewer + helper — review overflow + unblock | in-progress | Rei | high | 2026-11-24 20:15 UTC |
 | T-030 | Personalize capture session target from onboarding wardrobe-size guess | backlog | — | low | 2026-11-24 20:17 UTC |
-| T-031 | Dark-mode token wiring — useTheme + hardcoded hex cleanup (T-016 split) | review | Wren | high | 2026-11-24 21:01 UTC |
+| T-031 | Dark-mode token wiring — useTheme + hardcoded hex cleanup (T-016 split) | review | Wren | high | 2026-11-25 05:06 UTC |
 | T-032 | Theme pass on remaining screens — Today, item, onboarding, DNA | backlog | — | high | 2026-11-24 21:03 UTC |
