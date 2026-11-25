@@ -1,7 +1,7 @@
 ---
 id: T-046
 title: Android emulator for agent-side device checks (replace Anay's phone)
-status: in-progress
+status: blocked
 owner: Rei
 reviewer: Onyx
 priority: high
@@ -10,7 +10,7 @@ files:
   - docs/TESTING.md
   - .github/workflows/emulator.yml
 branch: Rei/T-046
-updated_at: 2026-11-25T09:15Z
+updated_at: 2026-11-25T12:27Z
 ---
 
 ## Goal
@@ -105,3 +105,22 @@ and will not install on an x86_64 AVD. Build a debug/dev x86_64 APK locally:
   `emulator.png`, `styleme.log`, `logcat.txt`. Temporary push trigger on the
   branch for the first run: workflow `45584235952` (in progress).
 - [2026-11-25 11:55 UTC] CI run `45603304885` progress (Onyx review): API 30 AVD **booted** (841s) and settings/animation steps passed; failure is now `adb install` on the 191MB APK — `cmd: Failure calling service package: Broken pipe (32)` after ~3.5 min. Infra, not app. Next lever: `adb install --no-streaming -r` or `adb push` + `pm install -r /data/local/tmp/app.apk` with a longer timeout; keep the 30-min boot budget.
+- [2026-11-25 12:18 UTC] **BLOCKED — no working emulator lane on any available runner.** Full evidence:
+  (a) local host: QEMU segfault 60–90 s into every boot, API 36 + 34,
+  swiftshader/gpu-off/guest, `-accel off`, `-qemu -cpu qemu64`,
+  Bluetooth/WiFi/UWB off, `LIBGL_DRI3_DISABLE=1`, `Vulkan=off/GLDirectMem=on`,
+  1–2 GB, headless + windowed.
+  (b) ubuntu-latest: no `/dev/kvm`; action disables HW accel, TCG cannot boot
+  API 34 in 600 s (`45585896749`).
+  (c) macos-14 arm64: "configuration not supported" (`45590022060`).
+  (d) macos-15-intel: API 30 boots (338–841 s) then the emulator dies on the
+  first post-boot `settings` / `adb install` (`Broken pipe`) — `45591777774`,
+  `45599257739`, `45603304885`.
+  (e) macos-15 arm64: emulator never connects to adb (`45608844901`).
+  `adb install --no-streaming` + `adb push`/`pm install` fallback applied; the
+  emulator process itself dies, so the install never runs.
+  Unblocks: a physical Android phone (arm64 APK) or a self-hosted runner with
+  working KVM/nested virtualization. Docs branch `Rei/T-046` @ `756680b`
+  records the blocked state in `docs/TESTING.md` + `docs/RELEASE.md` and
+  removes the broken workflow; Onyx to merge. T-046 stays blocked until then.
+- [2026-11-25 12:27 UTC] **blocked + stopped (Onyx, per Anay):** final run `45608844901` failed after 21m44s — API 30 AVD booted, but the 191MB APK install died (`Broken pipe`/`cmd package` failure) even with `--no-streaming` + push/pm fallback. Hosted runners cannot reliably virtualize+install this app (Ubuntu no KVM; macos HVF boot ~14 min; install pipe unstable). Phone is back and covers device checks. Lane documented as unsupported on hosted CI; do not keep burning runs.

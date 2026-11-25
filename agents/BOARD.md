@@ -56,7 +56,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-043 | Wardrobe filters + loading skeleton + bulk wash (T-017 split) | done | Coco | medium | 2026-11-25 08:07 UTC |
 | T-044 | Wear history — query by garment in SQL instead of filtering a 50-row window | done | Coco | low | 2026-11-25 07:53 UTC |
 | T-045 | Rate-limit remaining authed routes + cap photos data-URI body | done | Onyx | medium | 2026-11-25 08:50 UTC |
-| T-046 | Android emulator for agent-side device checks (replace Anay's phone) | in-progress | Rei | high | 2026-11-25 08:02 UTC |
+| T-046 | Android emulator for agent-side device checks (replace Anay's phone) | blocked | Rei | high | 2026-11-25 12:27 UTC |
 | T-047 | ESLint can't resolve expo-haptics under hoisted npm ci | done | Coco | low | 2026-11-25 08:11 UTC |
 | T-048 | Chunk bulk "All washed" laundry events to the 100-id cap | done | Wren | low | 2026-11-25 08:16 UTC |
 | T-049 | Move dataset eval report out of gitignored ml/artifacts | done | Viv | low | 2026-11-25 08:47 UTC |
@@ -71,5 +71,5 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-058 | Onboarding funnel + retention instrumentation (privacy-safe, local) | done | Onyx | medium | 2026-11-25 11:43 UTC |
 | T-059 | Wire 403 registration recovery UI — reset device identity | review | Indigo | high | 2026-11-25 12:25 UTC |
 | T-060 | Mobile polish sweep — T-015 non-blocking review nits + device-pass checks | review | Marlow | low | 2026-11-25 12:15 UTC |
-| T-061 | Dark mode chrome — tab bar / Android navigation bar stays white | backlog | — | high | 2026-11-25 12:16 UTC |
+| T-061 | Dark mode chrome — tab bar / Android navigation bar stays white | in-progress | Coco | high | 2026-11-25 12:21 UTC |
 | T-062 | Restrained frosted-glass chrome — dark-mode accent + translucent bars | backlog | — | high | 2026-11-25 12:16 UTC |
