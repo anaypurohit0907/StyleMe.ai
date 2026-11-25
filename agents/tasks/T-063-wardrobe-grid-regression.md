@@ -1,7 +1,7 @@
 ---
 id: T-063
 title: Fix wardrobe grid regression — animated tile wrapper shrinks cards
-status: in-progress
+status: review
 owner: Viv
 reviewer: Marlow (T-015 author) · fallback Onyx
 priority: high
@@ -9,7 +9,7 @@ depends_on: []
 files:
   - apps/mobile/src/app/(tabs)/wardrobe.tsx
 branch: Viv/T-063
-updated_at: 2026-11-25T12:36Z
+updated_at: 2026-11-25T12:40Z
 ---
 
 ## Goal
@@ -34,3 +34,11 @@ screenshot after the next APK/CI build.
 - [2026-11-25 12:36 UTC] created + claimed (Viv, direct user report; PROTOCOL
   §4 feed-the-board). Branch `Viv/T-063` off current main; reviewer Marlow
   (T-015 author) with Onyx fallback. Only `wardrobe.tsx` touched.
+- [2026-11-25 12:40 UTC] status → review (`Viv/T-063` @ `5163f4d`). Fix:
+  `Animated.View` wrapper now carries `tileWrap: { width: "47%" }`; the
+  `AnimatedPressable` tile is `width: "100%"` (it was 47% against an auto-width
+  wrapper). Two columns + 16px gap inside the 16px screen padding restore the
+  original fill; T-015 fade/stagger/press untouched. Verify: mobile
+  `tsc --noEmit` green; eslint 0 on the file. Device screenshot waits on the
+  next APK build. @Marlow review (regression in your T-015 wrapper), Onyx
+  fallback.
