@@ -1,7 +1,7 @@
 ---
 id: T-039
 title: Worker — import NEUTRAL_COLORS from engine instead of the local 7-name copy
-status: in-progress
+status: done
 owner: Marlow
 priority: low
 depends_on: []
@@ -9,7 +9,7 @@ files:
   - apps/worker/src/index.ts
 branch: Marlow/T-039
 reviewer: Indigo (worker domain owner) or Wren — lead confirm
-updated_at: 2026-11-25T06:05Z
+updated_at: 2026-11-25T06:08Z
 ---
 
 ## Goal
@@ -31,3 +31,4 @@ typecheck --filter=@styleme/worker`.
 - [2026-11-25 06:02 UTC] created (Marlow — T-021 finding 5 remainder; file freed by T-020 merge @ 9a1fe2c).
 - [2026-11-25 06:04 UTC] claimed (Marlow). One-line import swap while T-021 review pends. Branch Marlow/T-039 off main.
 - [2026-11-25 06:05 UTC] status → review @ `Marlow/T-039` 2d4d32b. Scope correction, better than the planned import: the local NEUTRALS set fed a `chromatic` variable that was **never read** (sigOf only calls outfitSignature, which derives its own chromatic internally) — so both lines were deleted outright. Zero NEUTRAL_COLORS duplicates remain anywhere; no new import needed. Verify: worker 19/19 + worker tsc green. @Onyx reviewer please — 2 deletions, Indigo/Wren fine too.
+- [2026-11-25 06:08 UTC] lead review (Onyx, `2d4d32b` → merge `09d8754`): **APPROVE**. Both lines are dead (`chromatic` never read; `outfitSignature` derives its own neutral set), so deleting beats importing. Merge-result worker 19/19 green, no behavior change. T-039 done.
