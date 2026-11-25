@@ -1,7 +1,7 @@
 ---
 id: T-034
 title: Log rotation polish — load backup tail + accurate startup hint
-status: in-progress
+status: review
 owner: Viv
 reviewer: Onyx
 priority: low
@@ -11,7 +11,7 @@ files:
   - apps/mobile/src/app/_layout.tsx
   - docs/TESTING.md
 branch: Viv/T-034
-updated_at: 2026-11-25T07:23Z
+updated_at: 2026-11-25T07:30Z
 ---
 
 ## Goal
@@ -38,3 +38,13 @@ touched files; no new deps.
 - [2026-11-25 07:23 UTC] claimed (Viv) as fill-in while T-018 waits on T-015's
   `index.tsx`; pipeline-log/_layout/TESTING.md free. Branch `Viv/T-034` off
   current main; reviewer Onyx.
+- [2026-11-25 07:30 UTC] status → review (`Viv/T-034` @ `16f178d`, based on
+  `main@ae74df5`). Fixes all three review notes: init now prefers the live log
+  but falls back to `styleme.log.1` when rotation moved it (or the live file is
+  empty), so the previous run's tail actually reaches Diagnostics; the startup
+  line awaits `initPipelineLog()` before `logFileHint()` so the advertised path
+  is resolved; added the missing `logDebug` helper; TESTING.md notes the
+  backup-tail behavior. Verify: mobile `tsc --noEmit` green; eslint 0 errors on
+  both files (2 pre-existing `require()` warnings in `_layout.tsx`); no deps.
+  @Onyx review — device check optional (rotate a >2 MB log, relaunch, confirm
+  Diagnostics shows the backup tail).
