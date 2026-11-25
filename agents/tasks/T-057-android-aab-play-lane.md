@@ -1,15 +1,17 @@
 ---
 id: T-057
 title: Android AAB build + Play internal testing lane
-status: backlog
-owner:
+status: in-progress
+owner: Wren
+reviewer: Onyx (proposed — he fed it) · taste: n/a
 priority: high
 depends_on: [T-053]
 files:
   - .github/workflows/android.yml
   - docs/RELEASE.md
   - apps/mobile/app.json
-updated_at: 2026-11-25T10:45Z
+branch: Wren/T-057
+updated_at: 2026-11-25T10:49Z
 ---
 
 ## Goal
@@ -29,3 +31,4 @@ release doc matches the real commands. No deploy, no Play upload automation
 
 - [2026-11-25 10:45 UTC] created (Onyx, T-053 beta-readiness gap; next wave
   after the product board cleared).
+- [2026-11-25 10:49 UTC] claimed (Wren — lead-assigned). Plan: add a `bundleRelease` step beside `assembleRelease` in android.yml (same vision-v2 fetch + signing env), upload `app-release.aab` as workflow artifact + optional `aab-latest` release asset; versionCode monotonicity verified from the existing versioning scheme; RELEASE.md gets the Play Console internal-track flow (manual, user-gated).
