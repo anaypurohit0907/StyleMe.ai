@@ -64,7 +64,7 @@ export default function Onboarding() {
 
         {step === 0 && (
           <>
-            <Title>Let's build your wardrobe.</Title>
+            <Title>Let&apos;s build your wardrobe.</Title>
             <Caption>No account. No cloud photos. This stays on your phone.</Caption>
             <TextInput
               value={name}
@@ -99,7 +99,7 @@ export default function Onboarding() {
         {step === 2 && (
           <>
             <Title>Laundry reality.</Title>
-            <Caption>So I never suggest something that's in the wash.</Caption>
+            <Caption>So I never suggest something that&apos;s in the wash.</Caption>
             <View style={{ gap: space.s }}>
               {LAUNDRY.map((l) => (
                 <Chip key={l} label={l} selected={laundry === l} onPress={() => setLaundry(l)} />

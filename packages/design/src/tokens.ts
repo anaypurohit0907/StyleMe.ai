@@ -39,6 +39,72 @@ export const colors = {
   bad: "#A83A32",
 } as const;
 
+/**
+ * Semantic themes — same token names over light/dark palettes.
+ * Screens consume these via a scheme-aware hook (apps/mobile/src/lib/theme.ts);
+ * the flat `colors` export stays for static, non-scheme surfaces (swatches etc.).
+ */
+export type ThemeColors = {
+  bg: string;
+  surface: string;
+  surfaceAlt: string;
+  ink: string;
+  inkSoft: string;
+  inkFaint: string;
+  line: string;
+  overlayStrong: string;
+  overlaySoft: string;
+  accent: string;
+  accentSoft: string;
+  /** Text/icon color on accent- and bad-filled surfaces — white in both themes. */
+  onAccent: string;
+  ok: string;
+  warn: string;
+  bad: string;
+};
+
+export const themes: Record<"light" | "dark", ThemeColors> = {
+  light: {
+    bg: "#FAF9F7",
+    surface: "#FFFFFF",
+    surfaceAlt: "#F1EFEA",
+    ink: "#141414",
+    inkSoft: "#5C5952",
+    inkFaint: "#9B968C",
+    line: "#E5E1D8",
+    overlayStrong: "rgba(250,249,247,0.97)",
+    overlaySoft: "rgba(250,249,247,0.92)",
+    accent: "#B4552D",
+    accentSoft: "#F3E2D7",
+    onAccent: "#FFFFFF",
+    ok: "#3E7C4F",
+    warn: "#B07C1F",
+    bad: "#A83A32",
+  },
+  dark: {
+    bg: "#111110",
+    surface: "#1C1C1A",
+    surfaceAlt: "#262624",
+    ink: "#F2F0EB",
+    inkSoft: "#A8A49B",
+    inkFaint: "#6E6A61",
+    line: "#2E2E2B",
+    overlayStrong: "rgba(17,17,16,0.97)",
+    overlaySoft: "rgba(17,17,16,0.92)",
+    accent: "#B4552D",
+    accentSoft: "#F3E2D7",
+    onAccent: "#FFFFFF",
+    ok: "#3E7C4F",
+    warn: "#B07C1F",
+    bad: "#A83A32",
+  },
+};
+
+/** Light is the default; null/undefined schemes (web, pre-hydration) fall back safely. */
+export function getTheme(scheme: "light" | "dark" | null | undefined): ThemeColors {
+  return scheme === "dark" ? themes.dark : themes.light;
+}
+
 export const paletteSwatch: Record<string, string> = {
   black: "#181818",
   white: "#FAFAF8",

@@ -67,6 +67,16 @@ export const SLOT_MASS: Record<string, number> = {
   accessory: 0.3,
 };
 
+/**
+ * Assemble reason fragments into one human sentence.
+ * Fragments are lowercase, comma-joined; first letter capitalized.
+ */
+export function reasonSentence(fragments: string[], fallback: string): string {
+  if (fragments.length === 0) return fallback;
+  const joined = fragments.join(", ");
+  return `${joined.charAt(0).toUpperCase()}${joined.slice(1)}.`;
+}
+
 export interface ColorHarmonyResult {
   score: number;
   text: string;
@@ -118,16 +128,16 @@ export function colorHarmony(
   const maxChromatic = wardrobeHasNeutral ? 3 : 4;
   if (chromatic.length <= 2) {
     score += 1.0;
-    notes.push(chromatic.length === 0 ? "monochrome anchor" : "clean color count");
+    notes.push(chromatic.length === 0 ? "a quiet monochrome anchor" : "the color count stays clean");
   } else if (chromatic.length === maxChromatic) {
     score += 0.55;
-    notes.push("full 3-color palette (60-30-10)");
+    notes.push("a full three-color palette, balanced 60-30-10");
   } else if (chromatic.length === maxChromatic + 1) {
     score -= 0.15;
-    notes.push("color count slightly busy");
+    notes.push("the color count runs slightly busy");
   } else {
     score -= 0.4;
-    notes.push("too many colors competing");
+    notes.push("too many colors competing for attention");
   }
 
   // --- temperature mix ----------------------------------------------------
@@ -141,10 +151,10 @@ export function colorHarmony(
     const minorMass = Math.min(warmMass, coolMass);
     if (minorMass <= 0.6) {
       score += 0.0; // neutral read, no penalty
-      notes.push("warm/cool mix held as accent");
+      notes.push("a warm and cool mix held as an accent");
     } else {
       score -= 0.15;
-      notes.push("warm and cool colors mixed");
+      notes.push("warm and cool tones mixing");
     }
   }
 
@@ -167,10 +177,10 @@ export function colorHarmony(
   }
   if (clashing) {
     score -= 0.25;
-    notes.push("clashing complementary pair");
+    notes.push("a loud complementary clash");
   } else if (accentPop) {
     score += 0.1;
-    notes.push("complementary accent pop");
+    notes.push("a deliberate complementary pop");
   }
 
   // --- tonal layering bonus -------------------------------------------------
@@ -178,16 +188,20 @@ export function colorHarmony(
   const sharedFamily = chromatic.length >= 2 && hueFamilies.size < chromatic.length;
   if (sharedFamily) {
     score += 0.1;
-    notes.push("tonal layering");
+    notes.push("tonal layering in the same family");
   }
 
   // --- all neutral -----------------------------------------------------------
   if (chromatic.length === 0 && unique.length > 0) {
     score += 0.15;
-    notes.push("all-neutral monochrome");
+    notes.push("an all-neutral monochrome");
   }
 
-  return { score, text: notes.join(" · "), neverMixViolation: null };
+  return {
+    score,
+    text: reasonSentence(notes, "A balanced palette."),
+    neverMixViolation: null,
+  };
 }
 
 /** Coarse hue family: 45° buckets around the wheel (achromatic → "neutral"). */

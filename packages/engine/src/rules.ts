@@ -13,11 +13,13 @@ import type {
   PreferenceVector,
   RecommendContext,
 } from "@styleme/schema";
-import { colorHarmony, SLOT_MASS } from "./color";
+import { colorHarmony, reasonSentence, SLOT_MASS } from "./color";
 
 export interface RuleScore {
   score: number;
   text: string;
+  /** Present when the rule disqualifies on a personal never-mix pair. */
+  neverMix?: [ColorName, ColorName];
 }
 
 export interface RuleCtx {
@@ -52,12 +54,12 @@ export const completenessRule: Rule = (items) => {
   const hasDress = slots.has("dress");
   const hasTopBottom = slots.has("top") && slots.has("bottom");
   if (!hasDress && !hasTopBottom) {
-    return { score: -Infinity, text: "missing core pieces" };
+    return { score: -Infinity, text: "Needs a top and bottom, or a dress." };
   }
   if (!slots.has("shoes")) {
-    return { score: -Infinity, text: "missing shoes" };
+    return { score: -Infinity, text: "Needs shoes to finish it." };
   }
-  return { score: 0.2, text: "complete outfit" };
+  return { score: 0.2, text: "Every slot is covered." };
 };
 
 // ---------------------------------------------------------------------------
@@ -78,7 +80,7 @@ export const colorRule: Rule = (items, rc) => {
     (p) => [p.colorA, p.colorB] as [ColorName, ColorName],
   );
   const res = colorHarmony(colors, slotByColor, neverMix, rc.wardrobeHasNeutral);
-  return { score: res.score, text: res.text };
+  return { score: res.score, text: res.text, neverMix: res.neverMixViolation ?? undefined };
 };
 
 // ---------------------------------------------------------------------------
@@ -111,10 +113,10 @@ export const formalityRule: Rule = (items, rc) => {
   // Smart-casual mix: exactly one deliberate off-band piece, rest clean.
   if (dev2 === 1 && over2 === 0 && avgDev <= 1.0) {
     score += 0.1;
-    return { score, text: `one deliberate twist for a ${rc.context.occasion} look` };
+    return { score, text: `One deliberate twist keeps the ${rc.context.occasion} look interesting.` };
   }
-  if (avgDev <= 0.75) return { score, text: `formality matches ${rc.context.occasion}` };
-  return { score, text: `formality drifts from ${rc.context.occasion}` };
+  if (avgDev <= 0.75) return { score, text: `The formality sits right for ${rc.context.occasion}.` };
+  return { score, text: `The formality leans away from ${rc.context.occasion}.` };
 };
 
 // ---------------------------------------------------------------------------
@@ -144,7 +146,10 @@ export const silhouetteRule: Rule = (items, rc) => {
   const bottom = items.find((g) => g.attrs.slot === "bottom");
   if (!top || !bottom) {
     // Dress-led outfit: no pairing decision.
-    return { score: items.some((g) => g.attrs.slot === "dress") ? 0.3 : 0, text: "single-piece silhouette" };
+    return {
+      score: items.some((g) => g.attrs.slot === "dress") ? 0.3 : 0,
+      text: "One piece carries the whole silhouette.",
+    };
   }
   const key = `${top.attrs.fit}|${bottom.attrs.fit}`;
   let s = SILHOUETTE_SCORE[key] ?? 0;
@@ -154,8 +159,8 @@ export const silhouetteRule: Rule = (items, rc) => {
   }
   const text =
     top.attrs.fit === bottom.attrs.fit
-      ? `both ${top.attrs.fit}`
-      : `${top.attrs.fit} top balances ${bottom.attrs.fit} bottom`;
+      ? `The ${top.attrs.fit} top and ${bottom.attrs.fit} bottom match cuts.`
+      : `A ${top.attrs.fit} top balances the ${bottom.attrs.fit} bottom.`;
   return { score: s, text };
 };
 
@@ -165,8 +170,12 @@ export const silhouetteRule: Rule = (items, rc) => {
 
 export const patternRule: Rule = (items, rc) => {
   const dominant = items.filter((g) => g.attrs.pattern !== "solid" && (SLOT_MASS[g.attrs.slot] ?? 0) >= 0.6);
-  if (dominant.length === 0) return { score: 0.2, text: "clean solid palette" };
-  if (dominant.length === 1) return { score: 0.5, text: `one statement piece (${dominant[0]!.attrs.pattern})` };
+  if (dominant.length === 0) return { score: 0.2, text: "A clean, solid palette." };
+  if (dominant.length === 1) {
+    const piece = dominant[0]!;
+    const what = piece.attrs.subtype ?? piece.attrs.pattern;
+    return { score: 0.5, text: `One statement piece — the ${what}.` };
+  }
   // Two+ patterned items: they must share a base color.
   const pa = dominant[0]!;
   let shared = false;
@@ -176,7 +185,10 @@ export const patternRule: Rule = (items, rc) => {
   let s = shared ? 0.1 : -0.3;
   s += 0.2 * rc.prefs.patternMixing; // personal tolerance
   if (dominant.length > 2) s -= 0.3;
-  return { score: s, text: shared ? "patterned pieces share a color" : "patterns compete" };
+  return {
+    score: s,
+    text: shared ? "The patterns share a base color." : "The patterns are fighting each other.",
+  };
 };
 
 // ---------------------------------------------------------------------------
@@ -193,10 +205,10 @@ export const weatherRule: Rule = (items, rc) => {
   if (tempC < 5) {
     if (hasOuter) {
       s += 0.5;
-      notes.push("layered for cold");
+      notes.push("layered for the cold");
     } else {
       s -= 0.8;
-      notes.push("no outerwear for freezing temp");
+      notes.push("no outerwear in freezing weather");
     }
     if (materials.includes("light") && !hasOuter) s -= 0.2;
   } else if (tempC < 13) {
@@ -205,33 +217,33 @@ export const weatherRule: Rule = (items, rc) => {
       notes.push("outerwear on standby");
     } else if (materials.includes("medium") || materials.includes("heavy")) {
       s += 0.15;
-      notes.push("warm enough fabrics");
+      notes.push("fabrics warm enough for the day");
     } else {
       s -= 0.15;
-      notes.push("might run cold");
+      notes.push("you might run cold");
     }
   } else if (tempC < 19) {
     if (hasOuter) {
       s += 0.1;
-      notes.push("light layer available");
+      notes.push("a light layer is on hand");
     } else {
       s += 0.1;
     }
   } else if (tempC < 27) {
     if (hasOuter) {
       s -= 0.1;
-      notes.push("outerwear likely unneeded");
+      notes.push("outerwear probably not needed");
     } else {
       s += 0.2;
-      notes.push("temp just right");
+      notes.push("the temperature is just right");
     }
   } else {
     if (materials.every((m) => m === "light")) {
       s += 0.3;
-      notes.push("breathable fabrics");
+      notes.push("breathable fabrics for the heat");
     } else if (materials.includes("heavy")) {
       s -= 0.4;
-      notes.push("heavy fabric for hot day");
+      notes.push("heavy fabric for a hot day");
     } else {
       s += 0.1;
     }
@@ -239,13 +251,13 @@ export const weatherRule: Rule = (items, rc) => {
 
   if (isRaining && !hasOuter) {
     s -= 0.3;
-    notes.push("no rain cover");
+    notes.push("no cover for the rain");
   } else if (isRaining && hasOuter) {
     s += 0.2;
-    notes.push("covered for rain");
+    notes.push("covered for the rain");
   }
 
-  return { score: s, text: notes.join(" · ") || "weather fit" };
+  return { score: s, text: reasonSentence(notes, "Dressed for the weather.") };
 };
 
 // ---------------------------------------------------------------------------
@@ -273,12 +285,16 @@ export const rotationRule: Rule = (items, rc) => {
   }
   if (inCooldown > 0) {
     s -= 0.5 * inCooldown;
-    notes.push(`${inCooldown} piece${inCooldown > 1 ? "s" : ""} still cooling down`);
+    notes.push(
+      inCooldown === 1
+        ? "one piece was worn recently and is still resting"
+        : `${inCooldown} pieces were worn recently and are still resting`,
+    );
   } else {
     s += 0.3;
-    notes.push("fresh rotation");
+    notes.push("fresh rotation — nothing here repeated this week");
   }
-  return { score: s, text: notes.join(" · ") || "rotation ok" };
+  return { score: s, text: reasonSentence(notes, "Fresh rotation.") };
 };
 
 // ---------------------------------------------------------------------------
@@ -288,7 +304,7 @@ export const rotationRule: Rule = (items, rc) => {
 export const preferenceRule: Rule = (items, rc) => {
   const { colors, patterns, fits, n } = rc.prefs;
   const confidence = Math.min(1, n / 10); // full weight after 10 pick events
-  if (n === 0) return { score: 0, text: "learning your style" };
+  if (n === 0) return { score: 0, text: "Still learning your taste." };
 
   let a = 0;
   for (const g of items) {
@@ -297,7 +313,12 @@ export const preferenceRule: Rule = (items, rc) => {
     a += fits[g.attrs.fit] ?? 0;
   }
   const s = 0.4 * a * confidence;
-  const text = a > 0.2 ? "leans toward your known taste" : a < -0.2 ? "pushes your palette a bit" : "neutral to your history";
+  const text =
+    a > 0.2
+      ? "This leans toward what you already love."
+      : a < -0.2
+        ? "This nudges past your usual palette."
+        : "This sits close to your usual picks.";
   return { score: s, text };
 };
 
@@ -325,7 +346,7 @@ const OCCASION_SUBTYPES: Partial<Record<Occasion, Partial<Record<string, Set<str
 
 export const occasionRule: Rule = (items, rc) => {
   const table = OCCASION_SUBTYPES[rc.context.occasion];
-  if (!table) return { score: 0, text: "occasion neutral" };
+  if (!table) return { score: 0, text: "Nothing here is occasion-locked." };
 
   let s = 0;
   const good: string[] = [];
@@ -344,12 +365,18 @@ export const occasionRule: Rule = (items, rc) => {
   s = Math.max(-0.7, Math.min(0.7, s));
   const text =
     good.length > 0
-      ? `made for ${rc.context.occasion}: ${good.join(", ")}`
+      ? `Built for ${rc.context.occasion} — ${listWords(good)} fit right in.`
       : bad.length > 0
-        ? `not quite ${rc.context.occasion} gear`
-        : "occasion neutral";
+        ? `Not quite ${rc.context.occasion} pieces.`
+        : "Nothing here is occasion-locked.";
   return { score: s, text };
 };
+
+/** ["a", "b", "c"] → "a, b and c" for readable reason sentences. */
+function listWords(items: string[]): string {
+  if (items.length === 1) return items[0]!;
+  return `${items.slice(0, -1).join(", ")} and ${items[items.length - 1]}`;
+}
 
 // ---------------------------------------------------------------------------
 // Rule registry & weights

@@ -5,7 +5,7 @@ import type { Fit, Garment, GarmentAttrs, Pattern, Slot } from "@styleme/schema"
 import { colors, paletteSwatch, radius, space } from "@styleme/design";
 import { Btn, Caption, Card, Chip, Screen, Scroll, Swatch, Title } from "@/components/ui";
 import { deleteGarment, getGarment, setGarmentStatus, upsertGarment } from "@/lib/db";
-import { diffCorrections } from "@/lib/tag-corrections";
+import { diffCorrections } from "@styleme/schema/corrections";
 
 const SLOTS: Slot[] = ["top", "bottom", "dress", "outerwear", "shoes", "accessory"];
 const PATTERNS: Pattern[] = ["solid", "striped", "check", "floral", "graphic", "animal", "other"];
