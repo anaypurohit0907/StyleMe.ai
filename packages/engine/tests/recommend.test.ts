@@ -244,4 +244,61 @@ describe("recommend() invariants", () => {
       expect(text.toLowerCase()).not.toMatch(/(no cap|bestie|slay|it's giving)/);
     }
   });
+
+  it("every reason reads like a human sentence", () => {
+    const res = recommend({ userId: "u9-copy", wardrobe, context, prefs: emptyPreference() });
+    for (const o of res.outfits) {
+      for (const r of o.reasons) {
+        // sentence-cased, one sentence, machine-free
+        expect(r.text).toMatch(/^[A-Z]/);
+        expect(r.text.endsWith(".")).toBe(true);
+        expect(r.text).not.toContain("·");
+        expect(r.text.toLowerCase()).not.toContain("rotation ok");
+      }
+    }
+  });
+
+  it("surfaces skipped never-mix pairs in meta instead of dropping them silently", () => {
+    const make = (id: string, slot: Garment["attrs"]["slot"], colors: string[]) => ({
+      id,
+      attrs: {
+        slot,
+        colors: colors as Garment["attrs"]["colors"],
+        pattern: "solid" as const,
+        fit: "regular" as const,
+        formality: 2,
+        season: "all" as const,
+        material: "light" as const,
+      },
+      status: "available" as const,
+      photoRef: "",
+      addedAt: 1,
+      lastWornAt: null,
+      corrections: [],
+    });
+    const wardrobe: Garment[] = [
+      make("red-top", "top", ["red"]),
+      make("green-bottom", "bottom", ["green"]),
+      make("blue-top", "top", ["blue"]),
+      make("navy-bottom", "bottom", ["navy"]),
+      make("shoes", "shoes", ["white"]),
+    ];
+    const prefs = {
+      ...emptyPreference(),
+      neverMix: [{ colorA: "red", colorB: "green" }],
+    };
+    const res = recommend({
+      userId: "u-skip",
+      wardrobe,
+      context: makeContext({ occasion: "casual", tempC: 22 }),
+      prefs,
+    });
+    // the red+green candidate was considered and filtered, not silently lost
+    expect(res.meta.skippedNeverMix).toContainEqual(["red", "green"]);
+    // and the surviving outfits honor the rule: never red and green together
+    for (const o of res.outfits) {
+      const both = o.garmentIds.includes("red-top") && o.garmentIds.includes("green-bottom");
+      expect(both).toBe(false);
+    }
+  });
 });

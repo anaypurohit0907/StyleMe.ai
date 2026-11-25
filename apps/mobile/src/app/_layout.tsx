@@ -3,10 +3,12 @@ import { Platform } from "react-native";
 import Constants from "expo-constants";
 import { Stack, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useColorScheme } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { getDb, metaGet } from "@/lib/db";
 import { setVisionTagger } from "@/lib/vision";
 import { initPipelineLog, log, logFileHint } from "@/lib/pipeline-log";
+import { useTheme } from "@/lib/theme";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -45,11 +47,13 @@ function Gate() {
 }
 
 export default function RootLayout() {
+  const t = useTheme();
+  const scheme = useColorScheme();
   return (
     <>
-      <StatusBar style="dark" />
+      <StatusBar style={scheme === "dark" ? "light" : "dark"} />
       <Gate />
-      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: "#FAF9F7" } }}>
+      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: t.bg } }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="onboarding" options={{ gestureEnabled: false }} />
         <Stack.Screen name="item/[id]" options={{ presentation: "card" }} />

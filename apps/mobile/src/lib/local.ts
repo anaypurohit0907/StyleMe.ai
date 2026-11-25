@@ -8,6 +8,7 @@
 import * as Location from "expo-location";
 import * as FileSystem from "expo-file-system/legacy";
 import type {
+  ColorName,
   Garment,
   GarmentAttrs,
   Occasion,
@@ -106,6 +107,8 @@ export interface LocalToday {
   outfits: ScoredOutfit[];
   context: RecommendContext;
   missingSlots: string[];
+  /** Personal never-mix pairs that filtered candidates this run. */
+  skippedNeverMix: [ColorName, ColorName][];
 }
 
 export async function recommendLocal(
@@ -124,7 +127,12 @@ export async function recommendLocal(
     now: Date.now() + seedOffset,
   };
   const res = recommend({ userId, wardrobe: garments, context, prefs, exploreState, topK: 3 });
-  return { outfits: res.outfits, context, missingSlots: res.meta.missingSlots };
+  return {
+    outfits: res.outfits,
+    context,
+    missingSlots: res.meta.missingSlots,
+    skippedNeverMix: res.meta.skippedNeverMix,
+  };
 }
 
 export async function recordPick(
