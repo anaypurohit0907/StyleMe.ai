@@ -3,7 +3,7 @@ import { ActivityIndicator, Image, Platform, StyleSheet, View } from "react-nati
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { useRouter } from "expo-router";
 import type { Fit, GarmentAttrs, Pattern, Slot } from "@styleme/schema";
-import { colors, paletteSwatch, radius, space } from "@styleme/design";
+import { paletteSwatch, radius, space } from "@styleme/design";
 import { AddedChip, Btn, Caption, Card, Chip, Progress, Screen, Scroll, Swatch, TextLink, Title } from "@/components/ui";
 import { ScanLog } from "@/components/scan-log";
 import { upsertGarment } from "@/lib/db";
@@ -11,6 +11,7 @@ import { newGarment, persistPhoto } from "@/lib/local";
 import { segmentGarment } from "@/lib/segment";
 import { getVisionTagger } from "@/lib/vision";
 import { errorText, log } from "@/lib/pipeline-log";
+import { useTheme } from "@/lib/theme";
 
 const SLOTS: Slot[] = ["top", "bottom", "dress", "outerwear", "shoes", "accessory"];
 const PATTERNS: Pattern[] = ["solid", "striped", "check", "floral", "graphic", "animal", "other"];
@@ -23,6 +24,7 @@ const FLASH_MS = 1600;
 
 export default function Capture() {
   const router = useRouter();
+  const t = useTheme();
   const cameraRef = useRef<CameraView>(null);
   const [permission, requestPermission] = useCameraPermissions();
   const [uri, setUri] = useState<string | null>(null);
@@ -156,7 +158,7 @@ export default function Capture() {
       <Screen>
         <Scroll>
           <Title>Camera</Title>
-          <ActivityIndicator color={colors.accent} style={{ marginTop: space.m }} />
+          <ActivityIndicator color={t.accent} style={{ marginTop: space.m }} />
           <Caption>Checking permission…</Caption>
         </Scroll>
       </Screen>
@@ -181,7 +183,7 @@ export default function Capture() {
         <Scroll>
           <Title>Check the tags.</Title>
           <Caption>Auto-tags are a first guess. Tap anything wrong — that correction teaches the model.</Caption>
-          <Image source={{ uri }} style={s.preview} />
+          <Image source={{ uri }} style={[s.preview, { backgroundColor: t.surfaceAlt }]} />
           {cutoutNote ? <Caption>{cutoutNote}</Caption> : null}
 
           <Card style={{ gap: space.s }}>
@@ -257,7 +259,7 @@ export default function Capture() {
           </Card>
 
           {saveError ? (
-            <Card style={{ gap: space.s, borderColor: colors.bad }}>
+            <Card style={{ gap: space.s, borderColor: t.bad }}>
               <Caption>{saveError}</Caption>
               <Btn label="Try saving again" onPress={() => void save()} loading={busy} />
             </Card>
@@ -303,13 +305,13 @@ export default function Capture() {
       <View pointerEvents="none" style={s.guide} />
       {flash ? (
         <View pointerEvents="none" style={s.flash}>
-          <Image source={{ uri: flash.thumb }} style={s.flashThumb} />
+          <Image source={{ uri: flash.thumb }} style={[s.flashThumb, { backgroundColor: t.surfaceAlt }]} />
           <AddedChip label="Added ✓" />
         </View>
       ) : null}
       {!cameraReady && (
-        <View style={s.cameraLoading}>
-          <ActivityIndicator color={colors.accent} size="large" />
+        <View style={[s.cameraLoading, { backgroundColor: t.overlayStrong }]}>
+          <ActivityIndicator color={t.accent} size="large" />
           <Caption>{cameraError ? `Camera didn't start: ${cameraError}` : "Starting camera…"}</Caption>
           {cameraError && (
             <Btn
@@ -323,7 +325,7 @@ export default function Capture() {
           )}
         </View>
       )}
-      <View style={s.camBar}>
+      <View style={[s.camBar, { backgroundColor: t.overlaySoft }]}>
         {sessionCount > 0 ? (
           <Progress
             value={Math.min(1, sessionCount / SESSION_TARGET)}
@@ -342,8 +344,8 @@ export default function Capture() {
         ) : null}
       </View>
       {busy && (
-        <View style={s.busyOverlay}>
-          <ActivityIndicator color={colors.accent} size="large" />
+        <View style={[s.busyOverlay, { backgroundColor: t.overlayStrong }]}>
+          <ActivityIndicator color={t.accent} size="large" />
           <Caption>{stage || "Working…"}</Caption>
           <ScanLog limit={5} title="Pipeline" />
         </View>
@@ -353,7 +355,7 @@ export default function Capture() {
 }
 
 const s = StyleSheet.create({
-  preview: { width: "100%", aspectRatio: 0.8, borderRadius: radius.md, backgroundColor: colors.surfaceAlt },
+  preview: { width: "100%", aspectRatio: 0.8, borderRadius: radius.md },
   wrap: { flexDirection: "row", flexWrap: "wrap", gap: space.s, alignItems: "center" },
   guide: {
     position: "absolute",
@@ -375,7 +377,6 @@ const s = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: space.s,
-    backgroundColor: colors.bg,
   },
   busyOverlay: {
     position: "absolute",
@@ -386,7 +387,6 @@ const s = StyleSheet.create({
     padding: space.l,
     paddingTop: space.xl * 2,
     gap: space.m,
-    backgroundColor: "rgba(250,249,247,0.97)",
   },
   camBar: {
     position: "absolute",
@@ -396,7 +396,6 @@ const s = StyleSheet.create({
     padding: space.m,
     paddingBottom: space.xl,
     gap: space.s,
-    backgroundColor: "rgba(250,249,247,0.92)",
   },
   flash: {
     position: "absolute",
@@ -410,6 +409,5 @@ const s = StyleSheet.create({
     width: 84,
     height: 84,
     borderRadius: radius.md,
-    backgroundColor: colors.surfaceAlt,
   },
 });
