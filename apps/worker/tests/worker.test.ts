@@ -1,6 +1,6 @@
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import app from "../src/index";
-import { makeEnv, type MockEnv } from "./mockdb";
+import { gkey, makeEnv, type MockEnv } from "./mockdb";
 import { updatePreference } from "@styleme/engine";
 
 /**
@@ -246,6 +246,43 @@ describe("worker API", () => {
     const secondBody = (await second.json()) as { deduped?: boolean; n: number };
     expect(secondBody.deduped).toBeUndefined();
     expect(secondBody.n).toBe(firstBody.n + 1);
+  });
+
+  it("learn dedupe: a failed apply forgets the job id — the retry re-applies (T-041)", async () => {
+    const send = (jobId: string) =>
+      call(
+        "/v1/learn",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            suggestedIds: [["t1", "b1", "s1"]],
+            pickedId: "t1+b1+s1",
+            context: { occasion: "casual", mood: "none", weather: { tempC: 18, isRaining: false }, now: NOW },
+            ts: NOW,
+            jobId,
+          }),
+        },
+        true,
+      );
+
+    // The apply blows up mid-write (injected DB failure) — the worker must
+    // release the dedupe row so nothing is poisoned.
+    env.DB.failNextUsersPrefsUpdate = true;
+    const failed = await send("queue-job-flaky");
+    expect(failed.status).toBe(500);
+    expect(env.DB.learnEvents.has(gkey(USER_A, "queue-job-flaky"))).toBe(false);
+
+    // Same job id, clean retry — the signal applies exactly once.
+    const retry = await send("queue-job-flaky");
+    expect(retry.status).toBe(200);
+    const retryBody = (await retry.json()) as { ok: boolean; deduped?: boolean; n: number };
+    expect(retryBody.ok).toBe(true);
+    expect(retryBody.deduped).toBeUndefined();
+    expect(env.DB.learnEvents.has(gkey(USER_A, "queue-job-flaky"))).toBe(true);
+
+    // And a further retry of the same id dedupes as designed.
+    const again = await send("queue-job-flaky");
+    expect((await again.json()).deduped).toBe(true);
   });
 
   it("tenant isolation: same garment id across users — no overwrite, no cross-effects", async () => {

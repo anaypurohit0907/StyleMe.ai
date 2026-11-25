@@ -4,13 +4,18 @@
 -- app dies after the worker accepted it but before the queue dropped it.
 -- Every retry carries the queue's job id; this table remembers the ids the
 -- worker already applied so a retry is a no-op instead of a double nudge.
--- Rows are pruned opportunistically after 30 days — the client queue keeps
--- at most 200 jobs, so a month covers every realistic retry window.
+--
+-- Tenant-scoped PK: a job id collision across users must never suppress
+-- another user's event. `created_at` is server time — the prune window must
+-- not be defeatable by a skewed client timestamp. The learn handler deletes
+-- a job's row if the apply fails, so a retry re-applies instead of dying on
+-- a poisoned dedupe entry.
 
 CREATE TABLE IF NOT EXISTS learn_events (
-  id       TEXT PRIMARY KEY,
-  user_id  TEXT NOT NULL,
-  ts       INTEGER NOT NULL
+  user_id    TEXT NOT NULL,
+  id         TEXT NOT NULL,
+  created_at INTEGER NOT NULL,
+  PRIMARY KEY (user_id, id)
 );
 
-CREATE INDEX IF NOT EXISTS idx_learn_events_user_ts ON learn_events(user_id, ts);
+CREATE INDEX IF NOT EXISTS idx_learn_events_prune ON learn_events(user_id, created_at);

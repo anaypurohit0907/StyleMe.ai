@@ -296,17 +296,32 @@ app.post("/v1/learn", auth, async (c) => {
   const d = ev.data;
 
   // Idempotent delivery (T-041): a retried job id applies exactly once.
+  // The dedupe row is written first, but the apply below runs in a
+  // try/catch that DELETES the row on failure — a failed apply never
+  // poisons the retry window. Prune window is server time (created_at),
+  // so a skewed client ts cannot defeat it.
+  const DEDUPE_PRUNE_MS = 30 * 24 * 3600 * 1000;
+  const forgetJob = async () => {
+    if (!d.jobId) return;
+    await c.env.DB.prepare("DELETE FROM learn_events WHERE user_id = ? AND id = ?")
+      .bind(userId, d.jobId)
+      .run()
+      .catch(() => {});
+  };
   if (d.jobId) {
     const seen = await c.env.DB.prepare(
-      "INSERT OR IGNORE INTO learn_events (id, user_id, ts) VALUES (?, ?, ?)",
-    ).bind(d.jobId, userId, d.ts).run();
+      "INSERT OR IGNORE INTO learn_events (user_id, id, created_at) VALUES (?, ?, ?)",
+    )
+      .bind(userId, d.jobId, Date.now())
+      .run();
     if (!seen.meta.changes) return c.json({ ok: true, deduped: true });
     // Opportunistic prune — one cheap delete per accepted event.
-    await c.env.DB.prepare(
-      "DELETE FROM learn_events WHERE user_id = ? AND ts < ?",
-    ).bind(userId, d.ts - 30 * 24 * 3600 * 1000).run();
+    await c.env.DB.prepare("DELETE FROM learn_events WHERE user_id = ? AND created_at < ?")
+      .bind(userId, Date.now() - DEDUPE_PRUNE_MS)
+      .run();
   }
 
+  try {
   const { user } = await ensureUser(c.env.DB, userId);
   const garments = await listGarments(c.env.DB, userId);
   const garmentMap = new Map(garments.map((g) => [g.id, g]));
@@ -384,6 +399,12 @@ app.post("/v1/learn", auth, async (c) => {
   }
   await c.env.DB.batch(batch);
   return c.json({ ok: true, n: nextPrefs.n });
+  } catch (err) {
+    // The apply failed — release the job id so the client's retry
+    // re-applies instead of hitting a poisoned dedupe row.
+    await forgetJob();
+    throw err;
+  }
 });
 
 // ---------------------------------------------------------------------------
