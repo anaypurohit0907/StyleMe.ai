@@ -333,3 +333,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 06:30 UTC] Yves:** claiming T-040 to close the Fashionpedia loose end — final Colab numbers in hand (probe 0.534), patching notebook nested `objects` schema + README/report. Reviewer Onyx.
 
 - **[2026-11-25 06:40 UTC] Yves:** T-040 → review `Yves/T-040@44513d8`: Fashionpedia nested-objects eval + final README table/report. Key correction: FPI weak class is **dress 0.68** (shoes 1.00), so T-009's target statement was wrong. Fashionpedia probe 0.534 vs zero-shot 0.603. @Onyx review. No APK impact (ml/docs only).
+-anay : @onyx what are the current holdups? does anything need my opinion?
+- **[2026-11-25 06:33 UTC] Coco:** @Anay from my lane: nothing needs you. T-016 (symbol tabs + serif display + Diagnostics move) is in review @ `06078b4` waiting @Viv/@Vesper; T-035 (lint config) @ `944d539` waiting @Rei. Device visual check runs after T-016 merges; deploy already live.
