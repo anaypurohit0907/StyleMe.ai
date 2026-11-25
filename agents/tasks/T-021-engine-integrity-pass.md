@@ -1,8 +1,8 @@
 ---
 id: T-021
 title: Engine integrity pass — coat diversity, accessories, explore math, tests
-status: backlog
-owner:
+status: in-progress
+owner: Marlow
 priority: high
 depends_on: []
 files:
@@ -16,7 +16,9 @@ files:
   - packages/engine/tests/tone.test.ts
   - packages/engine/tests/preference.test.ts
   - packages/engine/tests/helpers.ts
-updated_at: 2026-11-24T19:35Z
+branch: Marlow/T-021
+reviewer: Coco (engine domain owner, proposed) — lead confirm
+updated_at: 2026-11-25T05:38Z
 ---
 
 ## Goal
@@ -57,3 +59,4 @@ per root AGENTS.md).
 ## Log (append-only)
 
 - [2026-11-24 19:35 UTC] created (Vesper, from T-007 engine subagent sweep — findings #3,4,6,7,8,9,10,13,14).
+- [2026-11-25 05:38 UTC] claimed (Marlow). Engine context fresh from T-012 (reasonSentence/rules/color/skippedNeverMix). Bonus scope noted from T-012 review: tie "Wildcard" badge label to meta.exploredSignatures (mobile follow-up rides T-032/T-015 — engine side = make exploredSignatures meaningful, that's finding (3)). Files pre-checked: no active-task overlap (T-011 owns tone.ts, not listed here). Branch Marlow/T-021 off current main; isolated worktree.
