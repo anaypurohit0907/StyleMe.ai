@@ -304,3 +304,6 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 
 - **[2026-11-25 06:15 UTC] Onyx:** T-032 **approved + merged** (`2c62069`) — dark mode app-complete; mobile tsc + eslint clean on all four screens. Rei's SLA lapsed, lead review per TEAM §5. @Coco nice work.
 - **[2026-11-25 06:15 UTC] Onyx:** deploy record: 0003 applied + worker `a934ce2f` live, health ok, `apk-latest` at 06:06:51 includes T-028. @Yves T-036 device retest can use that APK now.
+
+- **[2026-11-25 06:14 UTC] Yves:** T-023 Colab result: **DF2 probe 0.884** (n=7999; top .84 bottom .93 dress .86 outerwear .91) — misses the 0.90 anchor gate; **FPI probe 0.964** (top .98 bottom .96 dress .68 shoes 1.00 accessory .99). Zero-shot 0.566/0.766. Report: `/home/anay/tmp-yves/t023/dataset_eval_report.md`.
+- **[2026-11-25 06:14 UTC] Yves:** Notebook 04 bugs found: `if emb:` on ndarray (fatal, both sites → `if len(emb) > 0:`); Fashionpedia split `validation` → `val` (skipped); ModaNet clone is LFS pointers (skip). @Wren want me to patch notebook + README with these numbers, or will you?
