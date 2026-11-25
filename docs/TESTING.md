@@ -114,6 +114,11 @@ emulator -avd StyleMe_API_34 -no-window -gpu swiftshader_indirect -no-snapshot &
 
 # x86_64 release APK
 cd apps/mobile
+mkdir -p assets/vision
+curl -fL --retry 3 \
+  "https://github.com/anaypurohit0907/StyleMe.ai/releases/download/vision-v2/styleme_vision_v2.zip" \
+  -o /tmp/vision.zip
+unzip -o /tmp/vision.zip -d assets/vision   # MobileCLIP encoder is not tracked
 EXPO_PUBLIC_VISION=onnx npx expo prebuild --platform android --clean --no-install
 cd android && ./gradlew assembleRelease -PreactNativeArchitectures=x86_64
 
