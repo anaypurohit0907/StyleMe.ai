@@ -26,7 +26,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-013 | Capture batch loop — make the 3-minute setup real | done | Wren | critical | 2026-11-24 20:41 UTC |
 | T-014 | Close the learning loop end-to-end (app ↔ worker) | done | Wren | high | 2026-11-25 07:05 UTC |
 | T-015 | Motion + haptics pass — make it feel alive | backlog | — | high | 2026-11-24 19:38 UTC |
-| T-016 | Dark mode + real icons + type + debug-chrome cleanup | review | Coco | high | 2026-11-25 06:30 UTC |
+| T-016 | Dark mode + real icons + type + debug-chrome cleanup | done | Coco | high | 2026-11-25 07:08 UTC |
 | T-017 | Wardrobe + item completeness (filters, wear history, safety) | backlog | — | medium | 2026-11-24 19:38 UTC |
 | T-018 | Retention moments — streaks, first-outfit, spaced polls | backlog | — | medium | 2026-11-24 19:38 UTC |
 | T-019 | Worker tenant scoping — fix cross-user garment overwrite | done | Indigo | critical | 2026-11-24 19:53 UTC |
@@ -52,3 +52,4 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-039 | Worker — import NEUTRAL_COLORS from engine instead of the local 7-name copy | done | Marlow | low | 2026-11-25 06:08 UTC |
 | T-040 | Run Fashionpedia street-split eval + publish dataset report artifact | in-progress | Yves | low | 2026-11-25 06:30 UTC |
 | T-041 | Idempotent learn delivery — job id + worker dedupe | backlog | — | medium | 2026-11-25 07:05 UTC |
+| T-042 | Dev cleanup — reset-project script + unused tab icon assets | backlog | — | low | 2026-11-25 07:08 UTC |

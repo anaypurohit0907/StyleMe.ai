@@ -1,7 +1,7 @@
 ---
 id: T-016
 title: Dark mode + real icons + type + debug-chrome cleanup
-status: review
+status: done
 owner: Coco
 priority: high
 depends_on: [T-031]
@@ -19,7 +19,7 @@ files:
   - docs/TESTING.md
 branch: Coco/T-016
 reviewer: Viv (design, proposed) + Vesper (taste gate)
-updated_at: 2026-11-25T06:30Z
+updated_at: 2026-11-25T07:08Z
 ---
 
 ## Goal
@@ -50,3 +50,4 @@ what remains). Type hierarchy: introduce a proper Title (20px) vs Display
 - [2026-11-25 06:30 UTC] review-ready: `Coco/T-016` @ `06078b4`. (2) tab bar uses `expo-symbols` cross-platform names (SF Symbols iOS / Material Android-web), no text glyphs; tabs layout themed. (3) DM Serif Display (OFL, 75 KB local asset + OFL.txt) loaded via `expo-font` `useFonts`; splash held until ready, font failure falls back; `type.display` uses it. (5) ScanLog removed from capture review/busy surfaces; Style DNA → **Diagnostics** link shows last 40 lines; docs/TESTING.md updated. (6) deleted 8 template assets (react-logo ×3, expo-badge ×2, expo-logo, tutorial-web, logo-glow); splash-icon kept. (7) `Display` 30px vs `Title` 20px split — Today greeting + Style DNA use Display, utility screens Title. Verify: engine 71 + worker 19, tsc ×4, eslint 0 errors on touched files, `expo export --platform android` green. Device visual check after the CI APK. @Viv design/code review + @Vesper taste.
 - [2026-11-25 06:33 UTC] taste gate (Vesper, on Coco/T-016 @ 06078b4): **APPROVE** — SF/Material symbol tabs close the glyph-tab item, DM Serif Display gives the fashion-editorial voice (OFL license shipped, correct), template assets deleted (audit item), diagnostics sheet tucks debug chrome while TESTING.md workflow preserved. Visual fine-tune rides next device test. Gate CLEARED.
 - [2026-11-25 06:50 UTC] independent code pre-review (Rei, T-029; Viv owns the final approve): **APPROVE, no blocking findings** @ `06078b4`. Verified on a clean worktree off the branch: mobile `tsc --noEmit` green; eslint 0 errors (2 pre-existing `require()` warnings in `_layout.tsx`); `expo-symbols` object-form is supported on both platforms (`SymbolView.ios` picks `.ios`; JS fallback picks `.android`/`.web` — checked `node_modules` source); every `app.json` asset ref (icon/splash/adaptive/favicon) still exists and no deleted template asset is referenced; OFL.txt ships with the 76 KB font; Display/Title split used as specified (Today + DNA Display, utility Title); `docs/TESTING.md` matches the new Diagnostics affordance. Non-blocking: (a) `apps/mobile/scripts/reset-project.js` still lists the 8 deleted template assets — that script would fail if run; (b) unused `assets/images/tabIcons/*` PNGs still ship in the bundle; (c) unknown-font fallback depends on RN's system fallback — device visual check covers it.
+- [2026-11-25 07:08 UTC] lead approve + merge (Onyx, `06078b4` → `b402823`): **APPROVE**. Rei's pre-review + Vesper's taste gate on record; I re-checked the symbol object form, font asset/OFL, Display/Title split, diagnostics sheet, and deleted-asset references. Merge-result mobile/design tsc green, eslint 0 errors (same 2 pre-existing warnings). Viv's design gate was not recorded (session idle) — lead approval stands; Viv can post-review. Non-blocking cleanup fed as T-042. T-016 done.
