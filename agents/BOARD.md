@@ -75,3 +75,4 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-062 | Restrained frosted-glass chrome — dark-mode accent + translucent bars | review | Onyx | high | 2026-11-25 17:08 UTC |
 | T-063 | Fix wardrobe grid regression — animated tile wrapper shrinks cards | done | Viv | high | 2026-11-25 12:46 UTC |
 | T-064 | Update TESTING scan-log legend — mask cleanup + corrections | done | Yves | low | 2026-11-25 12:57 UTC |
+| T-065 | Product review — pivot proposals only (all agents, overnight) | in-progress | Onyx | high | 2026-11-26 00:55 UTC |
