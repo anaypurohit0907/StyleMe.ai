@@ -65,5 +65,5 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-052 | Shop-the-gap — text-only wardrobe gap suggestions | backlog | — | high | 2026-11-25 08:55 UTC |
 | T-053 | Release train + beta readiness checklist | done | Viv | high | 2026-11-25 09:18 UTC |
 | T-054 | Mask cleanup — keep central garment component on patterned backgrounds | done | Yves | high | 2026-11-25 09:37 UTC |
-| T-055 | Learning loop misses PLAN phase 4 gate — improve repeat-offer drop past 40% | backlog | — | high | 2026-11-25 09:30 UTC |
+| T-055 | Learning loop misses PLAN phase 4 gate — improve repeat-offer drop past 40% | in-progress | Onyx | high | 2026-11-25 09:54 UTC |
 | T-056 | Correct AGENTS vision-assets claim — mobileclip encoder still comes from the bundle | done | Wren | medium | 2026-11-25 09:43 UTC |

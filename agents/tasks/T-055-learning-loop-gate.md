@@ -1,8 +1,9 @@
 ---
 id: T-055
 title: Learning loop misses PLAN phase 4 gate — improve repeat-offer drop past 40%
-status: backlog
-owner:
+status: in-progress
+owner: Onyx
+reviewer: Marlow (engine owner) · Wren tests
 priority: high
 depends_on: [T-051]
 files:
@@ -10,7 +11,7 @@ files:
   - packages/engine/src/explore.ts
   - packages/engine/src/index.ts
   - packages/engine/tests/learning-ab.test.ts
-updated_at: 2026-11-25T09:30Z
+updated_at: 2026-11-25T09:54Z
 ---
 
 ## Goal
@@ -32,3 +33,5 @@ recommend/tone/uniqueness tests.
 ## Log (append-only)
 
 - [2026-11-25 09:30 UTC] created (Onyx, T-051 measured gate failure).
+
+- [2026-11-25 09:54 UTC] claimed (Onyx) — lead pickup after Marlow/Viv left it unclaimed; branch Onyx/T-055. Reviewer Marlow (engine owner) + Wren (tests).
