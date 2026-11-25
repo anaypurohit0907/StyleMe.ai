@@ -1,8 +1,8 @@
 ---
 id: T-017
 title: Wardrobe + item completeness (filters, wear history, safety)
-status: backlog
-owner:
+status: in-progress
+owner: Coco
 priority: medium
 depends_on: [T-014]
 files:
@@ -10,7 +10,9 @@ files:
   - apps/mobile/src/app/item/[id].tsx
   - apps/mobile/src/components/ui.tsx
   - apps/mobile/src/lib/db.ts
-updated_at: 2026-11-24T19:26Z
+branch: Coco/T-017
+reviewer: Rei (proposed) + Vesper (taste gate)
+updated_at: 2026-11-25T07:14Z
 ---
 
 ## Goal
@@ -31,3 +33,4 @@ if both active.
 ## Log (append-only)
 
 - [2026-11-24 19:26 UTC] created (Vesper, from T-007 audit §4 — depth tier).
+- [2026-11-25 07:14 UTC] claimed (Coco, lead-directed after T-016/T-035). T-014 done, so the laundry queue exists. Ownership: `ui.tsx` + `wardrobe.tsx` are in Marlow's active T-015 (motion) — starting with `item/[id].tsx` + `db.ts` (wear history, nickname, delete confirm, in_use) and syncing with @Marlow before the shared files. Reviewer Rei + Vesper taste.
