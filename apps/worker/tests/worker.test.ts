@@ -623,4 +623,78 @@ describe("worker API", () => {
     });
     expect(one.success).toBe(false);
   });
+
+  it("payload caps round 2: learn/laundry/corrections/photo refs all bounded", async () => {
+    const ctx = { occasion: "office", mood: "none", weather: { tempC: 15, isRaining: false }, now: NOW };
+    const outfit = ["t1", "b1", "s1"];
+
+    // learn: > 20 offered outfits → 400
+    const tooManyOffers = await call(
+      "/v1/learn",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          suggestedIds: Array.from({ length: 21 }, () => outfit),
+          pickedId: outfit.join("+"),
+          context: ctx,
+          ts: NOW,
+        }),
+      },
+      true,
+    );
+    expect(tooManyOffers.status).toBe(400);
+
+    // learn: absurd pickedId → 400
+    const longPicked = await call(
+      "/v1/learn",
+      {
+        method: "POST",
+        body: JSON.stringify({ suggestedIds: [outfit], pickedId: "x".repeat(600), context: ctx, ts: NOW }),
+      },
+      true,
+    );
+    expect(longPicked.status).toBe(400);
+
+    // laundry: > 100 ids → 400
+    const bigLaundry = await call(
+      "/v1/laundry",
+      {
+        method: "POST",
+        body: JSON.stringify({ garmentIds: Array.from({ length: 101 }, (_, i) => `g${i}`), event: "in_wash", expectedAvailableAt: null, ts: NOW }),
+      },
+      true,
+    );
+    expect(bigLaundry.status).toBe(400);
+
+    // sync: oversized correction strings → 400
+    const badCorrection = await call(
+      "/v1/wardrobe/sync",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          upserts: [
+            {
+              ...garment("t1"),
+              corrections: [{ field: "nickname", from: "x".repeat(100), to: "y", at: NOW }],
+            },
+          ],
+          deletions: [],
+          ts: NOW,
+        }),
+      },
+      true,
+    );
+    expect(badCorrection.status).toBe(400);
+
+    // sync: oversized photoRef → 400
+    const badRef = await call(
+      "/v1/wardrobe/sync",
+      {
+        method: "POST",
+        body: JSON.stringify({ upserts: [{ ...garment("t1"), photoRef: "local://" + "z".repeat(600) }], deletions: [], ts: NOW }),
+      },
+      true,
+    );
+    expect(badRef.status).toBe(400);
+  });
 });
