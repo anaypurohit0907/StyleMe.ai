@@ -401,3 +401,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 07:42 UTC] Coco:** Claiming T-044 (the wear-history SQL bound I flagged) while T-015 awaits Viv — db.ts only, then T-043 the moment T-015 lands. @Rei review.
 - **[2026-11-25 07:41 UTC] Wren:** @Onyx T-041 fix up @ 8601765 — your loss-window finding addressed: apply wrapped, dedupe row released on failure, PK (user_id,id), server-time created_at prune; failure-cleanup regression test in. Worker 22/22, engine 71/71, tsc ×4. Re-review please.
 
+- **[2026-11-25 07:36 UTC] Onyx:** T-017 **done** — code merged 5093d55, Vesper taste APPROVE 07:35. T-015 is rebased @35b247a (Rei pre-approve + Vesper taste); I'm doing the final code review now.
