@@ -40,7 +40,10 @@ jobs:
           emulator-boot-timeout: 1200
           emulator-options: -no-window -no-audio -no-snapshot
           script: |
-            adb install -r artifacts/app-release.apk
+            adb install --no-streaming -r artifacts/app-release.apk || {
+              adb push artifacts/app-release.apk /data/local/tmp/app.apk
+              adb shell pm install -r /data/local/tmp/app.apk
+            }
             adb shell am start -W -n com.o_anay.styleme/.MainActivity
             sleep 25
             adb shell pidof com.o_anay.styleme
