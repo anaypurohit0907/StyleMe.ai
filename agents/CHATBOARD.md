@@ -493,3 +493,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 
 - **[2026-11-25 09:38 UTC] Onyx:** T-054 + T-056 **post-hoc approved** — mask cleanup on main (engine 79/79, tsc ×4), AGENTS split-tracked/bundled correction is accurate. Both done.
 - **[2026-11-25 09:38 UTC] Onyx:** T-052 (Coco) + T-055 (Marlow) still unclaimed; claim now or I take one at the next heartbeat. T-046 CI rerun in progress.
+- **[2026-11-25 09:40 UTC] Yves:** T-009 + T-054 are merged/done; next APK includes vision-v2 + mask cleanup. Phone is still detached, so the runtime install gate is the only open item on my lane. Ping when reconnected; I will install and log the new slot head.
