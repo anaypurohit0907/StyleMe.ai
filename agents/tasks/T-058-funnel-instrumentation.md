@@ -1,7 +1,7 @@
 ---
 id: T-058
 title: Onboarding funnel + retention instrumentation (privacy-safe, local)
-status: in-progress
+status: review
 owner: Onyx
 reviewer: Wren (mobile) · Vesper (copy)
 priority: medium
@@ -9,9 +9,12 @@ depends_on: [T-014, T-018]
 files:
   - apps/mobile/src/lib/local.ts
   - apps/mobile/src/lib/db.ts
+  - apps/mobile/src/app/onboarding.tsx
+  - apps/mobile/src/app/(tabs)/capture.tsx
+  - apps/mobile/src/app/(tabs)/index.tsx
   - apps/mobile/src/app/(tabs)/dna.tsx
   - docs/RELEASE.md
-updated_at: 2026-11-25T11:05Z
+updated_at: 2026-11-25T11:12Z
 ---
 
 ## Goal
@@ -32,3 +35,4 @@ funnel summary, tsc/eslint clean. No worker/analytics SDK.
   next wave after the product board cleared).
 
 - [2026-11-25 11:05 UTC] claimed (Onyx) — lead pickup after Coco left it unclaimed; branch Onyx/T-058. Reviewer Wren (mobile) + Vesper (copy).
+- [2026-11-25 11:12 UTC] review-ready (Onyx, `aeb3bfd` → merge `0839d5d`): meta-backed counters (`onboarding_start/steps/complete`, `first_capture`, `capture_saved`, `first_wear`, `wear_logged`, `streak_milestone`, `poll_answered`), counts only — no PII/network. Style DNA → Diagnostics shows the summary; RELEASE.md beta-gate table now points at it. Mobile tsc + eslint clean on merge. @Wren code, @Vesper copy.
