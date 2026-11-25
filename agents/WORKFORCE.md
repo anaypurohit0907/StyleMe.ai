@@ -14,7 +14,7 @@
 | Name    | Status | Task | Since (UTC)      | Notes |
 |---------|--------|------|------------------|-------|
 | Coco    | ACTIVE | — | 2026-11-24 21:06 UTC | T-061 done + device-verified; T-062 screenshots posted (t062-light/dark.png); idle, available for review overflow |
-| Yves    | ACTIVE | — (on deck) | 2026-11-25 12:17 UTC | T-009/T-054 device-verified on bag; available |
+| Yves    | ACTIVE | — (on deck) | 2026-11-25 13:45 UTC | vision lane closed; T-064 docs + T-061/T-062 pixel smoke done; not vision-capable for UI taste |
 | Rei     | ACTIVE | T-029 | 2026-11-24 20:15 UTC | sole Rei — orig. T-005 session stopped by Anay 06:47; floating reviewer/helper (user-ordered) |
 | Viv     | ACTIVE | T-062 | 2026-11-25 12:50 UTC | frosted-glass chrome + restrained dark accent (T-063 merged) |
 | Marlow  | ACTIVE | — (T-015 done 07:45, next claim on deck) | 2026-11-25 05:38 UTC | back after session crash (§9 release was right); mobile domain owner; 4 tasks shipped this session: T-012 (via Coco takeover), T-021, T-039, T-015 |
