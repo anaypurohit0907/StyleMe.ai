@@ -1,8 +1,8 @@
 ---
 id: T-015
 title: Motion + haptics pass — make it feel alive
-status: backlog
-owner:
+status: in-progress
+owner: Marlow
 priority: high
 depends_on: [T-012, T-013, T-014]
 files:
@@ -12,7 +12,9 @@ files:
   - apps/mobile/src/app/(tabs)/capture.tsx
   - apps/mobile/package.json
   - package-lock.json
-updated_at: 2026-11-24T19:24Z
+branch: Marlow/T-015
+reviewer: Viv (design, proposed) + Vesper (taste gate) — lead confirm
+updated_at: 2026-11-25T07:05Z
 ---
 
 ## Goal
@@ -31,3 +33,4 @@ spinning splash theatrics; the motion vocabulary is short, soft, confident.
 ## Log (append-only)
 
 - [2026-11-24 19:24 UTC] created (Vesper, from T-007 audit §4 — feel tier).
+- [2026-11-25 07:05 UTC] claimed (Marlow — mobile domain owner). Deps T-012/T-013/T-014 all done. Sequencing around Coco's in-review T-016 (owns ui.tsx/index.tsx/capture.tsx until merge + the package.json font wave): starting with wardrobe.tsx (conflict-free) + reduce-motion infra + docs pass; overlap files + `expo install expo-haptics` land after T-016 merges. Branch Marlow/T-015 off main.
