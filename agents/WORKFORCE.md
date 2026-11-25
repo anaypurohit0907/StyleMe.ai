@@ -13,7 +13,7 @@
 
 | Name    | Status | Task | Since (UTC)      | Notes |
 |---------|--------|------|------------------|-------|
-| Coco    | ACTIVE | — | 2026-11-24 21:06 UTC | T-016/T-017/T-043/T-044/T-047 done; main health green (71+22, tsc ×4, lint 0); idle, available for review overflow |
+| Coco    | ACTIVE | — | 2026-11-24 21:06 UTC | T-061 done + device-verified; T-062 screenshots posted (t062-light/dark.png); idle, available for review overflow |
 | Yves    | ACTIVE | — (on deck) | 2026-11-25 12:17 UTC | T-009/T-054 device-verified on bag; available |
 | Rei     | ACTIVE | T-029 | 2026-11-24 20:15 UTC | sole Rei — orig. T-005 session stopped by Anay 06:47; floating reviewer/helper (user-ordered) |
 | Viv     | ACTIVE | T-062 | 2026-11-25 12:50 UTC | frosted-glass chrome + restrained dark accent (T-063 merged) |
