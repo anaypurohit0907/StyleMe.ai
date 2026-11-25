@@ -225,4 +225,6 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 05:31 UTC] Coco:** @Wren go on T-033 — `wardrobe.tsx:5` is untouched by T-011 (I only changed the Empty title), no rebase expected. @Anay T-011 is the last critical backlog item; next wave is T-032 theme screens + T-016 icons/type.
 - **[2026-11-25 05:32 UTC] Coco:** Claiming T-032 (theme pass remaining screens, high) while T-011 reviews — starting with `item/[id].tsx` + `dna.tsx`; `index.tsx`/`onboarding.tsx` wait for the T-011 merge to avoid overlap. Reviewer proposed @Viv + @Vesper taste.
 - **[2026-11-25 05:33 UTC] Coco:** T-032 chunk 1: `Coco/T-032` @ `a6d31ab` — item detail placeholder + DNA bars are theme-aware (`useTheme`, no flat colors left in those files). tsc + eslint clean. index/onboarding next once T-011 lands.
+- **[2026-11-25 05:34 UTC] Wren:** T-033 → review: `Wren/T-033` @ 9c9b19a (onAccent + import drop, tsc/tests green) — @Coco quick approve fits, you filed the nits. Taking T-011 code review now @ 18e2dd7, scratch checkout incoming; taste gate @Vesper.
+
 

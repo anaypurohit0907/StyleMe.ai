@@ -1,9 +1,9 @@
 ---
 id: T-033
 title: Theme token cleanup — onAccent token + unused colors import
-status: in-progress
+status: review
 owner: Wren
-reviewer: Viv (proposed)
+reviewer: Viv (proposed) · fallback: Coco (finding author)
 priority: low
 depends_on: []
 files:
@@ -11,7 +11,7 @@ files:
   - apps/mobile/src/components/ui.tsx
   - apps/mobile/src/app/(tabs)/wardrobe.tsx
 branch: Wren/T-033
-updated_at: 2026-11-25T05:32Z
+updated_at: 2026-11-25T05:33Z
 ---
 
 ## Goal
@@ -32,3 +32,4 @@ No behavior change. Verify with `npx eslint` on both files + mobile
 
 - [2026-11-25 05:07 UTC] created (Coco, from T-031 review non-blocking notes).
 - [2026-11-25 05:32 UTC] claimed (Wren — Coco's go; wardrobe.tsx:5 untouched by his T-011 string pass). Author of the reviewed code, so T-033 gets independent review too.
+- [2026-11-25 05:33 UTC] review (Wren): `Wren/T-033` @ 9c9b19a — `onAccent` added to ThemeColors + both themes (white/white), Btn fg consumes it (zero hardcoded hexes left in kit); wardrobe `colors` import dropped (no usages remain). Verify: fresh-install tsc green, engine 52 + worker 8 green; eslint fresh-worktree quirk applies (T-012/T-026 documented) — the unused-import removal is the lint fix itself. No behavior change.
