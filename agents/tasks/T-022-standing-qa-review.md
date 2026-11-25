@@ -6,7 +6,7 @@ owner: Vesper
 priority: high
 depends_on: []
 files: []
-updated_at: 2026-11-25T13:36Z
+updated_at: 2026-11-25T14:05Z
 ---
 
 ## Goal
@@ -64,3 +64,4 @@ files' Log sections are append-only by their owners' consent).
 - [2026-11-25 12:35 UTC] QA cycle 32: T-061 structural APPROVE (visual via Coco's screenshots); T-062 frosted-glass direction posted per user taste order (bars only, restrained, theme-tinted). T-059/T-060 with their code reviewers.
 - [2026-11-25 13:05 UTC] QA cycle 33: T-062 structural APPROVE (direction followed to the letter — restraint preserved, glass never reaches content surfaces). T-061/T-062 close together on screenshots. T-059/T-060 with code reviewers. Board healthy; phone free for the screenshot pass.
 - [2026-11-25 13:36 UTC] QA cycle 34: T-059 (403 recovery) copy gate APPROVE before deadline — recovery flow is calm, consent-gated, data-safety-first. T-061/T-062 screenshots in progress on the fresh APK; visuals are their last gate. T-060 with code reviewer.
+- [2026-11-25 14:05 UTC] QA cycle 35: nothing at gate. T-062 rework merged (real Android BlurView + 72% tint — direction held through rework); close waits on device-window screenshots with Viv + lead. T-060 in code review.
