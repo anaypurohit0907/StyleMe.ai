@@ -1,12 +1,23 @@
 import { useCallback, useState } from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, TextInput, View } from "react-native";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
-import type { Fit, Garment, GarmentAttrs, Pattern, Slot } from "@styleme/schema";
+import type { Fit, Garment, GarmentAttrs, GarmentStatus, Pattern, Slot } from "@styleme/schema";
 import { paletteSwatch, radius, space } from "@styleme/design";
-import { Btn, Caption, Card, Chip, Screen, Scroll, Swatch, Title } from "@/components/ui";
-import { deleteGarment, getGarment, setGarmentStatus, upsertGarment } from "@/lib/db";
+import { Body, Btn, Caption, Card, Chip, Confirm, Screen, Scroll, Swatch, Title } from "@/components/ui";
+import {
+  deleteGarment,
+  getGarment,
+  listWearHistory,
+  setGarmentStatus,
+  upsertGarment,
+  type WearEntry,
+} from "@/lib/db";
 import { diffCorrections } from "@styleme/schema/corrections";
 import { useTheme } from "@/lib/theme";
+import { enqueueLaundry } from "@/lib/sync-queue";
+
+/** React purity lint: keep the impure clock call out of the component body. */
+const nowMs = () => Date.now();
 
 const SLOTS: Slot[] = ["top", "bottom", "dress", "outerwear", "shoes", "accessory"];
 const PATTERNS: Pattern[] = ["solid", "striped", "check", "floral", "graphic", "animal", "other"];
@@ -19,13 +30,16 @@ export default function ItemDetail() {
   const t = useTheme();
   const [g, setG] = useState<Garment | null>(null);
   const [draft, setDraft] = useState<GarmentAttrs | null>(null);
+  const [wear, setWear] = useState<WearEntry[]>([]);
   const [saving, setSaving] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   const load = useCallback(async () => {
     if (!id) return;
     const item = await getGarment(id);
     setG(item);
     setDraft(item ? { ...item.attrs } : null);
+    setWear(await listWearHistory(id));
   }, [id]);
 
   useFocusEffect(
@@ -34,14 +48,23 @@ export default function ItemDetail() {
     }, [load]),
   );
 
-  async function setStatus(status: "available" | "in_wash") {
+  async function setStatus(status: GarmentStatus, laundry?: "in_wash" | "washed") {
     if (!id) return;
     await setGarmentStatus([id], status);
+    if (laundry) {
+      await enqueueLaundry({
+        garmentIds: [id],
+        event: laundry,
+        expectedAvailableAt: null,
+        ts: nowMs(),
+      });
+    }
     await load();
   }
 
   async function remove() {
     if (!id) return;
+    setConfirmingDelete(false);
     await deleteGarment(id);
     router.back();
   }
@@ -101,6 +124,31 @@ export default function ItemDetail() {
         </Card>
 
         <Card style={{ gap: space.s }}>
+          <Caption>Name</Caption>
+          <TextInput
+            value={draft.nickname ?? ""}
+            onChangeText={(v) => patch({ nickname: v.slice(0, 64) })}
+            placeholder="Give it a name — optional"
+            placeholderTextColor={t.inkFaint}
+            style={[s.input, { backgroundColor: t.surface, borderColor: t.line, color: t.ink }]}
+          />
+        </Card>
+
+        <Card style={{ gap: space.s }}>
+          <Caption>Wear history</Caption>
+          {wear.length === 0 ? (
+            <Caption>No wears logged yet.</Caption>
+          ) : (
+            wear.map((w) => (
+              <View key={`${w.wornAt}-${w.occasion ?? "none"}`} style={s.rowBetween}>
+                <Body>{new Date(w.wornAt).toLocaleDateString()}</Body>
+                <Caption>{w.occasion ?? "—"}</Caption>
+              </View>
+            ))
+          )}
+        </Card>
+
+        <Card style={{ gap: space.s }}>
           <Caption>Slot</Caption>
           <View style={s.wrap}>
             {SLOTS.map((v) => (
@@ -154,13 +202,34 @@ export default function ItemDetail() {
         <Btn label="Save tags" onPress={() => void saveTags()} loading={saving} />
 
         {g.status === "in_wash" ? (
-          <Btn label="I washed it — back in rotation" onPress={() => void setStatus("available")} />
+          <Btn
+            label="I washed it — back in rotation"
+            onPress={() => void setStatus("available", "washed")}
+          />
+        ) : g.status === "in_use" ? (
+          <Btn label="Back in the closet" onPress={() => void setStatus("available")} />
         ) : (
-          <Btn label="Send to laundry" variant="ghost" onPress={() => void setStatus("in_wash")} />
+          <>
+            <Btn label="Wearing it today" variant="ghost" onPress={() => void setStatus("in_use")} />
+            <Btn
+              label="Send to laundry"
+              variant="ghost"
+              onPress={() => void setStatus("in_wash", "in_wash")}
+            />
+          </>
         )}
-        <Btn label="Delete piece" variant="danger" onPress={() => void remove()} />
+        <Btn label="Delete piece" variant="danger" onPress={() => setConfirmingDelete(true)} />
         <Btn label="Back" variant="ghost" onPress={() => router.back()} />
       </Scroll>
+      <Confirm
+        visible={confirmingDelete}
+        title="Delete this piece?"
+        body="It disappears from your wardrobe and recommendations. This can't be undone."
+        confirmLabel="Delete"
+        danger
+        onConfirm={() => void remove()}
+        onCancel={() => setConfirmingDelete(false)}
+      />
     </Screen>
   );
 }
@@ -168,4 +237,12 @@ export default function ItemDetail() {
 const s = StyleSheet.create({
   img: { width: "100%", aspectRatio: 0.8, borderRadius: radius.md },
   wrap: { flexDirection: "row", flexWrap: "wrap", gap: space.s, alignItems: "center" },
+  input: {
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: radius.md,
+    paddingHorizontal: space.m,
+    paddingVertical: space.s,
+    fontSize: 16,
+  },
+  rowBetween: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
 });
