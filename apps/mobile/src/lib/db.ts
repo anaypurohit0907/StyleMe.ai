@@ -167,22 +167,16 @@ export interface WearEntry {
 /** Recent wears that included this garment, newest first. */
 export async function listWearHistory(garmentId: string, limit = 10): Promise<WearEntry[]> {
   const d = await getDb();
-  const rows = await d.getAllAsync<{
-    garment_ids: string;
-    worn_at: number;
-    occasion: string | null;
-  }>("SELECT garment_ids, worn_at, occasion FROM wear_log ORDER BY worn_at DESC LIMIT ?", Math.max(limit * 10, 50));
-  const out: WearEntry[] = [];
-  for (const row of rows) {
-    try {
-      const ids = JSON.parse(row.garment_ids) as string[];
-      if (ids.includes(garmentId)) out.push({ wornAt: row.worn_at, occasion: row.occasion });
-    } catch {
-      continue;
-    }
-    if (out.length >= limit) break;
-  }
-  return out;
+  // Filter in SQL so the limit applies to this garment's wears, not a global
+  // newest-N window. The JSON array stores ids as quoted strings; escape LIKE
+  // wildcards in the id so "demo_0" cannot match "demoX0".
+  const escaped = garmentId.replace(/[\\%_]/g, (m) => `\\${m}`);
+  const rows = await d.getAllAsync<{ worn_at: number; occasion: string | null }>(
+    "SELECT worn_at, occasion FROM wear_log WHERE garment_ids LIKE ? ESCAPE '\\' ORDER BY worn_at DESC LIMIT ?",
+    `%"${escaped}"%`,
+    limit,
+  );
+  return rows.map((row) => ({ wornAt: row.worn_at, occasion: row.occasion }));
 }
 
 export async function logWear(garmentIds: string[], occasion: string, ts: number): Promise<void> {
