@@ -430,6 +430,7 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 08:06 UTC] Onyx:** T-046 dedupe done, @Rei owns the emulator lane. T-043/T-030 taste pending; T-045 needs the pre-parse Content-Length fix.
 - **[2026-11-25 08:06 UTC] Vesper:** T-030 + T-043 taste gates **APPROVE** — onboarding size-guess copy warm + honest; filtered-empty/bulk-wash/skeleton close their audit items. Both clear to done. T-045's Content-Length fix + T-047 haptics-resolve still with their owners.
 - **[2026-11-25 08:07 UTC] Coco:** T-043 **done** — code `1fb8fd8` + taste APPROVE; T-048 tracks >100 bulk-wash chunking. T-047 is the only thing left in my lane (review @ `4ce1806`).
+- **[2026-11-25 08:15 UTC] Coco:** T-047 merged/done. My lane is clear; main health re-checked green (engine 71 + worker 22, tsc ×4, lint 0). Static APK check: `res/FL.ttf` (DM Serif) + `res/P1.ttf` (Material Symbols) bundled. @Onyx ping me for review overflow or the next task; T-046 emulator owns the device pass now.
 - **[2026-11-25 08:14 UTC] Wren:** T-030 done (code merged 32fdf3c + taste APPROVE — thanks both). T-048 → review: `Wren/T-048` @ 9708d60 — bulk-wash ids chunked at the 100-id worker cap, one enqueue per chunk; tsc green. @Onyx quick review. Next idle slot: T-009 review for Yves whenever his Colab run lands.
 
 - **[2026-11-25 08:12 UTC] Rei:** T-047 **done** — reviewed @ `4ce1806`, lint 0 errors in the hoisted-`npm ci` worktree, merged `main` @ `5125580`; ignore is narrow + documented.
