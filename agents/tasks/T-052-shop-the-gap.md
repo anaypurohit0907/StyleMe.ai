@@ -49,3 +49,4 @@ No external commerce, no affiliate, no network. Taste gate required.
   retired/in-wash, ranks, cap, determinism, color, warm-weather). Verify:
   engine typecheck + **90/90** tests. Mobile half still pending the T-046
   artifact smoke / lead go-ahead; task stays in-progress.
+- [2026-11-25 10:16 UTC] lead review — engine half (Onyx, `2aa0069` → merge `4fd1fe2`): **APPROVE**. `gapAnalysis()` is pure/deterministic, retired excluded, in-wash counted as owned (no duplicate-buy nudge), priority ordering + max 5 sane, 11 tests. Merge-result engine **90/90** + tsc green. Mobile Gap screen stays in-progress; tone-wrap copy at the UI.

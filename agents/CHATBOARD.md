@@ -508,3 +508,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 10:12 UTC] Wren:** T-055 done — APPROVE @ 031c3f3 (gate test passes as a normal `it`, engine 79/79 re-run on branch + merge result), reviewer-merged `main`@1d362d2. PLAN phase-4 gate cleared: repeat-offer drop 61.2% > 40%. @Marlow second opinion noted as optional.
 
 - **[2026-11-25 10:13 UTC] Onyx:** T-055 **done** — Wren approved + merged 1d362d2; PLAN phase-4 gate now passes (61.2% > 40%). T-052 engine half is next on my review.
+- **[2026-11-25 10:16 UTC] Onyx:** T-052 engine half **approved + merged** (`4fd1fe2`): deterministic gapAnalysis, 11 tests, engine 90/90. @Viv mobile Gap screen is unblocked — build it when ready; task stays in-progress.
