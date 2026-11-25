@@ -1,9 +1,8 @@
-name: Emulator smoke (x86_64)
+name: Emulator smoke (arm64)
 
 # Agent-side device checks without a physical phone.
-# Manual run: Actions → "Emulator smoke (x86_64)" → Run workflow.
-# build: ubuntu (fast) → x86_64 release APK artifact.
-# smoke: macos-15-intel (HVF) → API 30 AVD, install, screenshot, pull log.
+# Manual run: Actions → "Emulator smoke (arm64)" → Run workflow.
+# macOS-15 (arm64) + HVF + the published arm64 release APK. No Gradle build.
 
 on:
   workflow_dispatch:
@@ -17,92 +16,29 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: npm
-
-      - name: Install
-        run: npm ci
-
-      - name: Fetch vision bundle
-        run: |
-          mkdir -p apps/mobile/assets/vision
-          curl -fL --retry 3 \
-            "https://github.com/${{ github.repository }}/releases/download/vision-v2/styleme_vision_v2.zip" \
-            -o /tmp/vision.zip
-          unzip -o /tmp/vision.zip -d apps/mobile/assets/vision
-          ls -lh apps/mobile/assets/vision
-
-      - name: Generate native project (x86_64 release)
-        working-directory: apps/mobile
-        env:
-          EXPO_PUBLIC_API_BASE: https://styleme-api.style-me.workers.dev
-          EXPO_PUBLIC_VISION: onnx
-        run: npx expo prebuild --platform android --clean --no-install
-
-      - name: Configure release signing
-        working-directory: apps/mobile
-        env:
-          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
-          STYLEME_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          STYLEME_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          STYLEME_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-        run: |
-          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > android/app/styleme-release.keystore
-          python3 scripts/configure-signing.py
-
-      - name: Build x86_64 release APK
-        working-directory: apps/mobile/android
-        env:
-          EXPO_PUBLIC_API_BASE: https://styleme-api.style-me.workers.dev
-          EXPO_PUBLIC_VISION: onnx
-          STYLEME_STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          STYLEME_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          STYLEME_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-        run: |
-          chmod +x gradlew
-          ./gradlew assembleRelease --no-daemon --max-workers=4 \
-            -PreactNativeArchitectures=x86_64 \
-            -Pandroid.enableMinifyInReleaseBuilds=false \
-            -Pandroid.enablePngCrunchInReleaseBuilds=false
-
-      - name: Upload x86_64 APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: x86_64-apk
-          path: apps/mobile/android/app/build/outputs/apk/release/app-release.apk
-          if-no-files-found: error
-          retention-days: 14
-
   smoke:
-    needs: build
-    runs-on: macos-15-intel
+    runs-on: macos-15
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download x86_64 APK
-        uses: actions/download-artifact@v4
-        with:
-          name: x86_64-apk
-          path: artifacts
+      - name: Download latest release APK
+        run: |
+          mkdir -p artifacts
+          curl -fL --retry 3 \
+            "https://github.com/${{ github.repository }}/releases/download/apk-latest/app-release.apk" \
+            -o artifacts/app-release.apk
+          ls -lh artifacts/app-release.apk
 
       - name: Boot AVD, install, capture
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 30
+          api-level: 34
           target: google_apis
-          arch: x86_64
+          arch: arm64-v8a
           profile: pixel_6
           emulator-boot-timeout: 1200
-          emulator-options: -no-window -no-audio -no-snapshot -gpu off
+          emulator-options: -no-window -no-audio -no-snapshot
           script: |
             adb install -r artifacts/app-release.apk
             adb shell am start -W -n com.o_anay.styleme/.MainActivity

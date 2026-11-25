@@ -93,10 +93,10 @@ in GitHub Actions and replaces the `apk-latest` release asset.
 
 ## Agent-side emulator (no phone)
 
-Use the **Emulator smoke (x86_64)** GitHub workflow. It builds the release APK
-for `x86_64` on ubuntu (`EXPO_PUBLIC_VISION=onnx` + the `vision-v2` bundle),
-then runs it on a `macos-15-intel` runner (HVF-accelerated) in an API 30
-`google_apis` AVD — installs, launches, screenshots, and pulls the log:
+Use the **Emulator smoke (arm64)** GitHub workflow. It runs on a `macos-15`
+arm64 runner (HVF-accelerated), downloads the published arm64 release APK
+(`apk-latest`), boots an API 34 `google_apis` arm64 AVD, installs, launches,
+screenshots, and pulls the log:
 
 1. GitHub → **Actions** → **Emulator smoke (x86_64)** → **Run workflow**.
 2. Download the `emulator-smoke` artifact: `emulator.png`, `styleme.log`,
