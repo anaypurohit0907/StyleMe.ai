@@ -86,6 +86,8 @@ export interface Weather {
   tempC: number;
   isRaining: boolean;
   city?: string;
+  /** "fallback" = the 18°C offline guess, not a live reading. */
+  source?: "live" | "fallback";
 }
 
 /** Open-Meteo, no API key. Falls back to a mild default offline. */
@@ -96,8 +98,8 @@ export async function getWeather(): Promise<Weather> {
       Location.requestForegroundPermissionsAsync(),
       new Promise<null>((resolve) => setTimeout(() => resolve(null), 2500)),
     ]);
-    if (!perm) return { tempC: 18, isRaining: false };
-    if (perm.status !== "granted") return { tempC: 18, isRaining: false };
+    if (!perm) return { tempC: 18, isRaining: false, source: "fallback" };
+    if (perm.status !== "granted") return { tempC: 18, isRaining: false, source: "fallback" };
     const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Low });
     const url =
       `https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}` +
@@ -117,9 +119,10 @@ export async function getWeather(): Promise<Weather> {
     return {
       tempC: body.current?.temperature_2m ?? 18,
       isRaining: (body.current?.rain ?? 0) > 0,
+      source: body.current?.temperature_2m !== undefined ? "live" : "fallback",
     };
   } catch {
-    return { tempC: 18, isRaining: false };
+    return { tempC: 18, isRaining: false, source: "fallback" };
   }
 }
 

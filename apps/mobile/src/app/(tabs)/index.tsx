@@ -5,9 +5,10 @@ import type { ColorName, Garment, Occasion, ScoredOutfit } from "@styleme/schema
 import { occasionLabel, occasions, paletteSwatch, radius, space } from "@styleme/design";
 import { Btn, Caption, Card, Chip, Empty, Screen, Scroll, Title } from "@/components/ui";
 import { OutfitBadge, Toast, WhyPanel } from "@/components/why-panel";
-import { listGarments, logWear, metaGet, upsertGarment } from "@/lib/db";
+import { listGarments, logSuggestion, logWear, metaGet, upsertGarment } from "@/lib/db";
 import { useToneProfile, voice } from "@/lib/tone";
 import { useTheme } from "@/lib/theme";
+import { drain, enqueueLearn, enqueueWardrobe } from "@/lib/sync-queue";
 import {
   getWeather,
   loadPrefs,
@@ -39,11 +40,13 @@ export default function Today() {
   const [seed, setSeed] = useState(0);
   const [name, setName] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; undo?: () => void } | null>(null);
+  const [error, setError] = useState(false);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
     setPicked(null);
+    setError(false);
     try {
       const all = await listGarments();
       const free = all.filter((g) => g.status === "available");
@@ -58,11 +61,20 @@ export default function Today() {
         // line ("skipped rust + pink — you said never") must survive.
         const keep = result.outfits.length > 0 || result.skippedNeverMix.length > 0;
         setToday(keep ? result : null);
+        if (keep) {
+          // Learning loop: record the offer locally, then ship it + the
+          // wardrobe snapshot to the worker when connectivity allows.
+          await logSuggestion(result.outfits, null, result.context);
+          await enqueueWardrobe(all, nowMs());
+          void drain();
+        }
       } else {
         setToday(null);
       }
     } catch {
       setToday(null);
+      // Engine/data failure is not "need more pieces" — say so honestly.
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -132,7 +144,31 @@ export default function Today() {
     if (!today) return;
     await recordPick(available, outfit, today.outfits, today.context);
     await logWear(outfit.garmentIds, occasion, nowMs());
+    // Learning loop: the pick is the strongest signal — queue it for the worker.
+    await enqueueLearn({
+      suggestedIds: today.outfits.map((o) => o.garmentIds),
+      pickedId: outfit.garmentIds.join("+"),
+      context: today.context,
+      ts: nowMs(),
+    });
     setPicked(outfit);
+  }
+
+  /**
+   * "None of these? Shuffle" is the spec'd explicit-rejection moment: the
+   * offered three were seen and passed over. Queue the learn event with
+   * pickedId null (worker records the explore-state update), then reshuffle.
+   */
+  function rejectAndShuffle() {
+    if (today) {
+      void enqueueLearn({
+        suggestedIds: today.outfits.map((o) => o.garmentIds),
+        pickedId: null,
+        context: today.context,
+        ts: nowMs(),
+      });
+    }
+    setSeed((x) => x + 1);
   }
 
   const byId = new Map(garments.map((g) => [g.id, g]));
@@ -180,6 +216,7 @@ export default function Today() {
             <Title>{greeting}</Title>
             <Caption>
               {voice("weather_line", tone)} · {Math.round(weather.tempC)}°
+              {weather.source === "fallback" ? " · offline guess" : ""}
               {weather.isRaining ? " · rain" : ""} · {available.length} pieces ready
             </Caption>
           </View>
@@ -208,6 +245,14 @@ export default function Today() {
           </Card>
         )}
 
+        {!loading && error && !today && (
+          <Card style={{ gap: space.s, borderColor: t.bad }}>
+            <Title>Something went wrong.</Title>
+            <Caption>Your wardrobe is safe on this phone — the styling pass just failed. Try again.</Caption>
+            <Btn label="Try again" onPress={() => void load()} />
+          </Card>
+        )}
+
         {picked && (
           <Card style={{ borderColor: t.ok }}>
             <Caption>Worn.</Caption>
@@ -216,7 +261,7 @@ export default function Today() {
           </Card>
         )}
 
-        {!loading && !today && (
+        {!loading && !today && !error && (
           <Empty
             title="Need a few more pieces."
             body={
@@ -291,7 +336,7 @@ export default function Today() {
         ))}
 
         {today && today.outfits.length > 0 && (
-          <Pressable onPress={() => setSeed((x) => x + 1)} style={s.notToday}>
+          <Pressable onPress={rejectAndShuffle} style={s.notToday}>
             <Caption>None of these? Shuffle the 3 options.</Caption>
           </Pressable>
         )}
