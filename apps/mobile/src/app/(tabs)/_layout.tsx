@@ -1,7 +1,9 @@
+import { StyleSheet } from "react-native";
 import { Tabs } from "expo-router";
 import { SymbolView } from "expo-symbols";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { type } from "@styleme/design";
+import { ChromeSurface } from "@/components/chrome";
 import { useTheme } from "@/lib/theme";
 
 /**
@@ -25,14 +27,19 @@ export default function TabsLayout() {
         tabBarActiveTintColor: t.accent,
         tabBarInactiveTintColor: t.inkFaint,
         tabBarStyle: {
-          backgroundColor: t.surface,
-          borderTopColor: t.line,
+          // Dark mode: the glass surface owns the fill (78% tint). Light mode
+          // stays the opaque surface the user already approved.
+          backgroundColor: t.isDark ? "transparent" : t.surface,
+          borderTopColor: t.isDark ? "transparent" : t.line,
           // Custom height must include the bottom safe-area inset, otherwise
           // the inset shows the window background (white in dark mode).
           height: 64 + insets.bottom,
           paddingBottom: 8 + insets.bottom,
           paddingTop: 6,
         },
+        tabBarBackground: t.isDark
+          ? () => <ChromeSurface style={StyleSheet.absoluteFill} />
+          : undefined,
         tabBarLabelStyle: { ...type.caption, fontSize: 11 },
       }}>
       <Tabs.Screen
