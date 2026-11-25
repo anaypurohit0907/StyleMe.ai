@@ -70,3 +70,4 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-057 | Android AAB build + Play internal testing lane | done | Wren | high | 2026-11-25 11:24 UTC |
 | T-058 | Onboarding funnel + retention instrumentation (privacy-safe, local) | done | Onyx | medium | 2026-11-25 11:43 UTC |
 | T-059 | Wire 403 registration recovery UI — reset device identity | backlog | — | high | 2026-11-25 12:05 UTC |
+| T-060 | Mobile polish sweep — T-015 non-blocking review nits + device-pass checks | backlog | — | low | 2026-11-25 12:06 UTC |
