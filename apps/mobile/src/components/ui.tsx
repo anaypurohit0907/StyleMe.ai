@@ -80,10 +80,11 @@ export function Screen({ children, style }: { children: ReactNode; style?: Style
   const t = useTheme();
   const setTargetRef = useBlurTarget()?.setTargetRef;
   const targetRef = useRef<ComponentRef<typeof View>>(null);
-  // Register the focused screen as the Android blur target for the tab bar.
-  // Depend on the stable setter (not the context value): the provider bumps
-  // `version` on registration, and depending on the whole context would
-  // re-create this callback and re-run the focus effect forever.
+  // Register after mount (refs are attached) and again on focus. The mount
+  // effect is what makes the first BlurView attach; focus handles tab switches.
+  useEffect(() => {
+    setTargetRef?.(targetRef);
+  }, [setTargetRef]);
   useFocusEffect(
     useCallback(() => {
       // Ref object is stable even if the native view is still mounting; the
