@@ -74,18 +74,25 @@ export function updatePreference(prefs: PreferenceVector, ev: PickInput): Prefer
         1,
         5,
       );
-      // Pattern mixing tolerance: did the pick mix patterns?
+      // Pattern mixing tolerance: did the pick mix patterns? Occasion-
+      // conditioned — mixing for a party/date says more about taste than
+      // mixing for the office, which is often just a uniform habit.
       const patterns = g.map((x) => x.attrs.pattern);
       const mixed = new Set(patterns.filter((p) => p !== "solid")).size >= 2;
       if (direction === 1) {
+        const occasionWeight =
+          ev.occasion === "party" || ev.occasion === "date"
+            ? 0.7
+            : ev.occasion === "office"
+              ? 0.3
+              : 0.5;
         next.patternMixing = clamp(
-          next.patternMixing + alpha * (mixed ? 0.5 : -0.2),
+          next.patternMixing + alpha * (mixed ? occasionWeight : -0.2),
           0,
           1,
         );
       }
     }
-    void ev.occasion;
   };
 
   if (ev.picked) {

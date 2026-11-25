@@ -13,6 +13,8 @@
  * identical wardrobes diverge over time because their pick histories (and
  * therefore Beta posteriors) diverge.
  */
+import type { ColorName } from "@styleme/schema";
+import { NEUTRAL_COLORS } from "./color";
 
 /** cyrb53 → 32-bit seed from a string. */
 export function hashSeed(str: string): number {
@@ -108,9 +110,15 @@ export function exploreScore(
   const sample = betaSample(alpha + 1, beta + 1, rng);
   // Nudge: explored signatures pull toward their own mean; unexplored get
   // a random kick so they can rise above a marginally better known look.
-  const kick = (sample - 0.5) * 2 * strength * uncertainty * 0.6;
-  const spread = best > 0 ? Math.abs(base - best) + 0.3 : 0.3;
-  const score = base + (kick * spread) / 0.6;
+  // (No scaling constant: an earlier *0.6 … /0.6 pair cancelled in the
+  // score but leaked into the explored threshold, capping the kick at
+  // 0.04998 < 0.05 so brand-new users could never be flagged explored.)
+  const kick = (sample - 0.5) * 2 * strength * uncertainty;
+  // Distance to the anchor is meaningful even when the whole board sits
+  // below zero (cold-weather totals) — a flat fallback spread silently
+  // disabled exploration there.
+  const spread = Math.abs(base - best) + 0.3;
+  const score = base + kick * spread;
   return { score, explored: Math.abs(kick) > 0.05 };
 }
 
@@ -124,7 +132,7 @@ export function outfitSignature(
   isDress: boolean,
 ): string {
   const shape = isDress ? "dress" : "pair";
-  const chromatic = colors.filter((c) => !["black", "white", "cream", "grey", "navy", "tan", "brown"].includes(c));
+  const chromatic = colors.filter((c) => !NEUTRAL_COLORS.includes(c as ColorName));
   const dom = chromatic[0] ?? "mono";
   return `${shape}:${dom}`;
 }

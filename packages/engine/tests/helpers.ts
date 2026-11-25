@@ -42,7 +42,7 @@ export function makeWardrobe(spec: WardrobeSpec): Garment[] {
       const c1 = colorPool[Math.floor(rng() * colorPool.length)]!;
       let c2: (typeof COLORS)[number] | undefined;
       if (rng() < 0.35) c2 = colorPool[Math.floor(rng() * colorPool.length)]!;
-      const formality = slot === "shoes" ? 1 + Math.floor(rng() * 5) : 1 + Math.floor(rng() * 5);
+      const formality = 1 + Math.floor(rng() * 5);
       const attrs: GarmentAttrs = {
         slot: slot as GarmentAttrs["slot"],
         colors: c2 && c2 !== c1 ? [c1, c2] : [c1],

@@ -98,6 +98,28 @@ describe("updatePreference (EWA learning)", () => {
     expect(prefs.patternMixing).toBeGreaterThan(0.3);
   });
 
+  it("occasion conditions the mixing signal — party picks teach faster than office picks", () => {
+    const striped = garment("t1", { pattern: "striped" });
+    const floral = garment("b1", { slot: "bottom", pattern: "floral", colors: ["navy"] });
+    const run = (occasion: "party" | "office") => {
+      let prefs = emptyPreference();
+      for (let i = 0; i < 5; i++) {
+        prefs = updatePreference(prefs, {
+          picked: outfit([striped, floral]),
+          garments: new Map([
+            ["t1", striped],
+            ["b1", floral],
+          ]),
+          occasion,
+        });
+      }
+      return prefs.patternMixing;
+    };
+    expect(run("party")).toBeGreaterThan(run("office"));
+    expect(run("party")).toBeCloseTo(5 * EWA_ALPHA * 0.7, 5);
+    expect(run("office")).toBeCloseTo(5 * EWA_ALPHA * 0.3, 5);
+  });
+
   it("a 'not today' dismissal carries no negative signal", () => {
     const prefs = emptyPreference();
     const shirt = garment("t1", { colors: ["purple"] });
@@ -111,7 +133,19 @@ describe("updatePreference (EWA learning)", () => {
     expect(next.patterns["solid"]).toBeUndefined();
   });
 
-  it("EWA alpha is small (0.15) — one pick shouldn't define the user", () => {
+  it("EWA alpha is small — one pick nudges by exactly alpha × strength, never a full jump", () => {
+    // One pick of a single blue garment: color strength 0.5, so the first
+    // nudge must land at exactly 0.15 × 0.5 = 0.075. Behavioral check of
+    // the update math, not a restatement of the constant.
+    const shirt = garment("t1", { colors: ["blue"], pattern: "solid", fit: "regular" });
+    const next = updatePreference(emptyPreference(), {
+      picked: outfit([shirt]),
+      garments: new Map([["t1", shirt]]),
+      occasion: "casual",
+    });
     expect(EWA_ALPHA).toBeCloseTo(0.15);
+    expect(next.colors["blue"]).toBeCloseTo(EWA_ALPHA * 0.5);
+    expect(next.colors["blue"]!).toBeLessThan(0.5); // a step, not a jump
+    expect(next.patterns["solid"]).toBeCloseTo(EWA_ALPHA); // strength 1
   });
 });

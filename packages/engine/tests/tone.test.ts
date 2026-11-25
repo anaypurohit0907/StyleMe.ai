@@ -50,13 +50,21 @@ describe("toneText", () => {
     expect(toneText("pick_one", p)).toBe(BANKS.classic["pick_one"]);
   });
 
-  it("genz profile returns flavored copy with seeded determinism", () => {
-    const p = detectTone(["twin", "no cap", "slay", "bet", "locked in", "bestie"]);
-    const a = toneText("pick_one", p, "seed1");
-    const b = toneText("pick_one", p, "seed1");
-    const c = toneText("pick_one", p, "seed2");
-    expect(a).toBe(b); // deterministic per seed
-    expect([a, c].some((x) => x === BANKS.genz["pick_one"])).toBe(true);
+  it("genz profile at intensity 1 always returns flavored copy; intensity 0.5 mixes deterministically", () => {
+    // intensity 1 → rng() < 1 always true → flavored every time
+    const p1 = detectTone(["twin", "no cap", "slay", "bet", "locked in", "bestie"]);
+    expect(p1.intensity).toBe(1);
+    for (const key of ["pick_one", "why_these", "streak"]) {
+      expect(toneText(key, p1, "seed-a")).toBe(BANKS.genz[key]);
+    }
+    // intensity 0.5 → seeded rng crosses the threshold for some seeds only:
+    // both banks must appear across a spread of deterministic seeds.
+    const p2 = { bank: "genz" as const, intensity: 0.5 };
+    const seen = new Set(
+      Array.from({ length: 24 }, (_, i) => toneText("pick_one", p2, `s${i}`)),
+    );
+    expect(seen.has(BANKS.genz["pick_one"]!)).toBe(true);
+    expect(seen.has(BANKS.classic["pick_one"]!)).toBe(true);
   });
 
   it("falls back to the key itself for unknown keys", () => {
