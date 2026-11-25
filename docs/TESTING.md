@@ -93,40 +93,17 @@ in GitHub Actions and replaces the `apk-latest` release asset.
 
 ## Agent-side emulator (no phone)
 
-The release APK is arm64-only, so it will not install on an x86_64 AVD. Use the
-**Emulator smoke (x86_64)** GitHub workflow instead of a local emulator:
+Use the **Emulator smoke (arm64)** GitHub workflow. It runs on a macOS arm64
+runner (HVF-accelerated), downloads the published arm64 release APK
+(`apk-latest`), boots an API 34 `google_apis` arm64 AVD, installs, launches,
+screenshots, and pulls the log:
 
-1. GitHub → **Actions** → **Emulator smoke (x86_64)** → **Run workflow**.
-2. It builds the same release APK for `x86_64` (`EXPO_PUBLIC_VISION=onnx`),
-   boots an API 34 `google_apis` AVD on the runner's KVM, installs, launches,
-   screenshots, and pulls the log.
-3. Download the `emulator-smoke` artifact: `emulator.png`, `styleme.log`,
+1. GitHub → **Actions** → **Emulator smoke (arm64)** → **Run workflow**.
+2. Download the `emulator-smoke` artifact: `emulator.png`, `styleme.log`,
    `logcat.txt`.
 
-Local equivalent (only on a host where the emulator does not crash — this
-repo's current host segfaults in QEMU during boot, API 34 and 36 alike):
-
-```bash
-# AVD (once)
-sdkmanager "system-images;android-34;google_apis;x86_64"
-avdmanager create avd -n StyleMe_API_34 -k "system-images;android-34;google_apis;x86_64" -d pixel_6
-emulator -avd StyleMe_API_34 -no-window -gpu swiftshader_indirect -no-snapshot &
-
-# x86_64 release APK
-cd apps/mobile
-mkdir -p assets/vision
-curl -fL --retry 3 \
-  "https://github.com/anaypurohit0907/StyleMe.ai/releases/download/vision-v2/styleme_vision_v2.zip" \
-  -o /tmp/vision.zip
-unzip -o /tmp/vision.zip -d assets/vision   # MobileCLIP encoder is not tracked
-EXPO_PUBLIC_VISION=onnx npx expo prebuild --platform android --clean --no-install
-cd android && ./gradlew assembleRelease -PreactNativeArchitectures=x86_64
-
-# install + inspect
-adb install -r app/build/outputs/apk/release/app-release.apk
-adb shell am start -W -n com.o_anay.styleme/.MainActivity
-adb exec-out screencap -p > emulator.png
-adb pull /sdcard/Android/data/com.o_anay.styleme/files/styleme.log
-```
+Why not local: the release APK is arm64-only, and this repo's host segfaults in
+QEMU ~60–90 s into every AVD boot (API 34 and 36, all GPU/accel workarounds).
+The macOS arm64 runner has working hardware acceleration for the arm64 image.
 
 The workflow is manual (`workflow_dispatch`); it does not run on every push.
