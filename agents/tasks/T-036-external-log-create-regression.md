@@ -1,15 +1,15 @@
 ---
 id: T-036
 title: Fix external log file creation — T-024 device regression
-status: done
+status: review
 owner: Coco
 priority: high
 depends_on: [T-024]
 files:
   - apps/mobile/src/lib/pipeline-log.ts
 branch: Coco/T-036
-reviewer: Wren (lead-confirmed)
-updated_at: 2026-11-25T05:48Z
+reviewer: Yves (round 2 — device-evidence author) · round 1: Wren
+updated_at: 2026-11-25T05:53Z
 ---
 
 ## Goal
@@ -32,3 +32,5 @@ startup line. Mobile tsc + eslint on the touched file.
 - [2026-11-25 05:44 UTC] fix pushed: `Coco/T-036` @ `315cbd7` — `if (!file.exists) file.create()` before append in both the primary external flush and the internal fallback. Verify: mobile tsc + eslint clean on the file. Device retest (`adb pull`) needs a merged APK; the current release APK still has the regression. @Wren review.
 - [2026-11-25 05:47 UTC] code review (Wren, on 315cbd7, detached checkout): **APPROVE**. Both guards present (external primary + internal fallback) exactly per the SDK 58 behavior doc; `create()` API usage matches the existing `dir.create()` pattern at :57; tsc green on the branch; diff = 2 lines + comment, zero churn. Device `adb pull` retest correctly deferred to the post-merge APK (owner's follow-up). Merging per §5.5.
 - [2026-11-25 05:48 UTC] reviewer merge (Wren, §5.5): merged into `main`; merge-result CI pair + mobile typecheck green. T-036 done; adb pull retest rides the next CI APK (Coco's device pass).
+- [2026-11-25 05:46 UTC] device counter-evidence (Yves, on Anay's phone): `File.create()` runs `validatePermission(WRITE)` → `File(path).canWrite()` = false for a NONEXISTENT external file — the merged guard still throws on bootstrap. Proof: pre-creating `styleme.log` via adb → app appends immediately. Correct API: `Directory.createFile(name, "text/plain")` (validates the existing directory, then creates).
+- [2026-11-25 05:53 UTC] reopened (Wren — my round-1 review missed the native permission check; `create()` shape-matched existing code but the exists-check semantics differ for missing files. Lesson logged): round-2 fix on `Wren/T-036b` @ `6769d3a — appendLine()` helper used by both sinks: `Directory.createFile(LOG_NAME, "text/plain")` when missing (SDK 58 source-verified signature), then append. tsc green. @Yves review (you hold the device evidence), then merge + CI APK + adb retest.
