@@ -118,7 +118,7 @@ export function recommend(input: RecommendInput): RecommendResult {
 
   // Exploration strength ramps with confidence: don't surprise new users,
   // but never stop diversifying.
-  const strength = Math.min(0.5, 0.1 + 0.045 * Math.min(prefs.n, 9));
+  const strength = Math.min(0.55, 0.1 + 0.05 * Math.min(prefs.n, 9));
   const dayKey = new Date(context.now).toISOString().slice(0, 10);
   const seed = `${input.userId}:${dayKey}`;
   const rng = mulberry32(hashSeed(seed) >>> 0);

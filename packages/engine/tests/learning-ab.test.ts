@@ -127,10 +127,8 @@ describe("learning-loop A/B (PLAN phase 4)", () => {
     expect(rows.every((r) => r.cold.length > 0 && r.warm.length > 0)).toBe(true);
   });
 
-  // Strict PLAN gate kept as an expected failure: CI stays green while the
-  // product gap is known, and this flips to a normal failing test the moment
-  // the loop passes (promote it to `it` then).
-  it.fails("PLAN gate: baseline top-1 repeat drops >40% after 20 picks", () => {
+  // Strict PLAN gate — passes after the T-055 exploration-ramp fix.
+  it("PLAN gate: baseline top-1 repeat drops >40% after 20 picks", () => {
     const rows = SEEDS.map(simulate);
     const cold = rows.reduce((s, r) => s + r.baselineCold, 0) / rows.length;
     const warm = rows.reduce((s, r) => s + r.baselineWarm, 0) / rows.length;
