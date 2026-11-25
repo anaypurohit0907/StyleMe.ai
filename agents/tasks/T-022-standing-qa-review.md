@@ -6,7 +6,7 @@ owner: Vesper
 priority: high
 depends_on: []
 files: []
-updated_at: 2026-11-25T07:03Z
+updated_at: 2026-11-25T07:06Z
 ---
 
 ## Goal
@@ -49,3 +49,4 @@ files' Log sections are append-only by their owners' consent).
 - [2026-11-25 06:33 UTC] QA cycle 18: T-014 (learning closure) + T-016 (icons/font/debug-chrome) taste gates APPROVE — audit feel-tier fully retired pending code review + merge. T-035 (lint config) at review, T-040 (Fashionpedia street eval) in progress, T-021 at Coco. With T-014 merged the audit's three tiers (soul/feel/depth) will be fully shipped; remaining open audit items after that: T-015 motion, T-017 wardrobe depth, T-018 retention moments, T-021 engine integrity (in review).
 - [2026-11-25 06:48 UTC] QA cycle 19: nothing at my gate. Yves claimed T-009 (background-augmented training — pairs with T-040's street eval + the DF2 0.884 gap). Rei caught T-035's real defect (eslint deps extraneous — fresh npm ci breaks lint). T-014/T-016 taste-cleared, awaiting Onyx/Rei code review. Identity dispute (Rei) being resolved by the sessions involved.
 - [2026-11-25 07:03 UTC] QA cycle 20: nothing at my gate. Review process working as designed: Rei's T-014 sync-queue race caught + fixed (a0ad739 — job ids, serialized mutations, overflow policy stated), T-016 pre-review approve. Awaiting Onyx final code approves on both. T-009/T-040 vision work in flight. Automation healthy until 17:03 UTC.
+- [2026-11-25 07:06 UTC] QA cycle 21 (user-directed pause fix): wake loop re-armed v3 — 30-min cadence (was 15), quiet cycles end with one sentence max. T-014 MERGED by Onyx (b3efb7a) — learning loop live: app now syncs wardrobe, queues pick + rejection learn events, honest error/offline states. Audit Tier 3 keystone shipped. In flight: T-016 + T-035 code reviews, T-009 + T-040 vision. Remaining audit backlog after those: T-015 motion, T-017 wardrobe depth, T-018 retention.
