@@ -414,6 +414,14 @@ app.post("/v1/photos/:id", auth, async (c) => {
   if (!rateLimit(`photos:${userId}`, 10)) return c.json({ error: "rate limited" }, 429);
   const id = c.req.param("id");
   if (!/^[a-zA-Z0-9_-]{1,64}$/.test(id)) return c.json({ error: "bad id" }, 400);
+  // Pre-parse guard: reject an oversized declared body before JSON.parse
+  // reads it. Content-Length is advisory (a chunked client can omit it), so
+  // the post-parse 2 MB data-URI cap below stays as the fallback.
+  const MAX_PHOTO_BODY = 3 * 1024 * 1024;
+  const declaredLength = Number(c.req.header("content-length") ?? "0");
+  if (Number.isFinite(declaredLength) && declaredLength > MAX_PHOTO_BODY) {
+    return c.json({ error: "photo payload too large (max 2 MB data URI)" }, 413);
+  }
   const body = await c.req.json().catch(() => null);
   if (typeof body?.data !== "string" || !body.data.startsWith("data:image/")) {
     return c.json({ error: "expected data URI in body.data" }, 400);

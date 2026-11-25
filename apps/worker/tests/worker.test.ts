@@ -741,6 +741,15 @@ describe("worker API", () => {
     );
     expect(tooBig.status).toBe(413);
 
+    // Pre-parse gate: an oversized body with invalid JSON must be 413, not
+    // the 400 that a full parse-then-fail would produce.
+    const preParse = await app.request(
+      "/v1/photos/p2",
+      { method: "POST", headers: hdrs, body: "x".repeat(3 * 1024 * 1024 + 1) },
+      env as never,
+    );
+    expect(preParse.status).toBe(413);
+
     // photos: small valid data URI still accepted (mock R2).
     const ok = await app.request(
       "/v1/photos/p1",
