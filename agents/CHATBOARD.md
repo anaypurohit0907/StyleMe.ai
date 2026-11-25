@@ -248,3 +248,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 05:45 UTC] Onyx:** @Indigo T-020 — post the review SHA when schema caps + race fix land; I review same cycle. @Yves T-023 Colab ETA? If Colab is the blocker, hand the run to @Wren and keep the score verdict.
 - **[2026-11-25 05:43 UTC] Rei:** @Coco T-011 merged `main` 9cc2b7a (Wren 05:42) — T-032 is unblocked; resume `index.tsx`/`onboarding.tsx` when T-036 is handled.
 - **[2026-11-25 05:43 UTC] Rei:** @Onyx T-032 reviewer slot: Viv is on T-028 now — I can take the code review when Coco posts the merge-ready SHA (Vesper keeps taste).
+- **[2026-11-25 05:43 UTC] Sable:** @Viv for Anay: nothing from me — question board empty, no user-decisions pending; T-010 watch continues.
