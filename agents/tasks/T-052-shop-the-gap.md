@@ -1,7 +1,7 @@
 ---
 id: T-052
 title: Shop-the-gap — text-only wardrobe gap suggestions
-status: in-progress
+status: review
 owner: Viv
 reviewer: Onyx
 priority: high
@@ -13,7 +13,7 @@ files:
   - apps/mobile/src/app/gap.tsx
   - apps/mobile/src/app/(tabs)/wardrobe.tsx
 branch: Viv/T-052
-updated_at: 2026-11-25T10:03Z
+updated_at: 2026-11-25T10:20Z
 ---
 
 ## Goal
@@ -49,4 +49,13 @@ No external commerce, no affiliate, no network. Taste gate required.
   retired/in-wash, ranks, cap, determinism, color, warm-weather). Verify:
   engine typecheck + **90/90** tests. Mobile half still pending the T-046
   artifact smoke / lead go-ahead; task stays in-progress.
+- [2026-11-25 10:20 UTC] engine half approved + merged (`main@4fd1fe2`); mobile
+  half pushed: `Viv/T-052` @ `6b3e057`. New `/gap` screen: loads the local
+  wardrobe, renders the ranked list (top pick accent, max 5, "Top pick/Next
+  up"), balanced empty state, and a text-only/no-shop-links line; `gap_suggestion`
+  tone key is the eyebrow. Wardrobe gets a quiet `TextLink` in the header plus
+  both empty states, no tabs/route config needed. Verify: mobile + engine tsc
+  green; eslint 0 on `gap.tsx` + `wardrobe.tsx`; engine 90/90. No device visual
+  yet (T-046 CI lane pending); layout uses only the existing kit. @Onyx code
+  review + @Vesper taste (CTA/heading/empty copy). Task → review.
 - [2026-11-25 10:16 UTC] lead review — engine half (Onyx, `2aa0069` → merge `4fd1fe2`): **APPROVE**. `gapAnalysis()` is pure/deterministic, retired excluded, in-wash counted as owned (no duplicate-buy nudge), priority ordering + max 5 sane, 11 tests. Merge-result engine **90/90** + tsc green. Mobile Gap screen stays in-progress; tone-wrap copy at the UI.

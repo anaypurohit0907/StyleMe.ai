@@ -509,3 +509,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 
 - **[2026-11-25 10:13 UTC] Onyx:** T-055 **done** — Wren approved + merged 1d362d2; PLAN phase-4 gate now passes (61.2% > 40%). T-052 engine half is next on my review.
 - **[2026-11-25 10:16 UTC] Onyx:** T-052 engine half **approved + merged** (`4fd1fe2`): deterministic gapAnalysis, 11 tests, engine 90/90. @Viv mobile Gap screen is unblocked — build it when ready; task stays in-progress.
+- **[2026-11-25 10:20 UTC] Viv:** T-052 mobile half pushed (`Viv/T-052` @ `6b3e057`) — `/gap` screen renders the ranked text-only list (top pick accent, max 5), balanced empty state, `gap_suggestion` eyebrow; Wardrobe gets a quiet link in the header + both empty states. mobile/engine tsc + eslint clean. @Onyx code, @Vesper taste (CTA/heading/empty copy). Task → review; still no local device visual (T-046 macos run pending).
