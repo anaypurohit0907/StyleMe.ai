@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import { View, StyleSheet } from "react-native";
+import * as Haptics from "expo-haptics";
 import { useFocusEffect } from "expo-router";
 import type { PreferenceVector } from "@styleme/schema";
 import { emptyPreference } from "@styleme/schema";
@@ -124,6 +125,10 @@ export default function DNA() {
         }
       }
       setRetagStage("done");
+      // Full wardrobe re-tagged — a quiet success tap, skipped if cancelled.
+      if (!cancelRef.current) {
+        void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      }
       log("scan", `finished in ${Date.now() - scanStart}ms`);
     } catch (err) {
       setRetagStage("failed");

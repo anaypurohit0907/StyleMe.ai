@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
+import * as Haptics from "expo-haptics";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import type { Fit, Garment, GarmentAttrs, Pattern, Slot } from "@styleme/schema";
 import { paletteSwatch, radius, space } from "@styleme/design";
@@ -37,6 +38,10 @@ export default function ItemDetail() {
   async function setStatus(status: "available" | "in_wash") {
     if (!id) return;
     await setGarmentStatus([id], status);
+    // "Washed it" is a small win — mark it with the success haptic.
+    if (status === "available") {
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    }
     await load();
   }
 

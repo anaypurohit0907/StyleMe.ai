@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Image, Pressable, StyleSheet, View } from "react-native";
+import Animated, { FadeInDown, useReducedMotion } from "react-native-reanimated";
+import * as Haptics from "expo-haptics";
 import { useFocusEffect, useRouter } from "expo-router";
 import type { ColorName, Garment, Occasion, ScoredOutfit } from "@styleme/schema";
 import { occasionLabel, occasions, paletteSwatch, radius, space } from "@styleme/design";
@@ -30,6 +32,7 @@ export default function Today() {
   const router = useRouter();
   const tone = useToneProfile();
   const t = useTheme();
+  const reduce = useReducedMotion();
   const [garments, setGarments] = useState<Garment[]>([]);
   const [available, setAvailable] = useState<Garment[]>([]);
   const [occasion, setOccasion] = useState<Occasion>("casual");
@@ -151,6 +154,8 @@ export default function Today() {
       context: today.context,
       ts: nowMs(),
     });
+    // Confirmed: a short success haptic, not a celebration.
+    void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     setPicked(outfit);
   }
 
@@ -295,44 +300,51 @@ export default function Today() {
         )}
 
         {today?.outfits.map((outfit, i) => (
-          <Card key={outfit.garmentIds.join("+")} style={{ gap: space.m }}>
-            <View style={s.rowBetween}>
-              <Caption>Option {i + 1}</Caption>
-              <OutfitBadge score={outfit.score} best={bestScore} />
-            </View>
-            <View style={s.thumbs}>
-              {outfit.garmentIds.map((id) => {
-                const g = byId.get(id);
-                if (!g)
-                  return (
+          // Staggered entrance — and the shuffle moment: new options mount
+          // with fresh keys, so the reshuffle lands as a soft cascade
+          // instead of an instant re-render. Reduce-motion: no cascade.
+          <Animated.View
+            key={outfit.garmentIds.join("+")}
+            entering={reduce ? undefined : FadeInDown.duration(260).delay(i * 90)}>
+            <Card style={{ gap: space.m }}>
+              <View style={s.rowBetween}>
+                <Caption>Option {i + 1}</Caption>
+                <OutfitBadge score={outfit.score} best={bestScore} />
+              </View>
+              <View style={s.thumbs}>
+                {outfit.garmentIds.map((id) => {
+                  const g = byId.get(id);
+                  if (!g)
+                    return (
+                      <View
+                        key={id}
+                        style={[s.thumb, { backgroundColor: t.surfaceAlt, borderColor: t.line }]}
+                      />
+                    );
+                  return g.photoRef ? (
+                    <Image key={id} source={{ uri: g.photoRef }} style={[s.thumb, { borderColor: t.line }]} />
+                  ) : (
                     <View
                       key={id}
-                      style={[s.thumb, { backgroundColor: t.surfaceAlt, borderColor: t.line }]}
+                      style={[
+                        s.thumb,
+                        {
+                          backgroundColor: paletteSwatch[g.attrs.colors[0]] ?? t.surfaceAlt,
+                          borderColor: t.line,
+                        },
+                      ]}
                     />
                   );
-                return g.photoRef ? (
-                  <Image key={id} source={{ uri: g.photoRef }} style={[s.thumb, { borderColor: t.line }]} />
-                ) : (
-                  <View
-                    key={id}
-                    style={[
-                      s.thumb,
-                      {
-                        backgroundColor: paletteSwatch[g.attrs.colors[0]] ?? t.surfaceAlt,
-                        borderColor: t.line,
-                      },
-                    ]}
-                  />
-                );
-              })}
-            </View>
-            <WhyPanel outfit={outfit} byId={byId} onNeverMix={(pair) => void neverMix(pair)} />
-            <Btn
-              label={picked?.garmentIds.join("+") === outfit.garmentIds.join("+") ? "Picked" : "Wear this"}
-              onPress={() => void pick(outfit)}
-              disabled={!!picked}
-            />
-          </Card>
+                })}
+              </View>
+              <WhyPanel outfit={outfit} byId={byId} onNeverMix={(pair) => void neverMix(pair)} />
+              <Btn
+                label={picked?.garmentIds.join("+") === outfit.garmentIds.join("+") ? "Picked" : "Wear this"}
+                onPress={() => void pick(outfit)}
+                disabled={!!picked}
+              />
+            </Card>
+          </Animated.View>
         ))}
 
         {today && today.outfits.length > 0 && (

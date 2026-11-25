@@ -1,14 +1,47 @@
 import { useCallback, useState } from "react";
-import { Image, Pressable, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View } from "react-native";
+import Animated, { FadeInDown, useReducedMotion } from "react-native-reanimated";
 import { useFocusEffect, useRouter } from "expo-router";
 import type { Garment } from "@styleme/schema";
 import { paletteSwatch, radius, space } from "@styleme/design";
-import { Btn, Caption, Chip, Empty, Screen, Scroll, Title } from "@/components/ui";
+import { Btn, Caption, Chip, Empty, Screen, Scroll, Title, usePressFeedback, AnimatedPressable } from "@/components/ui";
 import { listGarments } from "@/lib/db";
 import { useTheme } from "@/lib/theme";
 import { useToneProfile, voice } from "@/lib/tone";
 
 const SLOTS = ["all", "top", "bottom", "dress", "outerwear", "shoes", "accessory"] as const;
+
+/** One wardrobe tile: press feedback + staggered entrance, reduce-motion aware. */
+function Tile({ g, index }: { g: Garment; index: number }) {
+  const router = useRouter();
+  const t = useTheme();
+  const reduce = useReducedMotion();
+  const fb = usePressFeedback();
+  return (
+    <Animated.View
+      entering={reduce ? undefined : FadeInDown.duration(220).delay(Math.min(index, 8) * 35)}>
+      <AnimatedPressable
+        onPress={() => router.push(`/item/${g.id}`)}
+        onPressIn={fb.onPressIn}
+        onPressOut={fb.onPressOut}
+        style={[s.tile, { backgroundColor: t.surface, borderColor: t.line }, fb.style]}>
+        {g.photoRef ? (
+          <Image source={{ uri: g.photoRef }} style={[s.img, { borderColor: t.line }]} />
+        ) : (
+          <View style={[s.img, { borderColor: t.line, backgroundColor: paletteSwatch[g.attrs.colors[0]] ?? t.surfaceAlt }]} />
+        )}
+        <View style={s.tileBody}>
+          <Caption>
+            {g.attrs.slot} · {g.attrs.colors.join(" / ")}
+          </Caption>
+          {g.status !== "available" && (
+            <Caption>{g.status === "in_wash" ? "in wash" : g.status}</Caption>
+          )}
+        </View>
+      </AnimatedPressable>
+    </Animated.View>
+  );
+}
 
 export default function Wardrobe() {
   const router = useRouter();
@@ -50,22 +83,8 @@ export default function Wardrobe() {
           />
         ) : (
           <View style={s.grid}>
-            {shown.map((g) => (
-              <Pressable key={g.id} onPress={() => router.push(`/item/${g.id}`)} style={[s.tile, { backgroundColor: t.surface, borderColor: t.line }]}>
-                {g.photoRef ? (
-                  <Image source={{ uri: g.photoRef }} style={[s.img, { borderColor: t.line }]} />
-                ) : (
-                  <View style={[s.img, { borderColor: t.line, backgroundColor: paletteSwatch[g.attrs.colors[0]] ?? t.surfaceAlt }]} />
-                )}
-                <View style={s.tileBody}>
-                  <Caption>
-                    {g.attrs.slot} · {g.attrs.colors.join(" / ")}
-                  </Caption>
-                  {g.status !== "available" && (
-                    <Caption>{g.status === "in_wash" ? "in wash" : g.status}</Caption>
-                  )}
-                </View>
-              </Pressable>
+            {shown.map((g, i) => (
+              <Tile key={g.id} g={g} index={i} />
             ))}
           </View>
         )}

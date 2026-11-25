@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Image, Platform, StyleSheet, View } from "react-native";
+import Animated, { FadeInDown, FadeOut, useReducedMotion } from "react-native-reanimated";
+import * as Haptics from "expo-haptics";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { useRouter } from "expo-router";
 import type { Fit, GarmentAttrs, Pattern, Slot } from "@styleme/schema";
@@ -26,6 +28,7 @@ export default function Capture() {
   const router = useRouter();
   const t = useTheme();
   const tone = useToneProfile();
+  const reduce = useReducedMotion();
   const cameraRef = useRef<CameraView>(null);
   const [permission, requestPermission] = useCameraPermissions();
   const [uri, setUri] = useState<string | null>(null);
@@ -61,6 +64,8 @@ export default function Capture() {
     setBusy(true);
     setCutoutNote("");
     setStage("Capturing…");
+    // Shutter moment: a single firm tap, not a buzz.
+    void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     const start = Date.now();
     log("capture", "taking picture");
     try {
@@ -304,14 +309,16 @@ export default function Capture() {
       />
       <View pointerEvents="none" style={s.guide} />
       {flash ? (
-        <View
+        <Animated.View
           pointerEvents="none"
           style={s.flash}
+          entering={reduce ? undefined : FadeInDown.duration(220)}
+          exiting={reduce ? undefined : FadeOut.duration(280)}
           accessible
           accessibilityLabel={voice("save_confirmation", tone, flash.thumb)}>
           <Image source={{ uri: flash.thumb }} style={[s.flashThumb, { backgroundColor: t.surfaceAlt }]} />
           <AddedChip label={voice("new_item_added", tone, flash.thumb)} />
-        </View>
+        </Animated.View>
       ) : null}
       {!cameraReady && (
         <View style={[s.cameraLoading, { backgroundColor: t.overlayStrong }]}>
