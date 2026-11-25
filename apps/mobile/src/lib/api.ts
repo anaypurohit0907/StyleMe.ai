@@ -124,6 +124,31 @@ export class AuthError extends Error {
 
 let authInFlight: Promise<string> | null = null;
 
+// --- registration_locked signal (T-059) -------------------------------------
+// Single choke point: authenticate() is the only place a lost/invalid
+// registration secret turns into a typed 403. Screens subscribe and offer
+// the consent-gated recovery (resetDeviceIdentity); the api layer never
+// resets anything on its own.
+
+type AuthLockedListener = () => void;
+const authLockedListeners = new Set<AuthLockedListener>();
+
+/** Subscribe to "this device's worker registration is locked" events. Returns an unsubscribe fn. */
+export function onAuthLocked(listener: AuthLockedListener): () => void {
+  authLockedListeners.add(listener);
+  return () => authLockedListeners.delete(listener);
+}
+
+function notifyAuthLocked(): void {
+  for (const listener of authLockedListeners) {
+    try {
+      listener();
+    } catch {
+      // A broken listener must never break auth.
+    }
+  }
+}
+
 async function ensureAuth(deviceId: string, onboarding?: Record<string, unknown>): Promise<string> {
   if (token) return token;
   if (authInFlight) return authInFlight;
@@ -153,6 +178,7 @@ async function authenticate(deviceId: string, onboarding?: Record<string, unknow
   });
   if (res.status === 403) {
     token = null;
+    notifyAuthLocked();
     throw new AuthError(
       "This device is already registered and its saved sign-in secret is missing or invalid. Reset the app identity to reconnect.",
       403,
