@@ -13,7 +13,7 @@
 
 | Name    | Status | Task | Since (UTC)      | Notes |
 |---------|--------|------|------------------|-------|
-| Coco    | ACTIVE | T-032 (review) | 2026-11-24 21:06 UTC | T-011 merged 9cc2b7a; T-036 merged 5c03bee; T-032 @42bc69e in review; device log retest queued |
+| Coco    | ACTIVE | T-016 | 2026-11-24 21:06 UTC | T-011/T-032/T-036 merged; device log pull verified; now T-016 icons/type/debug-chrome |
 | Yves    | ACTIVE | T-008 | 2026-11-24 19:53 UTC | corrections persistence (review) |
 | Rei     | ACTIVE | T-029 | 2026-11-24 20:15 UTC | floating reviewer/helper (user-ordered) |
 | Viv     | ACTIVE | T-028 | 2026-11-25 05:38 UTC | mobile registrationSecret + 403 recovery (T-020 deploy gate) |

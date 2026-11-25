@@ -26,12 +26,12 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-013 | Capture batch loop — make the 3-minute setup real | done | Wren | critical | 2026-11-24 20:41 UTC |
 | T-014 | Close the learning loop end-to-end (app ↔ worker) | backlog | — | high | 2026-11-24 19:38 UTC |
 | T-015 | Motion + haptics pass — make it feel alive | backlog | — | high | 2026-11-24 19:38 UTC |
-| T-016 | Dark mode + real icons + type + debug-chrome cleanup | backlog | — | high | 2026-11-24 19:38 UTC |
+| T-016 | Dark mode + real icons + type + debug-chrome cleanup | in-progress | Coco | high | 2026-11-25 06:16 UTC |
 | T-017 | Wardrobe + item completeness (filters, wear history, safety) | backlog | — | medium | 2026-11-24 19:38 UTC |
 | T-018 | Retention moments — streaks, first-outfit, spaced polls | backlog | — | medium | 2026-11-24 19:38 UTC |
 | T-019 | Worker tenant scoping — fix cross-user garment overwrite | done | Indigo | critical | 2026-11-24 19:53 UTC |
 | T-020 | Worker auth hardening, validation, rate limits | done | Indigo | critical | 2026-11-25 05:54 UTC |
-| T-021 | Engine integrity pass — coat diversity, accessories, explore math, tests | in-progress | Marlow | high | 2026-11-25 05:38 UTC |
+| T-021 | Engine integrity pass — coat diversity, accessories, explore math, tests | review | Marlow | high | 2026-11-25 06:01 UTC |
 | T-022 | Standing QA + taste review of tasks reaching review status | in-progress | Vesper | high | 2026-11-24 19:47 UTC |
 | T-023 | Evaluate + adopt public clothing dataset for slot scoring/training | review | Wren | high | 2026-11-24 20:11 UTC |
 | T-024 | Structured logging — terminal/logfile instead of reading the screen | done | Yves | high | 2026-11-25 05:15 UTC |
@@ -42,10 +42,11 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-029 | Standing reviewer + helper — review overflow + unblock | in-progress | Rei | high | 2026-11-24 20:15 UTC |
 | T-030 | Personalize capture session target from onboarding wardrobe-size guess | backlog | — | low | 2026-11-24 20:17 UTC |
 | T-031 | Dark-mode token wiring — useTheme + hardcoded hex cleanup (T-016 split) | done | Wren | high | 2026-11-25 05:07 UTC |
-| T-032 | Theme pass on remaining screens — Today, item, onboarding, DNA | review | Coco | high | 2026-11-25 05:48 UTC |
+| T-032 | Theme pass on remaining screens — Today, item, onboarding, DNA | done | Coco | high | 2026-11-25 06:15 UTC |
 | T-033 | Theme token cleanup — onAccent token + unused colors import | done | Wren | low | 2026-11-25 05:38 UTC |
 | T-034 | Log rotation polish — load backup tail + accurate startup hint | backlog | — | low | 2026-11-25 05:15 UTC |
 | T-035 | Reproducible mobile lint — commit ESLint flat config + devDeps | backlog | — | low | 2026-11-25 05:41 UTC |
 | T-036 | Fix external log file creation — T-024 device regression | done | Coco | high | 2026-11-25 05:58 UTC |
 | T-037 | Cap remaining client payload strings — learn/laundry, corrections, photo refs | backlog | — | medium | 2026-11-25 05:54 UTC |
 | T-038 | Move auth token + registrationSecret to SecureStore | backlog | — | medium | 2026-11-25 05:58 UTC |
+| T-039 | Worker — import NEUTRAL_COLORS from engine instead of the local 7-name copy | done | Marlow | low | 2026-11-25 06:08 UTC |

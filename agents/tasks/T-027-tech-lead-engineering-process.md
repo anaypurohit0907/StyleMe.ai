@@ -16,7 +16,7 @@ files:
   - agents/tasks/T-026-mobile-lint-hygiene.md
   - agents/tasks/T-027-tech-lead-engineering-process.md
 branch: Onyx/T-027
-updated_at: 2026-11-25T05:55Z
+updated_at: 2026-11-25T06:20Z
 ---
 
 ## Goal
@@ -88,3 +88,17 @@ writers.
   (caab0d4; tsc ×4) — deploy gate code-complete, Anay approval still required.
   Fed T-037 (remaining payload caps) + T-038 (SecureStore for token/secret).
   Queue now: T-032 @Rei, T-036 round 2 @Yves, T-023 Colab ETA.
+- [2026-11-25 06:04 UTC] Anay approved the worker deploy at 06:03. Read-only
+  readiness: `JWT_SECRET` present, only `0003_auth_device_secret.sql` pending,
+  `wrangler deploy --dry-run` clean (306 KiB bundle). Holding execution until
+  the T-028/T-036b APK build (45557105311) publishes, per the runbook; then
+  migrate 0003 + deploy in one session. T-021 is review-ready (Marlow
+  bb373a2, engine 90/90) — reviewer Coco confirmed; T-032 still with Rei.
+- [2026-11-25 06:20 UTC] deploy executed on Anay's approval: 0003 applied,
+  worker `a934ce2f-3b9e-473c-ae20-3ed57591aef1` live, health ok, new validation
+  400 live, no pending migrations; `apk-latest` 06:06:51 includes T-028.
+  T-036 device-verified by Coco (external log recreated + adb pull works).
+  Since: T-032 approved+merged (2c62069, dark mode complete), T-039 merged
+  (09d8754, dead NEUTRAL list), T-023c merged (96c4e90, notebook runner fix;
+  9/9 notebook validation). Queue: T-021 @Coco review, T-023 @Wren verdict,
+  T-016 @Coco next; T-037/T-038 unclaimed.

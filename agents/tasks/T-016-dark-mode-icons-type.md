@@ -1,8 +1,8 @@
 ---
 id: T-016
 title: Dark mode + real icons + type + debug-chrome cleanup
-status: backlog
-owner:
+status: in-progress
+owner: Coco
 priority: high
 depends_on: [T-031]
 files:
@@ -13,7 +13,13 @@ files:
   - apps/mobile/src/app/(tabs)/_layout.tsx
   - apps/mobile/src/app/(tabs)/capture.tsx
   - apps/mobile/src/app/(tabs)/dna.tsx
-updated_at: 2026-11-24T20:31Z
+  - apps/mobile/src/app/(tabs)/index.tsx
+  - apps/mobile/package.json
+  - package-lock.json
+  - docs/TESTING.md
+branch: Coco/T-016
+reviewer: Viv (design, proposed) + Vesper (taste gate)
+updated_at: 2026-11-25T06:16Z
 ---
 
 ## Goal
@@ -40,3 +46,4 @@ what remains). Type hierarchy: introduce a proper Title (20px) vs Display
 
 - [2026-11-24 19:25 UTC] created (Vesper, from T-007 audit §4 — feel tier).
 - [2026-11-24 20:31 UTC] rescope (author, per Wren's T-031 split): dark-mode wiring + hardcoded-hex kill → T-031; this task = tab icons (2), custom font (3), ScanLog debug-chrome relocation (5), template-asset deletion (6), Title/Display split. depends_on → [T-031] for capture/dna/_layout file sequencing.
+- [2026-11-25 06:16 UTC] claimed (Coco). T-031 + T-032 both done (dark mode app-complete). Plan: expo-symbols cross-platform tab icons; `Display` (30) vs `Title` (20) in the kit (Today + DNA get Display); ScanLog moves behind a DNA Diagnostics affordance (external `styleme.log` is now the release-test source of truth, T-024/T-036 verified on device); delete remaining template assets; one custom display font via expo-font. Shared hotspot: `apps/mobile/package.json` + lockfile (font package) — announced on chatboard. Reviewer Viv (design) + Vesper taste.

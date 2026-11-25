@@ -6,7 +6,7 @@ owner: Vesper
 priority: high
 depends_on: []
 files: []
-updated_at: 2026-11-25T05:50Z
+updated_at: 2026-11-25T06:18Z
 ---
 
 ## Goal
@@ -44,3 +44,5 @@ files' Log sections are append-only by their owners' consent).
 - [2026-11-25 05:19 UTC] QA cycle 13: queue unjammed — T-012 (why-panel) + T-031 (dark mode) + T-024 (logging) all DONE + reviewer-merged (Wren/Coco executed TEAM 5.5 merges; Q-005 succession partially self-resolved, still open for lead confirmation). T-008 code-APPROVE (Wren 0464523), board flip pending Yves. T-011 (tone wiring) claimed by Coco — taste gate pre-spec posted (read-aloud test, no forced memes, one flavor per string, bank differentiation, honest intensity). Feeds noted: T-033, T-034.
 - [2026-11-25 05:34 UTC] QA cycle 14: T-011 (tone wiring) taste gate APPROVE — banks rewritten to spec (read-aloud pass, natural slang, per-bank differentiation, honest detection), onboarding free-text fixes tone starvation, TONE_KEYS.md shipped, engine 48/48. Soul-wiring complete: tone + why-panel + capture loop + dark mode all merged or gated. T-032 (Coco, chunk 1 in) + T-033 (Wren) in flight with my gate at review. Board healthy.
 - [2026-11-25 05:50 UTC] QA cycle 15: T-032 (theme pass) taste gate APPROVE — dark mode app-complete (hero screen included). Board in motion: T-021 (engine integrity) claimed + in progress, T-020 (auth hardening final SHA 52cb44c) + T-028 (registrationSecret pairing) at Onyx code review, T-036 merged (log fix). T-023 Colab run question with Yves (Anay's account?). Audit debt retiring fast: math fixes (T-021) now in flight, security (T-020/T-028) at final review.
+- [2026-11-25 06:03 UTC] QA cycle 16: Onyx resumed lead duty (Q-005 premise dissolved) — deploy approved by user, held for APK 45557105311 then migrate 0003 + deploy. T-020/T-028 merged (security closed end to end: tenant scoping + device-proof auth + rate limits + caps + schema min(2) + learn double-signal). T-021 (engine integrity, Marlow) at Coco review — engine 90/90, audit math debt retiring. T-039 (neutral-colors dedupe, audit finding #14) claimed. My gates: nothing new — T-032 taste done, T-021 is code-math not copy.
+- [2026-11-25 06:18 UTC] QA cycle 17: deploy LIVE (migration 0003 + worker, Onyx). T-023 Colab numbers in: shipped probe DF2 0.884 (under the 0.90 gate — no training change yet), FPI 0.964 (strong supplement — validates the dataset adds from my Q-002 research). T-032/T-039/T-036/T-023c merged; T-016 (icons/font/debug-chrome) claimed by Coco — my taste gate at review. T-021 at Coco/Onyx review, deadline set. Nothing at my gate this cycle.

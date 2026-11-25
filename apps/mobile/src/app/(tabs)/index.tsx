@@ -2,11 +2,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Image, Pressable, StyleSheet, View } from "react-native";
 import { useFocusEffect, useRouter } from "expo-router";
 import type { ColorName, Garment, Occasion, ScoredOutfit } from "@styleme/schema";
-import { colors, occasionLabel, occasions, paletteSwatch, radius, space } from "@styleme/design";
+import { occasionLabel, occasions, paletteSwatch, radius, space } from "@styleme/design";
 import { Btn, Caption, Card, Chip, Empty, Screen, Scroll, Title } from "@/components/ui";
 import { OutfitBadge, Toast, WhyPanel } from "@/components/why-panel";
 import { listGarments, logWear, metaGet, upsertGarment } from "@/lib/db";
 import { useToneProfile, voice } from "@/lib/tone";
+import { useTheme } from "@/lib/theme";
 import {
   getWeather,
   loadPrefs,
@@ -27,6 +28,7 @@ function capitalize(value: string): string {
 export default function Today() {
   const router = useRouter();
   const tone = useToneProfile();
+  const t = useTheme();
   const [garments, setGarments] = useState<Garment[]>([]);
   const [available, setAvailable] = useState<Garment[]>([]);
   const [occasion, setOccasion] = useState<Occasion>("casual");
@@ -201,13 +203,13 @@ export default function Today() {
 
         {loading && (
           <Card style={{ alignItems: "center", gap: space.s }}>
-            <ActivityIndicator color={colors.accent} />
+            <ActivityIndicator color={t.accent} />
             <Caption>Styling three options…</Caption>
           </Card>
         )}
 
         {picked && (
-          <Card style={{ borderColor: colors.ok }}>
+          <Card style={{ borderColor: t.ok }}>
             <Caption>Worn.</Caption>
             <Title>Logged it.</Title>
             <Caption>It rests for a couple of days so you don&apos;t repeat it.</Caption>
@@ -256,13 +258,25 @@ export default function Today() {
             <View style={s.thumbs}>
               {outfit.garmentIds.map((id) => {
                 const g = byId.get(id);
-                if (!g) return <View key={id} style={[s.thumb, { backgroundColor: colors.surfaceAlt }]} />;
+                if (!g)
+                  return (
+                    <View
+                      key={id}
+                      style={[s.thumb, { backgroundColor: t.surfaceAlt, borderColor: t.line }]}
+                    />
+                  );
                 return g.photoRef ? (
-                  <Image key={id} source={{ uri: g.photoRef }} style={s.thumb} />
+                  <Image key={id} source={{ uri: g.photoRef }} style={[s.thumb, { borderColor: t.line }]} />
                 ) : (
                   <View
                     key={id}
-                    style={[s.thumb, { backgroundColor: paletteSwatch[g.attrs.colors[0]] ?? colors.surfaceAlt }]}
+                    style={[
+                      s.thumb,
+                      {
+                        backgroundColor: paletteSwatch[g.attrs.colors[0]] ?? t.surfaceAlt,
+                        borderColor: t.line,
+                      },
+                    ]}
                   />
                 );
               })}
@@ -304,6 +318,6 @@ const s = StyleSheet.create({
   chips: { flexDirection: "row", flexWrap: "wrap", gap: space.s },
   rowBetween: { flexDirection: "row", justifyContent: "space-between" },
   thumbs: { flexDirection: "row", gap: space.s },
-  thumb: { flex: 1, aspectRatio: 0.8, borderRadius: radius.sm, backgroundColor: colors.surfaceAlt, borderWidth: StyleSheet.hairlineWidth, borderColor: colors.line },
+  thumb: { flex: 1, aspectRatio: 0.8, borderRadius: radius.sm, borderWidth: StyleSheet.hairlineWidth },
   notToday: { alignItems: "center", paddingVertical: space.m },
 });
