@@ -56,6 +56,8 @@ export type ThemeColors = {
   overlaySoft: string;
   accent: string;
   accentSoft: string;
+  /** Text/icon color on accent- and bad-filled surfaces — white in both themes. */
+  onAccent: string;
   ok: string;
   warn: string;
   bad: string;
@@ -74,6 +76,7 @@ export const themes: Record<"light" | "dark", ThemeColors> = {
     overlaySoft: "rgba(250,249,247,0.92)",
     accent: "#B4552D",
     accentSoft: "#F3E2D7",
+    onAccent: "#FFFFFF",
     ok: "#3E7C4F",
     warn: "#B07C1F",
     bad: "#A83A32",
@@ -90,6 +93,7 @@ export const themes: Record<"light" | "dark", ThemeColors> = {
     overlaySoft: "rgba(17,17,16,0.92)",
     accent: "#B4552D",
     accentSoft: "#F3E2D7",
+    onAccent: "#FFFFFF",
     ok: "#3E7C4F",
     warn: "#B07C1F",
     bad: "#A83A32",
