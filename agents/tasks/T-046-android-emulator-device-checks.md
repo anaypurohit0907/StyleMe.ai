@@ -75,3 +75,10 @@ and will not install on an x86_64 AVD. Build a debug/dev x86_64 APK locally:
   API 34 AVD, boot with `TMPDIR` on `/home` (host `/tmp` is a 3.6 GB tmpfs,
   725 MB free). If API 34 also segfaults, document the host limitation +
   exact commands and hand the lane back to the lead with evidence.
+- [2026-11-25 09:02 UTC] API 34 image installed (sdkmanager was ~164 KB/s;
+  switched to 8 parallel HTTP range streams — 1.56 GB in ~3 min). Unzipped to
+  `~/Android/Sdk/system-images/android-34/google_apis/x86_64/`, wrote a
+  minimal `package.xml` (the sys-img zip ships only `source.properties`), and
+  created AVD `Medium_API_34` (pixel_6, Android 14, google_apis/x86_64) with
+  the SDK-root cmdline-tools copy at `~/Android/Sdk/cmdline-tools/latest`.
+  Booting headless now; API 36 AVD remains unusable (segfault).
