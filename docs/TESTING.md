@@ -72,7 +72,8 @@ adb shell tail -f /sdcard/Android/data/com.o_anay.styleme/files/styleme.log
 ```
 
 - Format: `2026-11-24T20:32:10.123Z [scan] message` (UTC; `WARN`/`ERROR` for levels).
-- Rotates at 2 MB; the previous file is `styleme.log.1`.
+- Rotates at 2 MB; the previous file is `styleme.log.1`, and its tail is loaded
+  into Diagnostics at the next launch (so a crash before rotation still shows).
 - Style DNA → **Diagnostics** shows the last 40 in-memory lines; the file is
   authoritative and survives a crash.
 - Dev/Metro: `npx expo start` prints the same `[StyleMe]` lines in the terminal.
