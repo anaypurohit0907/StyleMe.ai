@@ -47,6 +47,7 @@ export {
   type SignatureState,
 } from "./explore";
 export { detectTone, toneText, BANKS } from "./tone";
+export { gapAnalysis, type WardrobeGap } from "./gap";
 export * from "./color";
 export * from "./candidates";
 export * from "./rules";
