@@ -1,5 +1,6 @@
 import { Tabs } from "expo-router";
 import { SymbolView } from "expo-symbols";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { type } from "@styleme/design";
 import { useTheme } from "@/lib/theme";
 
@@ -16,6 +17,7 @@ const ICONS = {
 
 export default function TabsLayout() {
   const t = useTheme();
+  const insets = useSafeAreaInsets();
   return (
     <Tabs
       screenOptions={{
@@ -25,8 +27,10 @@ export default function TabsLayout() {
         tabBarStyle: {
           backgroundColor: t.surface,
           borderTopColor: t.line,
-          height: 64,
-          paddingBottom: 8,
+          // Custom height must include the bottom safe-area inset, otherwise
+          // the inset shows the window background (white in dark mode).
+          height: 64 + insets.bottom,
+          paddingBottom: 8 + insets.bottom,
           paddingTop: 6,
         },
         tabBarLabelStyle: { ...type.caption, fontSize: 11 },

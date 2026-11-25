@@ -48,7 +48,13 @@
       "expo-sqlite",
       "expo-secure-store",
       "onnxruntime-react-native",
-      "expo-asset"
+      "expo-asset",
+      [
+        "expo-navigation-bar",
+        {
+          "enforceContrast": false
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,
