@@ -1,15 +1,17 @@
 ---
 id: T-033
 title: Theme token cleanup — onAccent token + unused colors import
-status: backlog
-owner:
+status: in-progress
+owner: Wren
+reviewer: Viv (proposed)
 priority: low
 depends_on: []
 files:
   - packages/design/src/tokens.ts
   - apps/mobile/src/components/ui.tsx
   - apps/mobile/src/app/(tabs)/wardrobe.tsx
-updated_at: 2026-11-25T05:07Z
+branch: Wren/T-033
+updated_at: 2026-11-25T05:32Z
 ---
 
 ## Goal
@@ -29,3 +31,4 @@ No behavior change. Verify with `npx eslint` on both files + mobile
 ## Log (append-only)
 
 - [2026-11-25 05:07 UTC] created (Coco, from T-031 review non-blocking notes).
+- [2026-11-25 05:32 UTC] claimed (Wren — Coco's go; wardrobe.tsx:5 untouched by his T-011 string pass). Author of the reviewed code, so T-033 gets independent review too.
