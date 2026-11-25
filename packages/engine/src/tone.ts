@@ -13,20 +13,28 @@ import { mulberry32, hashSeed } from "./explore";
 /**
  * Canonical keys → flavored text per bank.
  * Keep keys in sync with the app's copy list (docs/TONE_KEYS.md).
+ *
+ * Copy rules (T-007 audit §2): every bank covers every key; no phrase is
+ * recycled across keys; "honestly" is a millennial marker, not genz; genz
+ * keeps "twin" / "clock it" in rotation; weather copy differs per bank.
  */
 const BANKS: Record<string, Record<string, string>> = {
   genz: {
-    pick_one: "pick one, bestie",
-    not_today: "it's giving 'not today' — no cap",
+    pick_one: "pick one, twin",
+    not_today: "not today — no cap",
     today_outfit: "today's fit, served",
-    why_these: "why these, explained",
+    why_these: "clock it — here's why",
     in_laundry: "it's in the wash, fr",
-    washed_back: "back from the wash, it's giving fresh",
+    washed_back: "back from the wash, fresh",
     wardrobe_ready: "wardrobe locked in",
-    new_item_added: "new piece added to the rotation",
-    gap_suggestion: "your wardrobe needs this, honestly",
+    new_item_added: "new piece, added",
+    save_confirmation: "saved — it's in the rotation",
+    gap_suggestion: "your wardrobe needs this",
     streak: "you're on a streak, iconic",
-    weather_line: "weather check",
+    weather_line: "clock the weather",
+    greeting_morning: "morning",
+    greeting_afternoon: "afternoon",
+    greeting_evening: "evening",
     fresh_rotation: "fresh rotation, nothing worn this week",
   },
   millennial: {
@@ -38,9 +46,13 @@ const BANKS: Record<string, Record<string, string>> = {
     washed_back: "fresh from the laundry",
     wardrobe_ready: "wardrobe's set",
     new_item_added: "added to your rotation",
+    save_confirmation: "saved to your rotation",
     gap_suggestion: "your wardrobe could use this",
     streak: "consistency streak — lowkey impressive",
-    weather_line: "weather check",
+    weather_line: "quick weather check",
+    greeting_morning: "morning",
+    greeting_afternoon: "afternoon",
+    greeting_evening: "evening",
     fresh_rotation: "fresh rotation, nothing repeated this week",
   },
   classic: {
@@ -52,9 +64,13 @@ const BANKS: Record<string, Record<string, string>> = {
     washed_back: "returned from the laundry",
     wardrobe_ready: "your wardrobe is ready",
     new_item_added: "added to your wardrobe",
+    save_confirmation: "saved to your wardrobe",
     gap_suggestion: "a gap your wardrobe could fill",
     streak: "consistency streak",
     weather_line: "weather",
+    greeting_morning: "morning",
+    greeting_afternoon: "afternoon",
+    greeting_evening: "evening",
     fresh_rotation: "nothing repeated this week",
   },
 };
@@ -74,10 +90,15 @@ const SLANG_HITS: Record<string, string[]> = {
   classic: ["formal", "tailored", "classic", "timeless", "polished"],
 };
 
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 /**
  * Detect the user's tone profile from free-text they've typed
  * (onboarding answers, nicknames, corrections).
- * Pure frequency counting — no LLM.
+ * Pure frequency counting — no LLM. Hits match whole words/phrases so
+ * "bet" does not fire on "better" and "era" does not fire on "general".
  */
 export function detectTone(texts: string[]): ToneProfile {
   const joined = texts.join(" ").toLowerCase();
@@ -85,7 +106,8 @@ export function detectTone(texts: string[]): ToneProfile {
   for (const [bank, hits] of Object.entries(SLANG_HITS)) {
     let s = 0;
     for (const h of hits) {
-      if (joined.includes(h)) s++;
+      const re = new RegExp(`\\b${escapeRegExp(h)}\\b`);
+      if (re.test(joined)) s++;
     }
     scores[bank] = s;
   }
