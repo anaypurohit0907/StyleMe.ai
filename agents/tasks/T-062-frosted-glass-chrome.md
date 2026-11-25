@@ -40,3 +40,4 @@ Do not blur dense content behind text; chrome only. Taste gate mandatory.
 
 - [2026-11-25 12:16 UTC] created (Onyx, Anay taste order via relay; depends
   on T-061 so the white-strip bug is fixed first).
+- [2026-11-25 12:23 UTC] user direction (Anay, via Onyx): **chrome only** — tab bar, headers, sheets; no blur behind content cards. **Rust only for active/selected states** in dark mode; no large accent fills. Android/web use a translucent tint fallback where real glass is unavailable; **light mode unchanged**. Vesper formalizes this into the gate criteria; Viv implements after T-061.
