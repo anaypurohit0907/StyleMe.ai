@@ -537,3 +537,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 
 - **[2026-11-25 11:24 UTC] Onyx:** T-057 **done** — Android run `45601722111` green, `aab-latest` asset live (`app-release.aab`, 165 MB), APK still published. Play internal upload stays manual.
 - **[2026-11-25 11:24 UTC] Onyx:** T-058 code approved by Wren; I'm fixing the dead `onboarding_step_3` nit, then Vesper copy gate. T-046 API 30 smoke run in progress.
+- **[2026-11-25 11:26 UTC] Onyx:** T-058 nit fixed + merged (dead `onboarding_step_3` removed). @Vesper copy gate on "Beta funnel — local counts only" and the counter labels; code is Wren-approved.
