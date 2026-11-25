@@ -697,4 +697,56 @@ describe("worker API", () => {
     );
     expect(badRef.status).toBe(400);
   });
+
+  it("T-045: laundry/tone/photos rate-limited; photos body capped at 2 MB", async () => {
+    // Fresh device so its buckets start empty.
+    const reg = await app.request(
+      "/v1/auth/device",
+      {
+        method: "POST",
+        headers: { "content-type": "application/json", "cf-connecting-ip": "198.51.100.14" },
+        body: JSON.stringify({ deviceId: "device-t045-00000001" }),
+      },
+      env as never,
+    );
+    const tok = ((await reg.json()) as { token: string }).token;
+    const hdrs = { "content-type": "application/json", authorization: `Bearer ${tok}` };
+
+    // laundry: 30/min — 11 calls is under, so hit it with 31 small events.
+    let last = 0;
+    for (let i = 0; i < 31; i++) {
+      const r = await app.request(
+        "/v1/laundry",
+        { method: "POST", headers: hdrs, body: JSON.stringify({ garmentIds: ["t1"], event: "in_wash", expectedAvailableAt: null, ts: NOW }) },
+        env as never,
+      );
+      last = r.status;
+    }
+    expect(last).toBe(429);
+
+    // tone: 10/min.
+    let toneLast = 0;
+    for (let i = 0; i < 11; i++) {
+      const r = await app.request("/v1/tone", { headers: hdrs }, env as never);
+      toneLast = r.status;
+    }
+    expect(toneLast).toBe(429);
+
+    // photos: oversized data URI → 413 before any storage work.
+    const big = "data:image/jpeg;base64," + "A".repeat(2 * 1024 * 1024 + 1);
+    const tooBig = await app.request(
+      "/v1/photos/p1",
+      { method: "POST", headers: hdrs, body: JSON.stringify({ data: big }) },
+      env as never,
+    );
+    expect(tooBig.status).toBe(413);
+
+    // photos: small valid data URI still accepted (mock R2).
+    const ok = await app.request(
+      "/v1/photos/p1",
+      { method: "POST", headers: hdrs, body: JSON.stringify({ data: "data:image/jpeg;base64,aGVsbG8=" }) },
+      env as never,
+    );
+    expect(ok.status).toBe(200);
+  });
 });

@@ -261,6 +261,7 @@ app.post("/v1/recommend", auth, async (c) => {
 
 app.post("/v1/laundry", auth, async (c) => {
   const userId = c.get("userId");
+  if (!rateLimit(`laundry:${userId}`, 30)) return c.json({ error: "rate limited" }, 429);
   const ev = LaundryEventSchema.safeParse(await c.req.json().catch(() => null));
   if (!ev.success) return c.json({ error: "invalid laundry event" }, 400);
 
@@ -379,6 +380,7 @@ app.post("/v1/learn", auth, async (c) => {
 
 app.get("/v1/tone", auth, async (c) => {
   const userId = c.get("userId");
+  if (!rateLimit(`tone:${userId}`, 10)) return c.json({ error: "rate limited" }, 429);
   const { user } = await ensureUser(c.env.DB, userId);
   const profile = user.tone ?? { bank: "none" as const, intensity: 0 };
   const day = new Date().toISOString().slice(0, 10);
@@ -408,18 +410,26 @@ app.get("/v1/tone", auth, async (c) => {
 // ---------------------------------------------------------------------------
 
 app.post("/v1/photos/:id", auth, async (c) => {
+  const userId = c.get("userId");
+  if (!rateLimit(`photos:${userId}`, 10)) return c.json({ error: "rate limited" }, 429);
   const id = c.req.param("id");
   if (!/^[a-zA-Z0-9_-]{1,64}$/.test(id)) return c.json({ error: "bad id" }, 400);
   const body = await c.req.json().catch(() => null);
   if (typeof body?.data !== "string" || !body.data.startsWith("data:image/")) {
     return c.json({ error: "expected data URI in body.data" }, 400);
   }
+  // Hard body cap: photos are ~2 MB at most; anything bigger is CPU-burn,
+  // not a photo (route parses the full string before the 503 short-circuit).
+  const MAX_PHOTO_URI = 2 * 1024 * 1024;
+  if (body.data.length > MAX_PHOTO_URI) {
+    return c.json({ error: "photo payload too large (max 2 MB data URI)" }, 413);
+  }
   const base64 = body.data.split(",")[1];
   if (!base64) return c.json({ error: "bad data URI" }, 400);
   if (!c.env.PHOTOS) {
     return c.json({ error: "photo storage is not configured (R2 disabled)" }, 503);
   }
-  const key = `${c.get("userId")}/${id}.jpg`;
+  const key = `${userId}/${id}.jpg`;
   await c.env.PHOTOS.put(key, base64, { httpMetadata: { contentType: "image/jpeg" } });
   return c.json({ ok: true, key });
 });
