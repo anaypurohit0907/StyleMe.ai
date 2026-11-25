@@ -8,8 +8,9 @@ priority: high
 depends_on: []
 files:
   - docs/TESTING.md
+  - .github/workflows/emulator.yml
 branch: Rei/T-046
-updated_at: 2026-11-25T08:02Z
+updated_at: 2026-11-25T09:15Z
 ---
 
 ## Goal
@@ -82,3 +83,24 @@ and will not install on an x86_64 AVD. Build a debug/dev x86_64 APK locally:
   created AVD `Medium_API_34` (pixel_6, Android 14, google_apis/x86_64) with
   the SDK-root cmdline-tools copy at `~/Android/Sdk/cmdline-tools/latest`.
   Booting headless now; API 36 AVD remains unusable (segfault).
+- [2026-11-25 09:15 UTC] local emulator verdict: **unusable on this host**.
+  API 34 also reaches `adb device` then segfaults ~60-90 s in; repro'd with
+  `-gpu swiftshader_indirect/off/guest`, `LIBGL_DRI3_DISABLE=1`,
+  `advancedFeatures.ini` (`Vulkan=off`, `GLDirectMem=on`), `-accel off`,
+  `-qemu -cpu qemu64`, Bluetooth/WiFi/UWB disabled, 1-2 GB RAM, 1-2 cores,
+  headless + windowed. Log always ends after "Activated packet streamer for
+  bluetooth emulation" with the QEMU protected-range unmap warning → host
+  kernel/emulator-36.4.10 incompatibility, not the image.
+  **Pivot:** add a `workflow_dispatch` GitHub Actions emulator lane
+  (ubuntu-latest has KVM) that builds the x86_64 release APK, boots API 34,
+  installs, screenshots, and pulls `styleme.log`. Extending files with
+  `.github/workflows/emulator.yml`; docs get both the local attempt (for the
+  record) and the CI lane (the supported path).
+- [2026-11-25 09:21 UTC] CI lane pushed: branch `Rei/T-046` @ `7b0b53e`
+  (`.github/workflows/emulator.yml` + `docs/TESTING.md` section). It reuses
+  `android.yml`'s release-signing step, builds
+  `assembleRelease -PreactNativeArchitectures=x86_64` with
+  `EXPO_PUBLIC_VISION=onnx`, then `reactivecircus/android-emulator-runner`
+  (API 34, google_apis, x86_64, pixel_6) installs/launches and uploads
+  `emulator.png`, `styleme.log`, `logcat.txt`. Temporary push trigger on the
+  branch for the first run: workflow `45584235952` (in progress).
