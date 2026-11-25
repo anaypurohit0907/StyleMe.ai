@@ -101,11 +101,8 @@ jobs:
           target: google_apis
           arch: x86_64
           profile: pixel_6
-          disable-animations: true
           emulator-boot-timeout: 1200
-          emulator-options: >-
-            -no-window -no-audio -no-boot-anim -no-snapshot
-            -gpu swiftshader_indirect
+          emulator-options: -no-window -no-audio -no-snapshot -gpu off
           script: |
             adb install -r artifacts/app-release.apk
             adb shell am start -W -n com.o_anay.styleme/.MainActivity
