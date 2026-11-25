@@ -45,7 +45,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-032 | Theme pass on remaining screens — Today, item, onboarding, DNA | done | Coco | high | 2026-11-25 06:15 UTC |
 | T-033 | Theme token cleanup — onAccent token + unused colors import | done | Wren | low | 2026-11-25 05:38 UTC |
 | T-034 | Log rotation polish — load backup tail + accurate startup hint | backlog | — | low | 2026-11-25 05:15 UTC |
-| T-035 | Reproducible mobile lint — commit ESLint flat config + devDeps | review | Coco | low | 2026-11-25 06:31 UTC |
+| T-035 | Reproducible mobile lint — commit ESLint flat config + devDeps | done | Coco | low | 2026-11-25 07:11 UTC |
 | T-036 | Fix external log file creation — T-024 device regression | done | Coco | high | 2026-11-25 05:58 UTC |
 | T-037 | Cap remaining client payload strings — learn/laundry, corrections, photo refs | in-progress | Indigo | medium | 2026-11-25 07:04 UTC |
 | T-038 | Move auth token + registrationSecret to SecureStore | backlog | — | medium | 2026-11-25 05:58 UTC |
