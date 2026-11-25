@@ -6,6 +6,8 @@
 import type { WeatherContext } from "@styleme/schema";
 
 const CACHE_TTL_MS = 30 * 60 * 1000;
+/** Isolate-local cap — without it a hostile city/lat-lon loop grows the map forever (audit §6 F5). */
+const MAX_CACHE_ENTRIES = 1000;
 
 interface CacheEntry {
   weather: WeatherContext;
@@ -54,6 +56,11 @@ export async function fetchWeather(
     tempC: Math.round(res.current.temperature_2m * 10) / 10,
     isRaining: (res.current.precipitation ?? 0) > 0,
   };
+  // Insertion-order eviction of the oldest entry keeps the map bounded.
+  if (cache.size >= MAX_CACHE_ENTRIES) {
+    const oldest = cache.keys().next().value;
+    if (oldest !== undefined) cache.delete(oldest);
+  }
   cache.set(key, { weather, at: Date.now() });
   return weather;
 }

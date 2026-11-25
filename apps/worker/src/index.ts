@@ -9,10 +9,12 @@
  */
 import { Hono } from "hono";
 import { bearerAuth } from "hono/bearer-auth";
+import { HTTPException } from "hono/http-exception";
 import {
   emptyPreference,
   LaundryEventSchema,
   LearnEventSchema,
+  OnboardingSchema,
   RecommendContextSchema,
   WardrobeSyncSchema,
   type RecommendResponse,
@@ -26,11 +28,13 @@ import {
   updatePreference,
   type SignatureState,
 } from "@styleme/engine";
-import { mintToken, verifyToken } from "./auth";
+import { mintToken, verifyToken, generateRegistrationSecret, hashRegistrationSecret, verifyRegistrationSecret } from "./auth";
 import {
   ensureUser,
+  getUser,
   listGarments,
   mapGarment,
+  setUserRegSecretHash,
   syncWardrobe,
   type UserRow,
 } from "./db";
@@ -54,6 +58,43 @@ const app = new Hono<{ Bindings: Bindings }>();
 const weatherCache = createWeatherCache();
 
 // ---------------------------------------------------------------------------
+// Rate limiting (in-memory, isolate-local — fine for the free tier)
+// ---------------------------------------------------------------------------
+
+const RATE_BUCKETS = new Map<string, { n: number; windowStart: number }>();
+const RATE_WINDOW_MS = 60_000;
+
+/** Fixed-window limiter. true = allowed, false = over the per-minute cap. */
+function rateLimit(key: string, maxPerMinute: number): boolean {
+  const now = Date.now();
+  const bucket = RATE_BUCKETS.get(key);
+  if (!bucket || now - bucket.windowStart >= RATE_WINDOW_MS) {
+    // Opportunistic prune so the map cannot grow unbounded in a warm isolate.
+    if (RATE_BUCKETS.size > 10_000) {
+      for (const [k, v] of RATE_BUCKETS) {
+        if (now - v.windowStart >= RATE_WINDOW_MS) RATE_BUCKETS.delete(k);
+      }
+    }
+    RATE_BUCKETS.set(key, { n: 1, windowStart: now });
+    return true;
+  }
+  bucket.n += 1;
+  return bucket.n <= maxPerMinute;
+}
+
+function clientIp(c: { req: { header(name: string): string | undefined } }): string {
+  return c.req.header("cf-connecting-ip") ?? "unknown";
+}
+
+// Never leak stack traces; tests assert on status + shape, not prose.
+// Hono's own HTTPExceptions (401 from bearerAuth, 404s) keep their response.
+app.onError((err, c) => {
+  if (err instanceof HTTPException) return err.getResponse();
+  console.error("unhandled error:", err);
+  return c.json({ error: "internal error" }, 500);
+});
+
+// ---------------------------------------------------------------------------
 // Health
 // ---------------------------------------------------------------------------
 
@@ -69,13 +110,66 @@ app.post("/v1/auth/device", async (c) => {
   if (!deviceId || deviceId.length < 8 || deviceId.length > 128) {
     return c.json({ error: "deviceId must be 8-128 chars" }, 400);
   }
-  const onboarding =
-    body?.onboarding && typeof body.onboarding === "object"
-      ? (body.onboarding as Record<string, unknown>)
-      : undefined;
-  await ensureUser(c.env.DB, deviceId, onboarding);
+  // Unauthenticated surface: throttle hard per IP and per device id so a
+  // spam loop cannot burn the D1 budget.
+  if (!rateLimit(`auth:ip:${clientIp(c)}`, 10) || !rateLimit(`auth:dev:${deviceId}`, 10)) {
+    return c.json({ error: "rate limited" }, 429);
+  }
+  const registrationSecret = typeof body?.registrationSecret === "string" ? body.registrationSecret : undefined;
+  // Onboarding is free-form but bounded — reject junk before it reaches D1.
+  let onboarding: Record<string, unknown> | undefined;
+  if (body?.onboarding !== undefined && body?.onboarding !== null) {
+    const parsedOnboarding = OnboardingSchema.safeParse(body.onboarding);
+    if (!parsedOnboarding.success) {
+      return c.json({ error: "invalid onboarding", issues: parsedOnboarding.error.issues.slice(0, 3) }, 400);
+    }
+    onboarding = parsedOnboarding.data as Record<string, unknown>;
+  }
+  const existing = await getUser(c.env.DB, deviceId);
+  if (existing) {
+    // Proof-of-possession: never re-register silently for an existing user.
+    // Legacy rows (pre-0003, NULL hash) get a one-time upgrade instead of a
+    // lockout: fresh secret minted + returned at first re-contact.
+    if (existing.regSecretHash === null) {
+      const secret = generateRegistrationSecret();
+      await setUserRegSecretHash(c.env.DB, deviceId, await hashRegistrationSecret(secret));
+      const token = await mintToken(c.env.JWT_SECRET, deviceId);
+      return c.json({ token, userId: deviceId, registrationSecret: secret });
+    }
+    if (!(await verifyRegistrationSecret(registrationSecret, existing.regSecretHash))) {
+      return c.json({ error: "device already registered; valid registrationSecret required" }, 403);
+    }
+    const token = await mintToken(c.env.JWT_SECRET, deviceId);
+    return c.json({ token, userId: deviceId });
+  }
+  // First registration: onboarding is stored only here (an attacker knowing
+  // the device id must not be able to overwrite the real user's onboarding),
+  // and the one-time secret is returned exactly once. If a concurrent call
+  // wins the INSERT race, created=false and the existing-user rules apply.
+  const secret = generateRegistrationSecret();
+  const { user: created, created: won } = await ensureUser(
+    c.env.DB,
+    deviceId,
+    onboarding,
+    undefined,
+    await hashRegistrationSecret(secret),
+  );
+  if (!won) {
+    if (created.regSecretHash === null) {
+      // Racer created a legacy-shaped row (no hash): upgrade path.
+      const upgradeSecret = generateRegistrationSecret();
+      await setUserRegSecretHash(c.env.DB, deviceId, await hashRegistrationSecret(upgradeSecret));
+      const token = await mintToken(c.env.JWT_SECRET, deviceId);
+      return c.json({ token, userId: deviceId, registrationSecret: upgradeSecret });
+    }
+    if (!(await verifyRegistrationSecret(registrationSecret, created.regSecretHash))) {
+      return c.json({ error: "device already registered; valid registrationSecret required" }, 403);
+    }
+    const token = await mintToken(c.env.JWT_SECRET, deviceId);
+    return c.json({ token, userId: deviceId });
+  }
   const token = await mintToken(c.env.JWT_SECRET, deviceId);
-  return c.json({ token, userId: deviceId });
+  return c.json({ token, userId: deviceId, registrationSecret: secret });
 });
 
 const auth = bearerAuth({
@@ -92,6 +186,8 @@ const auth = bearerAuth({
 // ---------------------------------------------------------------------------
 
 app.post("/v1/wardrobe/sync", auth, async (c) => {
+  const userId = c.get("userId");
+  if (!rateLimit(`sync:${userId}`, 30)) return c.json({ error: "rate limited" }, 429);
   const body = await c.req.json().catch(() => null);
   const sync = WardrobeSyncSchema.safeParse(body);
   if (!sync.success) {
@@ -107,9 +203,10 @@ app.post("/v1/wardrobe/sync", auth, async (c) => {
 
 app.post("/v1/recommend", auth, async (c) => {
   const userId = c.get("userId");
+  if (!rateLimit(`rec:${userId}`, 10)) return c.json({ error: "rate limited" }, 429);
   const body = await c.req.json().catch(() => ({}));
 
-  const user = await ensureUser(c.env.DB, userId);
+  const { user } = await ensureUser(c.env.DB, userId);
   const garments = await listGarments(c.env.DB, userId);
   if (garments.length === 0) {
     return c.json({ outfits: [], note: "wardrobe empty — add items first", ts: Date.now() });
@@ -132,7 +229,11 @@ app.post("/v1/recommend", auth, async (c) => {
       weather = { tempC: 20, isRaining: false };
     }
   }
-  const context = RecommendContextSchema.parse({ ...partial, weather });
+  const contextParsed = RecommendContextSchema.safeParse({ ...partial, weather });
+  if (!contextParsed.success) {
+    return c.json({ error: "invalid recommend context", issues: contextParsed.error.issues.slice(0, 5) }, 400);
+  }
+  const context = contextParsed.data;
 
   const res = recommend({
     userId,
@@ -188,11 +289,12 @@ app.post("/v1/laundry", auth, async (c) => {
 
 app.post("/v1/learn", auth, async (c) => {
   const userId = c.get("userId");
+  if (!rateLimit(`learn:${userId}`, 30)) return c.json({ error: "rate limited" }, 429);
   const ev = LearnEventSchema.safeParse(await c.req.json().catch(() => null));
   if (!ev.success) return c.json({ error: "invalid learn event" }, 400);
 
   const d = ev.data;
-  const user = await ensureUser(c.env.DB, userId);
+  const { user } = await ensureUser(c.env.DB, userId);
   const garments = await listGarments(c.env.DB, userId);
   const garmentMap = new Map(garments.map((g) => [g.id, g]));
 
@@ -216,8 +318,12 @@ app.post("/v1/learn", auth, async (c) => {
     user.prefs,
     pickedOutfit
       ? {
+          // Compare by joined id string: the old object-identity filter
+          // (`o !== pickedOutfit`) never matched separate literals, so the
+          // picked outfit got both the +1 pick nudge and the −0.35 rejection
+          // nudge — learning ran at ~65% of intended (audit §6, T-020 item 6).
           picked: pickedOutfit,
-          rejected: offered.filter((o) => o !== pickedOutfit),
+          rejected: offered.filter((o) => o.garmentIds.join("+") !== d.pickedId),
           garments: garmentMap,
           occasion: d.context.occasion,
         }
@@ -275,7 +381,7 @@ app.post("/v1/learn", auth, async (c) => {
 
 app.get("/v1/tone", auth, async (c) => {
   const userId = c.get("userId");
-  const user = await ensureUser(c.env.DB, userId);
+  const { user } = await ensureUser(c.env.DB, userId);
   const profile = user.tone ?? { bank: "none" as const, intensity: 0 };
   const day = new Date().toISOString().slice(0, 10);
 
