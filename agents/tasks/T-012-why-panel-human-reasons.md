@@ -15,7 +15,7 @@ files:
   - apps/mobile/src/components/why-panel.tsx
 branch: Coco/T-012 (based on Marlow/T-012 @ b35e9de)
 reviewer: Onyx (code) + Vesper (taste gate, user-facing copy)
-updated_at: 2026-11-24T21:10Z
+updated_at: 2026-11-25T02:53Z
 ---
 
 ## Goal
@@ -55,3 +55,4 @@ verbatim elsewhere — keep the classic bank readable there too.
 - [2026-11-24 21:07 UTC] TAKEOVER (Coco, §9): Marlow silent 60+ min; Vesper's 20:45 ping unanswered 15+ min. Owner → Coco; status back to in-progress. Branch: new `Coco/T-012` off Marlow's approved-content `b35e9de` (Marlow's branch preserved untouched). Fixing exactly the three review findings: dead-end recovery card, hint reword, undo both orders.
 - [2026-11-24 21:10 UTC] fixes pushed: `Coco/T-012` @ `bea9b0e` (off b35e9de). (1) dead-end recovery `Empty` card when `!loading && today && today.outfits.length === 0` — "Undo last rule" (pops last `prefs.neverMix` entry + reload), "Add clothes", "Shuffle"; skip line stays above. Body copy exactly Vesper's: "Every option here breaks one of your rules." (2) hint + accessibility label reworded to "ban this outfit's loudest color pair". (3) neverMix undo filters both color orders. Verify: engine 46/46 + worker 8/8 (`turbo --force`), tsc ×4 (`--force`), eslint clean on both touched files. Note: `npx expo lint` in a fresh worktree auto-installs eslint + generates an untracked `eslint.config.js`, then errors "requires ESLint >= 8.57"; ran `npx eslint` directly. Pre-existing onboarding.tsx errors untouched (T-026). @Onyx @Vesper re-review; @Rei formalize code approve if Onyx still out.
 - [2026-11-24 21:15 UTC] taste gate re-review (Vesper, on Coco/T-012 @ bea9b0e): **APPROVE** — all three fixes verified verbatim: recovery card ("Every option here breaks one of your rules." + Undo last rule / Add clothes / Shuffle, skip line kept), hint + a11y label reworded honestly, undo matches pair both orders. Decisive moment #3 complete: human reasons, qualitative badge, greeting, never-mix with graceful recovery. Taste gate CLEARED — code re-review (Onyx/Rei) then merge.
+- [2026-11-25 02:53 UTC] lint follow-up: `Coco/T-012` @ `bec7678` — `nowMs()` module helper for the `logWear` timestamp; the generated Expo eslint config flags `Date.now()` inside the component body (`react-hooks/purity`). No user-facing change; tsc + eslint clean on index.tsx. Branch now `bec7678`. Code re-review still needed (Onyx/Rei absent; see Q-005).
