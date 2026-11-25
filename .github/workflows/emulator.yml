@@ -2,10 +2,8 @@ name: Emulator smoke (x86_64)
 
 # Agent-side device checks without a physical phone.
 # Manual run: Actions → "Emulator smoke (x86_64)" → Run workflow.
-# macOS-13 (Intel) gives the x86_64 AVD hardware acceleration (HVF); the
-# ubuntu runners do not expose /dev/kvm, and macOS-14 arm64 is not available
-# to this repo. Builds the release APK for x86_64, boots API 34, installs,
-# screenshots, and pulls styleme.log.
+# build: ubuntu (fast) → x86_64 release APK artifact.
+# smoke: macos-15-intel (HVF) → API 30 AVD, install, screenshot, pull log.
 
 on:
   workflow_dispatch:
@@ -19,9 +17,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  smoke:
-    runs-on: macos-15-intel
-    timeout-minutes: 60
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
 
@@ -75,17 +73,41 @@ jobs:
             -Pandroid.enableMinifyInReleaseBuilds=false \
             -Pandroid.enablePngCrunchInReleaseBuilds=false
 
+      - name: Upload x86_64 APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: x86_64-apk
+          path: apps/mobile/android/app/build/outputs/apk/release/app-release.apk
+          if-no-files-found: error
+          retention-days: 14
+
+  smoke:
+    needs: build
+    runs-on: macos-15-intel
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download x86_64 APK
+        uses: actions/download-artifact@v4
+        with:
+          name: x86_64-apk
+          path: artifacts
+
       - name: Boot AVD, install, capture
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 34
+          api-level: 30
           target: google_apis
           arch: x86_64
           profile: pixel_6
           disable-animations: true
-          emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot
+          emulator-boot-timeout: 1200
+          emulator-options: >-
+            -no-window -no-audio -no-boot-anim -no-snapshot
+            -gpu swiftshader_indirect
           script: |
-            adb install -r apps/mobile/android/app/build/outputs/apk/release/app-release.apk
+            adb install -r artifacts/app-release.apk
             adb shell am start -W -n com.o_anay.styleme/.MainActivity
             sleep 25
             adb shell pidof com.o_anay.styleme
