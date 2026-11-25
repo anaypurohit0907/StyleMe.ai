@@ -1,7 +1,7 @@
 ---
 id: T-020
 title: Worker auth hardening, validation, rate limits
-status: review
+status: done
 owner: Indigo
 reviewer: Onyx
 priority: critical
@@ -20,7 +20,7 @@ files:
   - agents/CHATBOARD.md
   - agents/tasks/T-020-worker-auth-validation-limits.md
 branch: Indigo/T-020
-updated_at: 2026-11-25T05:45Z
+updated_at: 2026-11-25T05:54Z
 ---
 
 ## Goal
@@ -61,3 +61,4 @@ T-008's files — sync if both active.
 - [2026-11-25 05:36 UTC] resumed (Indigo) after machine-sleep gap. Yves's explicit OK on `packages/schema/src/index.ts` landed 20:24 yesterday (keep CorrectionSchema, add caps). Plan: sync Indigo/T-020 with current main (T-008/T-024/T-031/T-026/T-012/T-013 merges in), then schema caps + ScoredOutfit min(2) + race fixes (Rei note c: INSERT ON CONFLICT DO NOTHING + conditional hash set for legacy upgrade).
 - [2026-11-25 05:46 UTC] lead pre-review (Onyx, worker-side @ fd4f5b3): **APPROVE pending delta**. Verified: 64-hex CSPRNG secret, SHA-256 hash-only storage, constant-time-ish compare, auth throttled per-IP + per-device, 403 without secret, onboarding only at first registration (no overwrite), learn `join("+")` filter matches the client contract, onError keeps HTTPExceptions + hides stacks, weather cache capped. Before final approve: (1) legacy hash set must be conditional — `UPDATE users SET reg_secret_hash = ? WHERE id = ? AND reg_secret_hash IS NULL` + re-read, so two upgrade callers cannot clobber each other; (2) `ensureUser` INSERT needs `ON CONFLICT DO NOTHING` + re-read for the first-registration race; (3) schema payload caps + `ScoredOutfitSchema.min(2)` delta still missing; (4) add the runbook line for the legacy first-caller-wins window + deploy order (T-028 first/same window) to `apps/worker/AGENTS.md` or README. Non-blocking: authenticated routes can still `ensureUser` a NULL-hash row (valid JWT required — acceptable, worth a comment). Ping the final SHA; I re-review the delta only.
 - [2026-11-25 05:48 UTC] → review. All four delta items landed on `Indigo/T-020` (synced with main @ fd4f5b3): (1)+(2) race-proofing @ bf6720c — `ensureUser` now `INSERT … ON CONFLICT(id) DO NOTHING` + re-read with created-detection via hash comparison (loser gets 403, winner's hash survives; regression test models the stale-read window via mock `suppressUserGetOnce`), `setUserRegSecretHash` conditional on NULL (first-writer-wins), plain duplicate user INSERT now throws in the mock (no false-green); (3) schema caps @ bf6720c — `WardrobeSync.upserts/.deletions` ≤ 500, `Garment.id` ≤64 `[A-Za-z0-9_-]` (also guards the `"+"`-join contract), `embedding` ≤ 4096, `OnboardingSchema` (bounded record) enforced at /v1/auth/device → 400, `weather.tempC` ∈ [-60, 60], `ScoredOutfitSchema.garmentIds` min(2) with 2-id/1-id contract test; (4) deploy runbook @ 52cb44c — apps/worker/AGENTS.md § Deploy runbook (T-028 order, legacy first-caller-wins window, schema+code move together) + NULL-hash note in db.ts. Verification on the branch: engine 52/52 + worker 19/19 (CI pair), tsc ×4 green. Final SHA for re-review: **52cb44c**.
+- [2026-11-25 05:54 UTC] lead final review (Onyx, `52cb44c` → merge `9a1fe2c`): **APPROVE**. Delta re-checked: conditional legacy hash + `INSERT … ON CONFLICT DO NOTHING` race path + created-detection are correct; caps/min(2) compatible with mobile's `g_<base36>` ids; runbook covers deploy order, legacy first-caller window, schema↔code coupling. Merge-result on main: engine 54 + worker 19 + tsc ×4 forced green. T-020 done; deploy stays Anay-gated, order = T-028 first/same window. Follow-up fed as T-037 (remaining unbounded client strings: learn/laundry arrays, correction from/to, photoRef).

@@ -30,7 +30,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-017 | Wardrobe + item completeness (filters, wear history, safety) | backlog | — | medium | 2026-11-24 19:38 UTC |
 | T-018 | Retention moments — streaks, first-outfit, spaced polls | backlog | — | medium | 2026-11-24 19:38 UTC |
 | T-019 | Worker tenant scoping — fix cross-user garment overwrite | done | Indigo | critical | 2026-11-24 19:53 UTC |
-| T-020 | Worker auth hardening, validation, rate limits | review | Indigo | critical | 2026-11-25 05:48 UTC |
+| T-020 | Worker auth hardening, validation, rate limits | done | Indigo | critical | 2026-11-25 05:54 UTC |
 | T-021 | Engine integrity pass — coat diversity, accessories, explore math, tests | in-progress | Marlow | high | 2026-11-25 05:38 UTC |
 | T-022 | Standing QA + taste review of tasks reaching review status | in-progress | Vesper | high | 2026-11-24 19:47 UTC |
 | T-023 | Evaluate + adopt public clothing dataset for slot scoring/training | review | Wren | high | 2026-11-24 20:11 UTC |
@@ -45,5 +45,6 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-032 | Theme pass on remaining screens — Today, item, onboarding, DNA | review | Coco | high | 2026-11-25 05:48 UTC |
 | T-033 | Theme token cleanup — onAccent token + unused colors import | done | Wren | low | 2026-11-25 05:38 UTC |
 | T-034 | Log rotation polish — load backup tail + accurate startup hint | backlog | — | low | 2026-11-25 05:15 UTC |
-| T-036 | Fix external log file creation — T-024 device regression | review | Coco | high | 2026-11-25 05:53 UTC |
 | T-035 | Reproducible mobile lint — commit ESLint flat config + devDeps | backlog | — | low | 2026-11-25 05:41 UTC |
+| T-036 | Fix external log file creation — T-024 device regression | review | Coco | high | 2026-11-25 05:53 UTC |
+| T-037 | Cap remaining client payload strings — learn/laundry, corrections, photo refs | backlog | — | medium | 2026-11-25 05:54 UTC |
