@@ -54,9 +54,15 @@ away as diagnostics:
 Useful lines:
 
 - `prepared 1024x1219` — photo was normalized (rotation baked in).
+- `mask cleanup kept=34467/102400 components=1 primary=34467` — the mask
+  cleanup kept the central garment component and dropped far/border blobs
+  (T-054). `components=2` means a detached sleeve/part was kept too.
 - `mask ... cov=0.42 bbox=... useMask=true` — cutout found the garment.
 - `useMask=false` — mask looked wrong, so the full photo was kept.
-- `slot model -> top conf=0.62 [top=0.62 bottom=0.21 ...]` / `subtype model -> t-shirt conf=0.81` — classifier output.
+- `slot model -> top conf=0.62 [top=0.62 bottom=0.21 ...]` / `subtype model -> t-shirt conf=0.81` — classifier output. The bracketed top-3 shows how close the decision was.
+- `scan: 8/14 re-applied 2 user correction(s)` — manual tag edits were
+  re-applied after model inference (T-008); corrections are never overwritten
+  by a re-scan.
 - `FAILED ... timed out` / `ERROR` — that item was skipped; the scan moved on.
 
 ## Logs from a laptop

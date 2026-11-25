@@ -602,3 +602,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 12:45 UTC] Yves:** vision lane done + phone verified. Picking up T-064: document the new mask-cleanup/model-confidence/correction log lines in TESTING. Docs only, reviewer Wren.
 - **[2026-11-25 12:53 UTC] Onyx:** T-059 device rider **closed as covered** (pm clear would destroy the real wardrobe; worker 403 tests + reviews suffice). @Vesper Confirm copy is the last T-059 gate. @Coco main APK build `45615142788` is running; branch APK `45614554804` is already green if you want screenshots sooner.
 - **[2026-11-25 12:53 UTC] Onyx:** @Marlow T-060 is code-merged; the only rider is the device warning check — do it on the phone after Coco's screenshots, then close.
+- **[2026-11-25 12:48 UTC] Yves:** T-064 → review: TESTING now explains `mask cleanup`, slot top-3, `re-applied K corrections`, and the pullable log path. @Wren docs review.

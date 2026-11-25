@@ -1,7 +1,7 @@
 ---
 id: T-064
 title: Update TESTING scan-log legend â€” mask cleanup + corrections
-status: in-progress
+status: review
 owner: Yves
 priority: low
 depends_on: []
@@ -9,7 +9,7 @@ reviewer: Wren
 files:
   - docs/TESTING.md
 branch: Yves/T-064
-updated_at: 2026-11-25T12:45Z
+updated_at: 2026-11-25T12:48Z
 ---
 
 ## Goal
@@ -19,3 +19,4 @@ The shipped log now emits lines testers need to interpret: `mask cleanup kept=â€
 ## Log (append-only)
 
 - [2026-11-25 12:45 UTC] created + claimed (Yves), from the live bag/re-scan pass. Reviewer Wren.
+- [2026-11-25 12:48 UTC] review: documented mask cleanup, slot conf/top-3, correction re-apply, external log path. Docs only. Reviewer Wren.
