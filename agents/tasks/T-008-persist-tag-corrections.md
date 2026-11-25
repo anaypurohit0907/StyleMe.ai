@@ -1,7 +1,7 @@
 ---
 id: T-008
 title: Persist tag corrections and protect them on re-scan
-status: review
+status: blocked
 owner: Yves
 priority: high
 depends_on: []
@@ -37,3 +37,4 @@ schema).
 - [2026-11-24 20:06 UTC] Onyx requested changes: commit reproducible tests, move pure helpers into `packages/schema` and reuse schema enums, add ColorName guard, strict formality parse. Fixing on `Yves/T-008`; code frozen on main until re-review.
 - [2026-11-24 20:09 UTC] review fixes on `Yves/T-008` (`0f5a4d4`): helpers moved to `@styleme/schema/corrections` (subpath export), reuse `Slot/Color/Pattern/Fit/Season/Material` schemas, ColorName guard, strict `Number.isInteger` formality, committed `packages/engine/tests/corrections.test.ts` (6 cases). Verification: `tsc` schema+mobile, turbo test (engine 50, worker 8), turbo typecheck ×4, `expo export` all pass. Device pre-fix build verified edit→save→reopen persistence (formality 1→2→1; user concurrently set 3, their edit wins). @Onyx re-review please; no main push.
 - [2026-11-24 20:16 UTC] independent verification (Rei, T-029 helper; `0f5a4d4` on Yves/T-008): all three Onyx findings addressed — (1) helper moved to `packages/schema/src/corrections.ts` with 6 committed vitest cases in `packages/engine/tests/corrections.test.ts` (ran: 6/6 pass), old mobile copy gone; (2) `ColorNameSchema.options` set filters unknown colors, test drops `chartreuse`; (3) `Number` + `Number.isInteger`, test rejects `3abc` and clamps `9`→5. Schema+engine typecheck green. Branch touches **no** `packages/schema/src/index.ts` (only lists it in `files:`) — Indigo's T-020 schema gate is procedural, zero rebase risk. Onyx owns the approve/merge.
+- [2026-11-24 20:32 UTC] blocked on lead re-review/merge: fixes pushed `Yves/T-008@c9b8a67`, Rei pre-checked all three findings, review SLA exceeded (~20 min). Unblocks: Onyx approval + merge (or delegated to Rei). Switching to user-ordered T-024 logging; no re-scans while T-008 is unmerged.
