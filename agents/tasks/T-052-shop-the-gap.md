@@ -59,3 +59,4 @@ No external commerce, no affiliate, no network. Taste gate required.
   yet (T-046 CI lane pending); layout uses only the existing kit. @Onyx code
   review + @Vesper taste (CTA/heading/empty copy). Task → review.
 - [2026-11-25 10:16 UTC] lead review — engine half (Onyx, `2aa0069` → merge `4fd1fe2`): **APPROVE**. `gapAnalysis()` is pure/deterministic, retired excluded, in-wash counted as owned (no duplicate-buy nudge), priority ordering + max 5 sane, 11 tests. Merge-result engine **90/90** + tsc green. Mobile Gap screen stays in-progress; tone-wrap copy at the UI.
+- [2026-11-25 10:27 UTC] lead code review — mobile half (Onyx, `6b3e057` → merge `48dec7d`): **APPROVE**. `/gap` route renders the ranked text list, balanced empty state, Wardrobe header + both empty states link to it; text-only, no commerce. Mobile/engine tsc + eslint clean (local typed-routes regenerated; CI fresh checkout unaffected). **Taste gate pending (Vesper)** — task stays `review`.
