@@ -63,7 +63,7 @@ npm run mobile:start
 
 ## Gotchas
 
-- **Vision assets are not in git** — `*.onnx`, `ml/artifacts/`, `ml/data/` are ignored. `apps/mobile/assets/vision/` is filled from the GitHub release `vision-v1` (CI's `curl` in `android.yml` does exactly that) or unzipped from `ml/artifacts/styleme_vision_v1.zip`. Missing bundle breaks native builds.
+- **Vision assets ARE tracked in git** — `apps/mobile/assets/vision/` ships its ONNX models + json metadata in the repo (`slot_background_aug`, `subtype_mobilenet`, `u2netp`, probes/embeddings; `ml/artifacts/` + `ml/data/` remain ignored). CI additionally re-downloads the full release bundle `vision-v2` (101.7MB zip: `android.yml` `curl`) over the same directory — so a clean checkout builds natively without the bundle, and CI builds use the release copy.
 - **Expo Go runs a deterministic mock tagger.** The real ONNX pipeline needs a dev/release build (`EXPO_PUBLIC_VISION=onnx`). Don't "fix" tagging observed in Expo Go.
 - **`apps/mobile/android/` + `ios/` are generated** by `expo prebuild` and ignored — configure via `app.json` + config plugins, never by hand.
 - `packages/engine/tests/uniqueness.property.test.ts` simulates 1,000 users over 40 days and takes ~20s alone — the engine suite is quiet that long by design, not hung.
