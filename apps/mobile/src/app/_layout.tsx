@@ -5,6 +5,7 @@ import { Stack, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from "expo-font";
 import * as SystemUI from "expo-system-ui";
+import { NavigationBar } from "expo-navigation-bar";
 import * as SplashScreen from "expo-splash-screen";
 import { getDb, metaGet } from "@/lib/db";
 import { setVisionTagger } from "@/lib/vision";
@@ -66,6 +67,7 @@ export default function RootLayout() {
   return (
     <>
       <StatusBar style={scheme === "dark" ? "light" : "dark"} />
+      {Platform.OS === "android" && <NavigationBar style="auto" />}
       <Gate />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: t.bg } }}>
         <Stack.Screen name="(tabs)" />
