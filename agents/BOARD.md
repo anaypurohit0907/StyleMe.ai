@@ -56,6 +56,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-043 | Wardrobe filters + loading skeleton + bulk wash (T-017 split) | review | Coco | medium | 2026-11-25 07:55 UTC |
 | T-044 | Wear history — query by garment in SQL instead of filtering a 50-row window | done | Coco | low | 2026-11-25 07:53 UTC |
 | T-045 | Rate-limit remaining authed routes + cap photos data-URI body | review | Indigo | medium | 2026-11-25 07:42 UTC |
+| T-046 | Android emulator device-test lane — no dependency on Anay's phone | backlog | — | high | 2026-11-25 07:55 UTC |
 | T-046 | Android emulator for agent-side device checks (replace Anay's phone) | backlog | — | high | 2026-11-25 07:55 UTC |
 | T-047 | Reproducible lint in clean worktrees — expo-haptics exports resolution | backlog | — | low | 2026-11-25 07:55 UTC |
 | T-047 | ESLint can't resolve expo-haptics under hoisted npm ci | backlog | — | low | 2026-11-25 07:55 UTC |
