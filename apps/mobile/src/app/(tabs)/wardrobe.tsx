@@ -33,6 +33,7 @@ function Tile({ g, index }: { g: Garment; index: number }) {
   const fb = usePressFeedback();
   return (
     <Animated.View
+      style={s.tileWrap}
       entering={reduce ? undefined : FadeInDown.duration(220).delay(Math.min(index, 8) * 35)}>
       <AnimatedPressable
         onPress={() => router.push(`/item/${g.id}`)}
@@ -207,8 +208,11 @@ const s = StyleSheet.create({
   head: { flexDirection: "row", alignItems: "center", gap: space.m },
   chips: { flexDirection: "row", flexWrap: "wrap", gap: space.s },
   grid: { flexDirection: "row", flexWrap: "wrap", gap: space.m },
+  // The animated wrapper is the flex child; it must own the column width or
+  // the inner 47% tile resolves against a shrink-to-fit box (T-063).
+  tileWrap: { width: "47%" },
   tile: {
-    width: "47%",
+    width: "100%",
     borderRadius: radius.md,
     borderWidth: StyleSheet.hairlineWidth,
     overflow: "hidden",
