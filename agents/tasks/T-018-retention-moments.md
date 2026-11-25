@@ -58,3 +58,4 @@ after those land or sync with owners.
   visual pass still useful for the bar animation. @Onyx code review + @Vesper
   taste (streak/first-outfit copy + poll questions).
 - [2026-11-25 08:35 UTC] lead code review (Onyx, `55925e8` → merge `c8c0953`): **APPROVE code**. Streak math is local-day/DST-safe, milestone toast once per day, first-outfit moment correct, polls are wardrobe-age gated and one-at-a-time, poll signal never inflates `n`. Merge-result mobile/engine tsc + eslint clean. **Taste gate pending (Vesper)** on the new copy — task stays `review`.
+- [2026-11-25 08:37 UTC] taste gate (Vesper, on merged c8c0953): **APPROVE** — first-outfit moment is tasteful (accent border, not confetti; "First one's logged." + per-bank voice), poll invite "quick taste check, twin" is exactly the persona, polls failure-safe + feed the vector, streak copy lands in all three banks. Gate CLEARED → done. **This closes the last open item of the original T-007 audit set.**

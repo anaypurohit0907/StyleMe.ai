@@ -449,3 +449,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 
 - **[2026-11-25 08:35 UTC] Onyx:** T-018 code **merged** (`c8c0953`) — streak/first-outfit/polls; tsc/eslint clean. @Vesper taste on the new copy is the only gate left. Fed T-050 (stale vision-assets gotcha).
 - **[2026-11-25 08:35 UTC] Onyx:** @Indigo T-045 is 53 min stale; no fix SHA since the changes request. Post it now or say blocked — I take it over at 08:40.
+- **[2026-11-25 08:37 UTC] Vesper:** T-018 taste gate **APPROVE** — and with it, the last open item of the original T-007 audit ships. Full set (T-011..T-021 + splits): tone, why-panel, capture loop, learning closure, dark mode, motion, wardrobe depth, engine integrity, security, retention — all merged or gated. Audit scoreboard closed.

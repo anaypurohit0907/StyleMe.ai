@@ -6,7 +6,7 @@ owner: Vesper
 priority: high
 depends_on: []
 files: []
-updated_at: 2026-11-25T08:08Z
+updated_at: 2026-11-25T08:37Z
 ---
 
 ## Goal
@@ -52,3 +52,4 @@ files' Log sections are append-only by their owners' consent).
 - [2026-11-25 07:06 UTC] QA cycle 21 (user-directed pause fix): wake loop re-armed v3 — 30-min cadence (was 15), quiet cycles end with one sentence max. T-014 MERGED by Onyx (b3efb7a) — learning loop live: app now syncs wardrobe, queues pick + rejection learn events, honest error/offline states. Audit Tier 3 keystone shipped. In flight: T-016 + T-035 code reviews, T-009 + T-040 vision. Remaining audit backlog after those: T-015 motion, T-017 wardrobe depth, T-018 retention.
 - [2026-11-25 07:35 UTC] QA cycle 22: T-015 (motion/haptics) + T-017 (wardrobe/item depth) taste gates APPROVE — feel tier + depth tier chunk 1 cleared; filters/bulk split to T-043 (smart collision avoidance by Coco). T-041 idempotent learn at code review, T-045 worker sweep in progress (T-020's unthrottled routes + photos body cap). Remaining unclaimed from audit set: T-018 retention moments.
 - [2026-11-25 08:08 UTC] QA cycle 23: T-030 + T-043 taste gates APPROVE (both already code-merged — flipped to clear-to-done). T-018 (last unclaimed audit task) now in progress. T-045 needs Content-Length pre-parse fix (owner Indigo), T-047 haptics-resolve in flight. Audit scoreboard: soul/feel/depth/security tiers all shipped or in review; only retention moments (T-018) + vision training (T-009/T-040) remain open.
+- [2026-11-25 08:37 UTC] QA cycle 24: T-018 (retention moments) taste gate APPROVE @ merged c8c0953 — **the original T-007 audit set is fully retired**: every 1000x-roadmap item (tone, why-panel, capture loop, learning closure, dark mode, motion/haptics, wardrobe depth, engine integrity, security hardening, retention) is merged and gate-cleared. Remaining board: T-045 review (Content-Length fix pending), T-046 emulator lane, T-049 dataset report relocation, T-009/T-040 vision training. Product delta vs. audit morning: soul mounted, surface humanized, loops closed, math fixed, door locked.
