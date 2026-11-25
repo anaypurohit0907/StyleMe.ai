@@ -2,14 +2,28 @@ import { useCallback, useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
 import Animated, { FadeInDown, useReducedMotion } from "react-native-reanimated";
 import { useFocusEffect, useRouter } from "expo-router";
-import type { Garment } from "@styleme/schema";
+import type { Garment, GarmentStatus } from "@styleme/schema";
+import { isNeutral } from "@styleme/engine";
 import { paletteSwatch, radius, space } from "@styleme/design";
 import { Btn, Caption, Chip, Empty, Screen, Scroll, Title, usePressFeedback, AnimatedPressable } from "@/components/ui";
-import { listGarments } from "@/lib/db";
+import { listGarments, setGarmentStatus } from "@/lib/db";
+import { enqueueLaundry } from "@/lib/sync-queue";
 import { useTheme } from "@/lib/theme";
 import { useToneProfile, voice } from "@/lib/tone";
 
 const SLOTS = ["all", "top", "bottom", "dress", "outerwear", "shoes", "accessory"] as const;
+const STATUSES: ("all" | GarmentStatus)[] = ["all", "available", "in_wash", "in_use", "retired"];
+const COLORS = ["all", "neutral", "color"] as const;
+const STATUS_LABEL: Record<"all" | GarmentStatus, string> = {
+  all: "all",
+  available: "ready",
+  in_wash: "in wash",
+  in_use: "wearing",
+  retired: "retired",
+};
+
+/** React purity lint: keep the impure clock call out of the component body. */
+const nowMs = () => Date.now();
 
 /** One wardrobe tile: press feedback + staggered entrance, reduce-motion aware. */
 function Tile({ g, index }: { g: Garment; index: number }) {
@@ -46,16 +60,56 @@ function Tile({ g, index }: { g: Garment; index: number }) {
 export default function Wardrobe() {
   const router = useRouter();
   const tone = useToneProfile();
+  const t = useTheme();
   const [garments, setGarments] = useState<Garment[]>([]);
+  const [loading, setLoading] = useState(true);
   const [slot, setSlot] = useState<(typeof SLOTS)[number]>("all");
+  const [status, setStatus] = useState<(typeof STATUSES)[number]>("all");
+  const [color, setColor] = useState<(typeof COLORS)[number]>("all");
+
+  const reload = useCallback(async () => {
+    setLoading(true);
+    try {
+      setGarments(await listGarments());
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
-      void listGarments().then(setGarments);
-    }, []),
+      void reload();
+    }, [reload]),
   );
 
-  const shown = slot === "all" ? garments : garments.filter((g) => g.attrs.slot === slot);
+  const shown = garments.filter((g) => {
+    if (slot !== "all" && g.attrs.slot !== slot) return false;
+    if (status !== "all" && g.status !== status) return false;
+    if (color === "neutral" && !g.attrs.colors.some((c) => isNeutral(c))) return false;
+    if (color === "color" && g.attrs.colors.every((c) => isNeutral(c))) return false;
+    return true;
+  });
+  const washedCount = garments.filter((g) => g.status === "in_wash").length;
+  const filtersActive = slot !== "all" || status !== "all" || color !== "all";
+
+  async function allWashed() {
+    const ids = garments.filter((g) => g.status === "in_wash").map((g) => g.id);
+    if (ids.length === 0) return;
+    await setGarmentStatus(ids, "available");
+    await enqueueLaundry({
+      garmentIds: ids,
+      event: "washed",
+      expectedAvailableAt: null,
+      ts: nowMs(),
+    });
+    await reload();
+  }
+
+  function clearFilters() {
+    setSlot("all");
+    setStatus("all");
+    setColor("all");
+  }
 
   return (
     <Screen>
@@ -73,12 +127,53 @@ export default function Wardrobe() {
             <Chip key={s0} label={s0} selected={slot === s0} onPress={() => setSlot(s0)} />
           ))}
         </View>
+        <View style={s.chips}>
+          {STATUSES.map((s0) => (
+            <Chip
+              key={s0}
+              label={STATUS_LABEL[s0]}
+              selected={status === s0}
+              onPress={() => setStatus(s0)}
+            />
+          ))}
+        </View>
+        <View style={s.chips}>
+          {COLORS.map((c) => (
+            <Chip
+              key={c}
+              label={c === "all" ? "all colors" : c}
+              selected={color === c}
+              onPress={() => setColor(c)}
+            />
+          ))}
+        </View>
 
-        {shown.length === 0 ? (
+        {washedCount > 0 && (
+          <Btn label={`All washed (${washedCount})`} variant="ghost" onPress={() => void allWashed()} />
+        )}
+
+        {loading ? (
+          <View style={s.grid}>
+            {[0, 1, 2, 3].map((i) => (
+              <View key={i} style={[s.tile, { backgroundColor: t.surface, borderColor: t.line }]}>
+                <View style={[s.img, { backgroundColor: t.surfaceAlt }]} />
+                <View style={s.tileBody}>
+                  <Caption> </Caption>
+                </View>
+              </View>
+            ))}
+          </View>
+        ) : garments.length === 0 ? (
           <Empty
             title={voice("wardrobe_empty", tone)}
             body="Photograph a piece and it lands here, tagged and ready."
             action={<Btn label="Add clothes" onPress={() => router.push("/(tabs)/capture")} />}
+          />
+        ) : shown.length === 0 ? (
+          <Empty
+            title="Nothing matches those filters."
+            body={filtersActive ? "Try a different slot, status, or color." : "Nothing here yet."}
+            action={<Btn label="Clear filters" variant="ghost" onPress={clearFilters} />}
           />
         ) : (
           <View style={s.grid}>
