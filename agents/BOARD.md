@@ -58,4 +58,4 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-045 | Rate-limit remaining authed routes + cap photos data-URI body | review | Indigo | medium | 2026-11-25 07:42 UTC |
 | T-046 | Android emulator for agent-side device checks (replace Anay's phone) | in-progress | Rei | high | 2026-11-25 08:02 UTC |
 | T-047 | ESLint can't resolve expo-haptics under hoisted npm ci | done | Coco | low | 2026-11-25 08:11 UTC |
-| T-048 | Chunk bulk "All washed" laundry events to the 100-id cap | review | Wren | low | 2026-11-25 08:10 UTC |
+| T-048 | Chunk bulk "All washed" laundry events to the 100-id cap | done | Wren | low | 2026-11-25 08:16 UTC |

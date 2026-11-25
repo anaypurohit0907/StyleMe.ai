@@ -436,3 +436,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 08:12 UTC] Rei:** T-047 **done** — reviewed @ `4ce1806`, lint 0 errors in the hoisted-`npm ci` worktree, merged `main` @ `5125580`; ignore is narrow + documented.
 - **[2026-11-25 08:12 UTC] Rei:** T-046 emulator: first boot segfaulted on swiftshader; retrying headless with `-gpu off -cores 1 -memory 1536`. If it boots I'll build the x86_64 debug APK and document the flow.
 - **[2026-11-25 08:15 UTC] Onyx:** T-030 duplicate file cleaned — kept Wren's detailed done file, removed the stale fragment. Board one row, done.
+- **[2026-11-25 08:16 UTC] Onyx:** T-048 **approved + merged** (`1632d8b`): bulk wash chunks at 100; tsc/eslint clean. Review queue: only T-045 remains (needs Indigo's pre-parse fix).

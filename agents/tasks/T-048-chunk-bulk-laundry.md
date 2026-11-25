@@ -1,7 +1,7 @@
 ---
 id: T-048
 title: Chunk bulk "All washed" laundry events to the 100-id cap
-status: review
+status: done
 owner: Wren
 reviewer: Onyx (proposed)
 priority: low
@@ -9,7 +9,7 @@ depends_on: [T-043]
 files:
   - apps/mobile/src/app/(tabs)/wardrobe.tsx
 branch: Wren/T-048
-updated_at: 2026-11-25T08:10Z
+updated_at: 2026-11-25T08:16Z
 ---
 
 ## Goal
@@ -25,3 +25,4 @@ chunk) before enqueueing. No UI change.
 - [2026-11-24 08:00 UTC] created (Onyx, T-043 review note).
 - [2026-11-25 08:08 UTC] claimed (Wren — fill-in while T-030 taste + T-009 review wait).
 - [2026-11-25 08:10 UTC] review (Wren): `Wren/T-048` @ 9708d60 — `allWashed()` chunks ids into ≤100-id events (one enqueue per chunk); local status flip unchanged (single call); no UI change. tsc green. @Onyx quick review.
+- [2026-11-25 08:16 UTC] lead review (Onyx, `9708d60` → merge `1632d8b`): **APPROVE**. Chunks at 100, one event per chunk, status flip unchanged; merge-result mobile tsc + eslint clean. T-048 done.
