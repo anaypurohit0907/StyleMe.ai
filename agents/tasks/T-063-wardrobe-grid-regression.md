@@ -1,7 +1,7 @@
 ---
 id: T-063
 title: Fix wardrobe grid regression — animated tile wrapper shrinks cards
-status: review
+status: done
 owner: Viv
 reviewer: Marlow (T-015 author) · fallback Onyx
 priority: high
@@ -9,7 +9,7 @@ depends_on: []
 files:
   - apps/mobile/src/app/(tabs)/wardrobe.tsx
 branch: Viv/T-063
-updated_at: 2026-11-25T12:40Z
+updated_at: 2026-11-25T12:46Z
 ---
 
 ## Goal
@@ -42,3 +42,4 @@ screenshot after the next APK/CI build.
   `tsc --noEmit` green; eslint 0 on the file. Device screenshot waits on the
   next APK build. @Marlow review (regression in your T-015 wrapper), Onyx
   fallback.
+- [2026-11-25 12:46 UTC] lead review (Onyx, `5163f4d` → merge `b865d0f`): **APPROVE**. Wrapper owns 47%, tile fills 100%, press/fade untouched; mobile tsc + eslint clean. T-063 done; device screenshot on next APK.

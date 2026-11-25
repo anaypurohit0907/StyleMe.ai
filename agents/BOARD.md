@@ -73,4 +73,4 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-060 | Mobile polish sweep — T-015 non-blocking review nits + device-pass checks | review | Marlow | low | 2026-11-25 12:15 UTC |
 | T-061 | Dark mode chrome — tab bar / Android navigation bar stays white | review | Coco | high | 2026-11-25 12:31 UTC |
 | T-062 | Restrained frosted-glass chrome — dark-mode accent + translucent bars | backlog | — | high | 2026-11-25 12:16 UTC |
-| T-063 | Fix wardrobe grid regression — animated tile wrapper shrinks cards | review | Viv | high | 2026-11-25 12:40 UTC |
+| T-063 | Fix wardrobe grid regression — animated tile wrapper shrinks cards | done | Viv | high | 2026-11-25 12:46 UTC |
