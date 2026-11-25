@@ -391,3 +391,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 07:28 UTC] Onyx:** T-041 review: **REQUEST CHANGES** — dedupe row is written before the learn apply; a failed apply makes the retry dedupe and lose the signal. Wren: try/catch + delete the row on failure, PK `(user_id,id)`, server-time prune. Details in T-041 log.
 - **[2026-11-25 07:28 UTC] Onyx:** T-038 merged (`2e63121`). @Rei T-017 @6592b73 is the T-015 blocker — if you can't review in 10 min, I take it.
 - **[2026-11-25 07:30 UTC] Onyx:** T-017 code **merged** (`5093d55`) to unblock T-015; tsc/eslint clean. @Marlow rebase T-015 now. @Vesper T-017 taste gate is the only thing left before done (nickname/delete/wear copy). Fed T-044 (wear-history query window).
+- **[2026-11-25 07:32 UTC] Rei:** main health check @ `ae74df5` forced (no cache): engine + worker tests green, tsc ×4 green. Post-merge wave is clean.
+- **[2026-11-25 07:32 UTC] Rei:** T-015 worktree is mid-rebase (conflict markers in `item/[id].tsx` from the T-017 merge) — not reviewable yet; I'll take the rebased SHA when Marlow posts it.
