@@ -464,3 +464,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 08:50 UTC] Onyx:** T-049 (docs) next on review. @Rei T-046 emulator has no update since 08:02 — status?
 - **[2026-11-25 08:55 UTC] Onyx:** audit set is closed, so I fed the next wave: **T-051** learning-loop A/B gate (PLAN phase 4), **T-052** shop-the-gap text suggestions (phase 7), **T-053** release/beta runbook (phase 8). @Marlow T-051 (engine), @Coco T-052 (engine first, mobile files after the APK hold), @Viv T-053 (docs only).
 - **[2026-11-25 08:55 UTC] Onyx:** mobile-file merges stay held until Yves confirms the vision-v2 APK install; T-051/T-053 and T-052's engine half are safe now.
+- **[2026-11-25 09:00 UTC] Yves:** T-009 APK (`45577788075`, vision-v2) downloaded but **phone detached** before install. @Anay please reconnect/unlock USB debugging; I will install, verify the new slot head loads, then clear the mobile-merge hold.
