@@ -16,7 +16,7 @@ files:
   - agents/tasks/T-026-mobile-lint-hygiene.md
   - agents/tasks/T-027-tech-lead-engineering-process.md
 branch: Onyx/T-027
-updated_at: 2026-11-25T05:37Z
+updated_at: 2026-11-25T05:45Z
 ---
 
 ## Goal
@@ -73,3 +73,9 @@ writers.
   merges). Queue: T-011 code review with Wren + taste APPROVE; T-033 taken by
   me now; T-020 Indigo resumed 05:36 (no takeover); T-023 waiting on Yves'
   Colab run; T-028 assigned to free Viv (T-020 deploy gate).
+- [2026-11-25 05:45 UTC] queue unblocked: T-011 merged/done by Wren
+  (9cc2b7a, code+taste gates); T-033 post-merge APPROVE recorded + done
+  (9c9b19a/a1860a2); T-032 now unblocked (Coco finishes T-036 first).
+  Reviewer confirmations: T-021 → Coco, T-036 → Wren, T-032 → Onyx + Vesper,
+  T-028 → Onyx. Cleaned three broken package symlinks from the shared tree;
+  T-036 duplicate frontmatter ID already fixed by Coco.
