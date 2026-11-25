@@ -26,11 +26,26 @@ Four Colab notebooks. Run in order. Everything is idempotent and survives sessio
 
 Scores the shipped slot head (zero-shot + `probes.json` probe) on public corpora against our
 6-slot taxonomy. Gate: probe ≥ 0.90 on the DeepFashion2 anchor; street sets measure
-worn-vs-flat distribution shift, not the gate. **Numbers pending first Colab run** — report
-lands in `artifacts/dataset_eval_report.md`. All four corpora are non-commercial-licensed:
+worn-vs-flat distribution shift, not the gate. Sampling seed pinned (SEED=0) so numbers stay
+comparable across T-009 retrains. All four corpora are non-commercial-licensed:
 fine for eval/training research (T-009), re-review before commercial use. They supplement —
 never replace — the 20–30 real labeled phone photos T-009 needs; no public set contains our
 bed/floor phone flat-lays.
+
+First Colab run (Yves, 2026-11-25, shipped probe):
+
+| dataset | style | probe acc | n | notes |
+|---|---|---|---|---|
+| DeepFashion2 val | consumer photos (anchor) | **0.884** | 7,999 | below the 0.90 gate — no training change shipped on it, but the honest baseline for T-009 |
+| Fashion Product Images | e-commerce flat-lays | **0.964** | 8,476 | strong on our capture style; **shoes recall 0.68** — the measured gap T-009's background-invariant retrain targets |
+| Fashionpedia (HF) | street (worn) | pending | — | split name fixed (`val` not `validation`); rerun with the next Colab session |
+| ModaNet | street (worn) | skipped | — | repo clone yields git-lfs pointers, no bulk images — annotations remain T-009 augmentation labels |
+
+Verdict (T-023, lead-approved gate read): the shipped slot head holds flat-lay/e-commerce
+territory (FPI 0.964) and sits just under the anchor gate on DF2 (0.884); the one measured
+weakness is **shoes recall 0.68**, which becomes the concrete target for T-009's
+background-augmented retrain + more shoes training data. Full report lands in
+`artifacts/dataset_eval_report.md` on the next run.
 
 ## Results (MobileCLIP-S1, 256px, 512-d)
 
