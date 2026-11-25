@@ -1,15 +1,15 @@
 ---
 id: T-056
 title: Correct AGENTS vision-assets claim — mobileclip encoder still comes from the bundle
-status: backlog
-owner:
-reviewer:
+status: review
+owner: Wren
+reviewer: Onyx (proposed — he caught it)
 priority: medium
 depends_on: [T-050]
 files:
   - AGENTS.md
-branch:
-updated_at: 2026-11-25T09:31Z
+branch: main (direct doc commit, same flow as T-050)
+updated_at: 2026-11-25T09:36Z
 ---
 
 ## Goal
@@ -36,3 +36,4 @@ first. Keep `ml/artifacts/` + `ml/data/` ignored.
   learning-loop gate task took T-055 (Rei, from the first `emulator.yml` run
   45584235952 failure — missing `mobileclip_s1_image.onnx`; T-050's "clean
   checkout builds natively" claim is wrong).
+- [2026-11-25 09:36 UTC] claimed + fixed (Wren — my error, my fix): AGENTS.md gotcha rewritten as split tracked/bundled — small models tracked, MobileCLIP encoder bundle-only via `vision-v2` (verified `git ls-files` = 0 for mobileclip), clean checkout needs the zip for a working tagger. Direct commit like T-050; @Onyx post-hoc approve both.
