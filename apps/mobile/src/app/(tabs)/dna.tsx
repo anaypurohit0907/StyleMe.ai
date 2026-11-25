@@ -1,5 +1,11 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { View, StyleSheet } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useReducedMotion,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 import { useFocusEffect } from "expo-router";
 import type { PreferenceVector } from "@styleme/schema";
@@ -7,7 +13,8 @@ import { emptyPreference } from "@styleme/schema";
 import { paletteSwatch, space } from "@styleme/design";
 import { Btn, Caption, Card, Display, Screen, Scroll, TextLink, Title } from "@/components/ui";
 import { ScanLog } from "@/components/scan-log";
-import { loadPrefs, savePrefs } from "@/lib/local";
+import { answerPoll, getPendingPoll, loadPrefs, savePrefs, type Poll } from "@/lib/local";
+import { useToneProfile, voice } from "@/lib/tone";
 import { applyCorrections } from "@styleme/schema/corrections";
 import { listGarments, metaSet, upsertGarment } from "@/lib/db";
 import { getVisionTagger } from "@/lib/vision";
@@ -16,6 +23,17 @@ import { errorText, log, logError, withTimeout } from "@/lib/pipeline-log";
 import { useTheme } from "@/lib/theme";
 
 const ITEM_TIMEOUT = 120_000;
+
+function BarFill({ value, color }: { value: number; color: string }) {
+  const pct = Math.max(0, Math.min(1, (value + 1) / 2));
+  const width = useSharedValue(pct);
+  const reduce = useReducedMotion();
+  useEffect(() => {
+    width.value = reduce ? pct : withTiming(pct, { duration: 320 });
+  }, [pct, reduce, width]);
+  const style = useAnimatedStyle(() => ({ width: `${width.value * 100}%` }));
+  return <Animated.View style={[s.fill, { backgroundColor: color }, style]} />;
+}
 
 function Bars({ data, swatches }: { data: Record<string, number>; swatches?: boolean }) {
   const t = useTheme();
@@ -34,12 +52,7 @@ function Bars({ data, swatches }: { data: Record<string, number>; swatches?: boo
             <Caption>{k}</Caption>
           </View>
           <View style={[s.track, { backgroundColor: t.surfaceAlt }]}>
-            <View
-              style={[
-                s.fill,
-                { width: `${Math.round(((v + 1) / 2) * 100)}%`, backgroundColor: v >= 0 ? t.accent : t.inkFaint },
-              ]}
-            />
+            <BarFill value={v} color={v >= 0 ? t.accent : t.inkFaint} />
           </View>
         </View>
       ))}
@@ -48,7 +61,10 @@ function Bars({ data, swatches }: { data: Record<string, number>; swatches?: boo
 }
 
 export default function DNA() {
+  const t = useTheme();
+  const tone = useToneProfile();
   const [prefs, setPrefs] = useState<PreferenceVector>(emptyPreference());
+  const [poll, setPoll] = useState<Poll | null>(null);
   const [retagging, setRetagging] = useState(false);
   const [retagProgress, setRetagProgress] = useState("");
   const [retagStage, setRetagStage] = useState("");
@@ -57,9 +73,27 @@ export default function DNA() {
 
   useFocusEffect(
     useCallback(() => {
-      void loadPrefs().then(setPrefs);
+      void Promise.all([loadPrefs(), getPendingPoll()])
+        .then(([next, pending]) => {
+          setPrefs(next);
+          setPoll(pending);
+        })
+        .catch(() => {
+          // A failed poll query must not hide the learned DNA.
+        });
     }, []),
   );
+
+  async function answer(pending: Poll, choice: string) {
+    try {
+      const next = await answerPoll(pending, choice);
+      setPrefs(next);
+      setPoll(null);
+      void Haptics.selectionAsync();
+    } catch {
+      // Keep the poll on screen if the local write failed.
+    }
+  }
 
   async function retagAll() {
     if (retagging) return;
@@ -157,6 +191,23 @@ export default function DNA() {
         <Caption>
           Learned from {prefs.n} pick{prefs.n === 1 ? "" : "s"}. Transparent and resettable.
         </Caption>
+
+        {poll && (
+          <Card style={{ gap: space.m, borderColor: t.accent }}>
+            <Caption>{voice("poll_invite", tone, `poll-${poll.day}`)}</Caption>
+            <Title>{poll.question}</Title>
+            <View style={{ flexDirection: "row", gap: space.s }}>
+              {poll.options.map((option) => (
+                <Btn
+                  key={option.key}
+                  label={option.label}
+                  variant="ghost"
+                  onPress={() => void answer(poll, option.key)}
+                />
+              ))}
+            </View>
+          </Card>
+        )}
 
         <Card style={{ gap: space.m }}>
           <Caption>Colors you reach for</Caption>

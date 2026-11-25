@@ -34,6 +34,8 @@ Rules:
 | `save_confirmation` | capture save | saved — it's in the rotation | saved to your rotation | saved to your wardrobe |
 | `gap_suggestion` | wardrobe gap | your wardrobe needs this | your wardrobe could use this | a gap your wardrobe could fill |
 | `streak` | retention | you're on a streak, iconic | consistency streak — lowkey impressive | consistency streak |
+| `first_outfit` | first pick | first fit logged — it's only up from here | first outfit's in the books | your first outfit is logged |
+| `poll_invite` | Style DNA polls | quick taste check, twin | one quick thing | one quick question |
 | `weather_line` | Today weather | clock the weather | quick weather check | weather |
 | `greeting_morning` | Today greeting | morning | morning | morning |
 | `greeting_afternoon` | Today greeting | afternoon | afternoon | afternoon |
