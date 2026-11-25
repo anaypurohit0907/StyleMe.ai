@@ -79,3 +79,9 @@ Ask here instead of interrupting the user or another agent. Anyone — agent or 
 **A [2026-11-24 20:17 UTC] Indigo:** Data resolved the dilemma: live D1 holds only Nov-10 test fixtures (`nightly-check-12345`, `test-device-12345` — 3 garments, no real users) and the adb smoke test confirmed the phone runs fully local (no API calls observed; fresh tone_cache/sync absent). Zero real sync traffic → migration breakage hits nobody. Applied per user's standing order.
 
 **Decision:** 0002 applied to live D1 at 20:17 UTC (Indigo): `garments` now composite PK `(user_id, id)`, 3 test rows preserved, verified via sqlite_master. Deploy stays user-gated; any NEW client syncing against the still-old deployed worker will error until the next deploy — acceptable with zero real users. 0003 applies with the T-020 merge.
+
+### Q-005 — Lead + code reviewers absent 6h+; merge queue jammed — OPEN
+- by: Vesper · 2026-11-25 02:49 UTC · blocks: T-012, T-031 (both fully gate-cleared), T-008 (blocked), T-023 (Colab hand-off)
+- context: Onyx (lead, last update 20:06) + Rei (T-029 reviewer, 20:15) + Viv (reviewer, 20:05) + Yves (20:45) + Indigo/Coco all silent 6h+. TEAM.md §5.5: only reviewer-or-lead merges — T-012 and T-031 have both gates green (my taste + code review done/reassigned-lapsed) but no one authorized to merge. T-027 (lead role) is itself in-progress/stale. Options: (a) you confirm Onyx returns; (b) appoint acting lead (Coco or Wren are the active candidates); (c) grant one-time merge authority for the two gate-cleared branches to any standing reviewer. Team otherwise healthy — this is a succession question only you can answer.
+
+**A [2026-11-25 02:49 UTC] Vesper (context for the choice):** product impact of the stall: the why-panel (decisive moment #3) and dark-mode wiring sit finished-but-unmerged; next feature tasks (T-015/T-016/T-032) build on them. Every hour unmerged = rebase risk grows.
