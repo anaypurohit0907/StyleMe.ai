@@ -2,7 +2,7 @@
  * Small UI kit. One accent, 8pt grid, one radius language.
  * Every screen gets exactly one primary action.
  */
-import { useEffect, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, type ComponentRef, type ReactNode } from "react";
 import {
   ActivityIndicator,
   Modal,
@@ -22,9 +22,12 @@ import Animated, {
   withSpring,
   withTiming,
 } from "react-native-reanimated";
+import { BlurTargetView } from "expo-blur";
+import { useFocusEffect } from "expo-router";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { radius, space, type } from "@styleme/design";
 import { useTheme } from "@/lib/theme";
+import { useBlurTarget } from "@/lib/blur-target";
 
 /** Reanimated 4 has no built-in Animated Pressable — build it once. */
 export const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -75,10 +78,23 @@ export function usePressFeedback(opts?: { disabled?: boolean }) {
 
 export function Screen({ children, style }: { children: ReactNode; style?: StyleProp<ViewStyle> }) {
   const t = useTheme();
+  const blur = useBlurTarget();
+  const targetRef = useRef<ComponentRef<typeof View>>(null);
+  // Register the focused screen as the Android blur target for the tab bar.
+  useFocusEffect(
+    useCallback(() => {
+      // Ref object is stable even if the native view is still mounting; the
+      // BlurView remounts on version bump once the target exists.
+      blur?.setTargetRef(targetRef);
+      return undefined;
+    }, [blur]),
+  );
   return (
-    <SafeAreaView style={[s.screen, { backgroundColor: t.bg }, style]} edges={["top", "left", "right"]}>
-      {children}
-    </SafeAreaView>
+    <BlurTargetView ref={targetRef} style={[s.screen, { backgroundColor: t.bg }, style]}>
+      <SafeAreaView style={s.screen} edges={["top", "left", "right"]}>
+        {children}
+      </SafeAreaView>
+    </BlurTargetView>
   );
 }
 

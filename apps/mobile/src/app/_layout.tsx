@@ -11,6 +11,7 @@ import { getDb, metaGet } from "@/lib/db";
 import { setVisionTagger } from "@/lib/vision";
 import { initPipelineLog, log, logFileHint } from "@/lib/pipeline-log";
 import { useTheme } from "@/lib/theme";
+import { BlurTargetProvider } from "@/lib/blur-target";
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -68,12 +69,14 @@ export default function RootLayout() {
     <>
       <StatusBar style={scheme === "dark" ? "light" : "dark"} />
       {Platform.OS === "android" && <NavigationBar style="auto" />}
-      <Gate />
-      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: t.bg } }}>
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="onboarding" options={{ gestureEnabled: false }} />
-        <Stack.Screen name="item/[id]" options={{ presentation: "card" }} />
-      </Stack>
+      <BlurTargetProvider>
+        <Gate />
+        <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: t.bg } }}>
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="onboarding" options={{ gestureEnabled: false }} />
+          <Stack.Screen name="item/[id]" options={{ presentation: "card" }} />
+        </Stack>
+      </BlurTargetProvider>
     </>
   );
 }
