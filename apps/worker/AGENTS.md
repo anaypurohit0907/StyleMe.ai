@@ -40,3 +40,9 @@ Photos stay on-device; the worker stores attributes + embeddings, never photos. 
 - Validation goes in `packages/schema` (zod) — worker routes validate with it; don't hand-roll checks in `src/index.ts`.
 - Response shape changes must update `packages/schema` first — mobile imports the same types.
 - Deploy flow (D1 migrations + `JWT_SECRET` + `wrangler deploy`) is README § "Deploy the worker" — run migrations before deploy, never after.
+
+## Deploy runbook (auth proof-of-possession, since 0003)
+
+- **Order matters:** mobile T-028 (registrationSecret storage) must ship in the same window or BEFORE the worker deploy — old APKs only send `registrationSecret` after T-028; a pre-T-028 install that loses its cached token gets a hard 403 (re-onboard under a fresh device id is the only recovery).
+- **Legacy first-caller-wins window:** pre-0003 users (NULL `reg_secret_hash`) get their secret minted at first re-contact after deploy. Until a device's first re-contact, anyone who knows its bare deviceId can claim that upgrade. Window closes per-user at first re-contact; treat lingering 403 reports after the T-028 wave as "re-onboard with a new device id".
+- **0002/0003 are live-schema-sensitive:** the deployed code and the D1 schema must move together — old sync SQL (`ON CONFLICT(id)`) errors against the composite PK and vice versa. Never migrate without deploying in the same session (and never deploy without migrating).

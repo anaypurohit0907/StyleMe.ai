@@ -129,6 +129,9 @@ export async function ensureUser(
 ): Promise<EnsureUserResult> {
   const existing = await getUser(db, id);
   if (existing) {
+    // Note: a valid JWT is required to reach the authed routes that land
+    // here, so a NULL-hash row can still be ensureUser'd — acceptable; the
+    // secret upgrade only happens in /v1/auth/device.
     if (onboarding || tone) {
       await db
         .prepare("UPDATE users SET onboarding = COALESCE(?, onboarding), tone = COALESCE(?, tone) WHERE id = ?")
