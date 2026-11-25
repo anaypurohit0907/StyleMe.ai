@@ -2,10 +2,11 @@ import { useCallback, useState } from "react";
 import { Image, StyleSheet, View } from "react-native";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import type { Fit, Garment, GarmentAttrs, Pattern, Slot } from "@styleme/schema";
-import { colors, paletteSwatch, radius, space } from "@styleme/design";
+import { paletteSwatch, radius, space } from "@styleme/design";
 import { Btn, Caption, Card, Chip, Screen, Scroll, Swatch, Title } from "@/components/ui";
 import { deleteGarment, getGarment, setGarmentStatus, upsertGarment } from "@/lib/db";
 import { diffCorrections } from "@styleme/schema/corrections";
+import { useTheme } from "@/lib/theme";
 
 const SLOTS: Slot[] = ["top", "bottom", "dress", "outerwear", "shoes", "accessory"];
 const PATTERNS: Pattern[] = ["solid", "striped", "check", "floral", "graphic", "animal", "other"];
@@ -15,6 +16,7 @@ const COLOR_NAMES = Object.keys(paletteSwatch);
 export default function ItemDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const t = useTheme();
   const [g, setG] = useState<Garment | null>(null);
   const [draft, setDraft] = useState<GarmentAttrs | null>(null);
   const [saving, setSaving] = useState(false);
@@ -89,7 +91,7 @@ export default function ItemDetail() {
         {g.photoRef ? (
           <Image source={{ uri: g.photoRef }} style={s.img} />
         ) : (
-          <View style={[s.img, { backgroundColor: paletteSwatch[draft.colors[0]] ?? colors.surfaceAlt }]} />
+          <View style={[s.img, { backgroundColor: paletteSwatch[draft.colors[0]] ?? t.surfaceAlt }]} />
         )}
 
         <Card style={{ gap: space.s }}>
@@ -164,6 +166,6 @@ export default function ItemDetail() {
 }
 
 const s = StyleSheet.create({
-  img: { width: "100%", aspectRatio: 0.8, borderRadius: radius.md, backgroundColor: colors.surfaceAlt },
+  img: { width: "100%", aspectRatio: 0.8, borderRadius: radius.md },
   wrap: { flexDirection: "row", flexWrap: "wrap", gap: space.s, alignItems: "center" },
 });

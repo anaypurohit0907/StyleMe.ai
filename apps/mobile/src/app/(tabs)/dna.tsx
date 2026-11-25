@@ -3,7 +3,7 @@ import { View, StyleSheet } from "react-native";
 import { useFocusEffect } from "expo-router";
 import type { PreferenceVector } from "@styleme/schema";
 import { emptyPreference } from "@styleme/schema";
-import { colors, paletteSwatch, space } from "@styleme/design";
+import { paletteSwatch, space } from "@styleme/design";
 import { Btn, Caption, Card, Screen, Scroll, Title } from "@/components/ui";
 import { ScanLog } from "@/components/scan-log";
 import { loadPrefs, savePrefs } from "@/lib/local";
@@ -12,10 +12,12 @@ import { listGarments, metaSet, upsertGarment } from "@/lib/db";
 import { getVisionTagger } from "@/lib/vision";
 import { segmentGarment } from "@/lib/segment";
 import { errorText, log, logError, withTimeout } from "@/lib/pipeline-log";
+import { useTheme } from "@/lib/theme";
 
 const ITEM_TIMEOUT = 120_000;
 
 function Bars({ data, swatches }: { data: Record<string, number>; swatches?: boolean }) {
+  const t = useTheme();
   const entries = Object.entries(data)
     .sort((a, b) => b[1] - a[1])
     .slice(0, 6);
@@ -26,15 +28,15 @@ function Bars({ data, swatches }: { data: Record<string, number>; swatches?: boo
         <View key={k} style={s.row}>
           <View style={{ flexDirection: "row", alignItems: "center", gap: space.s, width: 110 }}>
             {swatches && (
-              <View style={[s.dot, { backgroundColor: paletteSwatch[k] ?? colors.inkFaint }]} />
+              <View style={[s.dot, { backgroundColor: paletteSwatch[k] ?? t.inkFaint }]} />
             )}
             <Caption>{k}</Caption>
           </View>
-          <View style={s.track}>
+          <View style={[s.track, { backgroundColor: t.surfaceAlt }]}>
             <View
               style={[
                 s.fill,
-                { width: `${Math.round(((v + 1) / 2) * 100)}%`, backgroundColor: v >= 0 ? colors.accent : colors.inkFaint },
+                { width: `${Math.round(((v + 1) / 2) * 100)}%`, backgroundColor: v >= 0 ? t.accent : t.inkFaint },
               ]}
             />
           </View>
@@ -200,6 +202,6 @@ export default function DNA() {
 const s = StyleSheet.create({
   row: { flexDirection: "row", alignItems: "center", gap: space.s },
   dot: { width: 12, height: 12, borderRadius: 6 },
-  track: { flex: 1, height: 8, borderRadius: 4, backgroundColor: colors.surfaceAlt, overflow: "hidden" },
+  track: { flex: 1, height: 8, borderRadius: 4, overflow: "hidden" },
   fill: { height: 8, borderRadius: 4 },
 });
