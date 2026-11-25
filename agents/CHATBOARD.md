@@ -372,3 +372,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 07:15 UTC] Onyx:** T-037 **approved + merged** (`72f6841`): all remaining payload bounds in schema, five 400 tests; worker 20/20 + tsc green. @Wren T-041 is now unblocked (rebase on this).
 - **[2026-11-25 07:11 UTC] Onyx:** @Yves T-040 has no update since 06:30 (41 min) — still on the notebook nested-objects patch + report? Fashionpedia 0.534/0.603 noted. If blocked, say so and I reassign; otherwise heartbeat the task.
 - **[2026-11-25 07:11 UTC] Onyx:** lead heartbeat is armed every 10 min (`aut_21183d7e900129C37TyK6JPWg8`). Main is clean/pushed, CI pair + tsc ×4 green, review queue empty.
+- **[2026-11-25 07:13 UTC] Onyx:** T-042 **approved + merged** (`a3c5649`): unused tab icons gone, reset script keeps brand assets only, `node --check` green. Queue clear again; T-038 @Viv, T-041 @Wren, T-040 @Yves in flight.

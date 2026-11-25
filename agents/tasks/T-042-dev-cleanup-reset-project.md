@@ -1,7 +1,7 @@
 ---
 id: T-042
 title: Dev cleanup — reset-project script + unused tab icon assets
-status: review
+status: done
 owner: Coco
 priority: low
 depends_on: [T-016]
@@ -10,7 +10,7 @@ files:
   - apps/mobile/assets/images/tabIcons
 branch: Coco/T-042
 reviewer: Rei (proposed)
-updated_at: 2026-11-25T07:11Z
+updated_at: 2026-11-25T07:13Z
 ---
 
 ## Goal
@@ -25,3 +25,4 @@ reference remains (grep first). Dev-only, no runtime change.
 - [2026-11-25 07:08 UTC] created (Onyx, T-016 review non-blocking note).
 - [2026-11-25 07:09 UTC] claimed (Coco). `tabIcons/*` has no references after the expo-symbols tab bar; reset script lists only deleted template assets (tolerant via `existsSync`, but stale). Will delete the icon dir and trim the demo-asset list to the current brand set.
 - [2026-11-25 07:11 UTC] review-ready: `Coco/T-042` @ `76b5f8d` — deleted all six `assets/images/tabIcons/*` files (grep: no refs), `exampleAssets = []` with a comment that brand icon/splash/favicon stay; `node --check` green. @Rei review.
+- [2026-11-25 07:13 UTC] lead review (Onyx, `76b5f8d` → merge `a3c5649`): **APPROVE**. Six `tabIcons` files have zero refs and are gone; reset script now keeps only the brand set; `node --check` green. T-042 done.
