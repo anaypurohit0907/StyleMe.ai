@@ -49,10 +49,30 @@ class Stmt {
     return { results: [] };
   }
 
-  async run(): Promise<void> {
+  /**
+   * Returns D1's `{ meta: { changes } }` shape. `changes` is exact for the
+   * learn_events dedupe statements (the only place the worker reads it);
+   * other writes report 1 when a row was touched.
+   */
+  async run(): Promise<{ meta: { changes: number } }> {
     const sql = this.key();
     const p = this.params;
-    if (sql.startsWith("INSERT INTO users")) {
+    let changes = 0;
+    if (sql.startsWith("INSERT OR IGNORE INTO learn_events")) {
+      const id = p[0] as string;
+      if (!this.db.learnEvents.has(id)) {
+        this.db.learnEvents.set(id, { user_id: p[1] as string, ts: p[2] as number });
+        changes = 1;
+      }
+    } else if (sql.startsWith("DELETE FROM learn_events")) {
+      const cutoff = p[1] as number;
+      for (const [id, e] of this.db.learnEvents) {
+        if (e.user_id === (p[0] as string) && e.ts < cutoff) {
+          this.db.learnEvents.delete(id);
+          changes++;
+        }
+      }
+    } else if (sql.startsWith("INSERT INTO users")) {
       const id = p[0] as string;
       const existing = this.db.users.get(id);
       if (existing) {
@@ -148,7 +168,9 @@ class Stmt {
       this.db.laundry.push({ user_id: p[0], garment_ids: p[1], event: p[2] });
     } else if (sql.startsWith("INSERT INTO tone_cache")) {
       this.db.toneCache.set(`${p[0]}:${p[1]}`, { copy: p[2] });
+      changes = 1;
     }
+    return { meta: { changes } };
   }
 }
 
@@ -160,6 +182,8 @@ export class MockD1 {
   wearLog: Row[] = [];
   laundry: Row[] = [];
   toneCache = new Map<string, { copy: string }>();
+  /** learn_events dedupe table — mirrors migrations/0004. */
+  learnEvents = new Map<string, { user_id: string; ts: number }>();
   /** Test hook: next `SELECT * FROM users` for this id misses once (race window). */
   suppressUserGetOnce: string | null = null;
 
@@ -174,7 +198,7 @@ export class MockD1 {
     };
   }
 
-  async batch(stmts: { run: () => Promise<void> }[]): Promise<unknown[]> {
+  async batch(stmts: { run: () => Promise<unknown> }[]): Promise<unknown[]> {
     for (const s of stmts) await s.run();
     return [];
   }

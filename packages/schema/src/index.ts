@@ -214,6 +214,13 @@ export const LearnEventSchema = z.object({
   pickedId: z.string().max(512).nullable(),
   context: RecommendContextSchema,
   ts: z.number(),
+  /**
+   * Client queue job id. Delivery is at-least-once: if the app dies after
+   * the worker accepts the event but before the queue forgets it, the retry
+   * carries the same jobId and the worker skips the double-apply.
+   * Absent on old clients — those sends stay last-write-wins.
+   */
+  jobId: z.string().min(8).max(64).optional(),
 });
 export type LearnEvent = z.infer<typeof LearnEventSchema>;
 

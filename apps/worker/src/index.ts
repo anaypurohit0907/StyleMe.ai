@@ -294,6 +294,19 @@ app.post("/v1/learn", auth, async (c) => {
   if (!ev.success) return c.json({ error: "invalid learn event" }, 400);
 
   const d = ev.data;
+
+  // Idempotent delivery (T-041): a retried job id applies exactly once.
+  if (d.jobId) {
+    const seen = await c.env.DB.prepare(
+      "INSERT OR IGNORE INTO learn_events (id, user_id, ts) VALUES (?, ?, ?)",
+    ).bind(d.jobId, userId, d.ts).run();
+    if (!seen.meta.changes) return c.json({ ok: true, deduped: true });
+    // Opportunistic prune — one cheap delete per accepted event.
+    await c.env.DB.prepare(
+      "DELETE FROM learn_events WHERE user_id = ? AND ts < ?",
+    ).bind(userId, d.ts - 30 * 24 * 3600 * 1000).run();
+  }
+
   const { user } = await ensureUser(c.env.DB, userId);
   const garments = await listGarments(c.env.DB, userId);
   const garmentMap = new Map(garments.map((g) => [g.id, g]));

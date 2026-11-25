@@ -73,7 +73,12 @@ function serialized<T>(op: () => Promise<T>): Promise<T> {
  * pending one — the worker only ever needs the latest. */
 export function enqueue(job: NewSyncJob): Promise<void> {
   return serialized(async () => {
-    const withId = { ...job, id: newJobId() } as SyncJob;
+    const id = newJobId();
+    // Learn jobs carry their queue id so the worker can dedupe retries
+    // (at-least-once delivery applies exactly once — T-041).
+    const withId = (
+      job.kind === "learn" ? { ...job, id, ev: { ...job.ev, jobId: id } } : { ...job, id }
+    ) as SyncJob;
     try {
       let jobs = await readQueue();
       if (job.kind === "wardrobe") jobs = jobs.filter((j) => j.kind !== "wardrobe");
