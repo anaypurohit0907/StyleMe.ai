@@ -1,4 +1,12 @@
-import type { Garment, GarmentAttrs } from "@styleme/schema";
+import type { Garment, GarmentAttrs } from "./index";
+import {
+  ColorNameSchema,
+  FitSchema,
+  MaterialSchema,
+  PatternSchema,
+  SeasonSchema,
+  SlotSchema,
+} from "./index";
 
 type Correction = Garment["corrections"][number];
 
@@ -16,11 +24,12 @@ const CORRECTABLE_FIELDS = [
 
 type CorrectableField = (typeof CORRECTABLE_FIELDS)[number];
 
-const SLOTS = new Set(["top", "bottom", "dress", "outerwear", "shoes", "accessory"]);
-const PATTERNS = new Set(["solid", "striped", "check", "floral", "graphic", "animal", "other"]);
-const FITS = new Set(["slim", "regular", "relaxed", "oversized"]);
-const SEASONS = new Set(["warm", "cool", "all"]);
-const MATERIALS = new Set(["light", "medium", "heavy"]);
+const SLOTS = new Set<string>(SlotSchema.options);
+const COLORS = new Set<string>(ColorNameSchema.options);
+const PATTERNS = new Set<string>(PatternSchema.options);
+const FITS = new Set<string>(FitSchema.options);
+const SEASONS = new Set<string>(SeasonSchema.options);
+const MATERIALS = new Set<string>(MaterialSchema.options);
 
 function fieldValue(attrs: GarmentAttrs, field: CorrectableField): string {
   if (field === "colors") return attrs.colors.join(",");
@@ -56,7 +65,9 @@ export function applyCorrections(attrs: GarmentAttrs, corrections: Correction[])
         if (SLOTS.has(c.to)) next.slot = c.to as GarmentAttrs["slot"];
         break;
       case "colors": {
-        const colors = c.to.split(",").filter(Boolean) as GarmentAttrs["colors"];
+        const colors = c.to
+          .split(",")
+          .filter((color) => COLORS.has(color)) as GarmentAttrs["colors"];
         if (colors.length > 0) next.colors = colors;
         break;
       }
@@ -67,8 +78,8 @@ export function applyCorrections(attrs: GarmentAttrs, corrections: Correction[])
         if (FITS.has(c.to)) next.fit = c.to as GarmentAttrs["fit"];
         break;
       case "formality": {
-        const n = Number.parseInt(c.to, 10);
-        if (Number.isFinite(n)) {
+        const n = Number(c.to);
+        if (Number.isInteger(n)) {
           next.formality = Math.max(1, Math.min(5, n)) as GarmentAttrs["formality"];
         }
         break;

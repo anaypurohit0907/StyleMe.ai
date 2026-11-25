@@ -7,7 +7,7 @@ import { colors, paletteSwatch, space } from "@styleme/design";
 import { Btn, Caption, Card, Screen, Scroll, Title } from "@/components/ui";
 import { ScanLog } from "@/components/scan-log";
 import { loadPrefs, savePrefs } from "@/lib/local";
-import { applyCorrections } from "@/lib/tag-corrections";
+import { applyCorrections } from "@styleme/schema/corrections";
 import { listGarments, metaSet, upsertGarment } from "@/lib/db";
 import { getVisionTagger } from "@/lib/vision";
 import { segmentGarment } from "@/lib/segment";
