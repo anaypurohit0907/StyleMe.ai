@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { emptyPreference } from "@styleme/schema";
+import { emptyPreference, ScoredOutfitSchema } from "@styleme/schema";
 import type { Garment } from "@styleme/schema";
 import {
   blendWeights,
@@ -391,7 +391,7 @@ describe("recommend() invariants", () => {
     expect(res.meta.unavailableSlots).toEqual(["shoes"]); // say "all in the wash" instead
   });
 
-  it("dress + shoes outfits are 2 garments — the schema min must allow this (T-020 min(2))", () => {
+  it("dress + shoes outfits are 2 garments and satisfy the schema contract (min(2), T-020)", () => {
     const dressWardrobe = makeWardrobe({
       seed: 9,
       slotPlan: { dress: 3, shoes: 3 },
@@ -406,6 +406,8 @@ describe("recommend() invariants", () => {
     expect(res.outfits.length).toBeGreaterThan(0);
     for (const o of res.outfits) {
       expect(o.garmentIds.length).toBe(2);
+      // engine output must satisfy the wire contract as-is
+      expect(() => ScoredOutfitSchema.parse(o)).not.toThrow();
     }
   });
 
