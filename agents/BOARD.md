@@ -49,4 +49,4 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-036 | Fix external log file creation — T-024 device regression | done | Coco | high | 2026-11-25 05:58 UTC |
 | T-037 | Cap remaining client payload strings — learn/laundry, corrections, photo refs | backlog | — | medium | 2026-11-25 05:54 UTC |
 | T-038 | Move auth token + registrationSecret to SecureStore | backlog | — | medium | 2026-11-25 05:58 UTC |
-| T-039 | Worker — import NEUTRAL_COLORS from engine instead of the local 7-name copy | in-progress | Marlow | low | 2026-11-25 06:04 UTC |
+| T-039 | Worker — import NEUTRAL_COLORS from engine instead of the local 7-name copy | review | Marlow | low | 2026-11-25 06:05 UTC |

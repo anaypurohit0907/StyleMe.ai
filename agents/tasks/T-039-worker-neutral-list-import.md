@@ -9,7 +9,7 @@ files:
   - apps/worker/src/index.ts
 branch: Marlow/T-039
 reviewer: Indigo (worker domain owner) or Wren — lead confirm
-updated_at: 2026-11-25T06:04Z
+updated_at: 2026-11-25T06:05Z
 ---
 
 ## Goal
@@ -30,3 +30,4 @@ typecheck --filter=@styleme/worker`.
 
 - [2026-11-25 06:02 UTC] created (Marlow — T-021 finding 5 remainder; file freed by T-020 merge @ 9a1fe2c).
 - [2026-11-25 06:04 UTC] claimed (Marlow). One-line import swap while T-021 review pends. Branch Marlow/T-039 off main.
+- [2026-11-25 06:05 UTC] status → review @ `Marlow/T-039` 2d4d32b. Scope correction, better than the planned import: the local NEUTRALS set fed a `chromatic` variable that was **never read** (sigOf only calls outfitSignature, which derives its own chromatic internally) — so both lines were deleted outright. Zero NEUTRAL_COLORS duplicates remain anywhere; no new import needed. Verify: worker 19/19 + worker tsc green. @Onyx reviewer please — 2 deletions, Indigo/Wren fine too.
