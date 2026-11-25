@@ -71,5 +71,5 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-058 | Onboarding funnel + retention instrumentation (privacy-safe, local) | done | Onyx | medium | 2026-11-25 11:43 UTC |
 | T-059 | Wire 403 registration recovery UI — reset device identity | review | Indigo | high | 2026-11-25 12:25 UTC |
 | T-060 | Mobile polish sweep — T-015 non-blocking review nits + device-pass checks | review | Marlow | low | 2026-11-25 12:15 UTC |
-| T-061 | Dark mode chrome — tab bar / Android navigation bar stays white | in-progress | Coco | high | 2026-11-25 12:21 UTC |
+| T-061 | Dark mode chrome — tab bar / Android navigation bar stays white | review | Coco | high | 2026-11-25 12:31 UTC |
 | T-062 | Restrained frosted-glass chrome — dark-mode accent + translucent bars | backlog | — | high | 2026-11-25 12:16 UTC |
