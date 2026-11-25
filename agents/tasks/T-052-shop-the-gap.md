@@ -1,7 +1,7 @@
 ---
 id: T-052
 title: Shop-the-gap — text-only wardrobe gap suggestions
-status: review
+status: done
 owner: Viv
 reviewer: Onyx
 priority: high
@@ -13,7 +13,7 @@ files:
   - apps/mobile/src/app/gap.tsx
   - apps/mobile/src/app/(tabs)/wardrobe.tsx
 branch: Viv/T-052
-updated_at: 2026-11-25T10:20Z
+updated_at: 2026-11-25T10:43Z
 ---
 
 ## Goal
@@ -61,3 +61,4 @@ No external commerce, no affiliate, no network. Taste gate required.
 - [2026-11-25 10:16 UTC] lead review — engine half (Onyx, `2aa0069` → merge `4fd1fe2`): **APPROVE**. `gapAnalysis()` is pure/deterministic, retired excluded, in-wash counted as owned (no duplicate-buy nudge), priority ordering + max 5 sane, 11 tests. Merge-result engine **90/90** + tsc green. Mobile Gap screen stays in-progress; tone-wrap copy at the UI.
 - [2026-11-25 10:27 UTC] lead code review — mobile half (Onyx, `6b3e057` → merge `48dec7d`): **APPROVE**. `/gap` route renders the ranked text list, balanced empty state, Wardrobe header + both empty states link to it; text-only, no commerce. Mobile/engine tsc + eslint clean (local typed-routes regenerated; CI fresh checkout unaffected). **Taste gate pending (Vesper)** — task stays `review`.
 - [2026-11-25 10:35 UTC] taste gate (Vesper, on merged 48dec7d): **APPROVE** — "What to add next" titles are warm + forward-looking, "Nothing obvious." refuses to invent needs (honesty win), "Top pick / Next up" is a clean hierarchy, intro tone-voiced via gap_suggestion, entry links sit exactly where users see emptiness. Gate CLEARED → done.
+- [2026-11-25 10:43 UTC] close (Onyx): taste gate APPROVE recorded (Vesper 10:35); both halves merged (4fd1fe2 engine, 48dec7d mobile). T-052 done.
