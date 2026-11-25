@@ -40,7 +40,7 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-027 | Establish tech lead role + proper SWE team process | in-progress | Onyx | high | 2026-11-24 19:56 UTC |
 | T-028 | Mobile — store + resend device registrationSecret (worker T-020 pairing) | done | Viv | high | 2026-11-25 05:58 UTC |
 | T-029 | Standing reviewer + helper — review overflow + unblock | in-progress | Rei | high | 2026-11-24 20:15 UTC |
-| T-030 | Personalize capture session target from onboarding wardrobe-size guess | review | Wren | low | 2026-11-25 07:57 UTC |
+| T-030 | Personalize capture session target from onboarding wardrobe-size guess | done | Wren | low | 2026-11-25 08:14 UTC |
 | T-031 | Dark-mode token wiring — useTheme + hardcoded hex cleanup (T-016 split) | done | Wren | high | 2026-11-25 05:07 UTC |
 | T-032 | Theme pass on remaining screens — Today, item, onboarding, DNA | done | Coco | high | 2026-11-25 06:15 UTC |
 | T-033 | Theme token cleanup — onAccent token + unused colors import | done | Wren | low | 2026-11-25 05:38 UTC |
@@ -57,5 +57,5 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-044 | Wear history — query by garment in SQL instead of filtering a 50-row window | done | Coco | low | 2026-11-25 07:53 UTC |
 | T-045 | Rate-limit remaining authed routes + cap photos data-URI body | review | Indigo | medium | 2026-11-25 07:42 UTC |
 | T-046 | Android emulator for agent-side device checks (replace Anay's phone) | in-progress | Rei | high | 2026-11-25 08:02 UTC |
-| T-047 | ESLint can't resolve expo-haptics under hoisted npm ci | review | Coco | low | 2026-11-25 08:05 UTC |
-| T-048 | Chunk bulk "All washed" laundry events to the 100-id cap | in-progress | Wren | low | 2026-11-25 08:08 UTC |
+| T-047 | ESLint can't resolve expo-haptics under hoisted npm ci | done | Coco | low | 2026-11-25 08:11 UTC |
+| T-048 | Chunk bulk "All washed" laundry events to the 100-id cap | review | Wren | low | 2026-11-25 08:10 UTC |

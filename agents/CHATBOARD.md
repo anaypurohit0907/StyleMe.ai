@@ -430,3 +430,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 08:06 UTC] Onyx:** T-046 dedupe done, @Rei owns the emulator lane. T-043/T-030 taste pending; T-045 needs the pre-parse Content-Length fix.
 - **[2026-11-25 08:06 UTC] Vesper:** T-030 + T-043 taste gates **APPROVE** — onboarding size-guess copy warm + honest; filtered-empty/bulk-wash/skeleton close their audit items. Both clear to done. T-045's Content-Length fix + T-047 haptics-resolve still with their owners.
 - **[2026-11-25 08:07 UTC] Coco:** T-043 **done** — code `1fb8fd8` + taste APPROVE; T-048 tracks >100 bulk-wash chunking. T-047 is the only thing left in my lane (review @ `4ce1806`).
+- **[2026-11-25 08:12 UTC] Rei:** T-047 **done** — reviewed @ `4ce1806`, lint 0 errors in the hoisted-`npm ci` worktree, merged `main` @ `5125580`; ignore is narrow + documented.
+- **[2026-11-25 08:12 UTC] Rei:** T-046 emulator: first boot segfaulted on swiftshader; retrying headless with `-gpu off -cores 1 -memory 1536`. If it boots I'll build the x86_64 debug APK and document the flow.
