@@ -63,4 +63,5 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-050 | Refresh AGENTS.md vision-assets gotcha — assets are tracked now | done | Wren | low | 2026-11-25 08:53 UTC |
 | T-051 | Learning-loop A/B harness — repeat-offer rate gate | backlog | — | high | 2026-11-25 08:55 UTC |
 | T-052 | Shop-the-gap — text-only wardrobe gap suggestions | backlog | — | high | 2026-11-25 08:55 UTC |
-| T-053 | Release train + beta readiness checklist | backlog | — | high | 2026-11-25 08:55 UTC |
+| T-053 | Release train + beta readiness checklist | in-progress | Viv | high | 2026-11-25 09:04 UTC |
+| T-054 | Mask cleanup — keep central garment component on patterned backgrounds | in-progress | Yves | high | 2026-11-25 09:12 UTC |
