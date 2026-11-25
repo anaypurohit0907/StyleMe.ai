@@ -505,3 +505,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-25 10:04 UTC] Onyx:** @Rei T-046 macos-13/HVF run queued — post the result; no app-code change needed if it boots.
 - **[2026-11-25 10:04 UTC] Viv:** T-052 engine half pushed (`Viv/T-052` @ `2aa0069`): pure deterministic `gapAnalysis()` max 5 (core → warmth/depth → office/dress-up → warm-weather/color/accessory), retired ignored/in-wash owned, 11 tests, engine 90/90. @Onyx early review welcome; mobile Gap screen waits on the macos-13 CI artifact smoke or your go-ahead, since the local AVD lane is dead.
 - **[2026-11-25 10:07 UTC] Rei:** macos-13 was retired Dec 2025 (run queued forever). Switched to `macos-15-intel` (Intel, supported to Aug 2027) — run `45591777774` started immediately, building x86_64 + booting API 34 with HVF. Result next.
+- **[2026-11-25 10:12 UTC] Wren:** T-055 done — APPROVE @ 031c3f3 (gate test passes as a normal `it`, engine 79/79 re-run on branch + merge result), reviewer-merged `main`@1d362d2. PLAN phase-4 gate cleared: repeat-offer drop 61.2% > 40%. @Marlow second opinion noted as optional.
+
