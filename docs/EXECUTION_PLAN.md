@@ -108,10 +108,63 @@ for A is accepted.
 **Practicality:** high — everything is local, structured, and already proven writable externally (T-036 `Directory.createFile` evidence, T-024 `styleme.log` pull works). **Effort:reward: best-in-class for its size** — one session of work retires the single biggest data-safety fear of the only real user; no infra, no server, no maintenance.
 
 ## D. Release safety: screenshot-on-PR + `apk-latest` cold-launch gate
-**Owner:** Wren (CI/build lanes)
-**What's needed:** (fill: PR artifact set, cold-launch FATAL gate, gate ordering vs. existing lanes).
-**Needed from Anay:** (fill).
-**Practicality / Effort:reward:** (fill).
+**Owner:** Wren (CI/build lanes) · filled
+
+**What's needed — three tiers, in gate order:**
+
+1. **Publish-path hardening (do regardless, ~1–2 h, no new infra):**
+   Reorder `.github/workflows/android.yml` so the `apk-latest`/`aab-latest`
+   upload steps are the LAST steps and cannot run unless everything before
+   them passed: CI test pair, tsc ×4, eslint, **`npx expo export --platform
+   android`** (new required step — catches the unresolvable-module class that
+   shipped tonight, e.g. the encoder-missing `Unable to resolve
+   mobileclip_s1_image.onnx` failure), the vision-bundle fetch assert
+   (`ls` every file the tagger `require`s after the `vision-v2` curl — zero
+   cost, would have caught the emulator-lane failure exactly), and the APK/AAB
+   build. Then move the upload steps behind a GitHub
+   `environment: production` with **required reviewers (Onyx + Anay)** —
+   a release asset cannot publish without a human approve. Anay's 07:16 words
+   make this the non-negotiable core: broken software must not reach
+   `apk-latest`.
+2. **PR-lane (cheap, works today, ~1 h):** on every PR touching
+   `apps/mobile/**`, build a **branch APK artifact** (ubuntu x86_64 debug
+   build is green in ~8 min — proven on Coco's T-061 dispatch). Vision-capable
+   reviewers install from the artifact when judging UI PRs instead of
+   serializing the phone; `apk-latest` stays release-only. NOTE the honest
+   limit: hosted-PR **screenshots are not possible** — all six hosted
+   emulator configs failed (T-046 evidence file: local QEMU segfault,
+   ubuntu no-KVM, macos-13 retired, macos-15-intel dies post-boot, arm64
+   never connects); only a real device renders our app.
+3. **The real cold-launch gate (the actual decision):** FATAL-at-boot and
+   glass-class bugs ship invisible to every hosted check — tonight's crash
+   had green tests + tsc + eslint + export. Two options for Anay:
+   - **D-a Self-hosted KVM runner (~US$20/mo small x86 box):** proven
+     bootable stack (API 30 AVD, 338–841 s boot, `--no-streaming` install)
+     from tonight's evidence, just not on hosted silicon. One-time setup
+     ~2–3 h (runner registration + the existing `emulator.yml`). Then every
+     push gets install + cold-launch + `adb logcat` FATAL scan +
+     **screenshots into the run** automatically — the screenshot-on-PR from
+     my proposal becomes real, and the phone stops being the pipeline.
+   - **D-b Phone-first (status quo, zero cost):** tonight's §H runbook —
+     first install after every merge is the cold-launch gate, one owner,
+     expected 10 min/device window. Honest cost: releases serialize on
+     Anay being home.
+
+**Needed from Anay:**
+- (1) Approve required-checks + `environment: production` on the upload steps
+  (needs repo admin — his click), and name the required reviewers.
+- (2) Pick D-a (fund the runner) or D-b (phone-first interim). D-a is my
+  recommendation; it retires the single biggest process tax found in the
+  product review and makes the vision-gate async.
+- (3) Confirm no more direct pushes to `apk-latest` outside the workflow
+  (tonight's manual restore was correct firefighting; make it policy).
+
+**Practicality / Effort:reward:** Tier 1 is a no-brainer — hours, zero infra,
+kills the crash-asset-served-to-phone class outright. Tier 2 is cheap and
+unblocks UI review throughput today. Tier 3 is the only real spend decision;
+effort:reward for D-a is the highest on this page (one small box converts
+the most expensive, most repeated bottleneck in the product review into a
+background job).
 
 ## E. Narration layer — re-proposal (Vesper, filled)
 **What's needed:** one honest line per async action, past-tense on completion, tone-voiced via existing `toneText` keys + ~4 new ones (`capture_step_*`, `sync_state`, `scan_done`, `cooldown_note`). Surfaces: capture overlay stages (extend existing `stage`), re-scan progress (dna), sync-queue drain (wardrobe header, one line), laundry cooldown (item sheet). Pattern is already proven: the 403-recovery card + "offline guess" tag. Pure copy + state surfacing; no new screens, no engine changes. **Effort: small (≈1 focused session). Risk: copy discipline only — my gate enforces the read-aloud rule. Practicality: high — every piece exists (tone engine, stage state, T-024 structured log as the source of truth for states). Effort:reward: best in the list — smallest diff against the #1 measured pain (3 "what's happening" asks).**
@@ -128,9 +181,32 @@ for A is accepted.
 
 ## G. City-weather (honest weather source)
 **Owner:** Sable (user-proxy) · **Co:** Wren
-**What's needed:** (fill: onboarding city actually geocoded → Open-Meteo vs. GPS-only today; fallback ladder; copy honesty).
-**Needed from Anay:** (fill: does he want location permission at all?).
-**Practicality / Effort:reward:** (fill).
+
+**Co input — Wren (filled; the code side):**
+- Today's reality: `getWeather()` (`apps/mobile/src/lib/local.ts`) requests
+  **foreground location permission on every Today load**, races it with a
+  2.5 s timeout, then GPS + Open-Meteo by lat/lon; any miss falls to the
+  18 °C "offline guess" (tag shipped in T-014). That permission prompt is
+  Anay's battery complaint, and it's the one permission the app asks that
+  the product doesn't actually need.
+- The fix, no new deps: Open-Meteo ships a **free geocoding API, no key**
+  (`https://geocoding-api.open-meteo.com/v1/search?name=<city>&count=1`).
+  Onboarding already collects `city` and persists it (meta `city`) — resolve
+  it once at onboarding-save, store `weatherLatLon` in meta, and `getWeather`
+  reads **stored coords, zero location permission, zero GPS wake-ups**. City
+  edits later (Style DNA or a settings row) re-geocode once.
+- Fallback ladder, all states visible: geocoded live → cached coords (if the
+  geocode is offline, retry next launch) → 18 °C + "offline guess" tag. No
+  silent GPS, no silent permission.
+- Effort: small — one geocode helper + `getWeather` swap + one meta key,
+  ~1–2 h; the permission line comes OUT of `app.json` + the Android manifest
+  via prebuild. Files: `local.ts`, `onboarding.tsx`, `app.json`.
+- Needed from Anay (mine): none beyond Sable's copy questions; if he ever
+  wants automatic local weather back, that's a separate opt-in toggle.
+
+**What's needed (Sable, fill):** onboarding city actually geocoded → Open-Meteo vs. GPS-only today; fallback ladder; copy honesty.
+**Needed from Anay (Sable, fill):** does he want location permission at all?
+**Practicality / Effort:reward (Sable, fill):**
 
 ## H. Phone-window runbook (tonight) — ordered, zero-waste
 **Owner:** Onyx (phone owner) — all contribute their pass
