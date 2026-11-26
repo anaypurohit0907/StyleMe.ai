@@ -204,20 +204,69 @@ background job).
 - Needed from Anay (mine): none beyond Sable's copy questions; if he ever
   wants automatic local weather back, that's a separate opt-in toggle.
 
-**What's needed (Sable, fill):** onboarding city actually geocoded → Open-Meteo vs. GPS-only today; fallback ladder; copy honesty.
-**Needed from Anay (Sable, fill):** does he want location permission at all?
-**Practicality / Effort:reward (Sable, fill):**
+**What's needed (Sable, filled — user-proxy + copy-honesty side):**
+- Onboarding gains one free-text **"Where are you based?"** city field (Vesper-gated copy),
+  resolved by the geocode helper **once at onboarding-save**; result persisted as
+  `weatherLatLon` in meta. No picker UI, no map, no permission — text + geocode, zero deps.
+- **Permission policy (Anay's actual order):** the foreground-location ask is REMOVED —
+  `app.json` + manifest via prebuild (Wren's list). The app requests **no location at
+  all**; if Anay ever wants auto-local weather back, it returns as an explicit opt-in
+  toggle that re-adds the permission, never as a prompt.
+- **Fallback ladder, every state visible (extends T-014's honesty pattern):** live
+  geocoded weather → cached coords (geocode offline → retry next launch) → 18 °C +
+  "offline guess" tag. No silent GPS, no silent permission, no fake precision.
+- **Copy honesty:** the weather line renders the **city name**, not "your location"
+  ("Bangalore · 24°"), so the number is legible as what it is: city-scale weather.
+  City is editable any time via a Style DNA row (one re-geocode on save; same ladder).
+- **Verification via existing counters (T-058):** add `weather_live` / `weather_cached`
+  / `weather_offline` local counts — proof the prompt-elimination landed and the ladder
+  is honest, read from the Diagnostics card, no network.
+- **Metrics that matter to the user:** zero permission prompts after install (today:
+  one per Today-load), zero GPS wake-ups, identical weather output for a fixed city.
+
+**Needed from Anay (Sable, filled):**
+1. **Does he want the location permission gone from the manifest entirely** (my read
+   of his order: yes — remove; opt-in toggle can re-add it later if he ever asks), or
+   kept dormant in the build for a future auto mode?
+2. Free-text city at onboarding OK (vs a city-picker UI — text is zero extra work)?
+3. Nothing else.
+
+**Practicality / Effort:reward (Sable, filled):** Practicality: high — Wren's code
+side is 1–2 h; the field + edit row + copy is the same session. **Effort:reward: top-tier
+for its size** — one session kills the app's single unnecessary permission and Anay's only
+stated battery/privacy annoyance ("no fashion app should drain battery with always-on
+location", 07:16), while keeping the weather feature 100% intact and making the privacy
+story real: *a wardrobe app that asks for nothing*. Risk: misspelled city → geocode miss
+→ covered by the visible fallback + editable field; offline first-run → cached/guess,
+honest by design.
 
 ## H. Phone-window runbook (tonight) — ordered, zero-waste
-**Owner:** Onyx (phone owner) — all contribute their pass
-Order proposal (Onyx reorders as owner):
-1. Install current `apk-latest` (9b87bcd1 line) — cold-launch smoke, log capture (T-024 file).
-2. T-046 emulator: keep blocked unless a spare device window exists — don't spend phone time on it.
-3. **Anay's full-wardrobe capture session** (see I) — the centerpiece; everything else fits around it.
-4. Vision eval on the resulting tagged wardrobe vs. his corrections (Yves).
-5. Visual acceptance pass: Today/wardrobe/capture in both schemes (screenshots archived).
-6. Decisions §0 readback to Anay while he captures.
-**Per-pass prep must state:** APK build to use, files/log paths, who drives, expected minutes.
+**Owner:** Onyx (phone owner) — all contribute their pass. One installer, announced.
+
+**Pre-window (no phone needed, do before Anay plugs in):**
+- Confirm `main` CI pair + tsc ×4 + lint green; record release SHA.
+- Confirm `apk-latest` digest + size; download the APK to the shared box
+  (`/home/anay/apk-window.apk`), verify `sha256` matches the release asset.
+- Pre-write the pass table below; each pass has one driver, one APK, one path.
+- Phone: `adb shell svc power stayon true`; screen unlocked; dark mode as Anay left it.
+- Known-good rollback: keep the last verified digest; if the window APK crashes,
+  restore the asset + reinstall known-good before any other pass.
+
+**Pass table (proposal; Onyx may reorder):**
+
+| # | Pass | Driver | APK | Artifacts / paths | Est. |
+|---|---|---|---|---|---|
+| 1 | Install + cold-launch smoke (no FATAL, no `Maximum update depth`, no BlurView warning), pid stable | Onyx | window APK | `adb logcat`, `styleme.log` via `adb pull` | 5 min |
+| 2 | **Anay's full-wardrobe capture session** (section I) — centerpiece; no agent installs during this | Anay (Yves/Vesper guide) | same | session id + manifest; photos stay local | 15–30 min |
+| 3 | Export test (section C, if shipped) — write manifest+photos, verify counts/hash, copy back read-only | Indigo | same | export dir + `sha256sum`; no secrets | 5 min |
+| 4 | Vision eval on the captured wardrobe vs corrections (read-only) | Yves | same | `styleme.log`, report JSON | 10 min |
+| 5 | Visual acceptance: Today/Wardrobe/Capture/Gap, dark + light screenshots archived | Onyx + Viv | same | `/home/anay/window/*.png` | 10 min |
+| 6 | T-060 press-warning + T-038 SecureStore relaunch check | Marlow/Coco | same | logcat + relaunch | 5 min |
+
+**Hard rules:** no concurrent installs; every install announced with digest; no
+`pm clear`; no re-scan of user data unless Anay asks; if the phone sleeps or
+detaches, stop and queue the remaining passes — do not restart blindly.
+
 
 ## I. Anay's source-of-truth wardrobe session (his order)
 **Owners:** Yves (session design) + Vesper (copy/promise framing)
