@@ -182,9 +182,11 @@ export default function Today() {
     const isFirstOutfit = (await getWearCount()) === 0;
     await recordPick(available, outfit, today.outfits, today.context);
     await logWear(outfit.garmentIds, occasion, nowMs());
-    // Learning loop: the pick is the strongest signal — queue it for the worker.
+    // Learning loop: the pick is the strongest signal — queue it for the
+    // worker. Log exactly what was offered (depth mode shows one card).
+    const offered = shownOutfits ?? [];
     await enqueueLearn({
-      suggestedIds: today.outfits.map((o) => o.garmentIds),
+      suggestedIds: offered.map((o) => o.garmentIds),
       pickedId: outfit.garmentIds.join("+"),
       context: today.context,
       ts: nowMs(),
@@ -212,8 +214,11 @@ export default function Today() {
    */
   function rejectAndShuffle() {
     if (today) {
+      // Learning loop: log exactly what was OFFERED. In depth mode that is
+      // the one shown card — never the two unseen near-twins.
+      const offered = shownOutfits ?? [];
       void enqueueLearn({
-        suggestedIds: today.outfits.map((o) => o.garmentIds),
+        suggestedIds: offered.map((o) => o.garmentIds),
         pickedId: null,
         context: today.context,
         ts: nowMs(),
@@ -239,10 +244,11 @@ export default function Today() {
   // T-067 depth register: below 15 photo'd pieces the engine's near-twin
   // options read as noise — lead with one strong look + an honest line.
   const depth = depthRead(garments, target);
-  const depthMode = depth.photoPieces < 15 && (today?.outfits.length ?? 0) > 1;
+  const depthMode = depth.photoPieces < 15 && (today?.outfits.length ?? 0) > 0;
   const shownOutfits = depthMode ? today?.outfits.slice(0, 1) : today?.outfits;
   /** Share of an outfit's garments that have photos — badges need ≥60%. */
   const photoCovered = (outfit: ScoredOutfit): boolean => {
+    if (outfit.garmentIds.length === 0) return false;
     const withPhoto = outfit.garmentIds.filter((id) => byId.get(id)?.photoRef).length;
     return withPhoto / outfit.garmentIds.length >= 0.6;
   };
@@ -432,7 +438,9 @@ export default function Today() {
 
         {today && today.outfits.length > 0 && (
           <Pressable onPress={rejectAndShuffle} style={s.notToday}>
-            <Caption>None of these? Shuffle the 3 options.</Caption>
+            <Caption>
+              {depthMode ? "None of these? Shuffle for another." : "None of these? Shuffle the 3 options."}
+            </Caption>
           </Pressable>
         )}
       </Scroll>
