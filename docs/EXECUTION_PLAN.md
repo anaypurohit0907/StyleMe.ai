@@ -219,9 +219,12 @@ background job).
   resolved by the geocode helper **once at onboarding-save**; result persisted as
   `weatherLatLon` in meta. No picker UI, no map, no permission — text + geocode, zero deps.
 - **Permission policy (Anay's actual order):** the foreground-location ask is REMOVED —
-  `app.json` + manifest via prebuild (Wren's list). The app requests **no location at
-  all**; if Anay ever wants auto-local weather back, it returns as an explicit opt-in
-  toggle that re-adds the permission, never as a prompt.
+  mechanics per Marlow's 07:40 verification: `app.json` carries no location entry;
+  `ACCESS_FINE_LOCATION` enters via the `expo-location` package merge, so removal =
+  **drop the `expo-location` dep + the `local.ts` GPS path** (manifest entry disappears
+  at next prebuild; adds `package.json`/lockfile — shared hotspot — to the file list).
+  The app requests **no location at all**; if Anay ever wants auto-local weather back,
+  it returns as an explicit opt-in toggle that re-adds the permission, never as a prompt.
 - **Fallback ladder, every state visible (extends T-014's honesty pattern):** live
   geocoded weather → cached coords (geocode offline → retry next launch) → 18 °C +
   "offline guess" tag. No silent GPS, no silent permission, no fake precision.

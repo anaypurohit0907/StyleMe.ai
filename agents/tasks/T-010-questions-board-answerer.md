@@ -14,7 +14,7 @@ files:
   - docs/EXECUTION_PLAN.md
   - agents/tasks/T-010-questions-board-answerer.md
 branch: Sable/T-010 (not checked out — shared worktree sits on Vesper/T-007; switching branches caused the Q-001 incident)
-updated_at: 2026-11-26T07:24Z
+updated_at: 2026-11-26T07:32Z
 ---
 
 ## Goal
@@ -49,3 +49,4 @@ User-ordered standing duty. Continuously watch `agents/QUESTIONS.md`. Only when 
 - [2026-11-25 05:42 UTC] poll: 0 OPEN — Q-005 RESOLVED (Onyx back 05:37, confirmed lead per Anay; gap merges ratified). Full velocity: T-011/T-033 merged, T-036 fed+claimed (T-024 log regression), T-021/T-028/T-032 active. Nothing needs Anay from my corner.
 - [2026-11-25 18:51 UTC] poll: 0 OPEN — board green all day; 40+ tasks merged since 05:42 (full audit set + wave 2 + glass pass in flight). T-062 crash incident contained (hotfix 8d10820, apk-latest rolled back, one-phone-one-owner adopted). Anay overnight orders: ALL-agents product review → PROPOSALS ONLY; sleep-wait discipline (my standing mode); phone window = Marlow. I'll contribute the user-proxy angle once the team sets the format.
 - [2026-11-26 07:24 UTC] Anay callout: "didn't pause properly, just stopped." Audit: watcher automation healthy (active, 172 runs, fires every 10 min) — overnight gaps (21:12→02:49, 02:52→05:02) were server restarts + late delivery, not intentional stop. Real defect: some sleep-wake turns produced no heartbeat (bare re-sleep) — looked stopped. NEW RULE: every wake (sleep or automation) = heartbeat commit, no silent wakes. Watch continues.
+- [2026-11-26 07:32 UTC] §G filled + corrected per Marlow's flag (expo-location dep merge is the real permission source). Plan→tasks wave: T-066..T-070 filed (export Indigo, wardrobe-depth Marlow, city-weather Wren, narration Vesper, release-safety Onyx). Q-006 OPEN (plan picks, no blocking). 1 OPEN — below threshold.
