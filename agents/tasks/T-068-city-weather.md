@@ -1,9 +1,9 @@
 ---
 id: T-068
 title: City-weather — onboarding city + stored coords, no location permission
-status: backlog
-owner:
-reviewer: Onyx
+status: in-progress
+owner: Wren
+reviewer: Onyx · taste: Vesper (permission-honesty copy)
 priority: high
 depends_on: []
 files:
@@ -17,8 +17,8 @@ files:
   - agents/BOARD.md
   - agents/CHATBOARD.md
   - agents/tasks/T-068-city-weather.md
-branch: <name>/T-068
-updated_at: 2026-11-26T07:40Z
+branch: Wren/T-068
+updated_at: 2026-11-26T09:07Z
 ---
 
 ## Goal
@@ -46,3 +46,4 @@ review, not the architecture.
 
 - [2026-11-26 07:40 UTC] created (Onyx, per Anay 07:16 product order; plan §G filled by Sable + Wren).
 - [2026-11-26 07:55 UTC] manifest mechanic (Marlow, relayed by Onyx): `app.json` has no location entry; `ACCESS_FINE_LOCATION` is merged in by the `expo-location` package. Removal = drop the dep + the GPS path in `local.ts`; verify the generated manifest at prebuild. `package.json`/lockfile owned here until merge — T-066 waits.
+- [2026-11-26 09:07 UTC] claimed (Wren — §G co-author, the code side is mine; Sable's copy/user-lens questions ride review). Building on branch Wren/T-068.

@@ -1,7 +1,7 @@
 ---
 id: T-070
 title: Release safety — publish gate, PR artifacts, pre-push gate
-status: review
+status: done
 owner: Onyx
 reviewer: Wren
 priority: critical
@@ -60,3 +60,4 @@ Tier 3 — decisions for Anay (not blocking tier 1/2):
 - [2026-11-26 07:40 UTC] created (Onyx). Tier 1 implemented 07:25–07:35 UTC
   (commit `836d6e4`), CI green on the new lint gate.
 - [2026-11-26 08:45 UTC] tier 2 validated: Android run `45776093487` (push `d935f4f`) **success** — typecheck ×4, engine+worker tests, mobile lint, vision assert, `expo export`, signed APK+AAB all passed in one run; publish job skipped on push as designed; CI `45776093544` success. Pre-push hook exercised on the same push (tests/typecheck/lint green). Ready for Wren's independent review; tier 3 is Anay's decision (PR/required-checks flow, KVM runner).
+- [2026-11-26 09:05 UTC] independent code review (Wren, on `836d6e4` + `d935f4f`): **APPROVE**. Verified line-by-line: publish is a separate `workflow_dispatch`-only job behind `environment: production` (`needs: build`, never runs on push — the crash-asset class is structurally dead); gate order correct (tsc ×4 → tests → lint → vision-bundle assert → `expo export` smoke all precede artifact builds); PR lane uploads APK/AAB artifacts without any publish path; pre-push hook: coord-only pushes skip instantly (agent fast path kept), code pushes run the full pair, `--no-verify` bypass requires a chatboard explanation — right escape hatch; `merge-base` fallback path under-checks only branches with no origin/main ancestor (doesn't exist in practice); ci.yml mobile-lint pre-merge closes the lint gap; hook syntax + workflow YAML machine-validated by me, live run already green. Two cosmetic nits, non-blocking: the hook's `printf remote_ref >/dev/null` is a dead line; drop when convenient. Tier 3 correctly left as Anay's decision and matches §D. **Note: `environment: production` enforcement needs Anay's repo-settings click (required reviewers) — called out in tier 3.** Both implementation tiers done; T-070 done pending that one admin action.

@@ -78,6 +78,6 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-065 | Product review — pivot proposals only (all agents, overnight) | done | Onyx | high | 2026-11-26 02:33 UTC |
 | T-066 | Export / backup button — one-file closet backup (C2) | backlog | — | high | 2026-11-26 07:45 UTC |
 | T-067 | Wardrobe-depth activation — health meter + honest depth line | in-progress | Marlow | medium | 2026-11-26 07:47 UTC |
-| T-068 | City-weather — onboarding city + stored coords, no location permission | backlog | — | high | 2026-11-26 07:45 UTC |
+| T-068 | City-weather — onboarding city + stored coords, no location permission | in-progress | Wren | high | 2026-11-26 09:07 UTC |
 | T-069 | Narration layer — concrete re-proposal (screen, moment, exact copy) | backlog | — | high | 2026-11-26 07:45 UTC |
-| T-070 | Release safety — publish gate, PR artifacts, pre-push gate | review | Onyx | critical | 2026-11-26 08:45 UTC |
+| T-070 | Release safety — publish gate, PR artifacts, pre-push gate | done | Onyx | critical | 2026-11-26 09:05 UTC |
