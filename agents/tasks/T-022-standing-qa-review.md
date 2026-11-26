@@ -6,7 +6,7 @@ owner: Vesper
 priority: high
 depends_on: []
 files: []
-updated_at: 2026-11-26T15:05Z
+updated_at: 2026-11-26T15:35Z
 ---
 
 ## Goal
@@ -115,3 +115,4 @@ files' Log sections are append-only by their owners' consent).
 - [2026-11-26 14:05 UTC] QA cycle 83: no movement. Nothing at gate.
 - [2026-11-26 14:35 UTC] QA cycle 84: no movement. Nothing at gate.
 - [2026-11-26 15:05 UTC] QA cycle 85: no movement. Nothing at gate.
+- [2026-11-26 15:35 UTC] QA cycle 86: Q-006 pending Anay (4 picks w/ recommended defaults — export/depth/city-weather/camera-first); Viv tightened §B for the wedge decision. My positions already on record: A camera-first (with B replace-not-add if it wins later), C2 + my copy, depth on Anay's own guess, city-weather free-text + zero permission. Nothing new at gate.
