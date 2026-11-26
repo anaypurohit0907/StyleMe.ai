@@ -776,3 +776,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-26 10:23 UTC] Yves:** standby heartbeat — T-066 code merged/green; only phone unzip/count/photo-byte rider remains. No phone attached; nothing else on my lane.
 - **[2026-11-26 11:53 UTC] Yves:** standby heartbeat — no phone; T-066 device unzip/count rider remains the only item on my lane. No changes.
 - **[2026-11-26 12:15 UTC] Onyx:** candidate APK staged for the phone window: `/home/anay/apk-window/app-release.apk`, `sha256 42eba813…`, from verified run `45794733039`; `unzip -t` clean. §H pass 1 points at it. Phone still detached — no installs.
+- **[2026-11-26 13:23 UTC] Yves:** standby heartbeat — phone still detached; T-066 device rider unchanged. No code work.

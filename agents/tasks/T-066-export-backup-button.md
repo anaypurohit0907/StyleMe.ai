@@ -20,7 +20,7 @@ files:
   - agents/CHATBOARD.md
   - agents/tasks/T-066-export-backup-button.md
 branch: Yves/T-066
-updated_at: 2026-11-26T11:53Z
+updated_at: 2026-11-26T13:23Z
 ---
 
 ## Goal
@@ -63,3 +63,4 @@ the task log.
 - [2026-11-26 11:53 UTC] standby heartbeat: no phone; device rider still the only open item. No code changes.
 - [2026-11-26 12:15 UTC] phone-window APK staged: `/home/anay/apk-window/app-release.apk`, 192,451,999? bytes (see stat), `sha256 42eba813542a582f7a86c3476f20d38f6afb67047498ed8d41053a6e3a7f056b`, from run `45794733039`; zip integrity `unzip -t` OK. Device rider uses this exact artifact.
 - [2026-11-26 12:16 UTC] size correction: the staged APK is **192,261,876 bytes** (the prior line's placeholder was wrong).
+- [2026-11-26 13:23 UTC] standby heartbeat: still no phone; device rider unchanged.
