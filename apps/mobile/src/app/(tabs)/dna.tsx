@@ -21,6 +21,7 @@ import { getVisionTagger } from "@/lib/vision";
 import { segmentGarment } from "@/lib/segment";
 import { errorText, log, logError, withTimeout } from "@/lib/pipeline-log";
 import { useTheme } from "@/lib/theme";
+import { exportBackup, formatBackupSize } from "@/lib/backup";
 
 const ITEM_TIMEOUT = 120_000;
 
@@ -81,6 +82,8 @@ export default function DNA() {
   const [retagProgress, setRetagProgress] = useState("");
   const [retagStage, setRetagStage] = useState("");
   const [diagnosticsOpen, setDiagnosticsOpen] = useState(false);
+  const [backupBusy, setBackupBusy] = useState(false);
+  const [backupMessage, setBackupMessage] = useState("");
   const [funnel, setFunnel] = useState<Partial<Record<FunnelEvent, number>>>({});
   const cancelRef = useRef(false);
 
@@ -188,6 +191,27 @@ export default function DNA() {
     }
   }
 
+  async function saveBackup() {
+    setBackupBusy(true);
+    setBackupMessage("");
+    try {
+      const result = await exportBackup();
+      if (result.cancelled) {
+        setBackupMessage("Backup cancelled.");
+        return;
+      }
+      setBackupMessage(
+        `Saved ${result.fileName} · ${formatBackupSize(result.bytes ?? 0)} · ${result.garmentCount} pieces, ${result.photoCount} photos.`,
+      );
+      log("backup", `saved ${result.fileName} (${result.bytes} bytes)`);
+    } catch (err) {
+      logError("backup", `failed: ${errorText(err)}`);
+      setBackupMessage(`Backup failed: ${errorText(err)}`);
+    } finally {
+      setBackupBusy(false);
+    }
+  }
+
   function cancelRetag() {
     cancelRef.current = true;
     log("scan", "cancel requested");
@@ -265,6 +289,16 @@ export default function DNA() {
           </Caption>
         )}
         <Btn label="Reset what I've learned" variant="danger" onPress={() => void reset()} />
+
+        <Card style={{ gap: space.s }}>
+          <Caption>Your closet lives on this phone.</Caption>
+          <Btn label="Save a backup" onPress={() => void saveBackup()} loading={backupBusy} />
+          {backupMessage ? <Caption>{backupMessage}</Caption> : null}
+          <Caption>
+            Local insurance, not sync. Restore by copying the backup back on this phone after a
+            reinstall.
+          </Caption>
+        </Card>
 
         {/* Debug chrome is tucked away; the pullable styleme.log is the
             release-test source of truth (docs/TESTING.md). */}

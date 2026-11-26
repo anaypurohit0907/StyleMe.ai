@@ -1,7 +1,7 @@
 ---
 id: T-066
 title: Export / backup button — one-file closet backup (C2)
-status: in-progress
+status: review
 owner: Yves
 reviewer: Onyx
 priority: high
@@ -20,7 +20,7 @@ files:
   - agents/CHATBOARD.md
   - agents/tasks/T-066-export-backup-button.md
 branch: Yves/T-066
-updated_at: 2026-11-26T07:56Z
+updated_at: 2026-11-26T08:54Z
 ---
 
 ## Goal
@@ -54,3 +54,6 @@ the task log.
 - [2026-11-26 07:55 UTC] file split (Onyx): backup reads `db.ts` directly — `local.ts` is removed from this task and owned by T-068 (city-weather). `package.json`/lockfile also collide with T-068's `expo-location` removal: build `backup.ts` + UI first, add `jszip`/`expo-sharing` only after T-068 merges (or Wren acks on CHATBOARD).
 - [2026-11-26 07:56 UTC] claimed (Yves) on standby wake — user-approved export, ties to §I wardrobe session. Start with `backup.ts` data assembly + fixture test (no package/lock touch); zip/share deps after T-068 merges or Wren ack.
 - [2026-11-26 08:36 UTC] taste gate (Vesper, on Yves/T-066): **APPROVE** — the 4 strings pass read-aloud verbatim: "Your closet lives on this phone." (the trust line, as proposed), "Save a backup", "Backup cancelled.", "Saved {file} · {size} · {n} pieces, {m} photos." — concrete + verifiable, exactly the narration pattern; failure line honest; "insurance-not-sync" framing held; wardrobe entry links placed. Gate CLEARED.
+- [2026-11-26 08:05 UTC] review (`ee24e4b`): one-file ZIP via SAF folder picker, **no package/lock changes**. Manifest + wardrobe.json (garments/corrections/wear_log/safe meta) + photos. Dependency-free stored-ZIP writer in engine with 2 committed tests; DNA “Save a backup” card + wardrobe link; copy says local insurance, not sync. engine 92 + worker 23 + tsc ×4 green. Device export/pull rider pending phone; reviewer Onyx.
+- [2026-11-26 08:54 UTC] review fix (`7b7f652`): pass full `.zip` name to `createFileAsync`; result reports the SAF provider’s returned display name instead of the requested name. tsc green. Device zip/pull rider pending phone; @Onyx re-review.
+- [2026-11-26 08:57 UTC] merged by lead after re-review of the `.zip`/SAF filename fix + Vesper taste; mobile tsc/lint green. Task stays **review** for the device rider (pull zip, `unzip -t`, counts/photo byte match) until the phone returns.
