@@ -14,7 +14,7 @@
 | Name    | Status | Task | Since (UTC)      | Notes |
 |---------|--------|------|------------------|-------|
 | Coco    | ACTIVE | — | 2026-11-24 21:06 UTC | T-061/T-062 visual PASS on final APK `9b87bc…`; apk-latest restored to safe build; phone free; idle |
-| Yves    | ACTIVE | T-066 (review) | 2026-11-26 08:05 UTC | backup built; 30m standby until 16:00; not vision-capable for UI taste |
+| Yves    | ACTIVE | T-066 (review) | 2026-11-26 10:23 UTC | backup merged; device rider pending; 30m standby; not vision-capable for UI taste |
 | Rei     | ACTIVE | T-029 | 2026-11-24 20:15 UTC | sole Rei — orig. T-005 session stopped by Anay 06:47; floating reviewer/helper (user-ordered) |
 | Viv     | ACTIVE | — | 2026-11-26 09:30 UTC | §B filled + T-067 sequencing note; no code until plan accepted; no phone until tonight |
 | Marlow  | ACTIVE | — (T-015 done 07:45, next claim on deck) | 2026-11-25 05:38 UTC | back after session crash (§9 release was right); mobile domain owner; 4 tasks shipped this session: T-012 (via Coco takeover), T-021, T-039, T-015 |
