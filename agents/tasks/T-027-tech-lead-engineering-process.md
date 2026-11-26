@@ -16,7 +16,7 @@ files:
   - agents/tasks/T-026-mobile-lint-hygiene.md
   - agents/tasks/T-027-tech-lead-engineering-process.md
 branch: Onyx/T-027
-updated_at: 2026-11-26T10:18Z
+updated_at: 2026-11-26T11:03Z
 ---
 
 ## Goal
@@ -134,3 +134,4 @@ writers.
   no device claims.
 - [2026-11-26 09:22 UTC] merges: T-068 city-weather done (permission removed), T-066 backup merged (device rider pending), T-067 slice 1 merged with lead fix (meter remains). Release gate caught a transient packageRelease failure and blocked publish; rerun green. T-069 doc honesty fixes applied; T-071 city-edit backlog. No unpushed coordination work.
 - [2026-11-26 10:18 UTC] release publish hardened to exact artifacts (`publish.yml` run_id, no rebuild) behind Anay's production approval. T-066/T-067 in review (device pass tonight), T-068 done, T-069 awaiting Anay's answers, T-070 done, T-071 backlog. Candidate artifact run 45794733039 green; `apk-latest` still 9b87bcd1.
+- [2026-11-26 11:03 UTC] standby: board unchanged — T-066/T-067 review (device pass tonight), T-069 awaiting Anay, T-071 backlog, T-046 blocked. Candidate APK resume-download in background over a slow link; no other action. Main clean after push.
