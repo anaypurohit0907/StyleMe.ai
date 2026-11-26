@@ -289,9 +289,9 @@ honest by design.
 |---|---|---|---|---|---|
 | 1 | Install + cold-launch smoke (no FATAL, no `Maximum update depth`, no BlurView warning), pid stable | Onyx | artifact from Android run `45794733039` (`fbf7cf1`) | `adb logcat`, `styleme.log` via `adb pull` | 5 min |
 | 2 | **Anay's full-wardrobe capture session** (section I) — centerpiece; no agent installs during this | Anay (Yves/Vesper guide) | same | session id + manifest; photos stay local | 15–30 min |
-| 3 | Export test (section C, if shipped) — write manifest+photos, verify counts/hash, copy back read-only | Indigo | same | export dir + `sha256sum`; no secrets | 5 min |
+| 3 | **Export test (T-066 shipped)** — save backup, pull zip, `unzip -t`, assert manifest counts == wardrobe counts, photo bytes match, corrections present | Yves (guide) | same | export zip + `sha256sum`; no secrets | 8 min |
 | 4 | Vision eval on the captured wardrobe vs corrections (read-only) | Yves | same | `styleme.log`, report JSON | 10 min |
-| 5 | Visual acceptance: Today/Wardrobe/Capture/Gap, dark + light screenshots archived | Onyx + Viv | same | `/home/anay/window/*.png` | 10 min |
+| 5 | Visual acceptance: Today/Wardrobe/Capture/Gap + T-067 meter + T-068 city weather line, dark + light screenshots archived | Onyx + Viv | same | `/home/anay/window/*.png` | 10 min |
 | 6 | T-038 SecureStore relaunch check (T-060 press-warning already closed on-device 2026-11-25) | Coco | same | relaunch + logcat | 3 min |
 
 **Hard rules:** no concurrent installs; every install announced with digest; no
