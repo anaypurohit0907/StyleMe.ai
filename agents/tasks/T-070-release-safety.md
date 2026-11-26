@@ -1,7 +1,7 @@
 ---
 id: T-070
 title: Release safety — publish gate, PR artifacts, pre-push gate
-status: in-progress
+status: review
 owner: Onyx
 reviewer: Wren
 priority: critical
@@ -19,7 +19,7 @@ files:
   - agents/CHATBOARD.md
   - agents/tasks/T-070-release-safety.md
 branch: Onyx/T-070
-updated_at: 2026-11-26T07:40Z
+updated_at: 2026-11-26T08:45Z
 ---
 
 ## Goal
@@ -59,3 +59,4 @@ Tier 3 — decisions for Anay (not blocking tier 1/2):
 
 - [2026-11-26 07:40 UTC] created (Onyx). Tier 1 implemented 07:25–07:35 UTC
   (commit `836d6e4`), CI green on the new lint gate.
+- [2026-11-26 08:45 UTC] tier 2 validated: Android run `45776093487` (push `d935f4f`) **success** — typecheck ×4, engine+worker tests, mobile lint, vision assert, `expo export`, signed APK+AAB all passed in one run; publish job skipped on push as designed; CI `45776093544` success. Pre-push hook exercised on the same push (tests/typecheck/lint green). Ready for Wren's independent review; tier 3 is Anay's decision (PR/required-checks flow, KVM runner).
