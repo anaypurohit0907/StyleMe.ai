@@ -124,3 +124,4 @@ writers.
   (Yves, training), T-015 (Marlow, motion). T-017/T-018/T-042 backlog.
   Lead heartbeat automation `aut_21183d7e900129C37TyK6JPWg8` active every
   10 min — the seat no longer goes dark when the session sleeps.
+- [2026-11-26 07:15 UTC] proper standby: phone disconnected mid product-walkthrough; 10-min heartbeat paused, replaced by a 30-min silent standby automation (`aut_216bb2532…`) + a one-off morning handoff at 08:00 UTC (`aut_216bb2537…`). Board green; T-046 blocked; product review compiled; no unpushed work.
