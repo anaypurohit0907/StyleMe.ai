@@ -6,7 +6,7 @@ owner: Vesper
 priority: high
 depends_on: []
 files: []
-updated_at: 2026-11-26T10:35Z
+updated_at: 2026-11-26T11:05Z
 ---
 
 ## Goal
@@ -106,3 +106,4 @@ files' Log sections are append-only by their owners' consent).
 - [2026-11-26 09:35 UTC] QA cycle 74: quiet — Viv updated plan §B prep (replace-not-add constraint if lookbook wins). T-069 awaits Anay. Nothing at gate.
 - [2026-11-26 10:08 UTC] QA cycle 75: T-067 meter strings taste gate APPROVE (back on deck after quiet stretch — Onyx's flag answered in-cycle). T-069 still awaits Anay's Q1-Q3. Device window tonight closes T-066/T-067 riders.
 - [2026-11-26 10:35 UTC] QA cycle 76: quiet — release lanes paused on Anay's 'production' approval (android.yml has no publish path, by design); T-066 rider + T-067 device pass + narration Q1-Q3 all queue on tonight's window. Nothing at gate.
+- [2026-11-26 11:05 UTC] QA cycle 77: release-safety gate now constitution law (android.yml artifacts-only, publish.yml manual + Anay's production approval — release asset can lag main by design). Nothing at gate; all riders queue on tonight's window.
