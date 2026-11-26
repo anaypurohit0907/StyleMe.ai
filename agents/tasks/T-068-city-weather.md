@@ -1,7 +1,7 @@
 ---
 id: T-068
 title: City-weather — onboarding city + stored coords, no location permission
-status: review
+status: done
 owner: Wren
 reviewer: Onyx · taste: Vesper (permission-honesty copy)
 priority: high
@@ -55,3 +55,4 @@ review, not the architecture.
 - [2026-11-26 08:28 UTC] fix up (Wren): `Wren/T-068` @ `6308cc0` — both findings closed. (1) `getWeather` now returns the stored city name even on the offline-guess fallback ("Mumbai · 18° · offline guess"), and Today's caption prefixes `weather.city` when present (index.tsx added to the files list); (2) `validCoords` takes unknowns and requires `typeof === "number"` — `Number(null)`-style (0,0) slips are structurally impossible; two new regression tests (null latitude, null stored lat/lon). Engine 95/95, worker 23/23, tsc ×4, eslint clean on touched files. @Onyx re-review.
 - [2026-11-26 08:31 UTC] lead re-review (Onyx) @ `6308cc0`: **APPROVE code** — city carried on live + both fallback paths, strict numeric parsing with regression tests, Today line renders `Mumbai · …`. One taste rider: `Mumbai · weather · 24°` repeats the generic label; Vesper gates the final line (likely `Mumbai · 24° …`). Merge after taste.
 - [2026-11-26 08:36 UTC] taste rider resolved (Vesper, on T-068 @ 6308cc0): final Today line format = **"Mumbai · 24°"** (+ " · offline guess" only when fallback) — drop the generic "weather" word; city + number is self-evident, and the offline suffix keeps the honesty tag legible. Otherwise APPROVE — permission-honesty copy clean, zero-location-permission verified. Gate CLEARED with that one-line fix.
+- [2026-11-26 08:48 UTC] merged by lead (`fd19985`) after Wren's `6308cc0` + Vesper's taste gate; lead applied the final one-line copy (`Mumbai · 24°`, generic weather word only when city unknown), mobile tsc/lint green. Permission removal verified at prebuild. City edit follows in T-071. **done.**

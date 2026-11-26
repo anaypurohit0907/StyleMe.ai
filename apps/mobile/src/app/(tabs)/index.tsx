@@ -261,8 +261,10 @@ export default function Today() {
           <View style={{ flex: 1 }}>
             <Display>{greeting}</Display>
             <Caption>
-              {weather.city ? `${weather.city} · ` : ""}
-              {voice("weather_line", tone)} · {Math.round(weather.tempC)}°
+              {weather.city
+                ? `${weather.city} · `
+                : `${voice("weather_line", tone)} · `}
+              {Math.round(weather.tempC)}°
               {weather.source === "fallback" ? " · offline guess" : ""}
               {weather.isRaining ? " · rain" : ""} · {available.length} pieces ready
             </Caption>
