@@ -5,11 +5,13 @@ import { useFocusEffect, useRouter } from "expo-router";
 import type { Garment, GarmentStatus } from "@styleme/schema";
 import { isNeutral } from "@styleme/engine";
 import { paletteSwatch, radius, space } from "@styleme/design";
-import { Btn, Caption, Chip, Empty, Screen, Scroll, TextLink, Title, usePressFeedback, AnimatedPressable } from "@/components/ui";
+import { Btn, Caption, Chip, Empty, Progress, Screen, Scroll, TextLink, Title, usePressFeedback, AnimatedPressable } from "@/components/ui";
 import { listGarments, setGarmentStatus } from "@/lib/db";
 import { enqueueLaundry } from "@/lib/sync-queue";
 import { useTheme } from "@/lib/theme";
 import { useToneProfile, voice } from "@/lib/tone";
+import { depthRead } from "@/lib/wardrobe-depth";
+import { sessionTarget } from "@/lib/local";
 
 const SLOTS = ["all", "top", "bottom", "dress", "outerwear", "shoes", "accessory"] as const;
 const STATUSES: ("all" | GarmentStatus)[] = ["all", "available", "in_wash", "in_use", "retired"];
@@ -63,6 +65,7 @@ export default function Wardrobe() {
   const tone = useToneProfile();
   const t = useTheme();
   const [garments, setGarments] = useState<Garment[]>([]);
+  const [target, setTarget] = useState(30);
   const [loading, setLoading] = useState(true);
   const [slot, setSlot] = useState<(typeof SLOTS)[number]>("all");
   const [status, setStatus] = useState<(typeof STATUSES)[number]>("all");
@@ -71,7 +74,9 @@ export default function Wardrobe() {
   const reload = useCallback(async () => {
     setLoading(true);
     try {
-      setGarments(await listGarments());
+      const [list, sizeTarget] = await Promise.all([listGarments(), sessionTarget()]);
+      setGarments(list);
+      setTarget(sizeTarget);
     } finally {
       setLoading(false);
     }
@@ -92,6 +97,7 @@ export default function Wardrobe() {
   });
   const washedCount = garments.filter((g) => g.status === "in_wash").length;
   const filtersActive = slot !== "all" || status !== "all" || color !== "all";
+  const depth = depthRead(garments, target);
 
   async function allWashed() {
     const ids = garments.filter((g) => g.status === "in_wash").map((g) => g.id);
@@ -123,10 +129,20 @@ export default function Wardrobe() {
         <View style={s.head}>
           <View style={{ flex: 1 }}>
             <Title>Wardrobe</Title>
-            <Caption>{garments.length} pieces · {garments.filter((g) => g.status === "in_wash").length} in wash</Caption>
+            <Caption>{garments.length} pieces · {washedCount} in wash</Caption>
           </View>
           <Btn label="Add" onPress={() => router.push("/(tabs)/capture")} />
         </View>
+        {garments.length > 0 && (
+          <View style={{ gap: space.s, marginBottom: space.m }}>
+            <Progress value={depth.pieces / depth.target} label={voice("depth_goal", tone)} />
+            <Caption>
+              {depth.unlock
+                ? `${depth.pieces} of ~${depth.target} · one ${depth.unlock.label} adds ${depth.unlock.unlocks} fresh combination${depth.unlock.unlocks === 1 ? "" : "s"}.`
+                : `${depth.pieces} of ~${depth.target} pieces.`}
+            </Caption>
+          </View>
+        )}
         <TextLink label="What to add next" onPress={() => router.push("/gap")} />
         <TextLink label="Back up your closet" onPress={() => router.push("/(tabs)/dna")} />
 
@@ -179,7 +195,7 @@ export default function Wardrobe() {
               <View style={{ gap: space.s, alignSelf: "stretch" }}>
                 <Btn label="Add clothes" onPress={() => router.push("/(tabs)/capture")} />
                 <TextLink label="What to add next" onPress={() => router.push("/gap")} />
-        <TextLink label="Back up your closet" onPress={() => router.push("/(tabs)/dna")} />
+                <TextLink label="Back up your closet" onPress={() => router.push("/(tabs)/dna")} />
               </View>
             }
           />
@@ -191,7 +207,7 @@ export default function Wardrobe() {
               <View style={{ gap: space.s, alignSelf: "stretch" }}>
                 <Btn label="Clear filters" variant="ghost" onPress={clearFilters} />
                 <TextLink label="What to add next" onPress={() => router.push("/gap")} />
-        <TextLink label="Back up your closet" onPress={() => router.push("/(tabs)/dna")} />
+                <TextLink label="Back up your closet" onPress={() => router.push("/(tabs)/dna")} />
               </View>
             }
           />
