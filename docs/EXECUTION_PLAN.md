@@ -287,7 +287,7 @@ honest by design.
 
 | # | Pass | Driver | APK | Artifacts / paths | Est. |
 |---|---|---|---|---|---|
-| 1 | Install + cold-launch smoke (no FATAL, no `Maximum update depth`, no BlurView warning), pid stable | Onyx | window APK | `adb logcat`, `styleme.log` via `adb pull` | 5 min |
+| 1 | Install + cold-launch smoke (no FATAL, no `Maximum update depth`, no BlurView warning), pid stable | Onyx | artifact from Android run `45794733039` (`fbf7cf1`) | `adb logcat`, `styleme.log` via `adb pull` | 5 min |
 | 2 | **Anay's full-wardrobe capture session** (section I) — centerpiece; no agent installs during this | Anay (Yves/Vesper guide) | same | session id + manifest; photos stay local | 15–30 min |
 | 3 | Export test (section C, if shipped) — write manifest+photos, verify counts/hash, copy back read-only | Indigo | same | export dir + `sha256sum`; no secrets | 5 min |
 | 4 | Vision eval on the captured wardrobe vs corrections (read-only) | Yves | same | `styleme.log`, report JSON | 10 min |

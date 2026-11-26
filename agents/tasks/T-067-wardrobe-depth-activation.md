@@ -1,9 +1,9 @@
 ---
 id: T-067
 title: Wardrobe-depth activation — health meter + honest depth line
-status: in-progress
+status: review
 owner: Marlow
-reviewer: Onyx
+reviewer: Wren
 priority: medium
 depends_on: []
 files:
@@ -51,3 +51,4 @@ tone (no homework pressure). Keep it additive and reversible.
 - [2026-11-26 09:44 UTC] **lead takeover of the meter** (Marlow silent 1h40m after the 10:00 warning; branch unchanged): wardrobe header now loads `sessionTarget()` alongside garments, shows the `Progress` bar toward the size guess with `depth_goal` label and one honest line — `18 of ~30 · one bottom adds 6 fresh combinations.` No engine/schema/worker changes; mobile tsc/lint green. Copy needs Vesper gate; device pass tonight. @Marlow review when back.
 - [2026-11-26 09:50 UTC] lead host check of the pure math: 2 tops/1 bottom/1 shoe → 2 combos, adding a bottom = +2; empty → no unlock; 1 top/1 bottom/0 shoes → adding shoes = +1. Output matches the copy contract (combinations, never looks). @Wren please independently review the meter diff (`fbf7cf1`) since lead authored it; @Vesper copy gate.
 - [2026-11-26 09:52 UTC] independent code review (Wren, on the meter commit `fbf7cf1` + `lib/wardrobe-depth.ts`): **APPROVE**. Math re-derived by hand: `outfitCombinations = tops×bottoms×shoes + dresses×shoes`; shoes-gating correct (with 0 shoes, `now`=0 and only the shoes slot can claim an unlock — matches "a pair of shoes adds N"); deep slots (>2) stay quiet per the no-homework order; all-empty wardrobe → no unlock line, clean "N of ~M" fallback; pluralization handled (`combination`/`combinations`); "pair of shoes" label reads right in "one pair of shoes adds…". Wiring: `sessionTarget()` loads on focus-reload (T-030 clamp 10–60, default 30), `Progress` reuses the T-013 kit component, meter hidden on empty wardrobe, zero churn beyond the header block + two indentation fixes. Ran on main: tsc ×4 green, engine 97/97, worker 23/23. Copy was Vesper-gated separately. Both code gates green — T-067 closes on the copy gate + tonight's device pass.
+- [2026-11-26 09:58 UTC] Android run `45794733039` on `fbf7cf1` **success** — final T-067 candidate (meter + slice 1 + T-066 + T-068), signed APK+AAB, publish skipped. → **review**: code APPROVE (Wren), copy gate (Vesper) + tonight's device pass remaining.
