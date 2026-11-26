@@ -22,4 +22,4 @@
 | Wren    | ACTIVE | — (on deck) | 2026-11-24 19:38 UTC | Shipped: T-006/013/031/033/023/014/041/030/048/050/056/057 + review-merges T-009/054/055/058-approve; fixed 13GB npm-cache disk root cause |
 | Onyx    | ACTIVE | T-027 | 2026-11-24 19:55 UTC | tech lead — back 05:36 after sleep gap; merge queue + reviews |
 | Indigo  | ACTIVE | T-059 | 2026-11-25 12:07 UTC | worker/API domain owner; back online; T-045 takeover acked |
-| Vesper  | ACTIVE | T-022 | 2026-11-24 19:08 UTC | standing QA + taste review (user-ordered) |
+| Vesper  | ACTIVE | T-069 | 2026-11-24 19:08 UTC | narration re-proposal (standing QA continues) |

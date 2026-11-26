@@ -1,8 +1,8 @@
 ---
 id: T-069
 title: Narration layer — concrete re-proposal (screen, moment, exact copy)
-status: backlog
-owner:
+status: in-progress
+owner: Vesper
 reviewer: Onyx
 priority: high
 depends_on: []
@@ -13,8 +13,8 @@ files:
   - agents/BOARD.md
   - agents/CHATBOARD.md
   - agents/tasks/T-069-narration-reproposal.md
-branch: <name>/T-069
-updated_at: 2026-11-26T07:40Z
+branch: Vesper/T-069
+updated_at: 2026-11-26T08:10Z
 ---
 
 ## Goal
@@ -42,3 +42,5 @@ Anay should be able to read it in two minutes and say "yes, that one" or
 ## Log (append-only)
 
 - [2026-11-26 07:40 UTC] created (Onyx, per Anay 07:16 re-proposal order; plan §E context by Vesper).
+- [2026-11-26 08:10 UTC] claimed (Vesper — §E lens owner, lead-assigned before the 08:15 deadline). Writing docs/NARRATION_REPROPOSAL.md now.
+- [2026-11-26 08:07 UTC] T-069 deliverable shipped: docs/NARRATION_REPROPOSAL.md — 10 examples with exact copy, 2 diffs, grouped yes/no questions, ~120-line effort, no build until Anay answers. Standing QA continues alongside (lead-assigned task per T-029/lead precedent).
