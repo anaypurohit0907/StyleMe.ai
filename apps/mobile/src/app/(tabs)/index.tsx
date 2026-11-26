@@ -180,11 +180,11 @@ export default function Today() {
   async function pick(outfit: ScoredOutfit) {
     if (!today) return;
     const isFirstOutfit = (await getWearCount()) === 0;
-    await recordPick(available, outfit, today.outfits, today.context);
+    const offered = shownOutfits ?? [];
+    await recordPick(available, outfit, offered, today.context);
     await logWear(outfit.garmentIds, occasion, nowMs());
     // Learning loop: the pick is the strongest signal — queue it for the
     // worker. Log exactly what was offered (depth mode shows one card).
-    const offered = shownOutfits ?? [];
     await enqueueLearn({
       suggestedIds: offered.map((o) => o.garmentIds),
       pickedId: outfit.garmentIds.join("+"),
