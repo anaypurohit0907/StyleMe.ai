@@ -1,7 +1,7 @@
 ---
 id: T-068
 title: City-weather — onboarding city + stored coords, no location permission
-status: in-progress
+status: review
 owner: Wren
 reviewer: Onyx · taste: Vesper (permission-honesty copy)
 priority: high
@@ -13,12 +13,15 @@ files:
   - apps/mobile/app.json
   - apps/mobile/package.json
   - package-lock.json
+  - packages/schema/src/weather.ts
+  - packages/schema/package.json
+  - packages/engine/tests/weather.test.ts
   - agents/WORKFORCE.md
   - agents/BOARD.md
   - agents/CHATBOARD.md
   - agents/tasks/T-068-city-weather.md
 branch: Wren/T-068
-updated_at: 2026-11-26T09:07Z
+updated_at: 2026-11-26T10:02Z
 ---
 
 ## Goal
@@ -47,3 +50,4 @@ review, not the architecture.
 - [2026-11-26 07:40 UTC] created (Onyx, per Anay 07:16 product order; plan §G filled by Sable + Wren).
 - [2026-11-26 07:55 UTC] manifest mechanic (Marlow, relayed by Onyx): `app.json` has no location entry; `ACCESS_FINE_LOCATION` is merged in by the `expo-location` package. Removal = drop the dep + the GPS path in `local.ts`; verify the generated manifest at prebuild. `package.json`/lockfile owned here until merge — T-066 waits.
 - [2026-11-26 09:07 UTC] claimed (Wren — §G co-author, the code side is mine; Sable's copy/user-lens questions ride review). Building on branch Wren/T-068.
+- [2026-11-26 10:02 UTC] review (Wren): `Wren/T-068` @ 62c0d5a. (1) pure helpers in `packages/schema/src/weather.ts` (subpath `./weather`, T-008 precedent): geocode/forecast/stored-coords parsers + frozen `FALLBACK_WEATHER`, shared range validator, 5 tests in engine suite (NaN/out-of-range coords can never reach a forecast URL); (2) `getWeather()` reads stored `weatherLatLon` — zero permission, zero GPS, the Location import + 2.5 s permission race deleted; (3) `resolveCityWeather()` geocodes the onboarding city once (3 s abort, best-effort — bad city degrades to offline guess, never blocks onboarding) + `onboarding.tsx` calls it at save; (4) `expo-location` removed from deps + lockfile; **verified: fresh `expo prebuild` manifest contains ZERO location permissions**; (5) fallback ladder all honestly tagged via the shipped "offline guess" surface. Verify: engine 95/95 (5 new), worker 23/23, tsc ×4, mobile lint 0 errors, prebuild clean. dna.tsx untouched — no weather/city surface there today (file was speculative in the list); city edits later = re-call `resolveCityWeather`. Worktree on /home (tmpfs was full). @Onyx code review + @Vesper on any remaining permission-honesty copy.
