@@ -4,7 +4,7 @@ import { useRouter } from "expo-router";
 import { radius, space } from "@styleme/design";
 import { emptyPreference } from "@styleme/schema";
 import { Btn, Caption, Chip, Screen, Scroll, Title } from "@/components/ui";
-import { getDeviceId, savePrefs } from "@/lib/local";
+import { getDeviceId, resolveCityWeather, savePrefs } from "@/lib/local";
 import { bumpFunnel, metaSet } from "@/lib/db";
 import { detectAndSaveTone } from "@/lib/tone";
 import { useTheme } from "@/lib/theme";
@@ -48,6 +48,9 @@ export default function Onboarding() {
     const deviceId = await getDeviceId();
     await metaSet("name", name.trim());
     await metaSet("city", city.trim());
+    // One geocode, stored coords — the app never asks for location (T-068).
+    // Best-effort: a bad/offline city just means the offline-guess weather.
+    await resolveCityWeather(city.trim());
     await metaSet("vibes", JSON.stringify(vibes));
     await metaSet("laundry", laundry);
     await metaSet("wardrobeSizeGuess", String(sizeGuess));

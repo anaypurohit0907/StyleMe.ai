@@ -5,8 +5,14 @@
  * still gives 3 outfits with no network. The worker is used for fresh weather,
  * cross-device sync, and tone copy when available.
  */
-import * as Location from "expo-location";
 import * as FileSystem from "expo-file-system/legacy";
+import {
+  FALLBACK_WEATHER,
+  parseForecastResponse,
+  parseGeocodeResponse,
+  parseStoredCoords,
+  type WeatherLatLon,
+} from "@styleme/schema/weather";
 import type {
   ColorName,
   Garment,
@@ -286,39 +292,71 @@ export interface Weather {
   source?: "live" | "fallback";
 }
 
-/** Open-Meteo, no API key. Falls back to a mild default offline. */
-export async function getWeather(): Promise<Weather> {
+const WEATHER_LATLON_KEY = "weatherLatLon";
+
+/**
+ * Geocode the onboarding city once (Open-Meteo geocoding, no key) and persist
+ * the coordinates. Best-effort: a bad city or offline save degrades to the
+ * offline-guess weather, never blocks onboarding. (T-068: the app asks for
+ * NO location permission — the city is the only weather source.)
+ */
+export async function resolveCityWeather(city: string): Promise<WeatherLatLon | null> {
+  const trimmed = city.trim();
+  if (trimmed.length === 0) return null;
   try {
-    // Never block the Today screen on a permission prompt.
-    const perm = await Promise.race([
-      Location.requestForegroundPermissionsAsync(),
-      new Promise<null>((resolve) => setTimeout(() => resolve(null), 2500)),
-    ]);
-    if (!perm) return { tempC: 18, isRaining: false, source: "fallback" };
-    if (perm.status !== "granted") return { tempC: 18, isRaining: false, source: "fallback" };
-    const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Low });
-    const url =
-      `https://api.open-meteo.com/v1/forecast?latitude=${pos.coords.latitude}` +
-      `&longitude=${pos.coords.longitude}&current=temperature_2m,rain&timezone=auto`;
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 3000);
     let res: Response;
     try {
-      res = await fetch(url, { signal: ctrl.signal });
+      res = await fetch(
+        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(trimmed)}&count=1`,
+        { signal: ctrl.signal },
+      );
+    } finally {
+      clearTimeout(timer);
+    }
+    if (!res.ok) return null;
+    const coords = parseGeocodeResponse(await res.json());
+    if (!coords) return null;
+    await metaSet(WEATHER_LATLON_KEY, JSON.stringify(coords));
+    return coords;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Weather from the STORED city coordinates — zero location permission, zero
+ * GPS wake-ups (T-068 per Anay's order). Honest ladder: geocoded live →
+ * cached coords tried next launch → 18 °C "offline guess".
+ */
+export async function getWeather(): Promise<Weather> {
+  try {
+    const coords = parseStoredCoords(await metaGet(WEATHER_LATLON_KEY));
+    if (!coords) return { ...FALLBACK_WEATHER };
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 3000);
+    let res: Response;
+    try {
+      res = await fetch(
+        `https://api.open-meteo.com/v1/forecast?latitude=${coords.lat}` +
+          `&longitude=${coords.lon}&current=temperature_2m,rain&timezone=auto`,
+        { signal: ctrl.signal },
+      );
     } finally {
       clearTimeout(timer);
     }
     if (!res.ok) throw new Error(`weather ${res.status}`);
-    const body = (await res.json()) as {
-      current?: { temperature_2m?: number; rain?: number };
-    };
+    const reading = parseForecastResponse(await res.json());
+    if (!reading) return { ...FALLBACK_WEATHER };
     return {
-      tempC: body.current?.temperature_2m ?? 18,
-      isRaining: (body.current?.rain ?? 0) > 0,
-      source: body.current?.temperature_2m !== undefined ? "live" : "fallback",
+      tempC: reading.tempC,
+      isRaining: reading.isRaining,
+      source: reading.source,
+      ...(reading.source === "live" && coords.name ? { city: coords.name } : {}),
     };
   } catch {
-    return { tempC: 18, isRaining: false, source: "fallback" };
+    return { ...FALLBACK_WEATHER };
   }
 }
 
