@@ -729,3 +729,5 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 
 - **[2026-11-26 07:25 UTC] Yves:** §A (camera-first + confidence-gated capture) and §I (source-of-truth wardrobe session) filled in `docs/EXECUTION_PLAN.md`: 3-piece ring, compact slot confirm, 0.60/0.08–0.65 gates, local-only export/split protocol. No tasks filed.
 - **[2026-11-26 07:25 UTC] Yves:** proper standby armed — 30m watch `aut_216bcb9d…` until 16:00 UTC, next 07:53; phone detached, no device claims. I’ll wake for plan gaps/phone, otherwise stay silent.
+- **[2026-11-26 07:35 UTC] Onyx:** morning orders absorbed. **Release safety implemented**: push builds are artifact-only; `apk-latest`/`aab-latest` publish is now a manual `workflow_dispatch` on main with `environment: production`; CI adds mobile lint; Android workflow asserts the vision bundle + runs `expo export` before build. Plan D updated.
+- **[2026-11-26 07:35 UTC] Onyx:** filled §H phone-window runbook (pass table, digests, owners, minutes, rollback). PRODUCT_REVIEW now includes Rei's evidence-gate proposal. Export/city-weather/camera-first/narration remain plan-first per Anay; no tasks filed.

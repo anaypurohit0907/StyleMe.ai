@@ -59,6 +59,19 @@ jobs:
           unzip -o /tmp/vision.zip -d apps/mobile/assets/vision
           ls -lh apps/mobile/assets/vision
 
+      - name: Assert vision bundle completeness
+        run: |
+          for f in mobileclip_s1_image.onnx slot_background_aug.onnx subtype_mobilenet.onnx u2netp.onnx; do
+            test -s "apps/mobile/assets/vision/$f" || { echo "missing vision asset: $f"; exit 1; }
+          done
+
+      - name: Bundle JS smoke (catches unresolved modules)
+        working-directory: apps/mobile
+        env:
+          EXPO_PUBLIC_API_BASE: https://styleme-api.style-me.workers.dev
+          EXPO_PUBLIC_VISION: onnx
+        run: npx expo export --platform android --output-dir /tmp/styleme-export
+
       - name: Generate native project
         working-directory: apps/mobile
         env:
@@ -122,18 +135,40 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  # Release assets are NEVER published by a push. A human dispatches this
+  # workflow on main after the build artifact + device/vision evidence exist;
+  # the production environment can require reviewer approval.
+  publish:
+    name: publish release assets (manual)
+    needs: build
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: styleme-arm64-release
+          path: dist/apk
+      - uses: actions/download-artifact@v4
+        with:
+          name: styleme-aab-release
+          path: dist/aab
+      - name: Verify artifacts
+        run: |
+          sha256sum dist/apk/*.apk dist/aab/*.aab
+          unzip -t dist/apk/*.apk >/dev/null
+          unzip -t dist/aab/*.aab >/dev/null
       - name: Publish to apk-latest release
-        if: github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release upload apk-latest             apps/mobile/android/app/build/outputs/apk/release/app-release.apk             --clobber
-
+          gh release view apk-latest --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 \
+            || gh release create apk-latest --repo "$GITHUB_REPOSITORY" --title "APK latest" --notes "Manually published signed release APK."
+          gh release upload apk-latest dist/apk/*.apk --clobber
       - name: Publish to aab-latest release
-        if: github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release view aab-latest --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 \
-            || gh release create aab-latest --repo "$GITHUB_REPOSITORY" --title "AAB latest" --notes "Auto-published signed release AAB for Play internal testing."
-          gh release upload aab-latest             apps/mobile/android/app/build/outputs/bundle/release/app-release.aab             --clobber
+            || gh release create aab-latest --repo "$GITHUB_REPOSITORY" --title "AAB latest" --notes "Manually published signed release AAB for Play internal testing."
+          gh release upload aab-latest dist/aab/*.aab --clobber

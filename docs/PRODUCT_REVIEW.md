@@ -1,8 +1,8 @@
 # StyleMe — product review & pivot proposals
 
 **Status:** overnight proposals for Anay, 2026-11-26. **Nothing here is
-approved or executed.** Source files: `agents/proposals/*.md` (Viv, Wren,
-Marlow, Sable, Yves, Indigo, Vesper; Coco + Rei pending at compile time).
+approved or executed.** Source files: `agents/proposals/*.md` (Viv, Wren, Marlow, Sable, Yves,
+Indigo, Vesper, Rei; Coco pending).
 
 ## 1. What the app is (synthesis)
 
@@ -38,7 +38,12 @@ catalog size or social features.
 6. **The crown jewels have no exit.** Wardrobe + corrections live in one
    SQLite file with no export/backup. Indigo calls this the strongest signal;
    Vesper frames it as a trust surface, not a settings feature.
-7. **Anti-goals are shared:** no social/feed, no outfit rendering, no trend
+7. **Evidence is the missing quality gate.** Code reviews held; but the
+   T-062 crash and bad UI approvals reached `apk-latest` because "approved"
+   did not require a cold-launch artifact or a vision-capable screenshot.
+   Rei: make `apk-latest` publish only after a verified cold-launch + dark/light
+   screenshot pair; code APPROVE must name the command/SHA/effect trace.
+8. **Anti-goals are shared:** no social/feed, no outfit rendering, no trend
    data; no new screens before the existing five are fully narrated. Depth
    over surface area.
 
@@ -111,7 +116,7 @@ must stay warm. **Evidence:** Marlow, Sable.
 
 ## 6. Open items
 
-- Coco (core flow) and Rei (technical risk) proposals still pending; append
-  them to `agents/proposals/` and this document before the morning review.
+- Coco (core flow) proposal still pending; append it to
+  `agents/proposals/` and this document before the morning review.
 - This document is proposals only. No execution tasks were filed; no pivots
   were implemented.

@@ -72,12 +72,15 @@ Notes:
 
 ## 3. Mobile APK (arm64)
 
-Every push to `main` touching `apps/mobile/**` builds an arm64 release APK and
-clobbers the `apk-latest` release asset (`.github/workflows/android.yml`). The
-build also `curl`s the `vision-v2` bundle over the tracked assets.
+Every push to `main` touching `apps/mobile/**` builds an arm64 release APK +
+AAB as **workflow artifacts only** (`.github/workflows/android.yml`). Release
+assets are published only by a **manual `workflow_dispatch` on `main`** after
+the build artifact and device/vision evidence exist; the `production`
+environment can require reviewer approval. The build also `curl`s the
+`vision-v2` bundle over the tracked assets.
 
 ```bash
-# manual rebuild if needed
+# manual release publish (build + publish; only after device/vision evidence)
 gh workflow run android.yml --ref main
 gh run list --workflow=android.yml --limit 5
 
@@ -161,7 +164,7 @@ curl -sS https://styleme-api.style-me.workers.dev/health
 - `0004` is additive; a code rollback can leave `learn_events` in place.
 - `0003` auth columns are additive; pre-0003 code ignores them.
 
-**APK** — `apk-latest` is clobbered per build. Keep the last known-good APK from
+**APK** — `apk-latest` is updated only by manual publish. Keep the last known-good APK from
 the workflow artifact (30-day retention) or rebuild from the previous main SHA;
 there is no published APK history beyond GitHub release/artifact retention.
 

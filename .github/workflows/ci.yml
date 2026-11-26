@@ -24,6 +24,9 @@ jobs:
         run: npx turbo run typecheck --filter=@styleme/schema --filter=@styleme/engine --filter=@styleme/worker --filter=@styleme/mobile
       - name: Engine + worker tests
         run: npx turbo run test --filter=@styleme/engine --filter=@styleme/worker
+      - name: Mobile lint (pre-merge gate)
+        working-directory: apps/mobile
+        run: npx expo lint
 
   ml-notebooks:
     name: validate notebooks
