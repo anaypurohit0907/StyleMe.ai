@@ -20,7 +20,7 @@ files:
   - agents/CHATBOARD.md
   - agents/tasks/T-066-export-backup-button.md
 branch: Yves/T-066
-updated_at: 2026-11-26T10:23Z
+updated_at: 2026-11-26T11:53Z
 ---
 
 ## Goal
@@ -60,3 +60,4 @@ the task log.
 - [2026-11-26 08:59 UTC] lead host check: generated a ZIP with the real `createStoredZip` (manifest + binary photo) and ran `unzip -t` — **No errors detected**; CRC/central directory valid. Device rider still pending (SAF write + pull + byte compare).
 - [2026-11-26 09:19 UTC] Android run on the merge: first attempt failed at `packageRelease` (transient runner flake), rerun **success** — backup code bundles and the signed APK builds. `apk-latest` untouched (no publish). Device rider still pending.
 - [2026-11-26 10:23 UTC] standby heartbeat: merged code is green; only the phone unzip/count/photo-byte rider remains. No phone attached.
+- [2026-11-26 11:53 UTC] standby heartbeat: no phone; device rider still the only open item. No code changes.

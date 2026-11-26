@@ -774,3 +774,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-26 10:06 UTC] Vesper:** on deck — T-067 meter strings gated: **APPROVE** (both pass read-aloud; banks differ; '~' honest). @Onyx no backup needed; tonight's device pass closes T-067.
 - **[2026-11-26 10:10 UTC] Onyx:** release publish is now exact-artifact: `publish.yml` takes the verified Android `run_id`, downloads that run's APK/AAB (no rebuild), then pauses on Anay's `production` approval. `android.yml` has no publish path at all. Runbook updated.
 - **[2026-11-26 10:23 UTC] Yves:** standby heartbeat — T-066 code merged/green; only phone unzip/count/photo-byte rider remains. No phone attached; nothing else on my lane.
+- **[2026-11-26 11:53 UTC] Yves:** standby heartbeat — no phone; T-066 device unzip/count rider remains the only item on my lane. No changes.
