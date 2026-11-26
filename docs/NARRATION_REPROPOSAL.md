@@ -24,25 +24,25 @@
 ### 3. Re-scan — DNA progress (Style DNA tab)
 - **Moment:** "Re-scan wardrobe tags" running, one item at a time.
 - **Today:** button label "Re-scanning 4/7 · tagging…" — progress trapped inside a button.
-- **After:** a one-line caption under the button, past-tense per item: **"Checked 4 of 7 — the black tee came back t-shirt."** On finish: **"Re-checked 7 pieces in 49 seconds. Nothing changed without you."** (that last clause only when zero corrections were overwritten — honest by construction, since T-008 protects manual fixes)
+- **After:** a one-line caption under the button, past-tense per item: **"Checked 4 of 7 — the black tee came back t-shirt."** On finish: **"Re-checked 7 pieces in 49 seconds. Your 5 corrections stayed put."** (the second sentence only when corrections exist and were preserved; otherwise stop at the time)
 - **User's next move:** trusts the re-scan because it reported what it did.
 
 ### 4. Sync — wardrobe mirror (Wardrobe header)
 - **Moment:** app online, queued events draining to the worker.
 - **Today:** completely invisible. (The queue exists — T-014 — but no surface says so.)
-- **After:** one quiet caption in the Wardrobe header, present only while draining, gone after: **"Backing up your closet…"** → **"Backed up just now."** for ~2s, then disappears. Offline: **"Held on this phone until online."**
+- **After:** one quiet caption in the Wardrobe header, present only while draining, gone after: **"Saving your tags…"** → **"Tags saved just now."** for ~2s, then disappears. Offline: **"Held on this phone until online."** Photos never leave the phone — the line must never imply a photo backup.
 - **User's next move:** none — that's the point; it's reassurance, not a task.
 
 ### 5. Laundry cooldown (item sheet)
 - **Moment:** user taps "I washed it — back in rotation".
 - **Today:** status flips to "available", nothing else.
-- **After: **"Back in rotation — it rested 2 days."** (the number from `lastWornAt`, real). Reverse case on "Send to laundry": **"In the wash — I won't suggest it."**
+- **After:** "Back in rotation — it rested 2 days." (the number from `lastWornAt`, real). Reverse case on "Send to laundry": **"In the wash — I won't suggest it."**
 - **User's next move:** sees the system respect the wash, the promise made in onboarding kept.
 
 ### 6. First-run gap (Today, empty wardrobe)
 - **Moment:** brand-new user opens Today before photographing anything.
 - **Today:** "Need a few more pieces." + two buttons (good, but static).
-- **After:** same card, one warmer line added: **"Photograph three pieces and three outfits appear here tomorrow morning."** — sets the mechanic in one sentence.
+- **After:** same card, one warmer line added: **"Photograph three pieces and outfits appear here."** — sets the mechanic in one sentence, with no false delay.
 - **User's next move:** taps Add with an expectation, not a hope.
 
 ### 7. Streak milestone (Today)
@@ -60,7 +60,7 @@
 ### 9. Shuffle after "none of these" (Today)
 - **Moment:** user taps "None of these? Shuffle" (a rejection signal, learned since T-014).
 - **Today:** cards swap silently.
-- **After:** **"Noted — three new ones."** — acknowledges the rejection was heard, 1.5s.
+- **After:** **"Noted — another one."** (or "three new ones" only when three cards were shown) — acknowledges the rejection was heard, 1.5s. The count must match what was actually offered (T-067 depth mode shows one).
 - **User's next move:** trusts that passing on outfits does something.
 
 ### 10. Cold-launch sanity (app open, Today)
@@ -89,7 +89,7 @@
 - **Files:** `capture.tsx` (1–2), `dna.tsx` (3), `wardrobe.tsx` (4), `item/[id].tsx` (5), `index.tsx` (6,7,9,10), `dna.tsx` polls (8), + ~6 new tone keys (`narrate_*`) in `engine/tone.ts` + `docs/TONE_KEYS.md`.
 - **Effort:** one focused session; ~120 lines total, half of it copy already written in the banks.
 - **Risk:** copy discipline only — my gate checks every line for the read-aloud rule. Zero logic changes; every number quoted (days, counts, seconds) comes from existing state.
-- **Sequencing:** after T-066/T-067/T-068 merges to avoid file overlap; independent of them otherwise.
+- **Sequencing:** T-066/T-068 are merged; T-067 and T-071 also touch `index.tsx`/`dna.tsx`, so land after those or rebase. Independent of them otherwise.
 
 ---
 
