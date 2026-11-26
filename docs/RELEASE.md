@@ -75,8 +75,9 @@ Notes:
 Every push to `main` touching `apps/mobile/**` builds an arm64 release APK +
 AAB as **workflow artifacts only** (`.github/workflows/android.yml`). Release
 assets are published only by a **manual `workflow_dispatch` on `main`** after
-the build artifact and device/vision evidence exist; the `production`
-environment can require reviewer approval. The build also `curl`s the
+the build artifact and device/vision evidence exist. The `production`
+environment is enforced: required reviewer `anaypurohit0907`, self-review
+blocked, admin bypass disabled — a publish pauses until Anay approves it. The build also `curl`s the
 `vision-v2` bundle over the tracked assets.
 
 ```bash

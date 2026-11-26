@@ -165,9 +165,10 @@ job on `main` with `environment: production`; the same Android run gates on
 typecheck ×4, engine+worker tests, mobile lint, vision-bundle assert, and
 `expo export --platform android`; CI adds mobile lint; the workflow also runs on
 PRs and uploads arm64 APK/AAB artifacts (no publish); `.githooks/pre-push`
-(`npm run hooks:install`) gates code pushes locally. Remaining: Anay configures
-the production environment reviewers + the required-checks/PR-flow decision;
-cold-launch stays phone-first until a KVM runner exists.
+(`npm run hooks:install`) gates code pushes locally. `production` is configured (required
+reviewer Anay, self-review blocked, admin bypass disabled). Remaining: the
+required-checks/PR-flow decision; cold-launch stays phone-first until a KVM
+runner exists.
 
 **Needed from Anay:**
 - (1) Approve required-checks + `environment: production` on the upload steps
