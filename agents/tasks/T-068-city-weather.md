@@ -45,3 +45,4 @@ review, not the architecture.
 ## Log (append-only)
 
 - [2026-11-26 07:40 UTC] created (Onyx, per Anay 07:16 product order; plan §G filled by Sable + Wren).
+- [2026-11-26 07:55 UTC] manifest mechanic (Marlow, relayed by Onyx): `app.json` has no location entry; `ACCESS_FINE_LOCATION` is merged in by the `expo-location` package. Removal = drop the dep + the GPS path in `local.ts`; verify the generated manifest at prebuild. `package.json`/lockfile owned here until merge — T-066 waits.

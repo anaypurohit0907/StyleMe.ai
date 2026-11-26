@@ -8,7 +8,7 @@ priority: high
 depends_on: []
 files:
   - apps/mobile/src/lib/backup.ts
-  - apps/mobile/src/lib/local.ts
+  - apps/mobile/src/lib/db.ts
   - apps/mobile/src/app/(tabs)/dna.tsx
   - apps/mobile/src/app/(tabs)/wardrobe.tsx
   - apps/mobile/package.json
@@ -50,3 +50,4 @@ the task log.
 ## Log (append-only)
 
 - [2026-11-26 07:40 UTC] created (Onyx, per Anay 07:16 approval; plan §C filled by Indigo).
+- [2026-11-26 07:55 UTC] file split (Onyx): backup reads `db.ts` directly — `local.ts` is removed from this task and owned by T-068 (city-weather). `package.json`/lockfile also collide with T-068's `expo-location` removal: build `backup.ts` + UI first, add `jszip`/`expo-sharing` only after T-068 merges (or Wren acks on CHATBOARD).
