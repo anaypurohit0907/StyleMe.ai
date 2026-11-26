@@ -6,13 +6,22 @@
 
 ---
 
-## 0. Decisions to lock (Anay, tonight)
+## 0. Decisions — locked 07:16 UTC, remaining picks in QUESTIONS Q-006
 
-1. Primary wedge: **A camera-first** or **B lookbook-first** (they compete for the same wave).
-2. Export/trust surface (C) as beta gate — yes/no.
-3. Release-safety gates (D) before any further `apk-latest` update — yes/no.
-4. Tagger: "good enough, stop training" — confirm or fund one more round.
-5. Beta timing anchor.
+**Locked by Anay:**
+1. **Export/trust surface (C): APPROVED — build it** (T-066; C2 default, share sheet).
+2. **Wardrobe-depth activation (F): APPROVED — on the todo list** (T-067; quiet tone default).
+3. **Release safety (D): APPROVED — non-negotiable**, Onyx owns it (T-070; tier 1+2 shipped).
+4. **City-weather (G): ORDERED** — city at onboarding, weather from it, no repeated location permission, no always-on location (T-068).
+5. **Tagger: stop training** — revisit after real users; no more rounds now.
+6. **Kill list:** social/trends/outfit-rendering deferred; engine sophistication deferred; stable core first.
+7. **Camera-first (A): plan only** — no code until Anay approves §A.
+8. **Narration (E): re-proposal only** — concrete screen/moment/copy examples before any build (T-069).
+
+**Still open:**
+- Primary wedge: **A camera-first** or **B lookbook-first** (they compete for the same wave).
+- Beta timing anchor.
+- Q-006 defaults (export C2/destination, depth meter placement, city permission removal, §A thresholds) — defaults proceed unless Anay overrides.
 
 ## A. Camera-first first run + confidence-gated capture
 **Owner:** Yves (capture/vision) · **Co:** Sable (owner-demo reality)
@@ -209,8 +218,10 @@ background job).
   geocode is offline, retry next launch) → 18 °C + "offline guess" tag. No
   silent GPS, no silent permission.
 - Effort: small — one geocode helper + `getWeather` swap + one meta key,
-  ~1–2 h; the permission line comes OUT of `app.json` + the Android manifest
-  via prebuild. Files: `local.ts`, `onboarding.tsx`, `app.json`.
+  ~1–2 h; permission removal = drop the `expo-location` dep + the `local.ts`
+  GPS path (Marlow 07:40: `app.json` has no entry; the package merge adds
+  `ACCESS_FINE_LOCATION`, so the manifest entry disappears at prebuild).
+  Files: `local.ts`, `onboarding.tsx`, `app.json`, `package.json`, lockfile.
 - Needed from Anay (mine): none beyond Sable's copy questions; if he ever
   wants automatic local weather back, that's a separate opt-in toggle.
 
@@ -274,7 +285,7 @@ honest by design.
 | 3 | Export test (section C, if shipped) — write manifest+photos, verify counts/hash, copy back read-only | Indigo | same | export dir + `sha256sum`; no secrets | 5 min |
 | 4 | Vision eval on the captured wardrobe vs corrections (read-only) | Yves | same | `styleme.log`, report JSON | 10 min |
 | 5 | Visual acceptance: Today/Wardrobe/Capture/Gap, dark + light screenshots archived | Onyx + Viv | same | `/home/anay/window/*.png` | 10 min |
-| 6 | T-060 press-warning + T-038 SecureStore relaunch check | Marlow/Coco | same | logcat + relaunch | 5 min |
+| 6 | T-038 SecureStore relaunch check (T-060 press-warning already closed on-device 2026-11-25) | Coco | same | relaunch + logcat | 3 min |
 
 **Hard rules:** no concurrent installs; every install announced with digest; no
 `pm clear`; no re-scan of user data unless Anay asks; if the phone sleeps or
