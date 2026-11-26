@@ -61,3 +61,4 @@ the task log.
 - [2026-11-26 09:19 UTC] Android run on the merge: first attempt failed at `packageRelease` (transient runner flake), rerun **success** — backup code bundles and the signed APK builds. `apk-latest` untouched (no publish). Device rider still pending.
 - [2026-11-26 10:23 UTC] standby heartbeat: merged code is green; only the phone unzip/count/photo-byte rider remains. No phone attached.
 - [2026-11-26 11:53 UTC] standby heartbeat: no phone; device rider still the only open item. No code changes.
+- [2026-11-26 12:15 UTC] phone-window APK staged: `/home/anay/apk-window/app-release.apk`, 192,451,999? bytes (see stat), `sha256 42eba813542a582f7a86c3476f20d38f6afb67047498ed8d41053a6e3a7f056b`, from run `45794733039`; zip integrity `unzip -t` OK. Device rider uses this exact artifact.
