@@ -7,6 +7,10 @@ on:
     paths:
       - "apps/mobile/**"
       - ".github/workflows/android.yml"
+  pull_request:
+    paths:
+      - "apps/mobile/**"
+      - ".github/workflows/android.yml"
 
 permissions:
   contents: write
@@ -49,6 +53,18 @@ jobs:
 
       - name: Install JS deps
         run: npm ci
+
+      # Release gate: a publishable build must pass the same checks as CI in
+      # the same workflow run, so a manual publish can never ship untested code.
+      - name: Typecheck (release gate)
+        run: npx turbo run typecheck --filter=@styleme/schema --filter=@styleme/engine --filter=@styleme/worker --filter=@styleme/mobile
+
+      - name: Engine + worker tests (release gate)
+        run: npx turbo run test --filter=@styleme/engine --filter=@styleme/worker
+
+      - name: Mobile lint (release gate)
+        working-directory: apps/mobile
+        run: npx expo lint
 
       - name: Fetch vision bundle
         run: |

@@ -76,3 +76,8 @@ Live index of `agents/tasks/`. One row per task. Detailed progress lives in the 
 | T-063 | Fix wardrobe grid regression — animated tile wrapper shrinks cards | done | Viv | high | 2026-11-25 12:46 UTC |
 | T-064 | Update TESTING scan-log legend — mask cleanup + corrections | done | Yves | low | 2026-11-25 12:57 UTC |
 | T-065 | Product review — pivot proposals only (all agents, overnight) | done | Onyx | high | 2026-11-26 02:33 UTC |
+| T-066 | Export / backup button — one-file closet backup (C2) | backlog | — | high | 2026-11-26 07:45 UTC |
+| T-067 | Wardrobe-depth activation — health meter + honest depth line | backlog | — | medium | 2026-11-26 07:45 UTC |
+| T-068 | City-weather — onboarding city + stored coords, no location permission | backlog | — | high | 2026-11-26 07:45 UTC |
+| T-069 | Narration layer — concrete re-proposal (screen, moment, exact copy) | backlog | — | high | 2026-11-26 07:45 UTC |
+| T-070 | Release safety — publish gate, PR artifacts, pre-push gate | in-progress | Onyx | critical | 2026-11-26 07:45 UTC |

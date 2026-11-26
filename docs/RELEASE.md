@@ -102,6 +102,24 @@ Check: boot to Today, tag one capture, one logged wear, Style DNA diagnostics
 opens, `styleme.log` contains the startup + scan lines. The previous file is
 `styleme.log.1`; the app loads its tail at the next launch (T-034).
 
+### Publish gate (T-070)
+
+A manual publish is allowed only when the exact artifact has evidence:
+
+1. The Android run that produced the artifact passed typecheck ×4, engine +
+   worker tests, mobile lint, vision-bundle assert, `expo export`, and the
+   signed APK/AAB build (all steps are in the same run).
+2. Install that artifact on the phone and record: cold launch with no `FATAL`,
+   no `Maximum update depth`, no BlurView warning; stable pid; dark + light
+   screenshots; one capture; `styleme.log` clean.
+3. Only then dispatch the publish job and approve the `production` environment.
+4. Record the artifact `sha256` in the release notes / task log.
+
+Local guard: `npm run hooks:install` once per clone enables
+`.githooks/pre-push`, which runs the CI pair + typecheck + mobile lint on any
+push that touches code; coordination-only pushes skip instantly. Emergency
+bypass is `git push --no-verify`, with the reason in `agents/CHATBOARD.md`.
+
 ### Emulator lane — blocked (T-046)
 
 No working emulator lane as of 2026-11-25. Do not claim a device pass from an
@@ -176,7 +194,6 @@ data was not cleared — say so honestly to testers.
 
 ## 6. Known gaps (do not paper over)
 
-- No in-app 403 recovery UI (helper ready; T-028 note).
 - No crash/analytics SDK; beta gates rely on Play vitals + manual tallies.
 - AAB builds in CI (`bundleRelease`) but Play uploads stay manual — deliberate,
   deploy/upload automation is user-gated.

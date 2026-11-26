@@ -150,12 +150,15 @@ for A is accepted.
      expected 10 min/device window. Honest cost: releases serialize on
      Anay being home.
 
-**Implemented 07:35 UTC (Onyx, lead):** push builds are artifacts only; the
-`apk-latest`/`aab-latest` publish is a separate manual `workflow_dispatch` job
-on `main` with `environment: production`; CI adds mobile lint; the Android
-workflow now asserts the vision bundle and runs `expo export --platform android`
-before the native build. Remaining: Anay configures the production environment
-reviewers; D-a/D-b decision.
+**Implemented 07:35–07:45 UTC (Onyx, lead):** push builds are artifacts only;
+the `apk-latest`/`aab-latest` publish is a separate manual `workflow_dispatch`
+job on `main` with `environment: production`; the same Android run gates on
+typecheck ×4, engine+worker tests, mobile lint, vision-bundle assert, and
+`expo export --platform android`; CI adds mobile lint; the workflow also runs on
+PRs and uploads arm64 APK/AAB artifacts (no publish); `.githooks/pre-push`
+(`npm run hooks:install`) gates code pushes locally. Remaining: Anay configures
+the production environment reviewers + the required-checks/PR-flow decision;
+cold-launch stays phone-first until a KVM runner exists.
 
 **Needed from Anay:**
 - (1) Approve required-checks + `environment: production` on the upload steps

@@ -90,3 +90,13 @@ Ask here instead of interrupting the user or another agent. Anyone — agent or 
 **A [2026-11-25 05:36 UTC] Onyx:** back after a machine-sleep gap; session resumed on Anay's direct order ("continue"). No succession needed. The §5.5 reviewer merges made during the gap (T-012 d043023, T-031 de62760, T-008 cc3cd11, T-024 72093cc, T-026 2e2749c, T-013 6684f50) are ratified — gates were green and recorded; that is exactly the fallback the charter allows. Merge queue is mine again: T-011 code review is with Wren, T-033 I take now, T-020 Indigo resumed 05:36.
 
 **Decision [2026-11-25 05:36 UTC]:** Onyx continues as tech lead (Anay-directed continuation). No acting lead appointed; Wren keeps reviewer duties, not the seat. T-027 heartbeat resumed.
+
+### Q-006 — Morning execution-plan picks (export, depth, city-weather, camera-first) — OPEN
+- by: Onyx · 2026-11-26 07:45 UTC · blocks: final plan acceptance (tasks are filed as backlog; export is already approved to build)
+- context: Anay approved export + wardrobe-depth direction and ordered city-weather at 07:16 UTC. Four small picks remain; each has a recommended default so work can start without waiting.
+1. **Export (§C):** C2 one-file zip + share sheet (recommended) or C1 folder export? Default destination is the OS share sheet. Vesper's copy is the default line.
+2. **Wardrobe-depth (§F):** target = Anay's own size guess (recommended) or fixed 30; meter on Wardrobe only (recommended) or Today too; tone quiet (recommended) or nudge.
+3. **City-weather (§G):** confirm free-text city at onboarding and **remove location permission entirely** (recommended, matches your order) — or keep a dormant opt-in?
+4. **Camera-first (§A):** approve the 3-piece minimum, single confirmation row, and thresholds 0.60 / 0.08–0.65 for the plan (no code until you say go)?
+
+**A [answer here] user:** (one line per number is enough; "defaults" accepts all recommendations)
