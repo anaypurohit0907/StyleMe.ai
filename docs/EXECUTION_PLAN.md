@@ -85,6 +85,12 @@
    `gapAnalysis()` as the single source; no new math, no pushy commerce.
    Degradation states stay honest: engine error ≠ empty; no photos ≠ error;
    laundry-empty keeps the existing recovery card.
+**Prep-state (updated 09:30 UTC):** T-067 slice 1 is merged and already ships
+depth-mode one-card + badges hidden below 60% photo coverage in `index.tsx`. If B
+is chosen, session 1 must **replace that card shell**, not add a second Today
+layout; keep T-067's depth line + `gapAnalysis` below the hero. If A wins, B
+defers and T-067 stands alone.
+
 **Needed from Anay:** pick the wedge (A camera-first vs B lookbook-first);
 approve the photo fallback as “designed absence” rather than a photo-required
 gate; confirm that one hero + two peeks is still “3 outfits” for the product
