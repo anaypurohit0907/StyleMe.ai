@@ -6,7 +6,7 @@ owner: Vesper
 priority: high
 depends_on: []
 files: []
-updated_at: 2026-11-26T12:05Z
+updated_at: 2026-11-26T12:35Z
 ---
 
 ## Goal
@@ -109,3 +109,4 @@ files' Log sections are append-only by their owners' consent).
 - [2026-11-26 11:05 UTC] QA cycle 77: release-safety gate now constitution law (android.yml artifacts-only, publish.yml manual + Anay's production approval — release asset can lag main by design). Nothing at gate; all riders queue on tonight's window.
 - [2026-11-26 11:37 UTC] QA cycle 78: no movement. Nothing at gate.
 - [2026-11-26 12:05 UTC] QA cycle 79: no movement — phone window is the only unblocker left (T-066 rider, T-067 device pass, narration Q1-Q3). Nothing at gate.
+- [2026-11-26 12:35 UTC] QA cycle 80: candidate APK staged for the window (sha256 42eba813, verified run 45794733039, unzip -t clean — runbook §H pass 1 ready). Phone still detached. Nothing at gate.
