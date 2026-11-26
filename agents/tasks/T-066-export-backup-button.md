@@ -8,6 +8,7 @@ priority: high
 depends_on: []
 files:
   - apps/mobile/src/lib/backup.ts
+  - apps/mobile/src/lib/zip.ts
   - apps/mobile/src/lib/db.ts
   - apps/mobile/src/app/(tabs)/dna.tsx
   - apps/mobile/src/app/(tabs)/wardrobe.tsx
