@@ -16,9 +16,44 @@
 
 ## A. Camera-first first run + confidence-gated capture
 **Owner:** Yves (capture/vision) · **Co:** Sable (owner-demo reality)
-**What's needed:** (fill: flow change list, confidence thresholds from shipped probes, session-ring wiring, copy promise).
-**Needed from Anay:** (fill).
-**Practicality / Effort:reward:** (fill).
+
+**What's needed:**
+- Flow: after onboarding vibes, land in **Add** with the camera armed and a 3-piece
+  goal ("top + bottom + shoes", or dress + shoes), not the full 30-piece grid.
+  Keep the T-013 loop: capture → cutout → one compact confirmation → "Added ✓" →
+  camera re-arms; no bounce to Wardrobe.
+- Review surface: a **single slot row** (6 chips, current guess preselected) plus
+  Retake. Do not show six attribute cards at capture; color/pattern/formality move
+  to the item sheet. This is the "we guess, you confirm" promise, not auto-tagging.
+- Confidence gate (uses shipped logits/mask coverage, no retrain):
+  - slot conf >= 0.60 and mask coverage 0.08–0.65 → quiet confirmation row.
+  - slot conf < 0.60 or coverage < 0.08 or > 0.65 → "Check this one" banner + Retake
+    hint; still one tap to accept. Evidence: real flat-lay test had 0.48–1.00
+    confidence with both correct and wrong calls at 0.9+, so confidence alone must
+    not auto-save.
+  - `cover > 0.65` with `useMask=false` → keep full photo but tell the user the
+    background is busy; no hidden failure.
+- Session ring: 3-piece minimum, then "3 pieces → first outfit ready"; 30-piece
+  target remains a later goal, not a gate.
+- Copy: "One piece per shot. We'll guess; you confirm." Replace any "automatic"
+  claim on Capture/Onboarding.
+- Metrics emitted locally: shots taken, time to first outfit, confirmation taps,
+  retakes, corrections. Reuse T-058 funnel counters; no network.
+
+**Needed from Anay:**
+- Approve the 3-piece minimum and the one-row confirmation (vs. full editor now).
+- Confirm the default thresholds (0.60 / 0.08 / 0.65) are acceptable to tune on his
+  own wardrobe session.
+- Confirm time budget for first outfit (target ≤ 90s after onboarding).
+
+**Practicality / Effort:reward:**
+- Effort: ~4–6h mobile (one focused session) + copy; no model work, no new deps.
+  Reuses cutout, slot logits, coverage, T-013 loop, funnel counters.
+- Reward: high — directly targets the 3-minute promise and the 5/8 first-guess
+  reality. Risk: one extra confirmation tap per piece; mitigated by showing the
+  compact row only (not the full tag editor).
+- Success metrics: capture ≤ 10s/piece, correction rate ≤ 1 in 4, first outfit
+  completed by ≥ 80% of testers without asking "is it done?".
 
 ## B. Lookbook-first Today + honest degradation
 **Owner:** Viv (design) · **Co:** Marlow (engine gates)
@@ -84,9 +119,12 @@ for A is accepted.
 
 ## F. Wardrobe-depth-first activation
 **Owner:** Marlow (engine/utility) · **Co:** Sable
-**What's needed:** (fill: wardrobe health meter surface, "3 more bottoms unlock 6 looks" math from T-052 gap engine, warm-not-pushy pressure).
-**Needed from Anay:** (fill).
-**Practicality / Effort:reward:** (fill).
+**What's needed:** mobile-only surface work; **zero engine/worker/schema changes** (engine sophistication is deferred per the kill list — the "unlock" math is arithmetic on the local garment list, not engine work). All inputs already shipped: T-030 wardrobe-size guess (`metaGet("wardrobeSize")`, clamped 10–60, default 30), T-052 `gapAnalysis()` (pure, exported), T-013 `Progress` ring (in `ui.tsx`), T-017 wardrobe header.
+1. **Wardrobe health meter** — `apps/mobile/src/app/(tabs)/wardrobe.tsx`: header caption ("N pieces · M in wash") gains the `Progress` ring toward the size-guess target + one gap line: "18 of ~30 · 3 more bottoms → 6 fresh combinations." Math, honestly: pair-shape combos = tops × bottoms × shoes + dresses × shoes; delta from +k of the gap slot (gap slot + k from `gapAnalysis`) — computed in a small mobile helper, labeled **combinations**, never "looks" (cooldowns mean new ≠ immediate; taste gates final copy).
+2. **Today depth line + register shift** — `apps/mobile/src/app/(tabs)/index.tsx` (co-owned with B): below 15 photo'd pieces → 1 strong option + honest depth line instead of 3 near-twins; badges (`OutfitBadge`) hidden when photo coverage <60% — all gates on data the screen already holds (`listGarments` + `photoRef`), no new fetch. If B wins the wedge, this line rides B's layout wave rather than racing it.
+3. **Copy keys** — 2 new tone-bank keys (`depth_line`, `depth_goal`), Vesper gates; files: `apps/mobile/src/lib/tone.ts` + `docs/TONE_KEYS.md`.
+**Needed from Anay:** (1) goal framing — his size-guess as the visible target vs a fixed 30; (2) meter on Today too, or Wardrobe-only; (3) pressure ceiling — Sable's lens says status confusion is the #1 pain, the meter must never read as homework (his call on "nudge vs quiet").
+**Practicality / Effort:reward:** Practicality: high — every input shipped, additive UI only, no deps. Effort: **small — ≈1 focused session** (helper + meter + gates + copy; `wardrobe.tsx`/`index.tsx`/`local.ts`/`tone.ts`). Reward: high — it attacks the activation cliff (my proposal §2: at ~8 real pieces the engine's 3 options are near-twins and the setup promise is the product's most expensive assumption). Risk: low, taste-gated. Anay pre-approved the direction this morning ("wardrobe-depth activation — add to the todo list"). Sequences cleanly: F has no dependencies; its Today-side piece shares B's files, so F+B should be one wave if both are picked.
 
 ## G. City-weather (honest weather source)
 **Owner:** Sable (user-proxy) · **Co:** Wren
@@ -107,9 +145,33 @@ Order proposal (Onyx reorders as owner):
 
 ## I. Anay's source-of-truth wardrobe session (his order)
 **Owners:** Yves (session design) + Vesper (copy/promise framing)
-**What's needed:** (Yves fills: shot protocol — flat-lay, lighting, one-piece-per-frame; capture-loop settings; export of the resulting corrections+tags as the eval dataset).
-**Vesper, filled (copy side):** the session must FEEL like the product promise, not data collection — ring progress in his size-guess, honest low-confidence questions, zero jargon; end screen shows "this taught the model" + where the data lives (ties to C).
-**Needed from Anay:** time budget, item count, whether items stay in-app after.
+
+**What's needed:**
+- Protocol: one piece per frame, flat-lay, fill the guide, natural light, no hangers
+  or people. Include the real surfaces he uses (graphic bedsheet) plus at least one
+  plain sheet/floor shot for an A/B if he is willing. 20–30 items covering
+  top/bottom/dress/outerwear/shoes/accessory.
+- Capture loop: camera-first, auto-cutout, compact slot confirm; save immediately.
+  Color/pattern/formality corrections can happen later in the item sheet so the
+  session stays under ~15 min.
+- Persist: `originalRef`, cutout, final attrs, `corrections[]`, model prediction,
+  slot confidence, mask coverage/bbox, and a session id. Export manifest JSON +
+  photos via the C export surface (local-only; no upload).
+- Split: by item id, 70/15/15 train/val/test; keep at least one background family
+  and one hard item (patterned/dark) entirely in test. Use it as the real-photo
+  eval, not a training set, until Anay opts in.
+- Expected time: 30 items × 20–30s capture+confirm ≈ 10–15 min, plus corrections.
+
+**Vesper, filled (copy side):** the session must FEEL like the product promise, not
+data collection — ring progress in his size-guess, honest low-confidence questions,
+zero jargon; end screen shows "this taught the model" + where the data lives
+(ties to C).
+
+**Needed from Anay:**
+- 20–30 items and ~15 min; flat surface + light.
+- Consent to local export (photos stay on phone/laptop; adb pull only).
+- Whether captured items stay in the wardrobe after the session.
+- Whether he can add one plain-background set for A/B (not required).
 
 ---
 
