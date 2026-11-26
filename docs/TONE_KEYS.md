@@ -41,6 +41,8 @@ Rules:
 | `greeting_afternoon` | Today greeting | afternoon | afternoon | afternoon |
 | `greeting_evening` | Today greeting | evening | evening | evening |
 | `fresh_rotation` | Today reasons | fresh rotation, nothing worn this week | fresh rotation, nothing repeated this week | nothing repeated this week |
+| `depth_line` | Today depth register (<15 photo'd) | a few more pieces unlock more combinations | a few more pieces mean more combinations | more pieces unlock more combinations |
+| `depth_goal` | Wardrobe health meter | building the rotation | growing your rotation | toward your target wardrobe |
 
 ## Usage
 

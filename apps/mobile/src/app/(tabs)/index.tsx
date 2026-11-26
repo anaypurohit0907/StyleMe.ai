@@ -8,6 +8,7 @@ import { occasionLabel, occasions, paletteSwatch, radius, space } from "@styleme
 import { Btn, Caption, Card, Chip, Confirm, Display, Empty, Screen, Scroll, Title } from "@/components/ui";
 import { OutfitBadge, Toast, WhyPanel } from "@/components/why-panel";
 import { bumpFunnel, listGarments, logSuggestion, logWear, metaGet, upsertGarment } from "@/lib/db";
+import { depthRead } from "@/lib/wardrobe-depth";
 import { onAuthLocked } from "@/lib/api";
 import { useToneProfile, voice } from "@/lib/tone";
 import { useTheme } from "@/lib/theme";
@@ -23,6 +24,7 @@ import {
   recordPick,
   resetDeviceIdentity,
   savePrefs,
+  sessionTarget,
   type LocalToday,
   type Weather,
   type WearStreak,
@@ -51,6 +53,8 @@ export default function Today() {
   const [streak, setStreak] = useState<WearStreak>({ days: 0 });
   const [seed, setSeed] = useState(0);
   const [name, setName] = useState<string | null>(null);
+  // T-067: onboarding size guess (clamped 10–60) — the depth target.
+  const [target, setTarget] = useState(30);
   const [toast, setToast] = useState<{ message: string; undo?: () => void } | null>(null);
   const [error, setError] = useState(false);
   // T-059: worker registration is locked (403 registration_locked). Offer the
@@ -86,6 +90,7 @@ export default function Today() {
       const w = await getWeather();
       setWeather(w);
       setName(await metaGet("name"));
+      setTarget(await sessionTarget());
       setStreak(await getWearStreak());
       if (free.length >= 3) {
         const result = await recommendLocal(free, occasion, w, seed);
@@ -177,9 +182,11 @@ export default function Today() {
     const isFirstOutfit = (await getWearCount()) === 0;
     await recordPick(available, outfit, today.outfits, today.context);
     await logWear(outfit.garmentIds, occasion, nowMs());
-    // Learning loop: the pick is the strongest signal — queue it for the worker.
+    // Learning loop: the pick is the strongest signal — queue it for the
+    // worker. Log exactly what was offered (depth mode shows one card).
+    const offered = shownOutfits ?? [];
     await enqueueLearn({
-      suggestedIds: today.outfits.map((o) => o.garmentIds),
+      suggestedIds: offered.map((o) => o.garmentIds),
       pickedId: outfit.garmentIds.join("+"),
       context: today.context,
       ts: nowMs(),
@@ -207,8 +214,11 @@ export default function Today() {
    */
   function rejectAndShuffle() {
     if (today) {
+      // Learning loop: log exactly what was OFFERED. In depth mode that is
+      // the one shown card — never the two unseen near-twins.
+      const offered = shownOutfits ?? [];
       void enqueueLearn({
-        suggestedIds: today.outfits.map((o) => o.garmentIds),
+        suggestedIds: offered.map((o) => o.garmentIds),
         pickedId: null,
         context: today.context,
         ts: nowMs(),
@@ -230,6 +240,18 @@ export default function Today() {
     hour < 12 ? "greeting_morning" : hour < 18 ? "greeting_afternoon" : "greeting_evening";
   const greeting = name ? `${capitalize(voice(partKey, tone))}, ${name}` : "Today";
   const bestScore = today ? Math.max(...today.outfits.map((o) => o.score)) : 0;
+
+  // T-067 depth register: below 15 photo'd pieces the engine's near-twin
+  // options read as noise — lead with one strong look + an honest line.
+  const depth = depthRead(garments, target);
+  const depthMode = depth.photoPieces < 15 && (today?.outfits.length ?? 0) > 0;
+  const shownOutfits = depthMode ? today?.outfits.slice(0, 1) : today?.outfits;
+  /** Share of an outfit's garments that have photos — badges need ≥60%. */
+  const photoCovered = (outfit: ScoredOutfit): boolean => {
+    if (outfit.garmentIds.length === 0) return false;
+    const withPhoto = outfit.garmentIds.filter((id) => byId.get(id)?.photoRef).length;
+    return withPhoto / outfit.garmentIds.length >= 0.6;
+  };
 
   async function seedDemo() {
     const demo = [
@@ -356,7 +378,7 @@ export default function Today() {
           />
         )}
 
-        {today?.outfits.map((outfit, i) => (
+        {shownOutfits?.map((outfit, i) => (
           // Staggered entrance — and the shuffle moment: new options mount
           // with fresh keys, so the reshuffle lands as a soft cascade
           // instead of an instant re-render. Reduce-motion: no cascade.
@@ -366,7 +388,7 @@ export default function Today() {
             <Card style={{ gap: space.m }}>
               <View style={s.rowBetween}>
                 <Caption>Option {i + 1}</Caption>
-                <OutfitBadge score={outfit.score} best={bestScore} />
+                {photoCovered(outfit) && <OutfitBadge score={outfit.score} best={bestScore} />}
               </View>
               <View style={s.thumbs}>
                 {outfit.garmentIds.map((id) => {
@@ -404,9 +426,24 @@ export default function Today() {
           </Animated.View>
         ))}
 
+        {depthMode && (
+          <Card style={{ gap: space.s }}>
+            <Caption>{voice("depth_line", tone)}</Caption>
+            {depth.unlock && (
+              <Caption>
+                A {depth.unlock.label} here adds {depth.unlock.unlocks} fresh combination
+                {depth.unlock.unlocks === 1 ? "" : "s"}.
+              </Caption>
+            )}
+            <Btn label="Add clothes" variant="ghost" onPress={() => router.push("/(tabs)/capture")} />
+          </Card>
+        )}
+
         {today && today.outfits.length > 0 && (
           <Pressable onPress={rejectAndShuffle} style={s.notToday}>
-            <Caption>None of these? Shuffle the 3 options.</Caption>
+            <Caption>
+              {depthMode ? "None of these? Shuffle for another." : "None of these? Shuffle the 3 options."}
+            </Caption>
           </Pressable>
         )}
       </Scroll>

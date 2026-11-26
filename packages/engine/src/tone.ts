@@ -39,6 +39,8 @@ const BANKS: Record<string, Record<string, string>> = {
     greeting_afternoon: "afternoon",
     greeting_evening: "evening",
     fresh_rotation: "fresh rotation, nothing worn this week",
+    depth_line: "a few more pieces unlock more combinations",
+    depth_goal: "building the rotation",
   },
   millennial: {
     pick_one: "pick your vibe",
@@ -60,6 +62,8 @@ const BANKS: Record<string, Record<string, string>> = {
     greeting_afternoon: "afternoon",
     greeting_evening: "evening",
     fresh_rotation: "fresh rotation, nothing repeated this week",
+    depth_line: "a few more pieces mean more combinations",
+    depth_goal: "growing your rotation",
   },
   classic: {
     pick_one: "choose today's outfit",
@@ -81,6 +85,8 @@ const BANKS: Record<string, Record<string, string>> = {
     greeting_afternoon: "afternoon",
     greeting_evening: "evening",
     fresh_rotation: "nothing repeated this week",
+    depth_line: "more pieces unlock more combinations",
+    depth_goal: "toward your target wardrobe",
   },
 };
 
