@@ -1,8 +1,8 @@
 ---
 id: T-066
 title: Export / backup button — one-file closet backup (C2)
-status: backlog
-owner:
+status: in-progress
+owner: Yves
 reviewer: Onyx
 priority: high
 depends_on: []
@@ -18,8 +18,8 @@ files:
   - agents/BOARD.md
   - agents/CHATBOARD.md
   - agents/tasks/T-066-export-backup-button.md
-branch: <name>/T-066
-updated_at: 2026-11-26T07:40Z
+branch: Yves/T-066
+updated_at: 2026-11-26T07:56Z
 ---
 
 ## Goal
@@ -51,3 +51,4 @@ the task log.
 
 - [2026-11-26 07:40 UTC] created (Onyx, per Anay 07:16 approval; plan §C filled by Indigo).
 - [2026-11-26 07:55 UTC] file split (Onyx): backup reads `db.ts` directly — `local.ts` is removed from this task and owned by T-068 (city-weather). `package.json`/lockfile also collide with T-068's `expo-location` removal: build `backup.ts` + UI first, add `jszip`/`expo-sharing` only after T-068 merges (or Wren acks on CHATBOARD).
+- [2026-11-26 07:56 UTC] claimed (Yves) on standby wake — user-approved export, ties to §I wardrobe session. Start with `backup.ts` data assembly + fixture test (no package/lock touch); zip/share deps after T-068 merges or Wren ack.
