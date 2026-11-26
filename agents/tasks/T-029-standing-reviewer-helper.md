@@ -12,7 +12,7 @@ files:
   - agents/CHATBOARD.md
   - agents/tasks/T-029-standing-reviewer-helper.md
 branch: main (coordination-only; no code writes)
-updated_at: 2026-11-25T05:40Z
+updated_at: 2026-11-26T07:22Z
 ---
 
 ## Goal
@@ -34,3 +34,13 @@ overloaded (`TEAM.md` §4: queue ≤3).
   05:36, no takeover needed) and surfaced Q-005 (Onyx resumed 05:37).
   Reviewed + merged T-033 `Wren/T-033` @ 9c9b19a → `main` a1860a2
   (CI pair 52+8, tsc ×4 green); Onyx recorded the post-merge APPROVE.
+- [2026-11-26 07:22 UTC] on deck after pause (T-029 heartbeat). Overnight
+  review record: T-044 SQL wear-history APPROVE + merge; T-008/T-020/T-040/
+  T-049/T-050/T-054/T-059 pre-reviews; T-035 devDeps finding; T-014 sync-queue
+  lost-update race caught; T-062 render-loop caught from the focus-effect
+  dependency chain, then hotfix + conditional-BlurView reviews — crash clear,
+  final APK `9b87bcd1…` verified on the phone (pid alive, clean logcat), vision
+  pass done. T-046 emulator marked **blocked** with evidence and docs corrected.
+  Product proposal landed: `agents/proposals/Rei.md` (evidence-based APPROVE +
+  `apk-latest` cold-launch gate). Standing by for review overflow and the
+  execution-plan meeting sections.
