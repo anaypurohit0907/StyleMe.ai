@@ -16,7 +16,7 @@ files:
   - agents/tasks/T-026-mobile-lint-hygiene.md
   - agents/tasks/T-027-tech-lead-engineering-process.md
 branch: Onyx/T-027
-updated_at: 2026-11-26T08:50Z
+updated_at: 2026-11-26T09:22Z
 ---
 
 ## Goal
@@ -132,3 +132,4 @@ writers.
   tier 1+2 green: Android run 45776093487 end-to-end, PR artifacts, manual
   publish, pre-push hook). Q-006 holds the four default picks. Phone detached;
   no device claims.
+- [2026-11-26 09:22 UTC] merges: T-068 city-weather done (permission removed), T-066 backup merged (device rider pending), T-067 slice 1 merged with lead fix (meter remains). Release gate caught a transient packageRelease failure and blocked publish; rerun green. T-069 doc honesty fixes applied; T-071 city-edit backlog. No unpushed coordination work.
