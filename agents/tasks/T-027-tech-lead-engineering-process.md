@@ -16,7 +16,7 @@ files:
   - agents/tasks/T-026-mobile-lint-hygiene.md
   - agents/tasks/T-027-tech-lead-engineering-process.md
 branch: Onyx/T-027
-updated_at: 2026-11-26T02:43Z
+updated_at: 2026-11-26T08:50Z
 ---
 
 ## Goal
@@ -125,3 +125,10 @@ writers.
   Lead heartbeat automation `aut_21183d7e900129C37TyK6JPWg8` active every
   10 min — the seat no longer goes dark when the session sleeps.
 - [2026-11-26 07:15 UTC] proper standby: phone disconnected mid product-walkthrough; 10-min heartbeat paused, replaced by a 30-min silent standby automation (`aut_216bb2532…`) + a one-off morning handoff at 08:00 UTC (`aut_216bb2537…`). Board green; T-046 blocked; product review compiled; no unpushed work.
+- [2026-11-26 08:50 UTC] morning lead pass: Anay's 07:16 decisions locked in
+  `docs/EXECUTION_PLAN.md` §0; filed T-066 export (Indigo), T-067 depth
+  (Marlow, slice 1 in review with changes requested), T-068 city-weather
+  (Wren), T-069 narration re-proposal (Vesper), T-070 release safety (Onyx,
+  tier 1+2 green: Android run 45776093487 end-to-end, PR artifacts, manual
+  publish, pre-push hook). Q-006 holds the four default picks. Phone detached;
+  no device claims.
