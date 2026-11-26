@@ -159,16 +159,25 @@ export async function exportBackup(): Promise<BackupResult> {
   const name = `styleme-backup-${payload.manifest.createdAt.slice(0, 10)}.zip`;
   const fileUri = await FileSystem.StorageAccessFramework.createFileAsync(
     permission.directoryUri,
-    name.replace(/\.zip$/i, ""),
+    name,
     "application/zip",
   );
   const bytes = createStoredZip(entries);
   await FileSystem.writeAsStringAsync(fileUri, bytesToBase64(bytes), {
     encoding: FileSystem.EncodingType.Base64,
   });
+  // SAF providers may normalize the display name; report the file they made.
+  const tail = (() => {
+    try {
+      return decodeURIComponent(fileUri.split("/").pop() ?? "");
+    } catch {
+      return fileUri.split("/").pop() ?? "";
+    }
+  })();
+  const storedName = tail.split(":").pop()?.split("/").pop() || name;
   return {
     cancelled: false,
-    fileName: name,
+    fileName: storedName,
     bytes: bytes.length,
     garmentCount: payload.manifest.counts.garments,
     wearCount: payload.manifest.counts.wearLog,
