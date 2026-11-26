@@ -8,6 +8,7 @@ import { occasionLabel, occasions, paletteSwatch, radius, space } from "@styleme
 import { Btn, Caption, Card, Chip, Confirm, Display, Empty, Screen, Scroll, Title } from "@/components/ui";
 import { OutfitBadge, Toast, WhyPanel } from "@/components/why-panel";
 import { bumpFunnel, listGarments, logSuggestion, logWear, metaGet, upsertGarment } from "@/lib/db";
+import { depthRead } from "@/lib/wardrobe-depth";
 import { onAuthLocked } from "@/lib/api";
 import { useToneProfile, voice } from "@/lib/tone";
 import { useTheme } from "@/lib/theme";
@@ -23,6 +24,7 @@ import {
   recordPick,
   resetDeviceIdentity,
   savePrefs,
+  sessionTarget,
   type LocalToday,
   type Weather,
   type WearStreak,
@@ -51,6 +53,8 @@ export default function Today() {
   const [streak, setStreak] = useState<WearStreak>({ days: 0 });
   const [seed, setSeed] = useState(0);
   const [name, setName] = useState<string | null>(null);
+  // T-067: onboarding size guess (clamped 10–60) — the depth target.
+  const [target, setTarget] = useState(30);
   const [toast, setToast] = useState<{ message: string; undo?: () => void } | null>(null);
   const [error, setError] = useState(false);
   // T-059: worker registration is locked (403 registration_locked). Offer the
@@ -86,6 +90,7 @@ export default function Today() {
       const w = await getWeather();
       setWeather(w);
       setName(await metaGet("name"));
+      setTarget(await sessionTarget());
       setStreak(await getWearStreak());
       if (free.length >= 3) {
         const result = await recommendLocal(free, occasion, w, seed);
@@ -231,6 +236,17 @@ export default function Today() {
   const greeting = name ? `${capitalize(voice(partKey, tone))}, ${name}` : "Today";
   const bestScore = today ? Math.max(...today.outfits.map((o) => o.score)) : 0;
 
+  // T-067 depth register: below 15 photo'd pieces the engine's near-twin
+  // options read as noise — lead with one strong look + an honest line.
+  const depth = depthRead(garments, target);
+  const depthMode = depth.photoPieces < 15 && (today?.outfits.length ?? 0) > 1;
+  const shownOutfits = depthMode ? today?.outfits.slice(0, 1) : today?.outfits;
+  /** Share of an outfit's garments that have photos — badges need ≥60%. */
+  const photoCovered = (outfit: ScoredOutfit): boolean => {
+    const withPhoto = outfit.garmentIds.filter((id) => byId.get(id)?.photoRef).length;
+    return withPhoto / outfit.garmentIds.length >= 0.6;
+  };
+
   async function seedDemo() {
     const demo = [
       { slot: "top", colors: ["white"], pattern: "solid", fit: "regular", formality: 2, season: "all", material: "light" },
@@ -353,7 +369,7 @@ export default function Today() {
           />
         )}
 
-        {today?.outfits.map((outfit, i) => (
+        {shownOutfits?.map((outfit, i) => (
           // Staggered entrance — and the shuffle moment: new options mount
           // with fresh keys, so the reshuffle lands as a soft cascade
           // instead of an instant re-render. Reduce-motion: no cascade.
@@ -363,7 +379,7 @@ export default function Today() {
             <Card style={{ gap: space.m }}>
               <View style={s.rowBetween}>
                 <Caption>Option {i + 1}</Caption>
-                <OutfitBadge score={outfit.score} best={bestScore} />
+                {photoCovered(outfit) && <OutfitBadge score={outfit.score} best={bestScore} />}
               </View>
               <View style={s.thumbs}>
                 {outfit.garmentIds.map((id) => {
@@ -400,6 +416,19 @@ export default function Today() {
             </Card>
           </Animated.View>
         ))}
+
+        {depthMode && (
+          <Card style={{ gap: space.s }}>
+            <Caption>{voice("depth_line", tone)}</Caption>
+            {depth.unlock && (
+              <Caption>
+                A {depth.unlock.label} here adds {depth.unlock.unlocks} fresh combination
+                {depth.unlock.unlocks === 1 ? "" : "s"}.
+              </Caption>
+            )}
+            <Btn label="Add clothes" variant="ghost" onPress={() => router.push("/(tabs)/capture")} />
+          </Card>
+        )}
 
         {today && today.outfits.length > 0 && (
           <Pressable onPress={rejectAndShuffle} style={s.notToday}>
