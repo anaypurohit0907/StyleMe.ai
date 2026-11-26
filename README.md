@@ -62,7 +62,8 @@ The app bundle is `ml/artifacts/styleme_vision_v1.zip`. Copy the ONNX + JSON fil
 Download the latest arm64 APK from
 [apk-latest](https://github.com/anaypurohit0907/StyleMe.ai/releases/tag/apk-latest) and install it
 on an Android phone (allow "install unknown apps"). It is debug-signed for
-testing, not Play Store distribution.
+testing, not Play Store distribution. Release assets are published manually
+from a verified build run, so `apk-latest` can lag `main` by design.
 
 The release APK bundles JS + the MobileCLIP-S1 ONNX model, so tagging runs
 on-device with no laptop/Metro. Tester guide: [`docs/TESTING.md`](docs/TESTING.md).

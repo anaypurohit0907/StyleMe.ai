@@ -68,5 +68,5 @@ npm run mobile:start
 - **`apps/mobile/android/` + `ios/` are generated** by `expo prebuild` and ignored — configure via `app.json` + config plugins, never by hand.
 - `packages/engine/tests/uniqueness.property.test.ts` simulates 1,000 users over 40 days and takes ~20s alone — the engine suite is quiet that long by design, not hung.
 - CI (`ci.yml`, every push to `main` + PRs) runs exactly the commands above, then validates every `ml/*.ipynb` (nbformat + python compile; `!` shell lines other than `pip|cp|cd|ls` fail it).
-- Any push to `main` touching `apps/mobile/**` auto-builds an arm64 release APK and overwrites the `apk-latest` release asset (`android.yml`) — testers install from that link.
+- Any push to `main` touching `apps/mobile/**` builds an arm64 APK/AAB as **workflow artifacts only** (`android.yml`). `apk-latest` is updated only by the manual `publish.yml` workflow, which downloads the exact verified run by `run_id` and waits for Anay's `production` approval — so the release asset can lag `main`. Testers install from the release link.
 - Photos stay on-device by design; R2 photo backup is intentionally disabled (commented block in `wrangler.jsonc`). The worker stores attributes + embeddings, never photos.
