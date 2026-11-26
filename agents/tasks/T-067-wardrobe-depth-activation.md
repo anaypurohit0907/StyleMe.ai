@@ -11,6 +11,7 @@ files:
   - apps/mobile/src/app/(tabs)/index.tsx
   - apps/mobile/src/lib/wardrobe-depth.ts
   - apps/mobile/src/lib/tone.ts
+  - packages/engine/src/tone.ts
   - docs/TONE_KEYS.md
   - agents/WORKFORCE.md
   - agents/BOARD.md
