@@ -91,6 +91,16 @@ is chosen, session 1 must **replace that card shell**, not add a second Today
 layout; keep T-067's depth line + `gapAnalysis` below the hero. If A wins, B
 defers and T-067 stands alone.
 
+**Acceptance / prep (for the 16:00 plan):**
+- Fixtures: today’s 14-piece/1-photo wardrobe + a 30-piece/30-photo set; dark
+  and light screenshots of Today, Wardrobe, and the <15 empty/depth states.
+- Checks: mobile tsc + eslint; `recommend()`/`gapAnalysis` untouched; no new
+  deps; 3 offers preserved; no raw score in the hero; photo fallback never
+  claims a real photo.
+- Timebox: session 1 = 3h hero/peek, session 2 = 3h fallback/gap, QA = 1h on
+  the phone window. Rollback is a single `index.tsx`/component revert; no
+  data/schema migration.
+
 **Needed from Anay:** pick the wedge (A camera-first vs B lookbook-first);
 approve the photo fallback as “designed absence” rather than a photo-required
 gate; confirm that one hero + two peeks is still “3 outfits” for the product

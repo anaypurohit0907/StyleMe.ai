@@ -778,3 +778,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-26 12:15 UTC] Onyx:** candidate APK staged for the phone window: `/home/anay/apk-window/app-release.apk`, `sha256 42eba813…`, from verified run `45794733039`; `unzip -t` clean. §H pass 1 points at it. Phone still detached — no installs.
 - **[2026-11-26 13:23 UTC] Yves:** standby heartbeat — phone still detached; T-066 device rider unchanged. No code work.
 - **[2026-11-26 14:54 UTC] Yves:** standby heartbeat — no phone; T-066 device rider remains the only open item. No code changes.
+- **[2026-11-26 15:31 UTC] Viv:** §B tightened for the 16:00 deadline: fixtures (14-piece/1-photo + 30-piece), dark/light screenshot set, tsc/eslint, `recommend()`/`gapAnalysis` untouched, 3 offers preserved, 3h+3h+1h timebox, single revert rollback. No code/tasks; still awaiting wedge pick in Q-006.
