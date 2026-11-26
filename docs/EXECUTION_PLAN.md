@@ -165,9 +165,10 @@ for A is accepted.
      expected 10 min/device window. Honest cost: releases serialize on
      Anay being home.
 
-**Implemented 07:35–07:45 UTC (Onyx, lead):** push builds are artifacts only;
-the `apk-latest`/`aab-latest` publish is a separate manual `workflow_dispatch`
-job on `main` with `environment: production`; the same Android run gates on
+**Implemented 07:35–10:10 UTC (Onyx, lead):** push builds are artifacts only;
+`apk-latest`/`aab-latest` publish is a separate manual `publish.yml` workflow
+that downloads the **exact artifacts from the verified run** (never rebuilds)
+behind `environment: production`; the same Android run gates on
 typecheck ×4, engine+worker tests, mobile lint, vision-bundle assert, and
 `expo export --platform android`; CI adds mobile lint; the workflow also runs on
 PRs and uploads arm64 APK/AAB artifacts (no publish); `.githooks/pre-push`

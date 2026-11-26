@@ -74,16 +74,21 @@ Notes:
 
 Every push to `main` touching `apps/mobile/**` builds an arm64 release APK +
 AAB as **workflow artifacts only** (`.github/workflows/android.yml`). Release
-assets are published only by a **manual `workflow_dispatch` on `main`** after
-the build artifact and device/vision evidence exist. The `production`
-environment is enforced: required reviewer `anaypurohit0907`, self-review
-blocked, admin bypass disabled — a publish pauses until Anay approves it. The build also `curl`s the
+assets are published only by the **manual `Publish release assets` workflow**
+(`.github/workflows/publish.yml`) after the build artifact and device/vision
+evidence exist. It downloads the **exact artifacts from the verified run** —
+it never rebuilds. The `production` environment is enforced: required reviewer
+`anaypurohit0907`, self-review blocked, admin bypass disabled — a publish
+pauses until Anay approves it. The build also `curl`s the
 `vision-v2` bundle over the tracked assets.
 
 ```bash
-# manual release publish (build + publish; only after device/vision evidence)
+# 1. build (artifact only; note the run id)
 gh workflow run android.yml --ref main
-gh run list --workflow=android.yml --limit 5
+gh run list --workflow=android.yml --limit 1
+
+# 2. after device/vision evidence, publish THAT run's exact artifacts
+gh workflow run publish.yml --ref main -f run_id=<run-id>
 
 # testers
 gh release download apk-latest -p app-release.apk

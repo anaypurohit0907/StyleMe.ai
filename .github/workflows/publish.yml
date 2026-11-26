@@ -1,0 +1,63 @@
+name: Publish release assets
+
+# Publishes the EXACT artifacts from a verified Android build run. Never
+# rebuilds: the APK tested on the phone is the APK that becomes `apk-latest`.
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: "Android APK workflow run id containing the verified artifacts"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: publish-release-assets
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: publish verified artifacts (manual)
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Download APK from the verified run
+        uses: actions/download-artifact@v4
+        with:
+          name: styleme-arm64-release
+          path: dist/apk
+          run-id: ${{ inputs.run_id }}
+          github-token: ${{ github.token }}
+
+      - name: Download AAB from the verified run
+        uses: actions/download-artifact@v4
+        with:
+          name: styleme-aab-release
+          path: dist/aab
+          run-id: ${{ inputs.run_id }}
+          github-token: ${{ github.token }}
+
+      - name: Verify artifacts
+        run: |
+          sha256sum dist/apk/*.apk dist/aab/*.aab
+          unzip -t dist/apk/*.apk >/dev/null
+          unzip -t dist/aab/*.aab >/dev/null
+
+      - name: Publish to apk-latest release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view apk-latest --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 \
+            || gh release create apk-latest --repo "$GITHUB_REPOSITORY" --title "APK latest" --notes "Manually published signed release APK."
+          gh release upload apk-latest dist/apk/*.apk --clobber
+
+      - name: Publish to aab-latest release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view aab-latest --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1 \
+            || gh release create aab-latest --repo "$GITHUB_REPOSITORY" --title "AAB latest" --notes "Manually published signed release AAB for Play internal testing."
+          gh release upload aab-latest dist/aab/*.aab --clobber
