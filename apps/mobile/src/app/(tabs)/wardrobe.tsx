@@ -128,6 +128,7 @@ export default function Wardrobe() {
           <Btn label="Add" onPress={() => router.push("/(tabs)/capture")} />
         </View>
         <TextLink label="What to add next" onPress={() => router.push("/gap")} />
+        <TextLink label="Back up your closet" onPress={() => router.push("/(tabs)/dna")} />
 
         <View style={s.chips}>
           {SLOTS.map((s0) => (
@@ -178,6 +179,7 @@ export default function Wardrobe() {
               <View style={{ gap: space.s, alignSelf: "stretch" }}>
                 <Btn label="Add clothes" onPress={() => router.push("/(tabs)/capture")} />
                 <TextLink label="What to add next" onPress={() => router.push("/gap")} />
+        <TextLink label="Back up your closet" onPress={() => router.push("/(tabs)/dna")} />
               </View>
             }
           />
@@ -189,6 +191,7 @@ export default function Wardrobe() {
               <View style={{ gap: space.s, alignSelf: "stretch" }}>
                 <Btn label="Clear filters" variant="ghost" onPress={clearFilters} />
                 <TextLink label="What to add next" onPress={() => router.push("/gap")} />
+        <TextLink label="Back up your closet" onPress={() => router.push("/(tabs)/dna")} />
               </View>
             }
           />
