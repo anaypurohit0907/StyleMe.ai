@@ -22,15 +22,55 @@
 
 ## B. Lookbook-first Today + honest degradation
 **Owner:** Viv (design) · **Co:** Marlow (engine gates)
-**What's needed:** (fill: layout, photo-coverage fallbacks, <15-pieces register shift).
-**Needed from Anay:** (fill).
-**Practicality / Effort:reward:** (fill).
+**What's needed:** three bounded changes, no engine/model work:
+1. **Hero + peek, not three equal forms** in `apps/mobile/src/app/(tabs)/index.tsx`:
+   one large photo-led outfit card (garment names, one “why” disclosure, one
+   primary action), with options 2–3 as compact peek cards/tabs. Keep the
+   existing 3 offers; nothing changes in `recommend()`. Move the raw
+   score/badge treatment behind the “why” disclosure.
+2. **Photo-coverage fallback** in a new `apps/mobile/src/components/garment-thumb.tsx`
+   used by Today/Wardrobe: when `photoRef` is empty, render a token-styled
+   garment silhouette + slot label instead of a flat color swatch; when <50%
+   of a candidate outfit has photos, show one quiet “add photos for this look”
+   line, not fake imagery. The current 14-piece/test screenshots are mostly
+   color blocks (one real photo in 14 tiles) — this is the first-impression
+   trust bug.
+3. **<15-piece register shift** in the same Today file + `gapAnalysis`:
+   replace the generic “need a few more pieces” empty card with the top 1–2
+   concrete gaps (“a second bottom unlocks 6 looks”), keeping
+   `gapAnalysis()` as the single source; no new math, no pushy commerce.
+   Degradation states stay honest: engine error ≠ empty; no photos ≠ error;
+   laundry-empty keeps the existing recovery card.
+**Needed from Anay:** pick the wedge (A camera-first vs B lookbook-first);
+approve the photo fallback as “designed absence” rather than a photo-required
+gate; confirm that one hero + two peeks is still “3 outfits” for the product
+rule; and make the full-wardrobe capture session available for the before/
+after screenshot eval.
+**Practicality / Effort:reward:** **Medium, 2 focused sessions (~6–8h) + one
+device screenshot pass**: session 1 layout/peek + why disclosure, session 2
+fallback thumb + gap empty state, QA on his real 30-piece wardrobe. No schema,
+worker, engine, or dependency changes; risk is taste/photo coverage, not
+correctness. Reward is high because Today is the product’s first and most
+repeated screen and the current equal-card/photo-block state reads as
+unfinished; this is the cheapest way to make the existing engine feel like a
+stylist. Rank: 2nd after narration (E), ahead of camera-first until the plan
+for A is accepted.
 
 ## C. Trust surface: "your closet lives here" + export
 **Owner:** Indigo (data/worker)
-**What's needed:** (fill: export format = SQLite dump + photo-manifest, share-sheet target, Wardrobe copy line).
-**Needed from Anay:** (fill).
-**Practicality / Effort:reward:** (fill).
+**What's needed:** one "Save a backup" action + one copy line, so the app's #1 signal (irreplaceable data, Q-002: "I can't keep re-rating all of them") is answered with a mechanism, not a promise. Concretely:
+1. **Entry:** Diagnostics card (Style DNA) gets a "Backups" row + Wardrobe header gets one quiet line — draft copy by Vesper ("Your closet lives on this phone — export a copy."). No new screen required for v1.
+2. **Export content (read-only from the app's side, can never corrupt the source):** `manifest.json` (schema version, counts, timestamps), full wardrobe rows incl. attrs + corrections + subtypes, `wear_log`, prefs/explore state, streak/retention meta, onboarding answers, and the photo files (`photoRef` targets, ~200–500 KB per item at current capture scale — a 14-item closet ≈ 5–10 MB, a 100-item closet ≈ 30–50 MB, runtime seconds). **Never** the auth token/registration secret.
+3. **Two implementation options:**
+   - **C1 — folder export, zero new dependencies:** `expo-file-system` SAF `requestDirectoryPermissionsAsync()` → user picks a folder (Documents/Drive) → write `styleme-backup-YYYYMM-DD/` with manifest + JSON data + `photos/`. ~150 lines, one session (~2–3 h incl. verification).
+   - **C2 — single zip + share sheet (recommended):** `jszip` (pure JS, no native code) + `expo-sharing` (native module, rides the next APK) → one `styleme-backup-YYYY-MM-DD.zip` through the share sheet straight to Drive/Downloads/WhatsApp. ~200 lines, +1 dep, ~1 extra hour over C1. One file is what a user understands; recommend C2, with C1 as the fallback if the dep is unwanted.
+4. **Verification protocol:** run on Anay's 14-item wardrobe tonight → `adb pull` the backup → assert manifest counts == wardrobe counts, photos byte-identical, corrections present (5 known user corrections must be in the dump).
+5. **Honest scope line:** export is insurance, not sync. Restore = copy files back to the same phone after reinstall; no cross-device import in beta. The copy must not imply otherwise (Vesper gate).
+6. **Tie-in:** the wardrobe-session end screen (section I) points at this surface — "this taught the model, and here's where your data lives."
+
+**Needed from Anay:** (1) pick C1 or C2 (or "C2 if the dependency is clean"); (2) where backups should land by default (Downloads? Drive?); (3) pick one of Vesper's 2–3 copy drafts for the promise line. Nothing else — no accounts, no cloud, no cost.
+
+**Practicality:** high — everything is local, structured, and already proven writable externally (T-036 `Directory.createFile` evidence, T-024 `styleme.log` pull works). **Effort:reward: best-in-class for its size** — one session of work retires the single biggest data-safety fear of the only real user; no infra, no server, no maintenance.
 
 ## D. Release safety: screenshot-on-PR + `apk-latest` cold-launch gate
 **Owner:** Wren (CI/build lanes)
