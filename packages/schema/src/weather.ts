@@ -14,7 +14,10 @@ export interface WeatherLatLon {
   name?: string;
 }
 
-function validCoords(lat: number, lon: number, name?: unknown): WeatherLatLon | null {
+function validCoords(lat: unknown, lon: unknown, name?: unknown): WeatherLatLon | null {
+  // Strict numeric types: `Number(null) === 0` would pass a loose check and
+  // yield valid-looking (0, 0) coordinates from malformed JSON.
+  if (typeof lat !== "number" || typeof lon !== "number") return null;
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
   if (lat < -90 || lat > 90 || lon < -180 || lon > 180) return null;
   if (typeof name === "string" && name.length > 0) return { lat, lon, name };
@@ -33,7 +36,7 @@ export function parseGeocodeResponse(json: unknown): WeatherLatLon | null {
   if (!Array.isArray(results) || results.length === 0) return null;
   const first = results[0] as Record<string, unknown> | null;
   if (typeof first !== "object" || first === null) return null;
-  return validCoords(Number(first.latitude), Number(first.longitude), first.name);
+  return validCoords(first.latitude, first.longitude, first.name);
 }
 
 /** Read a stored `weatherLatLon` meta value (JSON string) back to coords. */
@@ -41,7 +44,7 @@ export function parseStoredCoords(raw: string | null | undefined): WeatherLatLon
   if (!raw) return null;
   try {
     const obj = JSON.parse(raw) as Record<string, unknown>;
-    return validCoords(Number(obj.lat), Number(obj.lon), obj.name);
+    return validCoords(obj.lat, obj.lon, obj.name);
   } catch {
     return null;
   }

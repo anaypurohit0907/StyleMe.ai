@@ -22,7 +22,10 @@ describe("weather source (T-068)", () => {
     expect(
       parseGeocodeResponse({ results: [{ latitude: "x", longitude: 1 }] }),
     ).toBeNull();
-    // NaN coords must never reach the forecast URL.
+    // Strict numeric types: `Number(null) === 0` must never yield (0, 0).
+    expect(
+      parseGeocodeResponse({ results: [{ latitude: null, longitude: null }] }),
+    ).toBeNull();
     expect(
       parseGeocodeResponse({ results: [{ latitude: 999, longitude: 0 }] }),
     ).toBeNull();
@@ -38,6 +41,8 @@ describe("weather source (T-068)", () => {
     // Corrupt/stale meta degrades to null, never to garbage coords.
     expect(parseStoredCoords("not json")).toBeNull();
     expect(parseStoredCoords(null)).toBeNull();
+    // Strict types: null lat/lon must not parse as (0, 0).
+    expect(parseStoredCoords(JSON.stringify({ lat: null, lon: null, name: "x" }))).toBeNull();
   });
 
   it("parses a live forecast and flags rain honestly", () => {

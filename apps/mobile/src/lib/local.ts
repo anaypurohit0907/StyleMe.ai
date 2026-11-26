@@ -331,8 +331,9 @@ export async function resolveCityWeather(city: string): Promise<WeatherLatLon | 
  * cached coords tried next launch → 18 °C "offline guess".
  */
 export async function getWeather(): Promise<Weather> {
+  let coords: WeatherLatLon | null = null;
   try {
-    const coords = parseStoredCoords(await metaGet(WEATHER_LATLON_KEY));
+    coords = parseStoredCoords(await metaGet(WEATHER_LATLON_KEY));
     if (!coords) return { ...FALLBACK_WEATHER };
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 3000);
@@ -348,7 +349,11 @@ export async function getWeather(): Promise<Weather> {
     }
     if (!res.ok) throw new Error(`weather ${res.status}`);
     const reading = parseForecastResponse(await res.json());
-    if (!reading) return { ...FALLBACK_WEATHER };
+    if (!reading) {
+      // Offline/odd forecast, but the CITY is still known — a bare "18°
+      // offline guess" is less legible than "Mumbai · 18° offline guess".
+      return { ...FALLBACK_WEATHER, ...(coords.name ? { city: coords.name } : {}) };
+    }
     return {
       tempC: reading.tempC,
       isRaining: reading.isRaining,
@@ -356,7 +361,7 @@ export async function getWeather(): Promise<Weather> {
       ...(reading.source === "live" && coords.name ? { city: coords.name } : {}),
     };
   } catch {
-    return { ...FALLBACK_WEATHER };
+    return { ...FALLBACK_WEATHER, ...(coords?.name ? { city: coords.name } : {}) };
   }
 }
 
