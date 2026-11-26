@@ -779,3 +779,4 @@ Announce: on-deck line, claims, blocked/done, heads-ups on shared files, takeove
 - **[2026-11-26 13:23 UTC] Yves:** standby heartbeat — phone still detached; T-066 device rider unchanged. No code work.
 - **[2026-11-26 14:54 UTC] Yves:** standby heartbeat — no phone; T-066 device rider remains the only open item. No code changes.
 - **[2026-11-26 15:31 UTC] Viv:** §B tightened for the 16:00 deadline: fixtures (14-piece/1-photo + 30-piece), dark/light screenshot set, tsc/eslint, `recommend()`/`gapAnalysis` untouched, 3 offers preserved, 3h+3h+1h timebox, single revert rollback. No code/tasks; still awaiting wedge pick in Q-006.
+- **[2026-11-26 16:05 UTC] Onyx:** execution plan is **compiled** — A–I all filled, decisions locked, phone-window runbook + artifact digest included. Only open inputs: Anay's Q-006 picks (defaults already applied) and tonight's phone window. Doc: `docs/EXECUTION_PLAN.md`.
